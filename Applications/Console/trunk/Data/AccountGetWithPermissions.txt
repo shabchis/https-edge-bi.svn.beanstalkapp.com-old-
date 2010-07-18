@@ -1,0 +1,32 @@
+SELECT     Account_ID, Account_Name, SEO_Status, SEO_Frequency, Adwords_Status, Adwords_Frequency, GAnalytics_Status, GAnalytics_Frequency
+
+FROM       User_GUI_Account ac
+
+WHERE
+           exists
+           (select UserID from User_GUI_User where UserID = @userID and AccountAdmin = 1)
+           OR
+           exists
+           (select UserID from User_GUI_UserGroupUser ug
+                                 inner join V_User_GUI_ActiveUserGroup g on
+                                 g.GroupID = ug.GroupID and AccountAdmin = 1
+                            where ug.UserID = @userID)
+           OR
+           exists
+           (select TargetID from User_GUI_AccountPermission ap
+                            where ap.AccountID = ac.Account_ID and ap.TargetID = @userID and ap.TargetIsGroup = 0 and ap.Value <> 0)
+           OR
+           (
+               not exists
+			   (select TargetID from User_GUI_AccountPermission ap
+                            where ap.AccountID = ac.Account_ID and ap.TargetID = @userID and ap.TargetIsGroup = 0 and ap.Value = 0)
+               AND
+               exists
+			   (select TargetID from User_GUI_AccountPermission ap
+									 inner join V_User_GUI_ActiveUserGroupUser ug on
+									 ug.GroupID = ap.TargetID and
+									 ug.UserID = @userID
+								where ap.AccountID = ac.Account_ID and ap.TargetIsGroup = 1 and ap.Value <> 0)
+           )
+
+ORDER BY Account_Name
