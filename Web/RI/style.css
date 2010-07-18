@@ -1,0 +1,26 @@
+#header ul{
+overflow:hidden;
+background-color:gray;
+
+}
+
+#header ul li{
+float:left;
+list-style:none;
+margin-right:500px;
+
+
+}
+#header ul li:last-child{
+margin-right:0px;
+
+}
+#content h2{
+background-color:green;
+
+}
+
+#content ul li{
+list-style:none;
+
+}
