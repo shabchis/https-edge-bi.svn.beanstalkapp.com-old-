@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsse="http://schemas.xmlsoap.org/ws/2002/07/secext" xmlns:soapenc12="http://www.w3.org/2003/05/soap-encoding" xmlns:tns="http://marketing.ews.yahooapis.com/V4" xmlns:soapenc11="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" targetNamespace="http://marketing.ews.yahooapis.com/V4" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://marketing.ews.yahooapis.com/V4">
+      <xsd:annotation>
+        <xsd:appinfo>
+          <tns:version>4.3.0</tns:version>
+        </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:element name="commandGroup">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="license">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="masterAccountID">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="quotaUsedForThisRequest">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="remainingQuota">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="timeTakenMillis">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="ApiFault" type="tns:ApiFault" />
+      <xsd:element name="getMasterAccountLocation">
+        <xsd:complexType />
+      </xsd:element>
+      <xsd:element name="getMasterAccountLocationResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="out" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="onBehalfOfPassword">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="onBehalfOfUsername">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:complexType name="ApiFault">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="code" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schemas.xmlsoap.org/ws/2002/07/secext">
+      <xsd:element name="Security" type="wsse:Security" />
+      <xsd:complexType name="Security">
+        <xsd:sequence>
+          <xsd:element name="UsernameToken" type="wsse:UsernameToken" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="UsernameToken">
+        <xsd:sequence>
+          <xsd:element name="Username" type="xsd:string" />
+          <xsd:element name="Password" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ApiFault">
+    <wsdl:part name="ApiFault" element="tns:ApiFault" />
+  </wsdl:message>
+  <wsdl:message name="Security">
+    <wsdl:part name="Security" element="wsse:Security" />
+  </wsdl:message>
+  <wsdl:message name="commandGroup">
+    <wsdl:part name="commandGroup" element="tns:commandGroup" />
+  </wsdl:message>
+  <wsdl:message name="getMasterAccountLocationRequest">
+    <wsdl:part name="parameters" element="tns:getMasterAccountLocation" />
+  </wsdl:message>
+  <wsdl:message name="getMasterAccountLocationResponse">
+    <wsdl:part name="parameters" element="tns:getMasterAccountLocationResponse" />
+  </wsdl:message>
+  <wsdl:message name="license">
+    <wsdl:part name="license" element="tns:license" />
+  </wsdl:message>
+  <wsdl:message name="masterAccountID">
+    <wsdl:part name="masterAccountID" element="tns:masterAccountID" />
+  </wsdl:message>
+  <wsdl:message name="onBehalfOfPassword">
+    <wsdl:part name="onBehalfOfPassword" element="tns:onBehalfOfPassword" />
+  </wsdl:message>
+  <wsdl:message name="onBehalfOfUsername">
+    <wsdl:part name="onBehalfOfUsername" element="tns:onBehalfOfUsername" />
+  </wsdl:message>
+  <wsdl:message name="quotaUsedForThisRequest">
+    <wsdl:part name="quotaUsedForThisRequest" element="tns:quotaUsedForThisRequest" />
+  </wsdl:message>
+  <wsdl:message name="remainingQuota">
+    <wsdl:part name="remainingQuota" element="tns:remainingQuota" />
+  </wsdl:message>
+  <wsdl:message name="timeTakenMillis">
+    <wsdl:part name="timeTakenMillis" element="tns:timeTakenMillis" />
+  </wsdl:message>
+  <wsdl:portType name="LocationService">
+    <wsdl:operation name="getMasterAccountLocation">
+      <wsdl:input name="getMasterAccountLocationRequest" message="tns:getMasterAccountLocationRequest" />
+      <wsdl:output name="getMasterAccountLocationResponse" message="tns:getMasterAccountLocationResponse" />
+      <wsdl:fault name="ApiFault" message="tns:ApiFault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="LocationServiceHttpBinding" type="tns:LocationService">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getMasterAccountLocation">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getMasterAccountLocationRequest">
+        <wsdlsoap:body use="literal" />
+        <wsdlsoap:header message="tns:onBehalfOfUsername" part="onBehalfOfUsername" use="literal" />
+        <wsdlsoap:header message="tns:onBehalfOfPassword" part="onBehalfOfPassword" use="literal" />
+        <wsdlsoap:header message="tns:masterAccountID" part="masterAccountID" use="literal" />
+        <wsdlsoap:header message="tns:license" part="license" use="literal" />
+        <wsdlsoap:header message="tns:Security" part="Security" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getMasterAccountLocationResponse">
+        <wsdlsoap:body use="literal" />
+        <wsdlsoap:header message="tns:commandGroup" part="commandGroup" use="literal" />
+        <wsdlsoap:header message="tns:remainingQuota" part="remainingQuota" use="literal" />
+        <wsdlsoap:header message="tns:quotaUsedForThisRequest" part="quotaUsedForThisRequest" use="literal" />
+        <wsdlsoap:header message="tns:timeTakenMillis" part="timeTakenMillis" use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ApiFault">
+        <wsdlsoap:fault use="literal" name="ApiFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LocationServiceService">
+    <wsdl:port name="LocationService" binding="tns:LocationServiceHttpBinding">
+      <wsdlsoap:address location="https://global.marketing.ews.yahooapis.com/services/V4/LocationService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

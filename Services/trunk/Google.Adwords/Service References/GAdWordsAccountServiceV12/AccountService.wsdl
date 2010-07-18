@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:intf="https://adwords.google.com/api/adwords/v12" xmlns:impl="https://adwords.google.com/api/adwords/v12" targetNamespace="https://adwords.google.com/api/adwords/v12" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="https://adwords.google.com/api/adwords/v12">
+      <xsd:complexType name="AccountInfo">
+        <xsd:sequence>
+          <xsd:element name="billingAddress" nillable="true" type="impl:Address" />
+          <xsd:element name="currencyCode" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="customerId" nillable="true" type="xsd:long" />
+          <xsd:element name="defaultNetworkTargeting" nillable="true" type="impl:NetworkTarget" />
+          <xsd:element name="descriptiveName" nillable="true" type="xsd:string" />
+          <xsd:element name="emailPromotionsPreferences" nillable="true" type="impl:EmailPromotionsPreferences" />
+          <xsd:element name="languagePreference" nillable="true" type="xsd:string" />
+          <xsd:element name="primaryAddress" nillable="true" type="impl:Address" />
+          <xsd:element name="primaryBusinessCategory" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" name="timeZoneEffectiveDate" nillable="true" type="xsd:long" />
+          <xsd:element name="timeZoneId" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Address">
+        <xsd:sequence>
+          <xsd:element name="addressLine1" type="xsd:string" />
+          <xsd:element name="addressLine2" nillable="true" type="xsd:string" />
+          <xsd:element name="city" type="xsd:string" />
+          <xsd:element name="companyName" type="xsd:string" />
+          <xsd:element name="countryCode" type="xsd:string" />
+          <xsd:element name="emailAddress" nillable="true" type="xsd:string" />
+          <xsd:element name="faxNumber" nillable="true" type="xsd:string" />
+          <xsd:element name="name" type="xsd:string" />
+          <xsd:element name="phoneNumber" type="xsd:string" />
+          <xsd:element name="postalCode" type="xsd:string" />
+          <xsd:element name="state" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ApiError">
+        <xsd:sequence>
+          <xsd:element name="code" type="xsd:int" />
+          <xsd:element name="detail" type="xsd:string" />
+          <xsd:element minOccurs="0" name="field" type="xsd:string" />
+          <xsd:element name="index" type="xsd:int" />
+          <xsd:element name="isExemptable" type="xsd:boolean" />
+          <xsd:element minOccurs="0" name="textIndex" type="xsd:int" />
+          <xsd:element minOccurs="0" name="textLength" type="xsd:int" />
+          <xsd:element minOccurs="0" name="trigger" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ApiException">
+        <xsd:sequence>
+          <xsd:element name="code" type="xsd:int" />
+          <xsd:element maxOccurs="unbounded" name="errors" nillable="true" type="impl:ApiError" />
+          <xsd:element name="internal" type="xsd:boolean" />
+          <xsd:element name="message" nillable="true" type="xsd:string" />
+          <xsd:element name="trigger" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="EmailPromotionsPreferences">
+        <xsd:sequence>
+          <xsd:element name="accountPerformanceEnabled" type="xsd:boolean" />
+          <xsd:element name="disapprovedAdsEnabled" type="xsd:boolean" />
+          <xsd:element name="marketResearchEnabled" type="xsd:boolean" />
+          <xsd:element name="newsletterEnabled" type="xsd:boolean" />
+          <xsd:element name="promotionsEnabled" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="NetworkTarget">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="networkTypes" type="impl:NetworkType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="NetworkType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="GoogleSearch" />
+          <xsd:enumeration value="SearchNetwork" />
+          <xsd:enumeration value="ContentNetwork" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="applicationToken">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="clientCustomerId">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="clientEmail">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="developerToken">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="email">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="fault" type="impl:ApiException" />
+      <xsd:element name="getAccountInfo">
+        <xsd:complexType />
+      </xsd:element>
+      <xsd:element name="getAccountInfoResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="getAccountInfoReturn" type="impl:AccountInfo" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getClientAccounts">
+        <xsd:complexType />
+      </xsd:element>
+      <xsd:element name="getClientAccountsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="getClientAccountsReturn" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="operations">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:long" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="password">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="requestId">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="responseTime">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:long" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="units">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:long" />
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="updateAccountInfo">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="accountInfo" type="impl:AccountInfo" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="updateAccountInfoResponse">
+        <xsd:complexType />
+      </xsd:element>
+      <xsd:element name="useragent">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string" />
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ApiException">
+    <wsdl:part name="fault" element="impl:fault" />
+  </wsdl:message>
+  <wsdl:message name="applicationToken">
+    <wsdl:part name="applicationToken" element="impl:applicationToken" />
+  </wsdl:message>
+  <wsdl:message name="clientCustomerId">
+    <wsdl:part name="clientCustomerId" element="impl:clientCustomerId" />
+  </wsdl:message>
+  <wsdl:message name="clientEmail">
+    <wsdl:part name="clientEmail" element="impl:clientEmail" />
+  </wsdl:message>
+  <wsdl:message name="developerToken">
+    <wsdl:part name="developerToken" element="impl:developerToken" />
+  </wsdl:message>
+  <wsdl:message name="email">
+    <wsdl:part name="email" element="impl:email" />
+  </wsdl:message>
+  <wsdl:message name="getAccountInfoRequest">
+    <wsdl:part name="parameters" element="impl:getAccountInfo" />
+  </wsdl:message>
+  <wsdl:message name="getAccountInfoResponse">
+    <wsdl:part name="parameters" element="impl:getAccountInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="getClientAccountsRequest">
+    <wsdl:part name="parameters" element="impl:getClientAccounts" />
+  </wsdl:message>
+  <wsdl:message name="getClientAccountsResponse">
+    <wsdl:part name="parameters" element="impl:getClientAccountsResponse" />
+  </wsdl:message>
+  <wsdl:message name="operations">
+    <wsdl:part name="operations" element="impl:operations" />
+  </wsdl:message>
+  <wsdl:message name="password">
+    <wsdl:part name="password" element="impl:password" />
+  </wsdl:message>
+  <wsdl:message name="requestId">
+    <wsdl:part name="requestId" element="impl:requestId" />
+  </wsdl:message>
+  <wsdl:message name="responseTime">
+    <wsdl:part name="responseTime" element="impl:responseTime" />
+  </wsdl:message>
+  <wsdl:message name="units">
+    <wsdl:part name="units" element="impl:units" />
+  </wsdl:message>
+  <wsdl:message name="updateAccountInfoRequest">
+    <wsdl:part name="parameters" element="impl:updateAccountInfo" />
+  </wsdl:message>
+  <wsdl:message name="updateAccountInfoResponse">
+    <wsdl:part name="parameters" element="impl:updateAccountInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="useragent">
+    <wsdl:part name="useragent" element="impl:useragent" />
+  </wsdl:message>
+  <wsdl:portType name="AccountInterface">
+    <wsdl:operation name="getAccountInfo">
+      <wsdl:input name="getAccountInfoRequest" message="impl:getAccountInfoRequest" />
+      <wsdl:output name="getAccountInfoResponse" message="impl:getAccountInfoResponse" />
+      <wsdl:fault name="ApiException" message="impl:ApiException" />
+    </wsdl:operation>
+    <wsdl:operation name="getClientAccounts">
+      <wsdl:input name="getClientAccountsRequest" message="impl:getClientAccountsRequest" />
+      <wsdl:output name="getClientAccountsResponse" message="impl:getClientAccountsResponse" />
+      <wsdl:fault name="ApiException" message="impl:ApiException" />
+    </wsdl:operation>
+    <wsdl:operation name="updateAccountInfo">
+      <wsdl:input name="updateAccountInfoRequest" message="impl:updateAccountInfoRequest" />
+      <wsdl:output name="updateAccountInfoResponse" message="impl:updateAccountInfoResponse" />
+      <wsdl:fault name="ApiException" message="impl:ApiException" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AccountServiceSoapBinding" type="impl:AccountInterface">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getAccountInfo">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getAccountInfoRequest">
+        <wsdlsoap:header message="impl:useragent" part="useragent" use="literal" />
+        <wsdlsoap:header message="impl:password" part="password" use="literal" />
+        <wsdlsoap:header message="impl:email" part="email" use="literal" />
+        <wsdlsoap:header message="impl:clientEmail" part="clientEmail" use="literal" />
+        <wsdlsoap:header message="impl:clientCustomerId" part="clientCustomerId" use="literal" />
+        <wsdlsoap:header message="impl:developerToken" part="developerToken" use="literal" />
+        <wsdlsoap:header message="impl:applicationToken" part="applicationToken" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAccountInfoResponse">
+        <wsdlsoap:header message="impl:responseTime" part="responseTime" use="literal" />
+        <wsdlsoap:header message="impl:operations" part="operations" use="literal" />
+        <wsdlsoap:header message="impl:units" part="units" use="literal" />
+        <wsdlsoap:header message="impl:requestId" part="requestId" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ApiException">
+        <wsdlsoap:fault use="literal" name="ApiException" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getClientAccounts">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getClientAccountsRequest">
+        <wsdlsoap:header message="impl:useragent" part="useragent" use="literal" />
+        <wsdlsoap:header message="impl:password" part="password" use="literal" />
+        <wsdlsoap:header message="impl:email" part="email" use="literal" />
+        <wsdlsoap:header message="impl:clientEmail" part="clientEmail" use="literal" />
+        <wsdlsoap:header message="impl:clientCustomerId" part="clientCustomerId" use="literal" />
+        <wsdlsoap:header message="impl:developerToken" part="developerToken" use="literal" />
+        <wsdlsoap:header message="impl:applicationToken" part="applicationToken" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getClientAccountsResponse">
+        <wsdlsoap:header message="impl:responseTime" part="responseTime" use="literal" />
+        <wsdlsoap:header message="impl:operations" part="operations" use="literal" />
+        <wsdlsoap:header message="impl:units" part="units" use="literal" />
+        <wsdlsoap:header message="impl:requestId" part="requestId" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ApiException">
+        <wsdlsoap:fault use="literal" name="ApiException" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="updateAccountInfo">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="updateAccountInfoRequest">
+        <wsdlsoap:header message="impl:useragent" part="useragent" use="literal" />
+        <wsdlsoap:header message="impl:password" part="password" use="literal" />
+        <wsdlsoap:header message="impl:email" part="email" use="literal" />
+        <wsdlsoap:header message="impl:clientEmail" part="clientEmail" use="literal" />
+        <wsdlsoap:header message="impl:clientCustomerId" part="clientCustomerId" use="literal" />
+        <wsdlsoap:header message="impl:developerToken" part="developerToken" use="literal" />
+        <wsdlsoap:header message="impl:applicationToken" part="applicationToken" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="updateAccountInfoResponse">
+        <wsdlsoap:header message="impl:responseTime" part="responseTime" use="literal" />
+        <wsdlsoap:header message="impl:operations" part="operations" use="literal" />
+        <wsdlsoap:header message="impl:units" part="units" use="literal" />
+        <wsdlsoap:header message="impl:requestId" part="requestId" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ApiException">
+        <wsdlsoap:fault use="literal" name="ApiException" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AccountService">
+    <wsdl:port name="AccountService" binding="impl:AccountServiceSoapBinding">
+      <wsdlsoap:address location="https://adwords.google.com/api/adwords/v12/AccountService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

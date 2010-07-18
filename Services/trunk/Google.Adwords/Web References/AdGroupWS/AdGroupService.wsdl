@@ -1,0 +1,2456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tns="https://adwords.google.com/api/adwords/cm/v200909" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="https://adwords.google.com/api/adwords/cm/v200909" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" elementFormDefault="qualified" targetNamespace="https://adwords.google.com/api/adwords/cm/v200909" jaxb:version="1.0">
+      <xsd:annotation>
+        <xsd:appinfo>
+          <jaxb:globalBindings typesafeEnumMaxMembers="999999" />
+        </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:complexType name="AdGroupServiceError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Represents possible error codes in AdGroupService.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:AdGroupServiceError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AuthenticationError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Errors returned when Authentication failed.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:AuthenticationError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AuthorizationError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Errors that are thrown due to an authorization problem.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:AuthorizationError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BiddingError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Represents bidding errors.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:BiddingError.Reason" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ClientTermsError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Encapsulates the errors thrown during client terms checks for adwords.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:ClientTermsError.Reason" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DatabaseError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Errors that are thrown due to a database access problem.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:DatabaseError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DateError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Errors associated with invalid dates and date ranges.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:DateError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DateRange">
+        <xsd:annotation>
+          <xsd:documentation>
+            Represents a range of dates that has either an upper or a lower bound.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="min" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                the lower bound of this date range, inclusive.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="max" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                the upper bound of this date range, inclusive.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="DistinctError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Errors related to distinct ids or content.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:DistinctError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DoubleValue">
+        <xsd:annotation>
+          <xsd:documentation>
+            Number value type for constructing double valued ranges.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:NumberValue">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="number" type="xsd:double">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    the underlying double value.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="EntityNotFound">
+        <xsd:annotation>
+          <xsd:documentation>
+            An id did not correspond to an entity, or it referred to an entity which does not belong to the
+            customer.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:EntityNotFound.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    Reason for this error.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="InternalApiError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Indicates that a server-side error has occured. {@code InternalApiError}s
+            are generally not the result of an invalid request or message sent by the
+            client.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:InternalApiError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="LongValue">
+        <xsd:annotation>
+          <xsd:documentation>
+            Number value type for constructing long valued ranges.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:NumberValue">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="number" type="xsd:long">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    the underlying long value.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="Money">
+        <xsd:annotation>
+          <xsd:documentation>
+            Represents a money amount.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ComparableValue">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="microAmount" type="xsd:long">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    Amount in micros. One million is equivalent to one unit.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="NewEntityCreationError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Error associated with creation of new entities using
+            {@link com.google.ads.api.services.common.id.TempId}s.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:NewEntityCreationError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="NotEmptyError">
+        <xsd:annotation>
+          <xsd:documentation>
+            A list of all errors associated with the @NotEmpty constraints.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:NotEmptyError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="NotWhitelistedError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Indicates that the customer is not whitelisted for accessing the API.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:NotWhitelistedError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="NullError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Errors associated with contents not null constraint.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:NullError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="NumberValue" abstract="true">
+        <xsd:annotation>
+          <xsd:documentation>
+            Number value types for constructing number valued ranges.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ComparableValue">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="OperationAccessDenied">
+        <xsd:annotation>
+          <xsd:documentation>
+            Unauthorized access errors as determined by the invoked service's
+            access policy.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:OperationAccessDenied.Reason" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="OperatorError">
+        <xsd:annotation>
+          <xsd:documentation>
+            A list of all errors associated with the @SupportedOperators constraints.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:OperatorError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="Paging">
+        <xsd:annotation>
+          <xsd:documentation>
+            Specifies what kind of paging wanted for the result of a get.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="startIndex" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+                Index of the first result to be returned.
+                &lt;span class="constraint InRange"&gt;This field must be between 0.0 and 2.147483647E9, inclusive.&lt;/span&gt;
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="numberResults" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+                Number of results, following the first result, to return starting from the one specified by
+                {@code startIndex}.
+                &lt;span class="constraint InRange"&gt;This field must be between 0.0 and 2.147483647E9, inclusive.&lt;/span&gt;
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="QuotaCheckError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Encapsulates the errors thrown during developer quota checks for webapi
+            calls.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:QuotaCheckError.Reason" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="QuotaError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Errors that are thrown if a quota limit is exceeded.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:QuotaError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="limit" type="xsd:int">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The number of entities allowed for this quota.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="QuotaExceededError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Used by WebAPI to convert QuotaExceededExceptions to ApiExceptions, which are
+            more suitable for user errors.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:QuotaExceededError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ReadOnlyError">
+        <xsd:annotation>
+          <xsd:documentation>
+            A list of all errors associated with the @ReadOnly constraint.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:ReadOnlyError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="RequiredError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Errors due to missing required field.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:RequiredError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SizeLimitError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Indicates that the number of entries in the request or response exceeds the system limit.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:SizeLimitError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SoapHeader">
+        <xsd:annotation>
+          <xsd:documentation>
+            Defines the required and optional elements within the header of a SOAP request.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="applicationToken" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                Application token to identify the caller making the call can access a valid
+                application repository in ads.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="authToken" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                Authentication token from Google ClientLogin API. Developers need to authenticate themselves
+                with that API before they can send a request to AdWords API. This header identifies either the
+                MCC manager acting on behalf of their client, or the advertiser managing their own account.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="clientCustomerId" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                Optional header: the external customer id of the client of the MCC manager. Applicable only
+                if an MCC manager, as identified by authToken, is acting on behalf of their client.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="clientEmail" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                Optional header: the login email of a client of the MCC manager. Applicable only
+                if an MCC manager, as identified by authToken, is acting on behalf of their client.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="developerToken" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                Developer token to identify that the person making the call has enough
+                quota.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="userAgent" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                UserAgent is used to track distribution of API client programs and
+                application usage. The client is responsible for putting in a meaningful
+                value for tracking purposes. To be clear this is not the same as an HTTP
+                user agent.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="validateOnly" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                Used to validate the request without executing it.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SoapResponseHeader">
+        <xsd:annotation>
+          <xsd:documentation>
+            Defines the elements within the header of a SOAP response.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="requestId" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                Unique id that identifies this request. If developers have any support issues, sending us
+                this id will enable us to find their request more easily.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="operations" type="xsd:long">
+            <xsd:annotation>
+              <xsd:documentation>
+                Number of operations performed for this SOAP request.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="responseTime" type="xsd:long">
+            <xsd:annotation>
+              <xsd:documentation>
+                Elapsed time in milliseconds between the AdWords API receiving the request and sending the
+                response.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="units" type="xsd:long">
+            <xsd:annotation>
+              <xsd:documentation>
+                Total number of API units the SOAP request used.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="StatsQueryError">
+        <xsd:annotation>
+          <xsd:documentation>
+            Represents possible error codes when querying for stats.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApiError">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="reason" type="tns:StatsQueryError.Reason">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The error reason represented by an enum.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="StatsSelector">
+        <xsd:annotation>
+          <xsd:documentation>
+            Selects statistics for date range.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="dateRange" type="tns:DateRange">
+            <xsd:annotation>
+              <xsd:documentation>
+                Date range to get stats for. "All time" if unspecified.
+                &lt;span class="constraint DateRangeWithinRange"&gt;This range must be contained within the range [1970-01-01, 2038-01-01].&lt;/span&gt;
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="StatsSelector.Type" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                This field indicates the subtype of StatsSelector of this instance.  It is ignored
+                on input, and instead xsi:type should be specified.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ComparableValue" abstract="true">
+        <xsd:annotation>
+          <xsd:documentation>
+            Comparable types for constructing ranges with.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ComparableValue.Type" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                This field indicates the subtype of ComparableValue of this instance.  It is ignored
+                on input, and instead xsi:type should be specified.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Stats">
+        <xsd:annotation>
+          <xsd:documentation>
+            Statistics about an ad or criterion within an adgroup or campaign.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="startDate" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                Starting date (inclusive) of the statistics.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="endDate" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                Ending date (inclusive) of the statistics.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="network" type="tns:Stats.Network">
+            <xsd:annotation>
+              <xsd:documentation>
+                The ad network which the stats are for.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="clicks" type="xsd:long">
+            <xsd:annotation>
+              <xsd:documentation>
+                Number of clicks.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="impressions" type="xsd:long">
+            <xsd:annotation>
+              <xsd:documentation>
+                Number of impressions.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="cost" type="tns:Money">
+            <xsd:annotation>
+              <xsd:documentation>
+                Cost.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="averagePosition" type="xsd:double">
+            <xsd:annotation>
+              <xsd:documentation>
+                Average position of ads.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="averageCpc" type="tns:Money">
+            <xsd:annotation>
+              <xsd:documentation>
+                Average Cost Per Conversion.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="averageCpm" type="tns:Money">
+            <xsd:annotation>
+              <xsd:documentation>
+                Average Cost Per Impression.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ctr" type="xsd:double">
+            <xsd:annotation>
+              <xsd:documentation>
+                Click Through Rate.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="conversions" type="xsd:long">
+            <xsd:annotation>
+              <xsd:documentation>
+                Number of conversions.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="conversionRate" type="xsd:double">
+            <xsd:annotation>
+              <xsd:documentation>
+                Conversion Rate.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="costPerConversion" type="tns:Money">
+            <xsd:annotation>
+              <xsd:documentation>
+                Cost per Conversion.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="conversionsManyPerClick" type="xsd:long">
+            <xsd:annotation>
+              <xsd:documentation>
+                Number of conversions (many-per-click).
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="conversionRateManyPerClick" type="xsd:double">
+            <xsd:annotation>
+              <xsd:documentation>
+                Conversion Rate (many-per-click).
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="costPerConversionManyPerClick" type="tns:Money">
+            <xsd:annotation>
+              <xsd:documentation>
+                Cost per Conversion (many-per-click).
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Stats.Type" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                This field indicates the subtype of Stats of this instance.  It is ignored
+                on input, and instead xsi:type should be specified.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ApiError" abstract="true">
+        <xsd:annotation>
+          <xsd:documentation>
+            A service api error base class that provides error details.
+            1) the OGNL field path is provided for parsers.
+            2) the OGNL field path with debug comments easily helps track causes.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="fieldPath" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                The OGNL field path to identify cause of error.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="trigger" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                The data that caused the error.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ApiError.Type" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                This field indicates the subtype of ApiError of this instance.  It is ignored
+                on input, and instead xsi:type should be specified.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ApiException">
+        <xsd:annotation>
+          <xsd:documentation>
+            Exception class for holding a list of service errors.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ApplicationException">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="errors" type="tns:ApiError">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    List of errors.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ApplicationException">
+        <xsd:annotation>
+          <xsd:documentation>
+            Base class for exceptions.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="message" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                Error message.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ApplicationException.Type" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                This field indicates the subtype of ApplicationException of this instance.  It is ignored
+                on input, and instead xsi:type should be specified.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Bid">
+        <xsd:annotation>
+          <xsd:documentation>
+            Represents a bid on a criterion.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="amount" type="tns:Money">
+            <xsd:annotation>
+              <xsd:documentation>
+                Bid amount.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BudgetOptimizerAdGroupBids">
+        <xsd:annotation>
+          <xsd:documentation>
+            Adgroup level bids used in budget optimizer bidding strategy.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:AdGroupBids">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="proxyKeywordMaxCpc" type="tns:Bid">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    Proxy bid set by budget optimizer:
+                    &lt;span class="constraint ReadOnly"&gt;This field is read only and should not be set.&lt;/span&gt;
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="proxySiteMaxCpc" type="tns:Bid">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    Proxy bid set by budget optimizer:
+                    &lt;span class="constraint ReadOnly"&gt;This field is read only and should not be set.&lt;/span&gt;
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ConversionOptimizerAdGroupBids">
+        <xsd:annotation>
+          <xsd:documentation>
+            Adgroup level bids used in conversion optimizer bidding strategy.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:AdGroupBids">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="targetCpa" type="tns:Bid">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    Target cost per acquisition/conversion.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ManualCPCAdGroupBids">
+        <xsd:annotation>
+          <xsd:documentation>
+            Adgroup level bids used in manual CPC bidding strategy.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:AdGroupBids">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="keywordMaxCpc" type="tns:Bid">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    Max CPC (cost per click) bid for keyword targeting on search network.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="keywordContentMaxCpc" type="tns:Bid">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    Max CPC bid for keyword targeting on content network.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="siteMaxCpc" type="tns:Bid">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    Max CPC bid for site targeting.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ManualCPMAdGroupBids">
+        <xsd:annotation>
+          <xsd:documentation>
+            Adgroup level bids used in manual CPM bidding strategy.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:AdGroupBids">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="maxCpm" type="tns:Bid">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    Max CPM (cost per thousand impressions) bid.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AdGroupBids" abstract="true">
+        <xsd:annotation>
+          <xsd:documentation>
+            Represents bids at the adgroup level, which could be of different subtypes based on
+            campaign's bidding strategy.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="AdGroupBids.Type" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                This field indicates the subtype of AdGroupBids of this instance.  It is ignored
+                on input, and instead xsi:type should be specified.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdGroupSelector">
+        <xsd:annotation>
+          <xsd:documentation>
+            A selector used to specify which adgroups should be returned.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="campaignId" type="xsd:long">
+            <xsd:annotation>
+              <xsd:documentation>
+                Campaign id to select adgroups from.
+                
+                Only one of 'campaignId' and 'adGroupIds' fields should be specified.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="adGroupIds" type="xsd:long">
+            <xsd:annotation>
+              <xsd:documentation>
+                List of adgroup ids to select.
+                
+                Only one of 'campaignId' and 'adGroupIds' fields should be specified.
+                &lt;span class="constraint ContentsDistinct"&gt;This field must contain distinct elements.&lt;/span&gt;
+                &lt;span class="constraint ContentsNotNull"&gt;This field must not contain {@code null} elements.&lt;/span&gt;
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="statsSelector" type="tns:StatsSelector">
+            <xsd:annotation>
+              <xsd:documentation>
+                Selects stats that the returned adgroups will include.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="paging" type="tns:Paging" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdGroup">
+        <xsd:annotation>
+          <xsd:documentation>
+            Represents the AdGroup object that is sent over the wire.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="id" type="xsd:long">
+            <xsd:annotation>
+              <xsd:documentation>
+                AdGroup id
+                &lt;span class="constraint ReadOnly"&gt;This field is read only and should not be set for following {@link Operator}s : ADD.&lt;/span&gt;
+                &lt;span class="constraint Required"&gt;This field is required and should not be {@code null} when it is contained within {@link Operator}s : SET, REMOVE.&lt;/span&gt;
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="campaignId" type="xsd:long">
+            <xsd:annotation>
+              <xsd:documentation>
+                Campaign id
+                &lt;span class="constraint Required"&gt;This field is required and should not be {@code null} when it is contained within {@link Operator}s : ADD.&lt;/span&gt;
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="campaignName" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                Campaign name
+                &lt;span class="constraint ReadOnly"&gt;This field is read only and should not be set for following {@link Operator}s : ADD.&lt;/span&gt;
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="name" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                AdGroup name
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="status" type="tns:AdGroup.Status">
+            <xsd:annotation>
+              <xsd:documentation>
+                AdGroup status
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="bids" type="tns:AdGroupBids">
+            <xsd:annotation>
+              <xsd:documentation>
+                Bids applicable to current bidding strategy that the campaign is in
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="stats" type="tns:Stats">
+            <xsd:annotation>
+              <xsd:documentation>
+                AdGroup statistics. {@code Output only if requested.}
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdGroupOperation">
+        <xsd:annotation>
+          <xsd:documentation>
+            AdGroup operations for adding/updating/removing adgroups.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:Operation">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="operand" type="tns:AdGroup">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    AdGroup to operate on
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AdGroupPage">
+        <xsd:annotation>
+          <xsd:documentation>
+            Contains a subset of adgroup resulting from the filtering and paging of the
+            {@link com.google.ads.api.services.campaignmgmt.adgroup.AdGroupService#get} call
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:Page">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="entries" type="tns:AdGroup">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The result entries in this page.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AdGroupReturnValue">
+        <xsd:annotation>
+          <xsd:documentation>
+            A container for return values from the AdGroupAdService.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:ListReturnValue">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="value" type="tns:AdGroup">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    List of AdGroups
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ListReturnValue" abstract="true">
+        <xsd:annotation>
+          <xsd:documentation>
+            Base list return value type.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ListReturnValue.Type" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                This field indicates the subtype of ListReturnValue of this instance.  It is ignored
+                on input, and instead xsi:type should be specified.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Operation" abstract="true">
+        <xsd:annotation>
+          <xsd:documentation>
+            This represents an operation that includes an operator and an operand
+            specified type.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="operator" type="tns:Operator">
+            <xsd:annotation>
+              <xsd:documentation>
+                Operator.
+                &lt;span class="constraint Required"&gt;This field is required and should not be {@code null}.&lt;/span&gt;
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Operation.Type" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                This field indicates the subtype of Operation of this instance.  It is ignored
+                on input, and instead xsi:type should be specified.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Page" abstract="true">
+        <xsd:annotation>
+          <xsd:documentation>
+            Contains the results from a get call.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="totalNumEntries" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+                Total number of entries in the result that this page is a part of.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Page.Type" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                This field indicates the subtype of Page of this instance.  It is ignored
+                on input, and instead xsi:type should be specified.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="AdGroup.Status">
+        <xsd:annotation>
+          <xsd:documentation>
+            The status of the AdGroup.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="ENABLED">
+            <xsd:annotation>
+              <xsd:documentation>
+                AdGroup is active. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="PAUSED">
+            <xsd:annotation>
+              <xsd:documentation>
+                AdGroup is paused. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="DELETED">
+            <xsd:annotation>
+              <xsd:documentation>
+                AdGroup has been deleted. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="AdGroupServiceError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for the adgroup service error. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="ADGROUP_CAMPAIGN_MISMATCH" />
+          <xsd:enumeration value="DUPLICATE_ADGROUP_NAME" />
+          <xsd:enumeration value="INVALID_ADGROUP_ID" />
+          <xsd:enumeration value="INVALID_ADGROUP_NAME" />
+          <xsd:enumeration value="USE_SET_OPERATOR_AND_MARK_STATUS_TO_DELETED" />
+          <xsd:enumeration value="ADVERTISER_NOT_ON_CONTENT_NETWORK">
+            <xsd:annotation>
+              <xsd:documentation>
+                bid errors 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="BID_EXCEEDS_AUTO_BUDGET" />
+          <xsd:enumeration value="BID_EXCEEDS_CUSTOM_BUDGET" />
+          <xsd:enumeration value="BID_EXCEEDS_DAILY_BUDGET" />
+          <xsd:enumeration value="BID_EXCEEDS_MONTHLY_BUDGET" />
+          <xsd:enumeration value="BID_TOO_BIG" />
+          <xsd:enumeration value="BID_TOO_SMALL" />
+          <xsd:enumeration value="BID_TYPE_AND_BIDDING_STRATEGY_MISMATCH" />
+          <xsd:enumeration value="BIDS_NOT_REQUIRED" />
+          <xsd:enumeration value="ILLEGAL_MANUAL_BID" />
+          <xsd:enumeration value="INCOMPATIBLE_WITH_KEYWORD_AND_SITE_VBB" />
+          <xsd:enumeration value="INCOMPATIBLE_WITH_KEYWORD_CPC" />
+          <xsd:enumeration value="INCOMPATIBLE_WITH_KEYWORD_CPC_AND_SITE_CPC" />
+          <xsd:enumeration value="INCOMPATIBLE_WITH_KEYWORD_CPM" />
+          <xsd:enumeration value="INCOMPATIBLE_WITH_KEYWORD_CPM_AND_SITE_CPM" />
+          <xsd:enumeration value="INCOMPATIBLE_WITH_SITE_CPC" />
+          <xsd:enumeration value="INCOMPATIBLE_WITH_SITE_CPM" />
+          <xsd:enumeration value="INCOMPATIBLE_WITH_VBB" />
+          <xsd:enumeration value="INCOMPATIBLE_WITH_SITE_VBB" />
+          <xsd:enumeration value="INVALID_BID" />
+          <xsd:enumeration value="MISSING_ADGROUP_NAME" />
+          <xsd:enumeration value="MISSING_BID" />
+          <xsd:enumeration value="MULTIPLE_BID_TYPES" />
+          <xsd:enumeration value="NO_CAMPAIGN_BUDGET" />
+          <xsd:enumeration value="NOT_WHITELISTED_FOR_SITE_CPC" />
+          <xsd:enumeration value="SEPARATE_CONTENT_BIDS_INAPPLICABLE" />
+          <xsd:enumeration value="SEPARATE_CONTENT_BIDS_NOT_ENABLED" />
+          <xsd:enumeration value="TOO_MANY_FRACTION_DIGITS" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="AuthenticationError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The single reason for the authentication failure.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="AUTHENTICATION_FAILED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Authentication of the request failed.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="CLIENT_CUSTOMER_ID_IS_REQUIRED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Client Customer Id is required if CustomerIdMode is set to CLIENT_EXTERNAL_CUSTOMER_ID. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="CLIENT_EMAIL_REQUIRED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Client Email is required if CustomerIdMode is set to CLIENT_EXTERNAL_EMAIL_FIELD. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="CLIENT_CUSTOMER_ID_INVALID">
+            <xsd:annotation>
+              <xsd:documentation>
+                Client customer Id is not a number. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="CLIENT_EMAIL_INVALID">
+            <xsd:annotation>
+              <xsd:documentation>
+                Client customer Id is not a number. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="CLIENT_EMAIL_FAILED_TO_AUTHENTICATE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Client email is not a valid customer email. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="CUSTOMER_NOT_FOUND">
+            <xsd:annotation>
+              <xsd:documentation>
+                No customer found for the customer id provided in the header. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="GOOGLE_ACCOUNT_DELETED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Client's Google Account is deleted. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="GOOGLE_ACCOUNT_COOKIE_INVALID">
+            <xsd:annotation>
+              <xsd:documentation>
+                Google account login token in the cookie is invalid. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="FAILED_TO_AUTHENTICATE_GOOGLE_ACCOUNT">
+            <xsd:annotation>
+              <xsd:documentation>
+                problem occurred during Google account authentication. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="GOOGLE_ACCOUNT_USER_AND_ADS_USER_MISMATCH">
+            <xsd:annotation>
+              <xsd:documentation>
+                The user in the google account login token does not match the UserId in the cookie. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="LOGIN_COOKIE_REQUIRED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Login cookie is required for authentication. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="NOT_ADS_USER">
+            <xsd:annotation>
+              <xsd:documentation>
+                User in the cookie is not a valid Ads user. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="OAUTH_TOKEN_INVALID">
+            <xsd:annotation>
+              <xsd:documentation>
+                Oauth token in the header is not valid. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="OAUTH_TOKEN_EXPIRED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Oauth token in the header has expired. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="OAUTH_TOKEN_DISABLED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Oauth token in the header has been disabled. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="OAUTH_TOKEN_REVOKED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Oauth token in the header has been revoked. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="OAUTH_TOKEN_HEADER_INVALID">
+            <xsd:annotation>
+              <xsd:documentation>
+                Oauth token HTTP header is malformed. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="LOGIN_COOKIE_INVALID">
+            <xsd:annotation>
+              <xsd:documentation>
+                Login cookie is not valid. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="FAILED_TO_RETRIEVE_LOGIN_COOKIE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Failed to decrypt the login cookie. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="USER_ID_INVALID">
+            <xsd:annotation>
+              <xsd:documentation>
+                User Id in the header is not a valid id. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="AuthorizationError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for the database error.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="UNABLE_TO_AUTHORIZE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Could not complete authorization due to an internal problem.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="NO_ADWORDS_ACCOUNT_FOR_CUSTOMER">
+            <xsd:annotation>
+              <xsd:documentation>
+                Customer has no AdWords account.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="USER_PERMISSION_DENIED">
+            <xsd:annotation>
+              <xsd:documentation>
+                User doesn't have permission to access customer.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="EFFECTIVE_USER_PERMISSION_DENIED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Effective user doesn't have permission to access this customer.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="USER_HAS_READONLY_PERMISSION">
+            <xsd:annotation>
+              <xsd:documentation>
+                User has read-only permission cannot mutate.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="NO_CUSTOMER_FOUND">
+            <xsd:annotation>
+              <xsd:documentation>
+                No customer found.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="BiddingError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            Reason for bidding error. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="BID_AMOUNT_REQUIRED" />
+          <xsd:enumeration value="BID_INCOMPATIBLE_WITH_ADGROUP" />
+          <xsd:enumeration value="BID_UNIVERSAL_CRITERIA_EXPECTED" />
+          <xsd:enumeration value="BIDS_DO_NOT_FULFILL_SPEC" />
+          <xsd:enumeration value="BID_TOO_SMALL">
+            <xsd:annotation>
+              <xsd:documentation>
+                Bid amount is too small.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="BID_TOO_BIG">
+            <xsd:annotation>
+              <xsd:documentation>
+                Bid amount is too big.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="BID_TOO_MANY_FRACTIONAL_DIGITS">
+            <xsd:annotation>
+              <xsd:documentation>
+                Bid has too many fractional digit precision.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="NETWORK_NOT_OVERRIDEABLE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Override bid not allowed for the specified network
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="NON_POSITIVE_BID">
+            <xsd:annotation>
+              <xsd:documentation>
+                Bids must have a positive amount
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="CURRENCY_MISMATCH">
+            <xsd:annotation>
+              <xsd:documentation>
+                A bid's currency must match the campaign's currency
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="BID_TOO_HIGH_FOR_DAILY_BUDGET">
+            <xsd:annotation>
+              <xsd:documentation>
+                Bid is too high for the daily budget.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="BID_TOO_HIGH_FOR_MONTHLY_BUDGET">
+            <xsd:annotation>
+              <xsd:documentation>
+                Bid is too high for the monthly budget.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="ADGROUPS_DO_NOT_MATCH_CONSTRAINT" />
+          <xsd:enumeration value="NETWORK_SETTINGS_DO_NOT_SUPPORT_TRANSITION" />
+          <xsd:enumeration value="UNSUPPORTED_STYLE_TRANSITION" />
+          <xsd:enumeration value="UNSUPPORTED_PROXY_BIDDER_STRATEGY_TRANSITION" />
+          <xsd:enumeration value="TRANSITION_DOES_NOT_SUPPORT_OPTION" />
+          <xsd:enumeration value="TRANSITION_DOES_NOT_SUPPORT_GOAL" />
+          <xsd:enumeration value="PROXY_BIDDER_STRATEGY_INCOMPATIBLE_WITH_STYLE" />
+          <xsd:enumeration value="GOAL_DOES_NOT_FULFILL_SPEC" />
+          <xsd:enumeration value="GOAL_VALIDATION_FAILED" />
+          <xsd:enumeration value="UNSUPPORTED_STYLE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Unsupported combination of CriterionType and ChargeableEvent 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="BAD_BID_COMBINATION">
+            <xsd:annotation>
+              <xsd:documentation>
+                Can't infer the BiddingStyle from a campaign's adgroups' default bids,
+                because they don't map to any known bidding style
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="CANNOT_TARGET_UNIVERSE" />
+          <xsd:enumeration value="NO_DESTINATION_URL_SPECIFIED" />
+          <xsd:enumeration value="NO_EFFECTIVE_BID" />
+          <xsd:enumeration value="CRITERION_NOT_TARGETED" />
+          <xsd:enumeration value="CANNOT_EXCLUDE_DEFAULT" />
+          <xsd:enumeration value="CANNOT_TARGET_AND_EXCLUDE" />
+          <xsd:enumeration value="ILLEGAL_URL" />
+          <xsd:enumeration value="BID_TO_POSITION_NOT_ENABLED" />
+          <xsd:enumeration value="POSITION_PREFERENCE_NOT_ENABLED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Position preference is not enabled.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="POSITION_PREFERENCE_NOT_SUPPORTED_FOR_CRITERIA_TYPE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Position preference is supported only for keyword criteria.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="PREFERRED_POSITION_OUT_OF_RANGE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Preferred top position is not in the range (1..9)
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="BOTTOM_POSITION_OUT_OF_RANGE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Bottom position is not in the range (1..10)
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="PREFERRED_POSITION_CANNOT_BE_HIGHER_THAN_BOTTOM">
+            <xsd:annotation>
+              <xsd:documentation>
+                Preferred position is greater than the bottom position
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="CAMPAIGN_ALREADY_SET" />
+          <xsd:enumeration value="PROXY_NOT_ENABLED" />
+          <xsd:enumeration value="CANNOT_UPDATE_SITE_BIDS_WHILE_PROXY_BIDDING" />
+          <xsd:enumeration value="MUST_EXCLUDE_0_TO_17_WITH_OTHER_AGE_EXCLUSIONS" />
+          <xsd:enumeration value="AUCTION_STRATEGY_INCOMPATIBLE_WITH_PROXY_BIDDER" />
+          <xsd:enumeration value="CAMPAIGN_MUST_HAVE_A_BUDGET_TO_ENABLE_BUDGET_OPTIMIZER" />
+          <xsd:enumeration value="CANNOT_SET_CONTENT_BID_WITHOUT_SETTING_KEYWORD_MAX_CPC_AS_WELL" />
+          <xsd:enumeration value="PAY_PER_CONVERSION_NOT_AVAILABLE_FOR_CUSTOMER" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="ClientTermsError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            Enums for the various reasons an error can be thrown as a result of
+            ClientTerms violation.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="INCOMPLETE_SIGNUP_CURRENT_ADWORDS_TNC_NOT_AGREED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Customer has not agreed to the latest adwords t&amp;c 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="DatabaseError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for the database error. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="CONCURRENT_MODIFICATION">
+            <xsd:annotation>
+              <xsd:documentation>
+                A concurrency problem occurred as two threads were attempting to modify same object. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="PERMISSION_DENIED">
+            <xsd:annotation>
+              <xsd:documentation>
+                The permission was denied to access an object. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="CAMPAIGN_PRODUCT_NOT_SUPPORTED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Requested campaign belongs to a product that is not supported by the api. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="DateError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for the target error. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="INVALID_FIELD_VALUES_IN_DATE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Given field values do not correspond to a valid date. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="INVALID_STRING_DATE">
+            <xsd:annotation>
+              <xsd:documentation>
+                The string date's format should be yyyymmdd. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="INVALID_STRING_DATE_RANGE">
+            <xsd:annotation>
+              <xsd:documentation>
+                The string date range's format should be yyyymmdd yyyymmdd. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="INVALID_STRING_DATE_TIME">
+            <xsd:annotation>
+              <xsd:documentation>
+                The string date time's format should be yyyymmdd hhmmss [tz]. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="EARLIER_THAN_MINIMUM_DATE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Date is before allowed minimum. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="LATER_THAN_MAXIMUM_DATE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Date is after allowed maximum. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="DATE_RANGE_MINIMUM_DATE_LATER_THAN_MAXIMUM_DATE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Date range bounds are not in order. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="DATE_RANGE_MINIMUM_AND_MAXIMUM_DATES_BOTH_NULL">
+            <xsd:annotation>
+              <xsd:documentation>
+                Both dates in range are null. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="DistinctError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for the validation error. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="DUPLICATE_ELEMENT" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="EntityNotFound.Reason">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="INVALID_ID">
+            <xsd:annotation>
+              <xsd:documentation>
+                The specified id refered to an entity which either doesn't exist or is not accessible to the
+                customer. e.g. campaign belongs to another customer.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="InternalApiError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The single reason for the internal API error.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="UNEXPECTED_INTERNAL_API_ERROR">
+            <xsd:annotation>
+              <xsd:documentation>
+                API encountered an unexpected internal error.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="NewEntityCreationError.Reason">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="CANNOT_SET_ID_FOR_ADD">
+            <xsd:annotation>
+              <xsd:documentation>
+                Do not set the id field while creating new entities. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="NotEmptyError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for the validation error. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="EMPTY_LIST" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="NotWhitelistedError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The single reason for the whitelist error.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="CUSTOMER_NOT_WHITELISTED_FOR_API">
+            <xsd:annotation>
+              <xsd:documentation>
+                Customer is not whitelisted for accessing the API.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="NullError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for the validation error. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="NULL_CONTENT">
+            <xsd:annotation>
+              <xsd:documentation>
+                Specified list/container must not contain any null elements 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="OperationAccessDenied.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for the operation access error. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="ACTION_NOT_PERMITTED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Unauthorized invocation of a service's method (get, mutate, etc.) 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="ADD_OPERATION_NOT_PERMITTED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Unauthorized ADD operation in invoking a service's mutate method. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="REMOVE_OPERATION_NOT_PERMITTED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Unauthorized REMOVE operation in invoking a service's mutate method. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="SET_OPERATION_NOT_PERMITTED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Unauthorized SET operation in invoking a service's mutate method. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="Operator">
+        <xsd:annotation>
+          <xsd:documentation>
+            This represents an operator that may be presented to an adsapi service.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="ADD">
+            <xsd:annotation>
+              <xsd:documentation>
+                The ADD operator. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="REMOVE">
+            <xsd:annotation>
+              <xsd:documentation>
+                The REMOVE operator. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="SET">
+            <xsd:annotation>
+              <xsd:documentation>
+                The SET operator (used for updates). 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="OperatorError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for the validation error. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="OPERATOR_NOT_SUPPORTED" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="QuotaCheckError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            Enums for all the reasons an error can be thrown to the user during
+            billing quota checks.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="INVALID_TOKEN_HEADER">
+            <xsd:annotation>
+              <xsd:documentation>
+                Customer passed in an invalid token in the header. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="ACCOUNT_DELINQUENT">
+            <xsd:annotation>
+              <xsd:documentation>
+                Customer is marked delinquent. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="ACCOUNT_INACCESSIBLE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Customer is a fraudulent. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="ACCOUNT_INACTIVE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Inactive Account. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="INCOMPLETE_SIGNUP">
+            <xsd:annotation>
+              <xsd:documentation>
+                Signup not complete 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="INCOMPLETE_SIGNUP_APP_INFO_MISSING">
+            <xsd:annotation>
+              <xsd:documentation>
+                App info missing. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="INCOMPLETE_SIGNUP_APP_INFO_PENDING">
+            <xsd:annotation>
+              <xsd:documentation>
+                Incomplete App info. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="INCOMPLETE_SIGNUP_APP_INFO_REJECTED">
+            <xsd:annotation>
+              <xsd:documentation>
+                App info rejected. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="INCOMPLETE_SIGNUP_LATEST_NETAPI_TNC_NOT_AGREED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Latest Netapi T&amp;C not agreed. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="INCOMPLETE_SIGNUP_NO_BILLING_INFO">
+            <xsd:annotation>
+              <xsd:documentation>
+                No Billing Info. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="INCOMPLETE_SIGNUP_USER_INFO_MISSING">
+            <xsd:annotation>
+              <xsd:documentation>
+                User Info missing. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="INCOMPLETE_SIGNUP_USER_INFO_PENDING">
+            <xsd:annotation>
+              <xsd:documentation>
+                User Info pending. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="INCOMPLETE_SIGNUP_USER_INFO_REJECTED">
+            <xsd:annotation>
+              <xsd:documentation>
+                User Info rejected. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="MONTHLY_BUDGET_REACHED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Monthly budget quota reached. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="QUOTA_EXCEEDED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Monthly budget quota exceeded. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="QuotaError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for the quota error. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="TOO_MANY_ADGROUPS_PER_CAMPAIGN">
+            <xsd:annotation>
+              <xsd:documentation>
+                Too many ad groups per campaign. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="TOO_MANY_CAMPAIGNS_PER_ACCOUNT">
+            <xsd:annotation>
+              <xsd:documentation>
+                Too many campaigns per account. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="TOO_MANY_CONVERSION_TYPES_PER_ACCOUNT">
+            <xsd:annotation>
+              <xsd:documentation>
+                Too many conversion types per account. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="TOO_MANY_KEYWORDS_PER_ADGROUP">
+            <xsd:annotation>
+              <xsd:documentation>
+                Too many keywords per ad group. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="TOO_MANY_KEYWORDS_PER_CAMPAIGN">
+            <xsd:annotation>
+              <xsd:documentation>
+                Too many keywords per campaign. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="TOO_MANY_KEYWORDS_PER_CUSTOMER">
+            <xsd:annotation>
+              <xsd:documentation>
+                Too many keywords per customer. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="TOO_MANY_SITES_PER_ADGROUP">
+            <xsd:annotation>
+              <xsd:documentation>
+                Too many sites per ad group. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="TOO_MANY_SITES_PER_CAMPAIGN">
+            <xsd:annotation>
+              <xsd:documentation>
+                Too many sites per campaign. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="QuotaExceededError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The single reason for the quota error.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="QUOTA_EXCEEDED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Quota exceeded.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="ReadOnlyError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for the target error. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="READ_ONLY" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="RequiredError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for the target error. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="REQUIRED">
+            <xsd:annotation>
+              <xsd:documentation>
+                Missing required field. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="SizeLimitError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for Ad Scheduling errors. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="REQUEST_SIZE_LIMIT_EXCEEDED">
+            <xsd:annotation>
+              <xsd:documentation>
+                The number of entries in the request exceeds the system limit. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="RESPONSE_SIZE_LIMIT_EXCEEDED">
+            <xsd:annotation>
+              <xsd:documentation>
+                The number of entries in the response exceeds the system limit. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="Stats.Network">
+        <xsd:annotation>
+          <xsd:documentation>
+            Ad network.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="SEARCH">
+            <xsd:annotation>
+              <xsd:documentation>
+                Aggregate of {@code GOOGLE_SEARCH} and {@code SEARCH_NETWORK}.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="GOOGLE_SEARCH" />
+          <xsd:enumeration value="SEARCH_NETWORK" />
+          <xsd:enumeration value="CONTENT">
+            <xsd:annotation>
+              <xsd:documentation>
+                Aggregate of {@code CONTENT_KEYWORD_BID} and {@code CONTENT_PLACEMENT_BID}.
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="CONTENT_KEYWORD_BID" />
+          <xsd:enumeration value="CONTENT_PLACEMENT_BID" />
+          <xsd:enumeration value="ALL" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="StatsQueryError.Reason">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reasons for errors when querying for stats. 
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="DATE_NOT_IN_VALID_RANGE">
+            <xsd:annotation>
+              <xsd:documentation>
+                Date is outside of allowed range. 
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:element name="get">
+        <xsd:annotation>
+          <xsd:documentation>
+            Returns a list of all the ad groups specified by the ad group selector
+            from the target customer's account.
+            
+            @param selector AdGroupSelector
+            @return list of adgroups identified by the AdGroupSelector
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="selector" type="tns:AdGroupSelector">
+              <xsd:annotation>
+                <xsd:documentation>
+                  &lt;span class="constraint Required"&gt;This field is required and should not be {@code null}.&lt;/span&gt;
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="rval" type="tns:AdGroupPage" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ApiExceptionFault" type="tns:ApiException">
+        <xsd:annotation>
+          <xsd:documentation>
+            A fault element of type ApiException.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="mutate">
+        <xsd:annotation>
+          <xsd:documentation>
+            Mutates (add, remove and set) ad groups as specified by the operations.
+            Note: to REMOVE use SET and mark status to DELETE.
+            @param operations list of unique operations. The same ad group cannot be
+            specified in more than one operation.
+            @return the updated adgroups.
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="operations" type="tns:AdGroupOperation">
+              <xsd:annotation>
+                <xsd:documentation>
+                  &lt;span class="constraint ContentsNotNull"&gt;This field must not contain {@code null} elements.&lt;/span&gt;
+                  &lt;span class="constraint DistinctIds"&gt;Elements in this field must have distinct IDs for following {@link Operator}s : SET, REMOVE.&lt;/span&gt;
+                  &lt;span class="constraint NotEmpty"&gt;This field must contain at least one element.&lt;/span&gt;
+                  &lt;span class="constraint Required"&gt;This field is required and should not be {@code null}.&lt;/span&gt;
+                  &lt;span class="constraint SuppoprtedOperators"&gt;The following {@link Operator}s are supported: ADD, SET.&lt;/span&gt;
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="mutateResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="rval" type="tns:AdGroupReturnValue" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="RequestHeader" type="tns:SoapHeader" />
+      <xsd:element name="ResponseHeader" type="tns:SoapResponseHeader" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="RequestHeader">
+    <wsdl:part name="RequestHeader" element="tns:RequestHeader" />
+  </wsdl:message>
+  <wsdl:message name="ResponseHeader">
+    <wsdl:part name="ResponseHeader" element="tns:ResponseHeader" />
+  </wsdl:message>
+  <wsdl:message name="getRequest">
+    <wsdl:part name="parameters" element="tns:get" />
+  </wsdl:message>
+  <wsdl:message name="getResponse">
+    <wsdl:part name="parameters" element="tns:getResponse" />
+  </wsdl:message>
+  <wsdl:message name="ApiException">
+    <wsdl:part name="ApiException" element="tns:ApiExceptionFault" />
+  </wsdl:message>
+  <wsdl:message name="mutateRequest">
+    <wsdl:part name="parameters" element="tns:mutate" />
+  </wsdl:message>
+  <wsdl:message name="mutateResponse">
+    <wsdl:part name="parameters" element="tns:mutateResponse" />
+  </wsdl:message>
+  <wsdl:portType name="AdGroupServiceInterface">
+    <wsdl:documentation>
+      Api service to get/mutate ad groups.
+    </wsdl:documentation>
+    <wsdl:operation name="get">
+      <wsdl:documentation>
+        Returns a list of all the ad groups specified by the ad group selector
+        from the target customer's account.
+        
+        @param selector AdGroupSelector
+        @return list of adgroups identified by the AdGroupSelector
+      </wsdl:documentation>
+      <wsdl:input name="getRequest" message="tns:getRequest" />
+      <wsdl:output name="getResponse" message="tns:getResponse" />
+      <wsdl:fault name="ApiException" message="tns:ApiException" />
+    </wsdl:operation>
+    <wsdl:operation name="mutate">
+      <wsdl:documentation>
+        Mutates (add, remove and set) ad groups as specified by the operations.
+        Note: to REMOVE use SET and mark status to DELETE.
+        @param operations list of unique operations. The same ad group cannot be
+        specified in more than one operation.
+        @return the updated adgroups.
+      </wsdl:documentation>
+      <wsdl:input name="mutateRequest" message="tns:mutateRequest" />
+      <wsdl:output name="mutateResponse" message="tns:mutateResponse" />
+      <wsdl:fault name="ApiException" message="tns:ApiException" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AdGroupServiceSoapBinding" type="tns:AdGroupServiceInterface">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="get">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getRequest">
+        <wsdlsoap:header message="tns:RequestHeader" part="RequestHeader" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getResponse">
+        <wsdlsoap:header message="tns:ResponseHeader" part="ResponseHeader" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ApiException">
+        <wsdlsoap:fault use="literal" name="ApiException" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="mutate">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="mutateRequest">
+        <wsdlsoap:header message="tns:RequestHeader" part="RequestHeader" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="mutateResponse">
+        <wsdlsoap:header message="tns:ResponseHeader" part="ResponseHeader" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ApiException">
+        <wsdlsoap:fault use="literal" name="ApiException" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AdGroupService">
+    <wsdl:port name="AdGroupServiceInterfacePort" binding="tns:AdGroupServiceSoapBinding">
+      <wsdlsoap:address location="https://adwords.google.com/api/adwords/cm/v200909/AdGroupService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

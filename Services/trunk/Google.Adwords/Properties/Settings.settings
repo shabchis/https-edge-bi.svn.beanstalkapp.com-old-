@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Easynet.Edge.Services.Google.Adwords.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Edge_Services_Google_Adwords_GAdWordsAccountServiceV13_AccountService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://adwords.google.com/api/adwords/v13/AccountService</Value>
+    </Setting>
+    <Setting Name="Edge_Services_Google_Adwords_GAdWordsReportServiceV13_ReportService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://adwords.google.com/api/adwords/v13/ReportService</Value>
+    </Setting>
+    <Setting Name="Edge_Services_Google_Adwords_com_google_adwords_CampaignService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://adwords.google.com/api/adwords/cm/v200909/CampaignService</Value>
+    </Setting>
+    <Setting Name="Edge_Services_Google_Adwords_AdGroupWS_AdGroupService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://adwords.google.com/api/adwords/cm/v200909/AdGroupService</Value>
+    </Setting>
+    <Setting Name="Edge_Services_Google_Adwords_AdGroupAdService_AdGroupAdService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://adwords.google.com/api/adwords/cm/v200909/AdGroupAdService</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

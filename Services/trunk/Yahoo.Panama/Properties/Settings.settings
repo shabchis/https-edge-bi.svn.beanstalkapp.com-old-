@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Easynet.Edge.Services.Yahoo.Panama.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Edge_Services_Yahoo_Panama_PanamaLocationServiceV4_LocationServiceService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://global.marketing.ews.yahooapis.com/services/V4/LocationService</Value>
+    </Setting>
+    <Setting Name="Edge_Services_Yahoo_Panama_PanamaReportServiceV4_BasicReportServiceService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://USE_ADDRESS_RETURNED_BY_LOCATION_SERVICE/services/V4/BasicReportService</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

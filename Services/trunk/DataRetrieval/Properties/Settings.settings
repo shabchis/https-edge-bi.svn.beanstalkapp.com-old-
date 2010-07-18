@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Easynet.Edge.Services.DataRetrieval.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Edge_Services_DataRetrieval_GAdWordsAccountServiceV13_AccountService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://adwords.google.com/api/adwords/v13/AccountService</Value>
+    </Setting>
+    <Setting Name="Edge_Services_DataRetrieval_GAdWordsReportServiceV13_ReportService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://adwords.google.com/api/adwords/v13/ReportService</Value>
+    </Setting>
+    <Setting Name="Edge_Services_DataRetrieval_EasyForexBackOfficeAPI_Marketing" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://classic.easy-forex.com/BackOffice/API/Marketing.asmx</Value>
+    </Setting>
+    <Setting Name="Edge_Services_DataRetrieval_com_google_adwords_CampaignService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://adwords.google.com/api/adwords/cm/v200909/CampaignService</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

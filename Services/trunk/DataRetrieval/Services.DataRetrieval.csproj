@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{65DAED92-326B-401D-BF05-526C6BD5409C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Easynet.Edge.Services.DataRetrieval</RootNamespace>
+    <AssemblyName>Edge.Services.DataRetrieval</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>Svn</SccProjectName>
+    <SccLocalPath>Svn</SccLocalPath>
+    <SccAuxPath>Svn</SccAuxPath>
+    <SccProvider>SubversionScc</SccProvider>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataReader\CsvReader.cs" />
+    <Compile Include="DataReader\XmlAttributesReader.cs" />
+    <Compile Include="BackOffice\BackOfficeRow.cs" />
+    <Compile Include="General\ExecuteStoredProcedure.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OrganicRankings\OrganicServiceDelegatorService.cs" />
+    <Compile Include="OrganicRankings\OrganicProcessorService.cs" />
+    <Compile Include="OrganicRankings\OrganicRetrieverService.cs" />
+    <Compile Include="OrganicRankings\OrganicRankingsRow.cs" />
+    <Compile Include="Processor\AdwordsContentProcessor.cs" />
+    <Compile Include="Processor\AdWordsCreativeProcessor.cs" />
+    <Compile Include="Processor\AnalyticsProcessor.cs" />
+    <Compile Include="Processor\BackOfficeBabylonProcessorNodes.cs" />
+    <Compile Include="Processor\BackOfficeProcessor.cs" />
+    <Compile Include="Processor\BaseProcessor.cs" />
+    <Compile Include="Processor\BackOfficeProcessorNodes.cs" />
+    <Compile Include="Processor\DataIdentifier.cs" />
+    <Compile Include="Processor\ImporterProcessor.cs" />
+    <Compile Include="DataReader\XmlNodesReader.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="DataReader\DataRow.cs" />
+    <Compile Include="DataReader\SourceDataRowReader.cs" />
+    <Compile Include="RetrieverProcessorBase\BaseService.cs" />
+    <Compile Include="RetrieverProcessorBase\ConfigurationElements.cs" />
+    <Compile Include="Processor\ProcessorService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Retriever\RetrieverService.cs" />
+    <Compile Include="Retriever\AccountData.cs" />
+    <Compile Include="Retriever\AccountServiceWrapper.cs" />
+    <Compile Include="Retriever\AdWordsRetriever.cs" />
+    <Compile Include="Retriever\BabylonBackOfficeRetreiver.cs" />
+    <Compile Include="Retriever\BackOfficeGenericRetriever.cs" />
+    <Compile Include="Retriever\BaseRetriever.cs" />
+    <Compile Include="Retriever\EasyForexBackOfficeRetriever.cs" />
+    <Compile Include="Retriever\FullService.cs" />
+    <Compile Include="Retriever\GAnalyticsRetriever.cs" />
+    <Compile Include="Retriever\ImporterRetriever.cs" />
+    <Compile Include="Retriever\ReportServiceWrapper.cs" />
+    <Compile Include="Retriever\Test.cs" />
+    <Compile Include="Web References\com.google.adwords\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\EasyForexBackOfficeAPI\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\GAdWordsAccountServiceV13\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\GAdWordsReportServiceV13\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BusinessObjects\BusinessObjects.csproj">
+      <Project>{6E2451D8-DD5B-4B28-B84A-A652D539F8C0}</Project>
+      <Name>BusinessObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Core.csproj">
+      <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
+      <Name>Core %28Core\Core%29</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="https://adwords.google.com/api/adwords/cm/v200909/CampaignService%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\com.google.adwords\</RelPath>
+      <UpdateFromURL>https://adwords.google.com/api/adwords/cm/v200909/CampaignService%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Edge_Services_DataRetrieval_com_google_adwords_CampaignService</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="https://adwords.google.com/api/adwords/v13/AccountService%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\GAdWordsAccountServiceV13\</RelPath>
+      <UpdateFromURL>https://adwords.google.com/api/adwords/v13/AccountService%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Edge_Services_DataRetrieval_GAdWordsAccountServiceV13_AccountService</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="https://adwords.google.com/api/adwords/v13/ReportService%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\GAdWordsReportServiceV13\</RelPath>
+      <UpdateFromURL>https://adwords.google.com/api/adwords/v13/ReportService%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Edge_Services_DataRetrieval_GAdWordsReportServiceV13_ReportService</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="https://classic.easy-forex.com/BackOffice/API/Marketing.asmx%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\EasyForexBackOfficeAPI\</RelPath>
+      <UpdateFromURL>https://classic.easy-forex.com/BackOffice/API/Marketing.asmx%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Edge_Services_DataRetrieval_EasyForexBackOfficeAPI_Marketing</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\com.google.adwords\CampaignPage.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\com.google.adwords\CampaignReturnValue.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\com.google.adwords\CampaignService.wsdl" />
+    <None Include="Web References\com.google.adwords\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\EasyForexBackOfficeAPI\Marketing.wsdl" />
+    <None Include="Web References\EasyForexBackOfficeAPI\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\GAdWordsAccountServiceV13\AccountInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\GAdWordsAccountServiceV13\AccountService.wsdl" />
+    <None Include="Web References\GAdWordsAccountServiceV13\ClientAccountInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\GAdWordsAccountServiceV13\MccAlert.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\GAdWordsAccountServiceV13\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\GAdWordsReportServiceV13\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\GAdWordsReportServiceV13\ReportJob.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\GAdWordsReportServiceV13\ReportJobStatus.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\GAdWordsReportServiceV13\ReportService.wsdl" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+    <!--<Copy SkipUnchangedFiles="false" SourceFiles="$(TargetPath)" DestinationFiles="..\..\Tools\ServiceTester\bin\Debug\Services\$(TargetFileName)" />-->
+    <Copy SkipUnchangedFiles="false" SourceFiles="$(TargetPath)" DestinationFiles="..\..\Applications\EdgeServiceHost\bin\Debug\Services\$(TargetFileName)" />
+    <Copy SkipUnchangedFiles="false" SourceFiles="$(TargetPath)" DestinationFiles="..\..\Applications\EdgeWebTools\bin\$(TargetFileName)" />
+  </Target>
+</Project>
