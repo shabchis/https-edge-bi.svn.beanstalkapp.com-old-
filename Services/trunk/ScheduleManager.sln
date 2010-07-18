@@ -1,35 +1,39 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.ScheduleManagement", "..\Services\ScheduleManagement\Services.ScheduleManagement.csproj", "{1A452E3A-9957-4B5A-B7AA-008F97E3359A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.ScheduleManagement", "ScheduleManagement\Services.ScheduleManagement.csproj", "{1A452E3A-9957-4B5A-B7AA-008F97E3359A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "..\BusinessObjects\BusinessObjects.csproj", "{6E2451D8-DD5B-4B28-B84A-A652D539F8C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "..\Core\BusinessObjects\BusinessObjects.csproj", "{6E2451D8-DD5B-4B28-B84A-A652D539F8C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.DataRetrieval", "..\Services\DataRetrieval\Services.DataRetrieval.csproj", "{65DAED92-326B-401D-BF05-526C6BD5409C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.DataRetrieval", "DataRetrieval\Services.DataRetrieval.csproj", "{65DAED92-326B-401D-BF05-526C6BD5409C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.FileImport", "..\Services\FileImport\Services.FileImport.csproj", "{7015CD2F-FC66-4549-B381-8B218A0D5159}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.FileImport", "FileImport\Services.FileImport.csproj", "{7015CD2F-FC66-4549-B381-8B218A0D5159}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Google.Adwords", "..\Services\Google.Adwords\Services.Google.Adwords.csproj", "{55FDA59A-B271-4A19-9ACE-94A81B5F9132}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Google.Adwords", "Google.Adwords\Services.Google.Adwords.csproj", "{55FDA59A-B271-4A19-9ACE-94A81B5F9132}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeServiceHost", "..\Applications\EdgeServiceHost\EdgeServiceHost.csproj", "{C1D17284-15C6-4CEC-AF35-D84CC8D5CCA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.BackOffice.Generic", "..\Services\BackOffice.Generic\Services.BackOffice.Generic.csproj", "{95110030-552C-4CAC-9BFB-FC4845AFABE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.BackOffice.Generic", "BackOffice.Generic\Services.BackOffice.Generic.csproj", "{95110030-552C-4CAC-9BFB-FC4845AFABE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Google.OrganicRankings", "..\Services\Google.OrganicRankings\Services.Google.OrganicRankings.csproj", "{031B91DC-B939-44A3-9014-9839DB5844CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Google.OrganicRankings", "Google.OrganicRankings\Services.Google.OrganicRankings.csproj", "{031B91DC-B939-44A3-9014-9839DB5844CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.BackOffice.Babylon", "..\Services\BackOffice.Babylon\Services.BackOffice.Babylon.csproj", "{771C2333-E9D4-427E-AC3B-6116A5561286}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.BackOffice.Babylon", "BackOffice.Babylon\Services.BackOffice.Babylon.csproj", "{771C2333-E9D4-427E-AC3B-6116A5561286}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.XmlFilter", "..\Services\Services.XmlFilter\Services.XmlFilter.csproj", "{25A4BA1A-82B4-4930-9A72-6BA892E7AB1E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.XmlFilter", "Services.XmlFilter\Services.XmlFilter.csproj", "{25A4BA1A-82B4-4930-9A72-6BA892E7AB1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Messaging", "..\Services\Services.Messaging\Services.Messaging.csproj", "{EDE44F98-8B4C-47CE-92E8-5A16103200CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Messaging", "Services.Messaging\Services.Messaging.csproj", "{EDE44F98-8B4C-47CE-92E8-5A16103200CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeMessengerService", "..\Services\Services.EdgeMessenger\EdgeMessengerService.csproj", "{33F40FD2-E0D5-4E11-95CB-065FF68DCE0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeMessengerService", "Services.EdgeMessenger\EdgeMessengerService.csproj", "{33F40FD2-E0D5-4E11-95CB-065FF68DCE0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\Core\Core.csproj", "{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\Core\Core\Core.csproj", "{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.DemoService", "..\Services\Services.DemoService\Services.DemoService.csproj", "{A6BBD648-D98C-47E1-8FA9-E0553D99068A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.DemoService", "Services.DemoService\Services.DemoService.csproj", "{A6BBD648-D98C-47E1-8FA9-E0553D99068A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.StatusManager", "Services.StatusManager\Services.StatusManager.csproj", "{E46EFEA0-AC7A-4667-A49D-CAB9C8EA1D0D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base", "Base", "{80FB6831-6CE1-469D-BD63-6311012ECAC6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{2DD0446D-19E6-4FDE-8BE6-A933A408B57C}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
@@ -104,5 +108,22 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6E2451D8-DD5B-4B28-B84A-A652D539F8C0} = {80FB6831-6CE1-469D-BD63-6311012ECAC6}
+		{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436} = {80FB6831-6CE1-469D-BD63-6311012ECAC6}
+		{C1D17284-15C6-4CEC-AF35-D84CC8D5CCA0} = {80FB6831-6CE1-469D-BD63-6311012ECAC6}
+		{65DAED92-326B-401D-BF05-526C6BD5409C} = {80FB6831-6CE1-469D-BD63-6311012ECAC6}
+		{1A452E3A-9957-4B5A-B7AA-008F97E3359A} = {80FB6831-6CE1-469D-BD63-6311012ECAC6}
+		{33F40FD2-E0D5-4E11-95CB-065FF68DCE0A} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
+		{25A4BA1A-82B4-4930-9A72-6BA892E7AB1E} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
+		{771C2333-E9D4-427E-AC3B-6116A5561286} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
+		{95110030-552C-4CAC-9BFB-FC4845AFABE7} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
+		{A6BBD648-D98C-47E1-8FA9-E0553D99068A} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
+		{7015CD2F-FC66-4549-B381-8B218A0D5159} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
+		{55FDA59A-B271-4A19-9ACE-94A81B5F9132} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
+		{031B91DC-B939-44A3-9014-9839DB5844CC} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
+		{EDE44F98-8B4C-47CE-92E8-5A16103200CA} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
+		{E46EFEA0-AC7A-4667-A49D-CAB9C8EA1D0D} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
 	EndGlobalSection
 EndGlobal
