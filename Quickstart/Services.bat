@@ -1,0 +1,3 @@
+TortoiseProc.exe /command:checkout /url:"https://build.seperia.hz:8443/svn/EdgeBI/Core/trunk" /path:"Core" /closeonend:1
+TortoiseProc.exe /command:checkout /url:"https://build.seperia.hz:8443/svn/EdgeBI/Services/trunk/" /path:"Services" /closeonend:1
+TortoiseProc.exe /command:checkout /url:"https://build.seperia.hz:8443/svn/EdgeBI/Applications/EdgeServiceHost/trunk" /path:"Applications/EdgeServiceHost" /closeonend:1
