@@ -1,0 +1,308 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+       <link type="text/css" rel="stylesheet" href="style2.css" >
+
+
+    <title>Dim fact tables</title>
+   <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+
+   <script type="text/javascript" src="effects.js"></script>
+     <script type="text/javascript" src="jquery.tmpl.js"></script>
+
+
+</head>
+<body>
+
+<div id="container">
+
+     <div class=".clear"></div>
+    <div id="dim">
+        <div id="switcher">
+            <p  class="field switch">
+                <input type="radio" id="radio1" name="field"  checked />
+                <input type="radio" id="radio2" name="field" />
+                <label for="radio1" class="cb-enable selected"><span>Fact table</span></label>
+                <label for="radio2" class="cb-disable"><span>Dimension table</span></label>
+            </p>
+
+
+        </div>
+        <div class="clear"></div>
+
+
+        <select id="dimcombo">
+
+        </select>
+
+        <select id="factcombo">
+
+        </select>
+    </div>
+
+
+    <div class="clear"></div>
+<div id="header">
+    <ul>
+        <li><h5 id="title">FactTable</h5></li>
+        <li><h5 id="title2">Dimension Field mapping</h5></li>
+
+    </ul>
+</div> <!--end header-->
+    <div id="content">
+	<h2 class="trigger"><a class = "link" href="#" id="6">DWH_Fact_PPC</a></h2>
+	<div class="toggle_container">
+		<div class="block">
+            <ul class="list">
+                <li>DWH_Dim_accounts.Account_id= DWH_Fact_PPC.Account_gk</li>
+                <li>DWH_Dim_accounts.Client_id= DWH_Fact_PPC.Client_gk</li>
+
+            </ul>
+
+		</div>
+
+	</div>
+<h2 class="trigger"><a class = "link" href="#" id="7">DWH_Fact_BackOffice</a></h2>
+	<div class="toggle_container">
+		<div class="block">
+            <ul class="list" id="list">
+                <li>DWH_Dim_accounts.Account_id= DWH_Fact_PPC.Account_gk</li>
+                <li>DWH_Dim_accounts.Client_id= DWH_Fact_PPC.Client_gk</li>
+
+            </ul>
+
+		</div>
+
+	</div>
+</div>
+
+</div>
+<script id="columns_containers" type="text/html">
+
+
+   <li>${DimField} - ${FactField}</li>
+               
+
+              
+</script>
+
+<script id="columns" type="text/html">
+     <div class="toggle_container">
+		<div class="block_${RelationID}">
+
+                </div>
+         </div>
+</script>
+
+<script id="template_dim" type="text/html">
+      <h2 class="trigger" id="${RelationID}">
+          <a class = "link"  href="#"  >${DimTableName}</a>
+          <div class="toggle_container">
+		<div class="block_${RelationID}">
+
+                </div>
+         </div>
+      </h2>
+
+
+</script>
+
+
+<script id="template_fact" type="text/html">
+      <h2 class="trigger"  id="${RelationID}">
+          <a class = "link"  href="#" >${FactTableName}</a>
+          <div class="toggle_container">
+		<div class="block_${RelationID}">
+
+                </div>
+         </div>
+      </h2>
+
+
+</script>
+
+<script type="text/html" id="template2">
+
+    <option id="${TableID}">${TableName}</option>
+
+</script>
+
+<script type="text/javascript">
+      var _RelationId = "";
+
+ var _tables = new Object();
+
+function GetTableListData(factOrDim){
+     var _objects;
+
+        $.ajax({
+            type: "GET",
+            url: "http://qa/ri/service.svc/tables?type="+factOrDim,/*http://qa/ri/service.svc/tables?type=fact*/
+           dataType:"json",
+             success: function(data){
+                 $("#template2").render(data).appendTo("#"+factOrDim+"combo");
+                 _tables[factOrDim] = data;
+                 console.log(data);
+            },
+            error:function(data,error){
+                alert(error);
+            }
+        });
+}
+
+    function GetDimTable(factOrDim){
+
+            $('#content').empty();
+        $('#'+factOrDim+'combo').change(function(){
+
+            var id = $('#dimcombo option:selected').attr("id");
+            
+              
+            $.ajax({
+                type: "GET",
+                url: "http://qa/ri/service.svc/relations?tableid="+id+"&type="+factOrDim+"",/*http://qa:8000/ri/tables*/
+                dataType:"json",
+                success: function(data){
+                    
+
+
+                      
+
+                        if (factOrDim == 'dim'){
+
+
+                          $("#template_fact").render(data).appendTo('#content');
+
+                        }
+
+                        else
+                        {
+                 
+                            $("#template_dim").render(data).appendTo('#content');
+
+
+                          
+
+                        }
+                            $('h2.trigger').click(function(){
+                        var RalationId = $(this).attr('id');
+
+
+                                GetRelationCol(RalationId);
+
+
+                    })
+
+                    },
+
+                     //$("#template").render(data).appendTo("#content");
+              
+                error:function(data,error){
+
+                    alert(error);
+                }
+            });
+
+    })
+
+    }
+
+  function GetRelationCol(RalationId){
+
+var title = $('h2.trigger#'+RalationId);
+
+
+               $.ajax({
+                type: "GET",
+                url: "http://qa/ri/service.svc/relations/"+RalationId+"/columns",/*http://qa:8000/ri/tables*/
+                dataType:"json",
+                success:function(data){
+
+               $('#columns_containers').render(data).appendTo('#content .block_'+RalationId+');
+                       /*     title.toggleClass("active").next().slideToggle("slow").stop();      */
+
+                                 
+                  return false;
+
+
+                }
+        })
+
+    }
+
+
+
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready( function(){
+    $(".cb-enable").click(function(){
+        var parent = $(this).parents('.switch');
+        $('.cb-disable',parent).removeClass('selected');
+        $(this).addClass('selected');
+        $('.checkbox',parent).attr('checked', true);
+    });
+    $(".cb-disable").click(function(){
+        var parent = $(this).parents('.switch');
+        $('.cb-enable',parent).removeClass('selected');
+        $(this).addClass('selected');
+        $('.checkbox',parent).attr('checked', false);
+    });
+});
+
+
+
+ $(document).ready( function(){
+    GetTableListData('dim');
+    GetTableListData('fact');
+   GetDimTable('dim');
+   GetDimTable('fact');
+
+         //GetDimListData();
+var title = $("<h5>please choose a table</h5>");
+var fact =  $("<h5>Fact Tables</h5>");
+ var dim =  $("<h5>Dimension Tables</h5>");
+     $('#dimcombo').hide();
+      $('#factcombo').hide();
+     $('#title').html(title);
+$('#radio1').click(function(){
+    $('#dimcombo').hide();
+     $('#factcombo').show();
+
+    $('#title').html(dim);
+        
+
+});
+
+     $('#radio2').click(function() {
+         $('#factcombo').hide();
+         $('#dimcombo').show();
+
+          $('#title').html(fact);
+     });
+
+
+     
+
+ 
+  });
+
+</script>
+
+<script type="text/javascript">
+ $(document).ready( function(){
+
+ $('.list li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
+
+
+ });
+
+</script>
+
+
+
+</body>
+
+</html>
