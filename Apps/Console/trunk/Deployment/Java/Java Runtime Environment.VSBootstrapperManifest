@@ -1,0 +1,20 @@
+<VSBootstrapperManifest>
+  <ProjectProperties ProjectName="Java Runtime Environment" BuildLocation="PackagesDir" BuildDirectory="C:\Program Files\Microsoft SDKs\Windows\v6.0A\Bootstrapper\Packages\Java Runtime Environment" DefaultLanguage="en" />
+  <UIPackage ProductCode="Java.Runtime.Environment">
+    <UIChecks />
+    <Relationships />
+    <CustomSchedules />
+  </UIPackage>
+  <UIInstallFile FileName="jre-6u20-windows-i586-iftw-rv.exe" DisplayName="Java Runtime Environment" Arguments="" Reboot="None" HomeSiteURL="http://javadl.sun.com/webapps/download/AutoDL?BundleId=39502" PublicKey="&lt;&lt;File is not Digitally Signed&gt;&gt;" IncludeHash="True" Locale="neutral">
+    <UIChecks>
+      <RegistryCheck RegKey="HKEY_LOCAL_MACHINE\SOFTWARE\JAVASOFT\JAVA RUNTIME ENVIRONMENT" RegValue="CurrentVersion" Property="CurrentVersion" />
+    </UIChecks>
+    <UIInstallConditions>
+      <UIInstallCondition Type="ByPassIf" Property="CurrentVersion" Operator="&gt;=" Value="1.6" Message="" />
+    </UIInstallConditions>
+    <UIExitCodes>
+      <UIExitCode ExitCode="0" Result="Success" Message="" />
+    </UIExitCodes>
+    <LooseFiles />
+  </UIInstallFile>
+</VSBootstrapperManifest>

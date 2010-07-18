@@ -1,0 +1,3 @@
+﻿<%@ ServiceHost Language="C#" Debug="true"
+		Service="Easynet.Edge.UI.Server.OltpLogic"
+		CodeBehind="OltpLogic.svc.cs" %>

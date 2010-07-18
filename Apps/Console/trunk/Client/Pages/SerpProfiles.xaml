@@ -1,0 +1,554 @@
+﻿<this:PageBase x:Class="Easynet.Edge.UI.Client.Pages.SerpProfiles"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	xmlns:sc="clr-namespace:System.Collections;assembly=mscorlib"
+	xmlns:this="clr-namespace:Easynet.Edge.UI.Client"
+	xmlns:local="clr-namespace:Easynet.Edge.UI.Client.SerpProfilesLocal"
+>
+	
+	<this:PageBase.Resources>
+		<local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+		<local:DomainNameStyleConverter x:Key="DomainNameStyleConverter"/>
+		<local:HourConverter x:Key="HourConverter"/>
+		<local:TotalResultsDisplayConverter x:Key="TotalResultsDisplayConverter"/>
+		<local:TotalResultsEditConverter x:Key="TotalResultsEditConverter"/>
+		<local:KeywordPickerTemplateSelector x:Key="KeywordPickerTemplateSelector"/>
+		<local:ProfileNameColorConverter x:Key="ProfileNameColorConverter"/>
+
+	<DataTemplate x:Key="GroupExpandToggleTemplate">
+			<ToggleButton x:Name="button" Style="{DynamicResource GroupExpander}"  Margin="0,3,3,3"/>
+		</DataTemplate>
+		
+		<DataTemplate x:Key="GroupDragHandleTemplate">
+			<ContentControl Style="{DynamicResource DragHandle}" this:ListTable.IsDragHandle="true" Margin="0,3,3,3"/>
+		</DataTemplate>
+
+		<DataTemplate x:Key="GroupNameTemplate">
+			<Grid HorizontalAlignment="Left">
+				<TextBlock Text="{Binding Name}" MouseDown="TextBlock_MouseDown"/>
+				<TextBox Width="95" Text="{this:StringBinding Path=Name, UpdateSourceTrigger=PropertyChanged}" Visibility="Collapsed" LostFocus="TextBox_LostFocus" KeyDown="TextBox_KeyDown" />
+			</Grid>
+		</DataTemplate>
+		
+		<DataTemplate x:Key="DomainNameTemplate">
+			<Grid HorizontalAlignment="Left">
+				<TextBlock Text="{Binding Domain}" ToolTip="{Binding Domain}" Margin="6,3,3,3" TextTrimming="CharacterEllipsis" MouseDown="TextBlock_MouseDown"/>
+				<TextBox Width="280" Text="{this:StringBinding Path=Domain, UpdateSourceTrigger=PropertyChanged}" Visibility="Collapsed" LostFocus="TextBox_LostFocus" KeyDown="TextBox_KeyDown" />
+			</Grid>
+		</DataTemplate>
+
+		<sc:ArrayList x:Key="HourPickerValues">
+			<s:Int32>0</s:Int32>
+			<s:Int32>100</s:Int32>
+			<s:Int32>200</s:Int32>
+			<s:Int32>300</s:Int32>
+			<s:Int32>400</s:Int32>
+			<s:Int32>500</s:Int32>
+			<s:Int32>600</s:Int32>
+			<s:Int32>700</s:Int32>
+			<s:Int32>800</s:Int32>
+			<s:Int32>900</s:Int32>
+			<s:Int32>1100</s:Int32>
+			<s:Int32>1200</s:Int32>
+			<s:Int32>1300</s:Int32>
+			<s:Int32>1400</s:Int32>
+			<s:Int32>1500</s:Int32>
+			<s:Int32>1600</s:Int32>
+			<s:Int32>1700</s:Int32>
+			<s:Int32>1800</s:Int32>
+			<s:Int32>1900</s:Int32>
+			<s:Int32>2000</s:Int32>
+			<s:Int32>2100</s:Int32>
+			<s:Int32>2200</s:Int32>
+			<s:Int32>2300</s:Int32>
+		</sc:ArrayList>
+		
+		<Style TargetType="{x:Type TextBlock}">
+			<Setter Property="Padding" Value="0,6,0,6"/>
+		</Style>
+		
+		<Style TargetType="{x:Type TextBlock}" x:Key="AccountDomainNameStyle">
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="FontStyle" Value="Italic"/>
+		</Style>
+
+		<Style TargetType="{x:Type TextBlock}" x:Key="CompetitorDomainNameStyle">
+		</Style>
+
+		<DataTemplate x:Key="SelfKeywordTemplate">
+			<TextBlock Text="{Binding Keyword}"/>
+		</DataTemplate>
+
+		<DataTemplate x:Key="RelatedKeywordTemplate">
+			<TextBlock Text="{Binding Keyword}" Foreground="#bbb"/>
+		</DataTemplate>
+
+	</this:PageBase.Resources>
+
+	<Grid>
+		<DockPanel LastChildFill="True">
+			
+			<Canvas DockPanel.Dock="Top">
+				<StackPanel Orientation="Horizontal" Canvas.Right="50" VerticalAlignment="Center" HorizontalAlignment="Right">
+					<Button x:Name="_buttonNew" Style="{StaticResource Link}" Margin="10,20,10,0" Content="New Profile" Click="Profile_Add"/>
+					<Button x:Name="_buttonDelete" Style="{StaticResource Link}" Margin="10,20,10,0" Content="Delete" />
+				</StackPanel>
+			</Canvas>
+			
+			<this:ListTable x:Name="_listTable" Margin="0,35,50,10" SelectionMode="Extended"> 
+				<this:ListTable.View>
+					<GridView AllowsColumnReorder="False">
+						<GridViewColumn Width="15"			CellTemplate="{StaticResource EmptyCell}"/>
+						<GridViewColumn Header="Profile"	this:ListTable.AutoSize="true">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<Button Content="{Binding Name}" Style="{StaticResource Link}" Foreground="{Binding Path=IsActive, Converter={StaticResource ProfileNameColorConverter}}" Click="Profile_dialog_Open" Margin="0,6,0,6"/>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+						<GridViewColumn Width="70">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<Button Style="{StaticResource Link}" Content="Run now" Click="Profile_RunNow"/>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+					</GridView>
+				</this:ListTable.View>
+			</this:ListTable>
+		</DockPanel>
+
+		<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+
+			<this:FloatingDialog
+				x:Name="Profile_dialog"
+				Width="650"
+				Height="450"
+				ApplyingChanges="Profile_dialog_ApplyingChanges"
+				AppliedChanges="Profile_dialog_AppliedChanges"
+				Closing="Profile_dialog_Closing"
+
+			 >
+				<this:FloatingDialog.Resources>
+					<Style TargetType="{x:Type Label}">
+						<Setter Property="Width" Value="120"/>
+					</Style>
+					<Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource FormValidatedInput}">
+						<Setter Property="Width" Value="150"/>
+					</Style>
+					<local:ExpandToggleTemplateSelector x:Key="ExpandToggleTemplateSelector"/>
+					<local:NameTemplateSelector x:Key="NameTemplateSelector"/>
+					<local:DragHandleTemplateSelector x:Key="DragHandleTemplateSelector"/>
+				</this:FloatingDialog.Resources>
+				
+				<this:FloatingDialog.ContentTemplate>
+					<DataTemplate>
+						<TabControl TabStripPlacement="Top" VirtualizingStackPanel.IsVirtualizing="False">
+							<TabItem Header="Details">
+								<StackPanel Style="{StaticResource FormContents}">
+									<StackPanel Style="{StaticResource FormField}">
+										<Label Content="Name"/>
+										<TextBox Text="{this:StringBinding Path=Name, ErrorMessage='Please enter a profile name'}" this:FloatingDialog.DialogFields="Text" />
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}">
+										<Label Content="Active"/>
+										<CheckBox IsChecked="{Binding Path=IsActive}" this:FloatingDialog.DialogFields="IsChecked"/>
+									</StackPanel>
+								</StackPanel>
+							</TabItem>
+
+							<TabItem Header="Keywords" GotFocus="KeywordsTab_GotFocus">
+								<Grid>
+									<DockPanel LastChildFill="True" >
+										<Canvas DockPanel.Dock="Top" Height="30">
+											<StackPanel Orientation="Horizontal" Margin="10,10,10,0" this:AccessKeyScoper.IsAccessKeyScope="true">
+												<this:AutocompleteCombo
+													x:Name="_keywordPicker"
+													Width="180"
+													Margin="0,0,6,0"
+													ItemsSourceRequired="_keywordPicker_ItemsSourceRequired"
+													Loaded="_keywordPicker_Loaded"
+													ItemTemplateSelector="{StaticResource KeywordPickerTemplateSelector}"
+													DisplayMemberPath="Keyword"
+													/>
+												<Button Content="add" Click="KeywordsTab_AddKeyword" IsDefault="True"/>
+												<Button Style="{StaticResource Link}" Margin="10,10,0,0" Content="add batch" Click="KeywordsTab_OpenBatch"/>
+											</StackPanel>
+											
+											<StackPanel Orientation="Horizontal" Canvas.Right="10" VerticalAlignment="Center" HorizontalAlignment="Right">
+												<Button Style="{StaticResource Link}" Margin="10,20,10,0" Content="Remove" Click="KeywordsTab_RemoveKeyword"/>
+											</StackPanel>
+										</Canvas>
+
+										<this:ListTable x:Name="_profileKeywordsListView" Margin="10"
+														SelectionMode="Extended"
+														Loaded="_profileKeywordsListView_Loaded"
+														ItemDragged="_profileKeywordsListView_ItemDragged"
+												>
+											<this:ListTable.View>
+												<GridView>
+													<GridView.ColumnHeaderContainerStyle>
+														<Style TargetType="GridViewColumnHeader">
+															<Setter Property="Visibility" Value="Hidden" />
+															<Setter Property="Height" Value="0" />
+														</Style>
+													</GridView.ColumnHeaderContainerStyle>
+													<GridViewColumn Header="Keyword" this:ListTable.AutoSize="true" >
+														<GridViewColumn.CellTemplate>
+															<DataTemplate>
+																<StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Horizontal">
+																	<ContentControl Style="{StaticResource DragHandle}" this:ListTable.IsDragHandle="true"/>
+																	<TextBlock Text="{Binding Keyword}" Margin="3"/>
+																</StackPanel>
+															</DataTemplate>
+														</GridViewColumn.CellTemplate>
+													</GridViewColumn>
+													<GridViewColumn Header="TotalResults" Width="55">
+														<GridViewColumn.CellTemplate>
+															<DataTemplate>
+																<StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+																	<TextBlock Width="40" Text="{Binding Path=TotalResults, Converter={StaticResource TotalResultsDisplayConverter}}" MouseDown="KeywordsTab_TextBlockMouseDown" Foreground="#999" Margin="3" TextAlignment="Right" HorizontalAlignment="Right"/>
+																	<TextBox Width="40" Text="{Binding Path=TotalResults, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TotalResultsEditConverter}}" Visibility="Collapsed" LostFocus="KeywordsTab_TextBoxLostFocus" KeyDown="KeywordsTab_TextBoxKeyDown" TextAlignment="Right" HorizontalAlignment="Right"/>
+																</StackPanel>
+															</DataTemplate>
+														</GridViewColumn.CellTemplate>
+													</GridViewColumn>
+												</GridView>
+											</this:ListTable.View>
+										</this:ListTable>
+									</DockPanel>
+
+									<Grid this:AccessKeyScoper.IsAccessKeyScope="true" Width="300" Height="215" Visibility="Collapsed" x:Name="_batchKeywordsDialog" >
+										<Grid.RowDefinitions>
+											<RowDefinition Height="45" />
+											<RowDefinition Height="*" />
+											<RowDefinition Height="35" />
+										</Grid.RowDefinitions>
+
+										<Rectangle Grid.RowSpan="3" RadiusX="10" RadiusY="10">
+											<Rectangle.BitmapEffect>
+												<DropShadowBitmapEffect Color="Black" Direction="320" ShadowDepth="10" Softness="1" Opacity="0.65" />
+											</Rectangle.BitmapEffect>
+											<Rectangle.Fill>
+												<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+													<GradientStop Offset="0" Color="#B2B2B2" />
+													<GradientStop Offset="1" Color="#686868" />
+												</LinearGradientBrush>
+											</Rectangle.Fill>
+										</Rectangle>
+
+										<TextBlock Grid.Row="0" Foreground="White" Margin="8">Enter words separated by commas or returns (enter).<LineBreak/><Underline>Note</Underline>: If you use returns, commas will be ignored.</TextBlock>
+
+										<DockPanel Grid.Row="1" LastChildFill="True">
+											<TextBox Width="270" x:Name="_batchKeywordsText" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"/>											
+										</DockPanel>
+
+										<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="15,0,15,0">
+											<Button Content="add" IsDefault="True" Margin="5,0,0,0" Click="KeywordsTab_AddBatch"/>
+											<Button Content="cancel" IsCancel="True" Margin="5,0,0,0" Click="KeywordsTab_CloseBatch"/>
+										</StackPanel>
+									</Grid>
+								</Grid>
+								
+							</TabItem>
+
+							<TabItem Header="Domains" GotFocus="DomainsTab_GotFocus">
+								<DockPanel LastChildFill="True" >
+									<Canvas DockPanel.Dock="Top" Height="30">
+										<StackPanel Orientation="Horizontal" Margin="10,10,10,0" this:AccessKeyScoper.IsAccessKeyScope="true">
+											<TextBox
+												x:Name="_domainTextbox"
+												Width="300"
+												Margin="0,0,6,0"
+												Loaded="_domainTextbox_Loaded"
+												/>
+											<Button Content="add filter" Click="DomainsTab_AddDomain" IsDefault="True"/>
+										</StackPanel>
+
+										<StackPanel Orientation="Horizontal" Canvas.Right="10" VerticalAlignment="Center" HorizontalAlignment="Right">
+											<Button Style="{StaticResource Link}" Margin="10,20,10,0" Content="New Domain" Click="DomainsTab_AddGroup"/>
+										</StackPanel>
+
+									</Canvas>
+
+									<this:ListTable x:Name="_profileDomainsListView" Margin="10"
+													Loaded="_profileDomainsListView_Loaded"
+													ItemDragged="DomainsTab_Reorder"
+													GroupExpanded="DomainsTab_GroupExpanded"
+													GroupCollapsed="DomainsTab_GroupCollapsed"
+											>
+										<this:ListTable.View>
+											<GridView>
+												<GridViewColumn	Width="28" CellTemplateSelector="{DynamicResource DragHandleTemplateSelector}" />
+												<GridViewColumn	Width="34" CellTemplateSelector="{DynamicResource ExpandToggleTemplateSelector}" />
+												<GridViewColumn Header="Name" CellTemplateSelector="{DynamicResource NameTemplateSelector}" this:ListTable.AutoSize="true"/>
+												<GridViewColumn Width="30">
+													<GridViewColumn.CellTemplate>
+														<DataTemplate>
+															<Button OverridesDefaultStyle="True" Click="DomainsTab_Remove">
+																<Button.Template>
+																	<ControlTemplate>
+																		<Image Source="../Graphics/cancel.png" Width="12" Height="12" ToolTip="Delete" Cursor="Hand"/>
+																	</ControlTemplate>
+																</Button.Template>
+															</Button>
+														</DataTemplate>
+													</GridViewColumn.CellTemplate>
+												</GridViewColumn>
+											</GridView>
+										</this:ListTable.View>
+									</this:ListTable>
+								</DockPanel>
+							</TabItem>
+
+							<TabItem Header="Search engines" GotFocus="SearchEnginesTab_GotFocus">
+								<DockPanel LastChildFill="True" >
+									<Canvas DockPanel.Dock="Top" Height="30">
+										<StackPanel Orientation="Horizontal" Margin="10,10,10,0" this:AccessKeyScoper.IsAccessKeyScope="true">
+											<ComboBox
+												x:Name="_searchEnginePicker"
+												Width="180"
+												Margin="0,0,6,0"
+												DisplayMemberPath="Name"
+												Loaded="_searchEnginePicker_Loaded"
+												/>
+											<Button Content="add" Click="SearchEnginesTab_Add" IsDefault="True"/>
+										</StackPanel>
+
+										<StackPanel Orientation="Horizontal" Canvas.Right="10" VerticalAlignment="Center" HorizontalAlignment="Right">
+											<Button Style="{StaticResource Link}" Margin="10,20,10,0" Content="Remove" Click="SearchEnginesTab_Remove"/>
+										</StackPanel>
+
+									</Canvas>
+
+									<this:ListTable x:Name="_profileSearchEnginesListView" Margin="10"
+													SelectionMode="Extended"
+													Loaded="_profileSearchEnginesListView_Loaded"
+													ItemDragged="_profileSearchEnginesListView_ItemDragged"
+											>
+										<this:ListTable.View>
+											<GridView>
+												<GridView.ColumnHeaderContainerStyle>
+													<Style TargetType="GridViewColumnHeader">
+														<Setter Property="Visibility" Value="Hidden" />
+														<Setter Property="Height" Value="0" />
+													</Style>
+												</GridView.ColumnHeaderContainerStyle>
+												<GridViewColumn Header="Engine" this:ListTable.AutoSize="true" >
+													<GridViewColumn.CellTemplate>
+														<DataTemplate>
+															<StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Horizontal">
+																<ContentControl Style="{StaticResource DragHandle}" this:ListTable.IsDragHandle="true"/>
+																<TextBlock Text="{Binding Name}" Margin="3"/>
+															</StackPanel>
+														</DataTemplate>
+													</GridViewColumn.CellTemplate>
+												</GridViewColumn>
+											</GridView>
+										</this:ListTable.View>
+									</this:ListTable>
+								</DockPanel>
+							</TabItem>
+
+							<TabItem Header="Scheduling" Visibility="Collapsed">
+								<StackPanel Style="{StaticResource FormContents}">
+									<StackPanel Style="{StaticResource FormField}">
+										<Label Content="Run"/>
+										<ComboBox x:Name="_comboScheduling" SelectionChanged="_comboScheduling_SelectionChanged" Loaded="_comboScheduling_Loaded">
+											<ComboBoxItem Content="normally" IsSelected="True"/>
+											<ComboBoxItem Content="every day"/>
+											<ComboBoxItem Content="on these days every week:"/>
+											<ComboBoxItem Content="on these dates every month:"/>
+										</ComboBox>
+									</StackPanel>
+									
+									<StackPanel x:Name="_scheduleDates" Style="{StaticResource FormField}" >
+										<Label/>
+
+										<StackPanel >
+											<Grid x:Name="_monthCalendar" ToggleButton.Checked="ApplySchedule" ToggleButton.Unchecked="ApplySchedule" Loaded="_monthCalendar_Loaded">
+												<Grid.Resources>
+													<Style TargetType="{x:Type ToggleButton}">
+														<Setter Property="Width" Value="20"/>
+														<Setter Property="Height" Value="20"/>
+														<Setter Property="Margin" Value="0,0,4,4"/>
+														<Setter Property="BorderThickness" Value="1"/>
+														<Setter Property="BorderBrush" Value="#c7c7c7"/>
+														<Setter Property="Cursor" Value="Hand"/>
+														<Setter Property="Template">
+															<Setter.Value>
+																<ControlTemplate TargetType="{x:Type ToggleButton}">
+																	<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+																		<Border.Background>
+																			<SolidColorBrush x:Name="bg" Color="Transparent"/>
+																		</Border.Background>
+																		<TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+																	</Border>
+																	<ControlTemplate.Triggers>
+																		<Trigger Property="IsChecked" Value="True">
+																			<Trigger.EnterActions>
+																				<BeginStoryboard>
+																					<Storyboard>
+																						<ColorAnimation Storyboard.TargetName="bg" Storyboard.TargetProperty="Color" To="#cecece" Duration="0:0:0.2"/>
+																					</Storyboard>
+																				</BeginStoryboard>
+																			</Trigger.EnterActions>
+																			<Trigger.ExitActions>
+																				<BeginStoryboard>
+																					<Storyboard>
+																						<ColorAnimation Storyboard.TargetName="bg" Storyboard.TargetProperty="Color" To="Transparent" Duration="0:0:0.2"/>
+																					</Storyboard>
+																				</BeginStoryboard>
+																			</Trigger.ExitActions>
+																			<Setter Property="FontWeight" Value="Bold"/>
+																		</Trigger>
+																		<Trigger Property="IsEnabled" Value="False">
+																			<Setter Property="Foreground" Value="#999"/>
+																		</Trigger>
+																	</ControlTemplate.Triggers>
+																</ControlTemplate>
+															</Setter.Value>
+														</Setter>
+													</Style>
+												</Grid.Resources>
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition/>
+													<ColumnDefinition/>
+													<ColumnDefinition/>
+													<ColumnDefinition/>
+													<ColumnDefinition/>
+													<ColumnDefinition/>
+													<ColumnDefinition/>
+												</Grid.ColumnDefinitions>
+												<Grid.RowDefinitions>
+													<RowDefinition/>
+													<RowDefinition/>
+													<RowDefinition/>
+													<RowDefinition/>
+													<RowDefinition/>
+												</Grid.RowDefinitions>
+												<Grid.Children>
+													<ToggleButton Grid.Row="0" Grid.Column="0" Content="1"/>
+													<ToggleButton Grid.Row="0" Grid.Column="1" Content="2"/>
+													<ToggleButton Grid.Row="0" Grid.Column="2" Content="3"/>
+													<ToggleButton Grid.Row="0" Grid.Column="3" Content="4"/>
+													<ToggleButton Grid.Row="0" Grid.Column="4" Content="5"/>
+													<ToggleButton Grid.Row="0" Grid.Column="5" Content="6"/>
+													<ToggleButton Grid.Row="0" Grid.Column="6" Content="7"/>
+													<ToggleButton Grid.Row="1" Grid.Column="0" Content="8"/>
+													<ToggleButton Grid.Row="1" Grid.Column="1" Content="9"/>
+													<ToggleButton Grid.Row="1" Grid.Column="2" Content="10"/>
+													<ToggleButton Grid.Row="1" Grid.Column="3" Content="11"/>
+													<ToggleButton Grid.Row="1" Grid.Column="4" Content="12"/>
+													<ToggleButton Grid.Row="1" Grid.Column="5" Content="13"/>
+													<ToggleButton Grid.Row="1" Grid.Column="6" Content="14"/>
+													<ToggleButton Grid.Row="2" Grid.Column="0" Content="15"/>
+													<ToggleButton Grid.Row="2" Grid.Column="1" Content="16"/>
+													<ToggleButton Grid.Row="2" Grid.Column="2" Content="17"/>
+													<ToggleButton Grid.Row="2" Grid.Column="3" Content="18"/>
+													<ToggleButton Grid.Row="2" Grid.Column="4" Content="19"/>
+													<ToggleButton Grid.Row="2" Grid.Column="5" Content="20"/>
+													<ToggleButton Grid.Row="2" Grid.Column="6" Content="21"/>
+													<ToggleButton Grid.Row="3" Grid.Column="0" Content="22"/>
+													<ToggleButton Grid.Row="3" Grid.Column="1" Content="23"/>
+													<ToggleButton Grid.Row="3" Grid.Column="2" Content="24"/>
+													<ToggleButton Grid.Row="3" Grid.Column="3" Content="25"/>
+													<ToggleButton Grid.Row="3" Grid.Column="4" Content="26"/>
+													<ToggleButton Grid.Row="3" Grid.Column="5" Content="27"/>
+													<ToggleButton Grid.Row="3" Grid.Column="6" Content="28"/>
+													<ToggleButton Grid.Row="4" Grid.Column="0" Content="29"/>
+													<ToggleButton Grid.Row="4" Grid.Column="1" Content="30"/>
+													<ToggleButton Grid.Row="4" Grid.Column="2" Content="31"/>
+												</Grid.Children>
+											</Grid>
+
+											<StackPanel x:Name="_weekDay" Visibility="Collapsed" Loaded="_weekDay_Loaded">
+												<StackPanel.Resources>
+													<Style TargetType="{x:Type CheckBox}">
+														<Setter Property="Margin" Value="0,0,0,5"/>
+													</Style>
+												</StackPanel.Resources>
+												<CheckBox Content="Sunday" Checked="ApplySchedule" Unchecked="ApplySchedule"/>
+												<CheckBox Content="Monday" Checked="ApplySchedule" Unchecked="ApplySchedule"/>
+												<CheckBox Content="Tuesday" Checked="ApplySchedule" Unchecked="ApplySchedule"/>
+												<CheckBox Content="Wednesday" Checked="ApplySchedule" Unchecked="ApplySchedule"/>
+												<CheckBox Content="Thursday" Checked="ApplySchedule" Unchecked="ApplySchedule"/>
+												<CheckBox Content="Friday" Checked="ApplySchedule" Unchecked="ApplySchedule"/>
+												<CheckBox Content="Saturday" Checked="ApplySchedule" Unchecked="ApplySchedule"/>
+											</StackPanel>
+										</StackPanel>
+
+									</StackPanel>
+									
+									<StackPanel Style="{StaticResource FormField}">
+										<StackPanel.Resources>
+											<Style TargetType="{x:Type ComboBox}" x:Key="HourPickerStyle">
+												<Setter Property="Margin" Value="6,0,6,0"/>
+												<Setter Property="Width" Value="60"/>
+												<Setter Property="ItemsSource" Value="{Binding Source={StaticResource HourPickerValues}}"/>
+												<Setter Property="ItemTemplate">
+													<Setter.Value>
+														<DataTemplate>
+															<TextBlock Text="{Binding Converter={StaticResource HourConverter}}"/>
+														</DataTemplate>
+													</Setter.Value>
+												</Setter>
+											</Style>
+											<Style TargetType="{x:Type RadioButton}">
+												<Setter Property="Margin" Value="0,6,0,6"/>
+												<Setter Property="VerticalAlignment" Value="Center"/>
+											</Style>
+										</StackPanel.Resources>
+										<Label Content="Repeat"/>
+										<StackPanel>
+											<RadioButton x:Name="_repeatRadio_OnceDaily">
+												<TextBlock Text="once a day" IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RadioButton}, AncestorLevel=1}, Path=IsChecked}"/>
+											</RadioButton>
+											<RadioButton x:Name="_repeatRadio_Interval">
+												<StackPanel Orientation="Horizontal" VerticalAlignment="Center" IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RadioButton}, AncestorLevel=1}, Path=IsChecked}">
+													<TextBlock Text="every"/>
+													<TextBox Width="40" Margin="6,0,6,0"/>
+													<TextBlock Text="hours between"/>
+													<ComboBox Style="{StaticResource HourPickerStyle}" />
+													<TextBlock Text="and"/>
+													<ComboBox Style="{StaticResource HourPickerStyle}" />
+												</StackPanel>
+											</RadioButton>
+											<RadioButton x:Name="_repeatRadio_Hours">
+												<StackPanel Orientation="Horizontal" VerticalAlignment="Center" IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RadioButton}, AncestorLevel=1}, Path=IsChecked}">
+													<TextBlock Text="at"/>
+													<ItemsControl>
+														<ItemsControl.Template>
+															<ControlTemplate>
+																<ItemsPresenter/>
+															</ControlTemplate>
+														</ItemsControl.Template>
+														<ItemsControl.ItemsPanel>
+															<ItemsPanelTemplate>
+																<StackPanel Orientation="Horizontal" />
+															</ItemsPanelTemplate>
+														</ItemsControl.ItemsPanel>
+														<ItemsControl.ItemTemplate>
+															<DataTemplate>
+																<ComboBox Style="{StaticResource HourPickerStyle}" />
+															</DataTemplate>
+														</ItemsControl.ItemTemplate>
+													</ItemsControl>
+												</StackPanel>
+											</RadioButton>
+										</StackPanel>
+									</StackPanel>
+
+								</StackPanel>
+							</TabItem>
+
+						</TabControl>
+					</DataTemplate>
+				</this:FloatingDialog.ContentTemplate>
+			</this:FloatingDialog>
+
+		</Grid>
+
+	</Grid>
+</this:PageBase>
