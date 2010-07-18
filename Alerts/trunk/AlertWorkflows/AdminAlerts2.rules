@@ -1,0 +1,77 @@
+﻿<RuleDefinitions xmlns="http://schemas.microsoft.com/winfx/2006/xaml/workflow">
+	<RuleDefinitions.Conditions>
+		<RuleExpressionCondition Expression="{p3:Null}" Name="if_clicks_over" xmlns:p3="http://schemas.microsoft.com/winfx/2006/xaml" />
+		<RuleExpressionCondition Name="check_clicks">
+			<RuleExpressionCondition.Expression>
+				<ns0:CodeMethodInvokeExpression xmlns:ns0="clr-namespace:System.CodeDom;Assembly=System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+					<ns0:CodeMethodInvokeExpression.Parameters>
+						<ns0:CodeCastExpression TargetType="System.Single, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+							<ns0:CodeCastExpression.Expression>
+								<ns0:CodeMethodInvokeExpression>
+									<ns0:CodeMethodInvokeExpression.Parameters>
+										<ns0:CodeMethodInvokeExpression>
+											<ns0:CodeMethodInvokeExpression.Parameters>
+												<ns0:CodePrimitiveExpression>
+													<ns0:CodePrimitiveExpression.Value>
+														<ns1:String xmlns:ns1="clr-namespace:System;Assembly=mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">threshold</ns1:String>
+													</ns0:CodePrimitiveExpression.Value>
+												</ns0:CodePrimitiveExpression>
+											</ns0:CodeMethodInvokeExpression.Parameters>
+											<ns0:CodeMethodInvokeExpression.Method>
+												<ns0:CodeMethodReferenceExpression MethodName="GetConditionValue">
+													<ns0:CodeMethodReferenceExpression.TargetObject>
+														<ns0:CodeFieldReferenceExpression FieldName="account1">
+															<ns0:CodeFieldReferenceExpression.TargetObject>
+																<ns0:CodeThisReferenceExpression />
+															</ns0:CodeFieldReferenceExpression.TargetObject>
+														</ns0:CodeFieldReferenceExpression>
+													</ns0:CodeMethodReferenceExpression.TargetObject>
+												</ns0:CodeMethodReferenceExpression>
+											</ns0:CodeMethodInvokeExpression.Method>
+										</ns0:CodeMethodInvokeExpression>
+									</ns0:CodeMethodInvokeExpression.Parameters>
+									<ns0:CodeMethodInvokeExpression.Method>
+										<ns0:CodeMethodReferenceExpression MethodName="ToDouble">
+											<ns0:CodeMethodReferenceExpression.TargetObject>
+												<ns0:CodeTypeReferenceExpression Type="System.Convert, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+											</ns0:CodeMethodReferenceExpression.TargetObject>
+										</ns0:CodeMethodReferenceExpression>
+									</ns0:CodeMethodInvokeExpression.Method>
+								</ns0:CodeMethodInvokeExpression>
+							</ns0:CodeCastExpression.Expression>
+						</ns0:CodeCastExpression>
+						<ns0:CodeMethodInvokeExpression>
+							<ns0:CodeMethodInvokeExpression.Method>
+								<ns0:CodeMethodReferenceExpression MethodName="GetMainMeasure">
+									<ns0:CodeMethodReferenceExpression.TargetObject>
+										<ns0:CodeFieldReferenceExpression FieldName="account1">
+											<ns0:CodeFieldReferenceExpression.TargetObject>
+												<ns0:CodeThisReferenceExpression />
+											</ns0:CodeFieldReferenceExpression.TargetObject>
+										</ns0:CodeFieldReferenceExpression>
+									</ns0:CodeMethodReferenceExpression.TargetObject>
+								</ns0:CodeMethodReferenceExpression>
+							</ns0:CodeMethodInvokeExpression.Method>
+						</ns0:CodeMethodInvokeExpression>
+						<ns0:CodeFieldReferenceExpression FieldName="Large">
+							<ns0:CodeFieldReferenceExpression.TargetObject>
+								<ns0:CodeTypeReferenceExpression Type="Easynet.Edge.Alerts.Core.MeasureDiff, Alerts.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+							</ns0:CodeFieldReferenceExpression.TargetObject>
+						</ns0:CodeFieldReferenceExpression>
+					</ns0:CodeMethodInvokeExpression.Parameters>
+					<ns0:CodeMethodInvokeExpression.Method>
+						<ns0:CodeMethodReferenceExpression MethodName="CheckEntity">
+							<ns0:CodeMethodReferenceExpression.TargetObject>
+								<ns0:CodeFieldReferenceExpression FieldName="account1">
+									<ns0:CodeFieldReferenceExpression.TargetObject>
+										<ns0:CodeThisReferenceExpression />
+									</ns0:CodeFieldReferenceExpression.TargetObject>
+								</ns0:CodeFieldReferenceExpression>
+							</ns0:CodeMethodReferenceExpression.TargetObject>
+						</ns0:CodeMethodReferenceExpression>
+					</ns0:CodeMethodInvokeExpression.Method>
+				</ns0:CodeMethodInvokeExpression>
+			</RuleExpressionCondition.Expression>
+		</RuleExpressionCondition>
+	</RuleDefinitions.Conditions>
+</RuleDefinitions>
