@@ -1,3 +1,3 @@
 TortoiseProc.exe /command:checkout /url:"https://build.seperia.hz:8443/svn/EdgeBI/Core/trunk" /path:"Core" /closeonend:1
 TortoiseProc.exe /command:checkout /url:"https://build.seperia.hz:8443/svn/EdgeBI/Services/trunk/DataRetrieval" /path:"Services/DataRetrieval" /closeonend:1
-TortoiseProc.exe /command:checkout /url:"https://build.seperia.hz:8443/svn/EdgeBI/Apps/Console/trunk" /path:"Apps/Console" /closeonend:1
+TortoiseProc.exe /command:checkout /url:"https://build.seperia.hz:8443/svn/EdgeBI/Applications/Console/trunk" /path:"Applications/Console" /closeonend:1
