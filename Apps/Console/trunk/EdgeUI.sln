@@ -10,11 +10,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Server", "Server\UI.Serv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Data", "Data\UI.Data.csproj", "{AC9C4389-97C8-47B9-84F3-E5E4E32C5E73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\Core\Core.csproj", "{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\..\Core\Core\Core.csproj", "{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "..\BusinessObjects\BusinessObjects.csproj", "{6E2451D8-DD5B-4B28-B84A-A652D539F8C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "..\..\Core\BusinessObjects\BusinessObjects.csproj", "{6E2451D8-DD5B-4B28-B84A-A652D539F8C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.DataRetrieval", "..\Services\DataRetrieval\Services.DataRetrieval.csproj", "{65DAED92-326B-401D-BF05-526C6BD5409C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.DataRetrieval", "..\..\Services\DataRetrieval\Services.DataRetrieval.csproj", "{65DAED92-326B-401D-BF05-526C6BD5409C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.WebPages", "WebPages\UI.WebPages.csproj", "{EFE6B61F-5B04-4890-B0E8-B4C4265297A7}"
 EndProject
