@@ -3,12 +3,14 @@
 <html>
 <head>
        <link type="text/css" rel="stylesheet" href="style2.css" >
+    <link type="text/css" rel="stylesheet" href="jquery-ui-1.8.2.custom.css">
 
 
     <title>Dim fact tables</title>
    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+    
 
-  
+  <script type="text/javascript" src="jquery-ui-1.8.2.custom.min.js"></script>
      <script type="text/javascript" src="jquery.tmpl.js"></script>
 
 
@@ -75,7 +77,10 @@ $('#radio1').click(function(){
 
         </select>
     </div>
+    <div id="modal">
+        
 
+    </div>
 
     <div class="clear"></div>
 <div id="header">
@@ -113,6 +118,17 @@ $('#radio1').click(function(){
 </div>
 
 </div>
+
+<script type="text/html" id="mapping">
+    <ul>
+        <li>${DimColumnName}</li>
+        <li>${DimTableID}</li>
+        <li>${MappingID}</li>
+        <li>${RIValue}</li>
+      
+    </ul>
+
+</script>
 <script id="columns_containers" type="text/html">
 
  <ul class="list_${RelationID}" id="list">
@@ -133,6 +149,7 @@ $('#radio1').click(function(){
 <script id="template_dim" type="text/html">
       <h2 class="trigger" id="${RelationID}">
           <a class = "link"  href="#"  >${DimTableName}</a>
+                 <a class="mapping" id="${DimTableID}">Mapping</a>
              </h2>
           <div class="toggle_container">
 		<div class="block" id="block_${RelationID}">
@@ -146,9 +163,11 @@ $('#radio1').click(function(){
 
 
 <script id="template_fact" type="text/html">
-      <h2 class="trigger"  id="${RelationID}">
+      <h2 class="trigger"  id="${RelationID}" >
           <a class = "link"  href="#" >${FactTableName}</a>
+                   <a class="mapping" href="#" id="${DimTableID}">Mapping</a>
            </h2>
+   
           <div class="toggle_container">
 		<div class="block" id="block_${RelationID}">
 
@@ -170,6 +189,8 @@ $('#radio1').click(function(){
 
  var _tables = new Object();
 
+     
+
 function GetTableListData(factOrDim){
 
   
@@ -182,8 +203,14 @@ function GetTableListData(factOrDim){
              success: function(data){
                  $("#template2").render(data).appendTo("#"+factOrDim+"combo");
                  _tables[factOrDim] = data;
-                 console.log(data);
+                
 
+         
+
+
+
+
+         
 
 
             },
@@ -207,8 +234,7 @@ function GetTableListData(factOrDim){
                 dataType:"json",
                 success: function(data){
 
-
-
+                               
 
 
                         if (factOrDim == 'dim'){
@@ -216,13 +242,20 @@ function GetTableListData(factOrDim){
 
                           $("#template_fact").render(data).appendTo('#content');
 
+                            $('a.mapping').click(function(){
+                               var mapping =  $(this).attr('id');
+                               GetMapping(mapping);
+                            })
                         }
 
                         else
                         {
 
                             $("#template_dim").render(data).appendTo('#content');
-
+                                $('a.mapping').click(function(){
+                               var mapping =  $(this).attr('id');
+                               GetMapping(mapping);
+                            })
 
 
 
@@ -274,6 +307,23 @@ var title = $('h2.trigger#'+RalationId);
                 }
         })
 
+    }
+
+    function GetMapping(mapping){
+ 
+
+
+  $.ajax({
+                type: "GET",
+                url: "http://qa/ri/service.svc/tables/"+mapping+"/mappings",/*http://qa:8000/ri/tables*/
+                dataType:"json",
+                success:function(data){
+
+                    $('#mapping').render(data).appendTo('#modal');
+
+                    $('#modal').dialog();
+                }
+  })
     }
 
 
