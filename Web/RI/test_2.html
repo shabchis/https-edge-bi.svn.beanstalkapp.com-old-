@@ -8,7 +8,7 @@
     <title>Dim fact tables</title>
    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
 
-   <script type="text/javascript" src="effects.js"></script>
+  
      <script type="text/javascript" src="jquery.tmpl.js"></script>
 
 
@@ -17,6 +17,7 @@
 <script type="text/javascript">
 
 $(function(){
+    	$(".toggle_container").hide();
 
      GetTableListData('dim');
      GetTableListData('fact');
@@ -170,6 +171,8 @@ $('#radio1').click(function(){
  var _tables = new Object();
 
 function GetTableListData(factOrDim){
+
+  
      var _objects;
 
         $.ajax({
@@ -265,7 +268,7 @@ var title = $('h2.trigger#'+RalationId);
                     title.toggleClass("active").next().slideToggle("slow");
 
 
-                  return false;
+
 
 
                 }
