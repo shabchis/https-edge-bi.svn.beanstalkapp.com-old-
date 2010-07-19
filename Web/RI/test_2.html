@@ -78,7 +78,15 @@ $('#radio1').click(function(){
         </select>
     </div>
     <div id="modal">
-        
+        <ul id="map"></ul>
+
+            
+
+
+    </div>
+
+    <div id="error">
+
 
     </div>
 
@@ -120,13 +128,11 @@ $('#radio1').click(function(){
 </div>
 
 <script type="text/html" id="mapping">
-    <ul>
-        <li>${DimColumnName}</li>
-        <li>${DimTableID}</li>
-        <li>${MappingID}</li>
-        <li>${RIValue}</li>
+
+    <li>${DimColumnName} - ${RIValue}</li>
+        
       
-    </ul>
+
 
 </script>
 <script id="columns_containers" type="text/html">
@@ -203,19 +209,14 @@ function GetTableListData(factOrDim){
              success: function(data){
                  $("#template2").render(data).appendTo("#"+factOrDim+"combo");
                  _tables[factOrDim] = data;
-                
-
          
 
-
-
-
-         
 
 
             },
             error:function(data,error){
-                alert(error);
+                $('#error').append(error)+"<br>";
+                $('#error').dialog();
             }
         });
 }
@@ -244,6 +245,7 @@ function GetTableListData(factOrDim){
 
                             $('a.mapping').click(function(){
                                var mapping =  $(this).attr('id');
+                                 var value = $(this).html();
                                GetMapping(mapping);
                             })
                         }
@@ -254,6 +256,9 @@ function GetTableListData(factOrDim){
                             $("#template_dim").render(data).appendTo('#content');
                                 $('a.mapping').click(function(){
                                var mapping =  $(this).attr('id');
+                               var value = $(this).html();
+
+                                    console.log(value);
                                GetMapping(mapping);
                             })
 
@@ -275,7 +280,8 @@ function GetTableListData(factOrDim){
 
                 error:function(data,error){
 
-                    alert(error);
+                      $('#error').append(error);
+                $('#error').dialog();
                 }
             });
 
@@ -319,8 +325,7 @@ var title = $('h2.trigger#'+RalationId);
                 dataType:"json",
                 success:function(data){
 
-                    $('#mapping').render(data).appendTo('#modal');
-
+                    $('#mapping').render(data).appendTo('#modal ul#map');
                     $('#modal').dialog();
                 }
   })
