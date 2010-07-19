@@ -17,6 +17,11 @@
 <script type="text/javascript">
 
 $(function(){
+
+     GetTableListData('dim');
+     GetTableListData('fact');
+     GetDimTable('dim');
+     GetDimTable('fact');
     $('#radio2').click(function() {
         $('#factcombo').hide();
         $('#dimcombo').show();
@@ -35,10 +40,7 @@ $('#radio1').click(function(){
      $('#factcombo').show();
 
     $('#title').html(dim);
-    GetTableListData('dim');
-     GetTableListData('fact');
-     GetDimTable('dim');
-     GetDimTable('fact');
+
 
 
 })
@@ -112,10 +114,10 @@ $('#radio1').click(function(){
 </div>
 <script id="columns_containers" type="text/html">
 
-
+ <ul class="list_${RelationID}" id="list">
    <li>${DimField} - ${FactField}</li>
 
-
+</ul>
 
 </script>
 
@@ -130,12 +132,13 @@ $('#radio1').click(function(){
 <script id="template_dim" type="text/html">
       <h2 class="trigger" id="${RelationID}">
           <a class = "link"  href="#"  >${DimTableName}</a>
+             </h2>
           <div class="toggle_container">
-		<div class="block_${RelationID}">
+		<div class="block" id="block_${RelationID}">
 
                 </div>
          </div>
-      </h2>
+
 
 
 </script>
@@ -144,12 +147,13 @@ $('#radio1').click(function(){
 <script id="template_fact" type="text/html">
       <h2 class="trigger"  id="${RelationID}">
           <a class = "link"  href="#" >${FactTableName}</a>
+           </h2>
           <div class="toggle_container">
-		<div class="block_${RelationID}">
+		<div class="block" id="block_${RelationID}">
 
                 </div>
          </div>
-      </h2>
+
 
 
 </script>
@@ -220,7 +224,7 @@ function GetTableListData(factOrDim){
 
 
                         }
-                            $('h2.trigger').click(function(){
+                            $('h2.trigger').bind("click",function(){
                         var RalationId = $(this).attr('id');
 
 
@@ -245,8 +249,9 @@ function GetTableListData(factOrDim){
 
   function GetRelationCol(RalationId){
 
-var title = $('h2.trigger#'+RalationId);
 
+var title = $('h2.trigger#'+RalationId);
+            $('#block_'+RalationId).empty();
 
                $.ajax({
                 type: "GET",
@@ -254,8 +259,10 @@ var title = $('h2.trigger#'+RalationId);
                 dataType:"json",
                 success:function(data){
 
-        
-                       /*     title.toggleClass("active").next().slideToggle("slow").stop();      */
+                        $('#columns_containers').render(data).appendTo('#block_'+RalationId);
+
+                    $('ul.list_'+RalationId+' li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
+                    title.toggleClass("active").next().slideToggle("slow");
 
 
                   return false;
