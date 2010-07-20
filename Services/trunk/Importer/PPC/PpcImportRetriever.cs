@@ -9,6 +9,7 @@ using Easynet.Edge.Services.DataRetrieval;
 using Easynet.Edge.Core.Utilities;
 using Easynet.Edge.Core.Configuration;
 using Easynet.Edge.Core.Services;
+using Easynet.Edge.Services.DataRetrieval.Retriever;
 
 namespace Easynet.Edge.Services.Importer
 {

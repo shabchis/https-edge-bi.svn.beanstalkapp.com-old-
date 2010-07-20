@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{8E20A16D-BC1D-4218-BE30-A9BEA484A780}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -55,11 +55,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\BusinessObjects\BusinessObjects.csproj">
+    <ProjectReference Include="..\..\Core\BusinessObjects\BusinessObjects.csproj">
       <Project>{6E2451D8-DD5B-4B28-B84A-A652D539F8C0}</Project>
       <Name>BusinessObjects</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Core\Core.csproj">
+    <ProjectReference Include="..\..\Core\Core\Core.csproj">
       <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
       <Name>Core</Name>
     </ProjectReference>
