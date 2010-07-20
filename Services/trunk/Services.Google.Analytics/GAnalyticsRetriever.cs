@@ -13,7 +13,6 @@ using Easynet.Edge.Services.DataRetrieval;
 using Easynet.Edge.Services.DataRetrieval.Configuration;
 using System.Collections;
 
-
 namespace Easynet.Edge.Services.Google.Analytics
 {
 	public class GAnalyticsRetrieverService : RetrieverService
