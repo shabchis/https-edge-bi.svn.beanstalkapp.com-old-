@@ -193,6 +193,5 @@
   <Target Name="AfterBuild">
     <!--<Copy SkipUnchangedFiles="false" SourceFiles="$(TargetPath)" DestinationFiles="..\..\Tools\ServiceTester\bin\Debug\Services\$(TargetFileName)" />-->
     <Copy SkipUnchangedFiles="false" SourceFiles="$(TargetPath)" DestinationFiles="..\..\Applications\EdgeServiceHost\bin\Debug\Services\$(TargetFileName)" />
-    <Copy SkipUnchangedFiles="false" SourceFiles="$(TargetPath)" DestinationFiles="..\..\Applications\EdgeWebTools\bin\$(TargetFileName)" />
   </Target>
 </Project>
