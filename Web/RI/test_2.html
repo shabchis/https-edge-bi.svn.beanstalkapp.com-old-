@@ -19,12 +19,24 @@
 <script type="text/javascript">
 
 $(function(){
-    	$(".toggle_container").hide();
+  	
 
      GetTableListData('dim');
      GetTableListData('fact');
      GetDimTable('dim');
      GetDimTable('fact');
+
+     $('a.mapping').live("click",function(){
+         var mapping =  $(this).attr('id');
+       var sibling  =   $(this).parent().find('a.link').text();
+
+
+
+     
+
+            GetMapping(mapping,sibling);
+
+     })
     $('#radio2').click(function() {
         $('#factcombo').hide();
         $('#dimcombo').show();
@@ -78,7 +90,15 @@ $('#radio1').click(function(){
         </select>
     </div>
     <div id="modal">
-        <ul id="map"></ul>
+        <table id="map">
+<thead>
+   <tr>
+       <td>Column Name</td>
+       <td>RI Value</td>
+   </tr>
+   </thead>
+            
+        </table>
 
             
 
@@ -129,7 +149,11 @@ $('#radio1').click(function(){
 
 <script type="text/html" id="mapping">
 
-    <li>${DimColumnName} - ${RIValue}</li>
+    <tr>
+        <td>${DimColumnName}</td>
+        <td>${RIValue}</td>
+    </tr>
+    
         
       
 
@@ -243,24 +267,14 @@ function GetTableListData(factOrDim){
 
                           $("#template_fact").render(data).appendTo('#content');
 
-                            $('a.mapping').click(function(){
-                               var mapping =  $(this).attr('id');
-                                 var value = $(this).html();
-                               GetMapping(mapping);
-                            })
+
                         }
 
                         else
                         {
 
                             $("#template_dim").render(data).appendTo('#content');
-                                $('a.mapping').click(function(){
-                               var mapping =  $(this).attr('id');
-                               var value = $(this).html();
 
-                                    console.log(value);
-                               GetMapping(mapping);
-                            })
 
 
 
@@ -289,6 +303,9 @@ function GetTableListData(factOrDim){
 
     }
 
+
+      
+
   function GetRelationCol(RalationId){
 
 
@@ -305,6 +322,8 @@ var title = $('h2.trigger#'+RalationId);
 
                     $('ul.list_'+RalationId+' li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
                     title.toggleClass("active").next().slideToggle("slow");
+                       $('.toggle_container:first').css('display','block');
+                          $('.toggle_container:last').css('display','block');
 
 
 
@@ -315,7 +334,7 @@ var title = $('h2.trigger#'+RalationId);
 
     }
 
-    function GetMapping(mapping){
+    function GetMapping(mapping,sibling){
  
 
 
@@ -325,8 +344,12 @@ var title = $('h2.trigger#'+RalationId);
                 dataType:"json",
                 success:function(data){
 
-                    $('#mapping').render(data).appendTo('#modal ul#map');
-                    $('#modal').dialog();
+                    $('#mapping').render(data).appendTo('#modal table#map');
+                    $('#modal').dialog({ modal: true },{ buttons:
+                    { "Ok": function() { $(this).dialog("close");
+                    } }
+
+                    });
                 }
   })
     }
