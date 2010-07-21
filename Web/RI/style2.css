@@ -60,6 +60,7 @@ h2.active:hover{
     overflow:auto;
 	width: 100%;
 	clear: both;
+    display:none;
 }
 .toggle_container .block {
 	padding: 0px; /*--Padding of Container--*/
@@ -80,6 +81,7 @@ h2.active:hover{
     height:26px;
     -moz-border-radius:5px 5px 0px 0px ;
     line-height:26px;
+
     
 
 }
@@ -124,7 +126,7 @@ h2.active:hover{
 
 }
 
-.list{
+#list{
     list-style:none;
     padding-left:0px;
     margin:0px;
@@ -166,14 +168,15 @@ h4{
     
 }
 
-.list li{
-     
+#list li{
+     font-family:verdana;
       border-top:1px solid #C2C3C5;
         color:#7CA81D;
     padding-top:2px;
     padding-bottom:2px;
     padding-left:0px;
     margin-left:0px;
+    font-size:14px;
 
 }
 
@@ -221,7 +224,34 @@ position:absolute;
     left:824px;
     top:-1px;
 }
-#dialog-modal{
+#modal{
 
     display:none;
+}
+
+ul#map{
+    overflow:hidden;
+    list-style:none;
+    
+}
+
+table#map {
+   margin:auto;
+    width:800px;
+   
+
+
+}
+
+#map td{
+
+ border:1px solid #DEDBD1;
+}
+
+
+
+
+#map thead td{
+font-weight:bold;
+text-align:center;
 }
