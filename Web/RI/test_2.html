@@ -272,7 +272,7 @@
 
 
         var title = $('h2.trigger#'+RalationId);
-        var LastTitle = $('h2.trigger#'+RalationId).last();
+        var LastTitle = $('h2.trigger:last');
         $('#block_'+RalationId).empty();
 
         $.ajax({
@@ -281,12 +281,17 @@
             dataType:"json",
             success:function(data){
 
-                $('#columns_containers').render(data).appendTo('#block_'+RalationId);
+                       $('#columns_containers').render(data).appendTo('#block_'+RalationId);
 
-                $('ul.list_'+RalationId+' li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
+                       $('ul.list_'+RalationId+' li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
 
+                            
+                          title.toggleClass("active").next().slideToggle("slow");
 
-                 title.toggleClass("active").next().slideToggle("slow");
+                        
+          
+
+              
               }
            
 
