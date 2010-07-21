@@ -142,18 +142,18 @@
 
 </div>
 
-<script type="text/html" id="mapping">
+      <script type="text/html" id="mapping">
 
-    <tr>
-        <td>${DimColumnName}</td>
-        <td>${RIValue}</td>
-    </tr>
-
-
+          <tr>
+              <td>${DimColumnName}</td>
+              <td>${RIValue}</td>
+          </tr>
 
 
 
-</script>
+
+
+    </script>
 <script id="columns_containers" type="text/html">
 
     <ul class="list_${RelationID}" id="list">
@@ -236,7 +236,7 @@
                     for(var relationKey in data)
                         data[relationKey].TableName = factOrDim == 'dim' ?  data[relationKey].FactTableName :  data[relationKey].DimTableName;
 
-                
+
                     $("#headers").render(data).appendTo('#content');
 
 
@@ -254,9 +254,10 @@
                 //$("#template").render(data).appendTo("#content");
 
                 error:function(data,error){
+                  
 
                     $('#error').append(error);
-                    $('#error').dialog();
+                    $('#error').dialog({title:''+error+''});
                 }
             });
 
@@ -271,6 +272,7 @@
 
 
         var title = $('h2.trigger#'+RalationId);
+        var LastTitle = $('h2.trigger#'+RalationId).last();
         $('#block_'+RalationId).empty();
 
         $.ajax({
@@ -282,15 +284,15 @@
                 $('#columns_containers').render(data).appendTo('#block_'+RalationId);
 
                 $('ul.list_'+RalationId+' li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
-                title.toggleClass("active").next().slideToggle("slow");
-                $('.toggle_container:first').css('display','block');
-                $('.toggle_container:last').css('display','block');
+
+
+                 title.toggleClass("active").next().slideToggle("slow");
+              }
+           
 
 
 
-
-
-            }
+            
         })
 
     }
@@ -339,15 +341,6 @@
 
 
 
-    $(document).ready( function(){
-
-
-
-        //GetDimListData();
-
-
-
-    });
 
 
 
@@ -357,15 +350,7 @@
 
 </script>
 
-<script type="text/javascript">
-    $(document).ready( function(){
 
-        $('.list li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
-
-
-    });
-
-</script>
 
 
 
