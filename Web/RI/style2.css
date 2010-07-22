@@ -60,8 +60,12 @@ h2.active:hover{
     overflow:auto;
 	width: 100%;
 	clear: both;
-    display:none;
+     display:none;
 }
+
+
+
+
 .toggle_container .block {
 	padding: 0px; /*--Padding of Container--*/
 	width:960px;
