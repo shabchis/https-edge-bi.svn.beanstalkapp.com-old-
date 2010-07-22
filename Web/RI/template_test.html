@@ -82,9 +82,9 @@
 
 
    <li>${DimField} - ${FactField}</li>
-               
 
-              
+
+
 </script>
 
 <script id="columns" type="text/html">
@@ -157,17 +157,17 @@ function GetTableListData(factOrDim){
         $('#'+factOrDim+'combo').change(function(){
 
             var id = $('#dimcombo option:selected').attr("id");
-            
-              
+
+
             $.ajax({
                 type: "GET",
                 url: "http://qa/ri/service.svc/relations?tableid="+id+"&type="+factOrDim+"",/*http://qa:8000/ri/tables*/
                 dataType:"json",
                 success: function(data){
-                    
 
 
-                      
+
+
 
                         if (factOrDim == 'dim'){
 
@@ -178,11 +178,11 @@ function GetTableListData(factOrDim){
 
                         else
                         {
-                 
+
                             $("#template_dim").render(data).appendTo('#content');
 
 
-                          
+
 
                         }
                             $('h2.trigger').click(function(){
@@ -197,7 +197,7 @@ function GetTableListData(factOrDim){
                     },
 
                      //$("#template").render(data).appendTo("#content");
-              
+
                 error:function(data,error){
 
                     alert(error);
@@ -222,7 +222,7 @@ var title = $('h2.trigger#'+RalationId);
                $('#columns_containers').render(data).appendTo('#content .block_'+RalationId+');
                        /*     title.toggleClass("active").next().slideToggle("slow").stop();      */
 
-                                 
+
                   return false;
 
 
@@ -257,8 +257,7 @@ var title = $('h2.trigger#'+RalationId);
  $(document).ready( function(){
     GetTableListData('dim');
     GetTableListData('fact');
-   GetDimTable('dim');
-   GetDimTable('fact');
+
 
          //GetDimListData();
 var title = $("<h5>please choose a table</h5>");
@@ -272,7 +271,7 @@ $('#radio1').click(function(){
      $('#factcombo').show();
 
     $('#title').html(dim);
-        
+
 
 });
 
@@ -284,9 +283,9 @@ $('#radio1').click(function(){
      });
 
 
-     
 
- 
+
+
   });
 
 </script>
