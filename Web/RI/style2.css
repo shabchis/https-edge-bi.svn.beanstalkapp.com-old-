@@ -273,3 +273,17 @@ a.new{
     position:absolute;
     top:-1px;
 }
+
+a.delete{
+
+   left:893px;
+    position:absolute;
+    top:-1px
+}
+
+a.delete span{
+    display:block;
+    width:100%
+
+
+}
