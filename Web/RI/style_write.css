@@ -25,14 +25,14 @@ h2.trigger a {
 h2.trigger:hover{
 
     background:#E3E3E3 url("images/tb-closed-hover.png") left no-repeat   ;
-   
+
 }
 h2.trigger a:hover {
     color:#7CA81D;
-   
+
 }
 h2.active {
-  
+
     background:#E3EDCB url("images/tb-open.png") left no-repeat;
     padding: 0 0 0 50px;
 	height:23px;
@@ -43,7 +43,7 @@ h2.active {
 	font-weight: normal;
 	float: left;
     position:relative;
-    
+
 }
 
 /*--When toggle is triggered, it will shift the image to the bottom to show its "opened" state--*/
@@ -72,7 +72,7 @@ h2.active:hover{
     font-size:12px;
     margin-top:0px;
     margin-bottom:0px;
-     
+
 }
 #header{
     width:960px;
@@ -86,7 +86,7 @@ h2.active:hover{
     -moz-border-radius:5px 5px 0px 0px ;
     line-height:26px;
 
-    
+
 
 }
 
@@ -94,7 +94,7 @@ h2.active:hover{
     float:left;
     list-style:none;
     margin-right:500px;
-    
+
 
 
 
@@ -106,7 +106,7 @@ h2.active:hover{
     margin:0px;
     color:white;
     font-family:verdana;
-    
+
 
 }
 #header ul li:last-child{
@@ -126,7 +126,7 @@ h2.active:hover{
 #container{
    width:960px;
    margin:0 auto;
-  
+
 
 }
 
@@ -144,7 +144,7 @@ h2.active:hover{
     background-color:#E3EDCB;
    height:115px;
     width:300px;
-   
+
     -moz-border-radius:10px;
     float:left;
 
@@ -169,7 +169,7 @@ h4{
 
 .clear{
     clear: both;
-    
+
 }
 
 #list li{
@@ -236,13 +236,13 @@ position:absolute;
 ul#map{
     overflow:hidden;
     list-style:none;
-    
+
 }
 
 table#map {
    margin:auto;
     width:800px;
-   
+
 
 
 }
@@ -261,9 +261,50 @@ text-align:center;
 }
 
 
-li a,li a:active{
-    color: #7CA81D;
-    text-decoration:none;
-    
+.editHover{
+	background-color: #E8F3FF;
 }
 
+.editBox{
+	width: 326px;
+	min-height: 20px;
+	padding: 10px 15px;
+	background-color: #fff;
+	border: 2px solid #E8F3FF;
+}
+
+ul{
+	list-style: none;
+}
+
+
+
+li.noPad{
+	padding: 0;
+	width: 360px;
+}
+
+form{
+	width: 100%;
+}
+
+.btnSave, .btnCancel{
+	padding: 6px 30px 6px 75px;
+}
+
+
+#combo{
+
+    display:none;
+
+}
+.block{
+	float: left;
+	margin: 20px 0;
+}
+
+.dim {
+    float:right;
+    margin-right:305px;
+    margin-top:-24px;
+}
