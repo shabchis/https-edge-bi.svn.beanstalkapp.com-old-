@@ -26,10 +26,48 @@
         GetDimTable('dim');
         GetDimTable('fact');
 
+        $('a.delete').live("click",function(){
+            
 
+           var id =   $(this).parent().attr('id');
+
+    
+        var confirm =     $(this).parent().next().find('li').text();
+
+           $('<span>Are you sure you want to delete</span>').prependTo('#confirm');
+
+
+            $('#confirm div').append(confirm);
+
+            $('#confirm').dialog({
+                    resizable: false,
+                     height:300,
+                     modal: true,
+                     buttons:{
+                         'Delete all items': function() {
+                                             $(this).dialog('close');
+                                         },
+                                         Cancel: function() {
+                                             $(this).dialog('close');
+                                         }
+                         
+
+                     }
+
+
+            })
+
+
+        })
         $('a.new').live("click",function(){
  var title  =   $(this).parent().find('a.link').text();
-            $('#col_edit').dialog({title:''+title+''});
+            $('#col_edit').dialog({title:''+title+''},{
+                    buttons:{"Add":function(){
+                    $(this).dialog('close');
+                        }
+                               }
+                                     }
+                    );
 
         })
         $('a.mapping').live("click",function(){
@@ -87,7 +125,13 @@
 
         </div>
         <div class="clear"></div>
+        <div id="confirm">
+            <div>
 
+                
+            </div>
+
+        </div>
 
         <div id="col_edit">
             <table>
@@ -196,6 +240,7 @@
         <a class = "link"  href="#">${TableName}</a>
         <a class="mapping" id="${DimTableID}">Mapping</a>
         <a class="new">New</a>
+        <a class="delete">Delete</a>
     </h2>
     <div class="toggle_container">
         <div class="block" id="block_${RelationID}">
