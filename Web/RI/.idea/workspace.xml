@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="e4282e73-c79f-4a26-a6c7-fdda3451339a" name="Default" comment="">
-      <change type="DELETED" beforePath="Y:\RI\test_2.html" afterPath="" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/style_write.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/style2.css" afterPath="$PROJECT_DIR$/style2.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.html" afterPath="$PROJECT_DIR$/main.html" />
@@ -36,7 +34,7 @@
       <file leaf-file-name="main.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="308" column="20" selection-start="7581" selection-end="7581" vertical-scroll-proportion="0.5562249">
+            <state line="322" column="23" selection-start="8054" selection-end="8054" vertical-scroll-proportion="0.75100404">
               <folding />
             </state>
           </provider>
@@ -45,7 +43,7 @@
       <file leaf-file-name="style2.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/style2.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="269" column="0" selection-start="3927" selection-end="3927" vertical-scroll-proportion="0.0">
+            <state line="273" column="4" selection-start="4003" selection-end="4003" vertical-scroll-proportion="-28.76">
               <folding />
             </state>
           </provider>
@@ -386,14 +384,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/style2.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="269" column="0" selection-start="3927" selection-end="3927" vertical-scroll-proportion="0.0">
+        <state line="273" column="4" selection-start="4003" selection-end="4003" vertical-scroll-proportion="-28.76">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="308" column="20" selection-start="7581" selection-end="7581" vertical-scroll-proportion="0.5562249">
+        <state line="322" column="23" selection-start="8054" selection-end="8054" vertical-scroll-proportion="0.75100404">
           <folding />
         </state>
       </provider>
