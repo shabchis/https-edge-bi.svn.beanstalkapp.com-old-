@@ -60,6 +60,8 @@
 
         })
 
+
+        
     })
 
 
@@ -80,6 +82,18 @@
         </div>
         <div class="clear"></div>
 
+
+        <div id="col_edit">
+            <table>
+                <tr>
+                    <td id="leftcol"></td>
+                    <td id="rightcol"></td>
+                </tr>
+
+            </table>
+
+
+        </div>
 
         <select id="dimcombo">
 
@@ -157,7 +171,7 @@
 <script id="columns_containers" type="text/html">
 
     <ul class="list_${RelationID}" id="list">
-        <li>${DimField} - ${FactField}</li>
+        <li id="${RelationID}"><a href="#">${DimField} - ${FactField}</a></li>
 
     </ul>
 
@@ -288,16 +302,50 @@
                             
                           title.toggleClass("active").next().slideToggle("slow");
 
+                $('li#'+RalationId).live("click",function(){
+
+                 $('#factcombo').appendTo('#col_edit #rightcol');
+                  $('#dimcombo').appendTo('#col_edit #leftcol');
+                    
+                    $("#col_edit").dialog({
+
+                        buttons:{
+                            "ok":function(){
+                       var col =   $('#leftcol option:selected').text();
+
+                                alert(col);
+
+
+                                        $(this).dialog('close');
+
+                            },
+                            "apply":function(){
+                                    $(this).dialog('close');
+
+                            }
+
+                        }
+
+                    }
+
                         
-          
+
+
+
+                );
+
+                })
+
+
+
 
               
               }
-           
 
 
 
-            
+
+
         })
 
     }
