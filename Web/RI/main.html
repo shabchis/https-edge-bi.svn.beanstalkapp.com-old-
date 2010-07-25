@@ -26,6 +26,12 @@
         GetDimTable('dim');
         GetDimTable('fact');
 
+
+        $('a.new').live("click",function(){
+ var title  =   $(this).parent().find('a.link').text();
+            $('#col_edit').dialog({title:''+title+''});
+
+        })
         $('a.mapping').live("click",function(){
             var mapping =  $(this).attr('id');
             var title  =   $(this).parent().find('a.link').text();
@@ -171,7 +177,7 @@
 <script id="columns_containers" type="text/html">
 
     <ul class="list_${RelationID}" id="list">
-        <li id="${RelationID}"><a href="#">${DimField} - ${FactField}</a></li>
+        <li id="${RelationID}"><a href="#">${DimField}</a> - <a href="#">${FactField}</a></li>
 
     </ul>
 
@@ -189,6 +195,7 @@
     <h2 class="trigger" id="${RelationID}">
         <a class = "link"  href="#">${TableName}</a>
         <a class="mapping" id="${DimTableID}">Mapping</a>
+        <a class="new">New</a>
     </h2>
     <div class="toggle_container">
         <div class="block" id="block_${RelationID}">
@@ -308,12 +315,12 @@
                   $('#dimcombo').appendTo('#col_edit #leftcol');
                     
                     $("#col_edit").dialog({
-
+                        width:1000,
                         buttons:{
                             "ok":function(){
                        var col =   $('#leftcol option:selected').text();
 
-                                alert(col);
+                       
 
 
                                         $(this).dialog('close');

@@ -112,7 +112,7 @@ h2.active:hover{
 #header ul li:last-child{
     margin-right:50px;
     float:right;
-
+     font-family:verdana;
 }
 
 #content{
@@ -267,3 +267,9 @@ li a,li a:active{
     
 }
 
+a.new{
+
+    left:759px;
+    position:absolute;
+    top:-1px;
+}
