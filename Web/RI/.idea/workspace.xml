@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="e4282e73-c79f-4a26-a6c7-fdda3451339a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/style2.css" afterPath="$PROJECT_DIR$/style2.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/effects.js" afterPath="$PROJECT_DIR$/effects.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/style_write.css" afterPath="$PROJECT_DIR$/style_write.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.html" afterPath="$PROJECT_DIR$/main.html" />
     </list>
     <ignored path="dim_fact.iws" />
@@ -36,7 +33,7 @@
       <file leaf-file-name="main.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="69" column="29" selection-start="1906" selection-end="1906" vertical-scroll-proportion="0.71686745">
+            <state line="33" column="0" selection-start="860" selection-end="860" vertical-scroll-proportion="0.40963855">
               <folding />
             </state>
           </provider>
@@ -407,7 +404,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="29" selection-start="1906" selection-end="1906" vertical-scroll-proportion="0.71686745">
+        <state line="33" column="0" selection-start="860" selection-end="860" vertical-scroll-proportion="0.40963855">
           <folding />
         </state>
       </provider>

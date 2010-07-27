@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="style_write.css" >
+
+    <link type="text/css" rel="stylesheet" href="jquery-ui-1.8.2.custom.css">
+
+
+    <title>RI Write</title>
+    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="effects.js"></script>
+    <script type="text/javascript" src="jquery-ui-1.8.2.custom.min.js"></script>
+    <script type="text/javascript" src="jquery.tmpl.js"></script>
+
+</head>
+<body>
+
+
+
+
+
+
+<div id="container">
+
+    <div id="db">
+        <select id="dboption">
+            <option>DB1</option>
+            <option>DB2</option>
+            <option>DB3</option>
+            <option>DB4</option>
+        </select>
+        <a class="button">
+            Analyze
+
+        </a>
+    </div>
+
+
+    <div class="clear"></div>
+    <div id="header">
+        <ul>
+            <li><h5 id="title">Dwh_Fact_PPC_Campaigns</h5></li>
+          
+
+        </ul>
+    </div> <!--end header-->
+    <div id="content">
+        <h2 class="trigger">
+            <a class = "link" href="#" id="6">Dwh_Fact_PPC_Campaigns</a>
+            <a class = "dim" href="#" id="4">DWH_Fact_PPC</a>
+        </h2>
+        <div class="toggle_container">
+            <div class="block">
+                <ul class="list" id="list">
+                    <input type="checkbox" class="checkbox">
+                  
+                    <li class="field">DWH_Dim_accounts.Account_id   -    DWH_Fact_PPC.Account_gk</li>
+
+
+                </ul>
+
+            </div>
+
+        </div>
+        <h2 class="trigger">
+           <a class = "link" href="#" id="7">Dwh_Fact_PPC_Campaigns</a>
+           <a class="dim" href="#" id="7">DWH_Fact_BackOffice</a>
+        </h2>
+        <div class="toggle_container">
+            <div class="block">
+                <input type="checkbox" class="checkbox">
+                <ul class="list" id="list">
+
+                    <li class="field">DWH_Dim_accounts.Account_id    -    DWH_Fact_PPC.Account_gk</li>
+                    
+
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+
+    
+
+</div>
+
+<div class="clear"></div>
+
+
+
+<script type="text/javascript">
+    $(function(){
+        $('li.field').live("dblclick",function(){
+            $('#modal').dialog();
+
+        })
+
+    $('.checkbox').removeAttr('checked');
+    })
+
+
+</script>
+
+<div id="modal">
+    <select title="Please select" id="field1">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+    </select>
+
+    <select title="Please select 2" id="field2">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+    </select>
+
+</div>
+
+
+</body>
+
+</html>
