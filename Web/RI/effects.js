@@ -1,8 +1,8 @@
 
-$(document).ready(function(){
-
-	//Hide (Collapse) the toggle containers on load
-	$(".toggle_container").hide();
+$(function(){
+    //Hide (Collapse) the toggle containers on load
+	$(".toggle_container").show();
+    $('h2.trigger').addClass("active");
 
 	//Switch the "Open" and "Close" state per click then slide up/down (depending on open/close state)
 	$("h2.trigger").click(function(){
@@ -11,4 +11,8 @@ $(document).ready(function(){
         return false;
 	});
 
-});
+})
+
+
+
+

@@ -60,7 +60,7 @@ h2.active:hover{
     overflow:auto;
 	width: 100%;
 	clear: both;
-     display:none;
+    display:none;
 }
 
 
@@ -281,9 +281,19 @@ a.delete{
     top:-1px
 }
 
-a.delete span{
+.delete span{
     display:block;
     width:100%
 
+
+}
+
+#confirm{
+    display:none;
+
+}
+
+#confirm span{
+    display:none;
 
 }

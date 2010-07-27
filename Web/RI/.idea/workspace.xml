@@ -7,10 +7,12 @@
     <list default="true" readonly="true" id="e4282e73-c79f-4a26-a6c7-fdda3451339a" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/style2.css" afterPath="$PROJECT_DIR$/style2.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/effects.js" afterPath="$PROJECT_DIR$/effects.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/style_write.css" afterPath="$PROJECT_DIR$/style_write.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.html" afterPath="$PROJECT_DIR$/main.html" />
     </list>
-    <ignored path=".idea/workspace.xml" />
     <ignored path="dim_fact.iws" />
+    <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +36,25 @@
       <file leaf-file-name="main.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="12" selection-start="777" selection-end="777" vertical-scroll-proportion="0.27309236">
+            <state line="69" column="29" selection-start="1906" selection-end="1906" vertical-scroll-proportion="0.71686745">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style_write.css" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/style_write.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="371" column="0" selection-start="5492" selection-end="5492" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="effects.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/effects.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="18" column="0" selection-start="371" selection-end="371" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -43,7 +63,7 @@
       <file leaf-file-name="style2.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/style2.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="286" column="0" selection-start="4130" selection-end="4130" vertical-scroll-proportion="-14.48">
+            <state line="62" column="17" selection-start="1193" selection-end="1193" vertical-scroll-proportion="-17.2">
               <folding />
             </state>
           </provider>
@@ -63,18 +83,18 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/json.html" />
         <option value="$PROJECT_DIR$/templatedemo" />
         <option value="$PROJECT_DIR$/json.js" />
         <option value="$PROJECT_DIR$/template.html" />
         <option value="$PROJECT_DIR$/json2.js" />
-        <option value="$PROJECT_DIR$/effects.js" />
         <option value="$PROJECT_DIR$/tes2t.html" />
         <option value="$PROJECT_DIR$/templatetest2.html" />
         <option value="$PROJECT_DIR$/template_test.html" />
         <option value="$PROJECT_DIR$/jquery-ui-1.8.2.custom.css" />
         <option value="$PROJECT_DIR$/test_2.html" />
         <option value="$PROJECT_DIR$/mojo.js" />
+        <option value="$PROJECT_DIR$/effects.js" />
+        <option value="$PROJECT_DIR$/download.php" />
         <option value="$PROJECT_DIR$/style_write.css" />
         <option value="$PROJECT_DIR$/main_write.html" />
         <option value="$PROJECT_DIR$/style2.css" />
@@ -128,8 +148,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Favorites" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -141,13 +161,13 @@
     <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="OPEN_URL_DIALOG">
+      <recent name="http://localhost/dim_fact" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="Y:\RI" />
       <recent name="Y:\dim_fact" />
       <recent name="C:\Documents and Settings\Yaron\Desktop\dim_fact" />
-    </key>
-    <key name="OPEN_URL_DIALOG">
-      <recent name="http://localhost/dim_fact" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="Y:\RI" />
@@ -253,10 +273,10 @@
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32942554" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32942554" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32942554" sideWeight="0.0" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32750398" sideWeight="0.3352872" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30206677" sideWeight="0.6623681" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3298887" sideWeight="0.6623681" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3985932" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -302,11 +322,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="http://qa:8000/ri/tables?callback=jsonp1279021237110">
-      <provider selected="true" editor-type-id="httpFileEditor">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templatetest2.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
@@ -322,11 +337,6 @@
         <state line="49" column="91" selection-start="3157" selection-end="3157" vertical-scroll-proportion="0.20961775" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/effects.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="1" selection-end="337" vertical-scroll-proportion="0.10290557" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/json.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
@@ -339,21 +349,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tes2t.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/template.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="8" selection-start="1014" selection-end="6697" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/style_write.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="297" column="17" selection-start="4147" selection-end="4147" vertical-scroll-proportion="0.0" />
+        <state line="38" column="8" selection-start="1014" selection-end="6697" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="http://www.appelsiini.net/projects/jeditable/default.html">
@@ -361,37 +362,52 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main_write.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="201" column="0" selection-start="4321" selection-end="4321" vertical-scroll-proportion="5.0729165">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="10" selection-start="1767" selection-end="1767" vertical-scroll-proportion="0.39766082">
-          <folding />
-        </state>
+        <state line="63" column="10" selection-start="1767" selection-end="1767" vertical-scroll-proportion="0.39766082" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/template_test.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="215" column="18" selection-start="4947" selection-end="5446" vertical-scroll-proportion="0.034136545">
+        <state line="215" column="18" selection-start="4947" selection-end="5446" vertical-scroll-proportion="0.034136545" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/download.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="8" selection-start="155" selection-end="155" vertical-scroll-proportion="0.22118959" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/effects.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="0" selection-start="371" selection-end="371" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_write.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="94" column="36" selection-start="2319" selection-end="2319" vertical-scroll-proportion="1.1267056">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/style_write.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="371" column="0" selection-start="5492" selection-end="5492" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/style2.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="286" column="0" selection-start="4130" selection-end="4130" vertical-scroll-proportion="-14.48">
+        <state line="62" column="17" selection-start="1193" selection-end="1193" vertical-scroll-proportion="-17.2">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="12" selection-start="777" selection-end="777" vertical-scroll-proportion="0.27309236">
+        <state line="69" column="29" selection-start="1906" selection-end="1906" vertical-scroll-proportion="0.71686745">
           <folding />
         </state>
       </provider>

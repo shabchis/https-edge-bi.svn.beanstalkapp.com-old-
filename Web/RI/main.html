@@ -17,9 +17,9 @@
 </head>
 <body>
 <script type="text/javascript">
-
+ var _col = "";
     $(function(){
-
+       
 
         GetTableListData('dim');
         GetTableListData('fact');
@@ -27,17 +27,14 @@
         GetDimTable('fact');
 
         $('a.delete').live("click",function(){
-            
+         
 
            var id =   $(this).parent().attr('id');
+          
+GetRelationCol(id);
 
-    
-        var confirm =     $(this).parent().next().find('li').text();
+              
 
-           $('<span>Are you sure you want to delete</span>').prependTo('#confirm');
-
-
-            $('#confirm div').append(confirm);
 
             $('#confirm').dialog({
                     resizable: false,
@@ -126,10 +123,10 @@
         </div>
         <div class="clear"></div>
         <div id="confirm">
-            <div>
 
+            <span>Are you sure you want to delete</span>
                 
-            </div>
+            
 
         </div>
 
@@ -348,13 +345,19 @@
             success:function(data){
 
                        $('#columns_containers').render(data).appendTo('#block_'+RalationId);
+                       
+                     $('#block_'+RalationId).appendTo('#confim');
+                   
 
                        $('ul.list_'+RalationId+' li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
 
                             
                           title.toggleClass("active").next().slideToggle("slow");
+                        
 
                 $('li#'+RalationId).live("click",function(){
+
+
 
                  $('#factcombo').appendTo('#col_edit #rightcol');
                   $('#dimcombo').appendTo('#col_edit #leftcol');
