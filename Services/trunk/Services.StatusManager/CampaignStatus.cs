@@ -28,7 +28,7 @@ namespace Easynet.Edge.Services.StatusManager
         //    using (DataManager.Current.OpenConnection())
         //    {
 		// COMMENT HADASG
-		// OD COMMENT
+		// MY BEST COMMENT
 
               
         //        try
