@@ -31,7 +31,7 @@
 
            var id =   $(this).parent().attr('id');
           
-GetRelationCol(id);
+
 
               
 
@@ -57,7 +57,7 @@ GetRelationCol(id);
 
         })
         $('a.new').live("click",function(){
- var title  =   $(this).parent().find('a.link').text();
+            var title  =   $(this).parent().find('a.link').text();
             $('#col_edit').dialog({title:''+title+''},{
                     buttons:{"Add":function(){
                     $(this).dialog('close');
