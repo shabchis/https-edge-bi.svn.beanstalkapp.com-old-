@@ -54,9 +54,9 @@
             <div class="block">
                 <ul class="list" id="list">
                     <input type="checkbox" class="checkbox">
-                  
+                    <ul class="list" id="list">
                     <li class="field">DWH_Dim_accounts.Account_id   -    DWH_Fact_PPC.Account_gk</li>
-
+                    </ul>
 
                 </ul>
 
@@ -81,7 +81,10 @@
 
         </div>
     </div>
+     <div id="submit" class="button">
+         Submit
 
+     </div>
     
 
 </div>
@@ -98,10 +101,36 @@
         })
 
     $('.checkbox').removeAttr('checked');
+    });
+
+    $('#submit').click(function(){
+        $('#count span').empty();
+         $('#count #values').empty();
+        var length = ($(':checkbox:checked').length)
+
+        $('input[type=checkbox]:checked').each(function(){
+         var value =  $(this).next().find('.field').text();
+        $('#count #values').append(value);
+
+});
+
+
+
+      $('#count span').append(length);
+
+        $('#count').dialog();
+
+
     })
 
-
 </script>
+
+<div id="count">
+    your about to send <span></span> records
+    <div id="values"></br></div>
+
+
+</div>
 
 <div id="modal">
     <select title="Please select" id="field1">

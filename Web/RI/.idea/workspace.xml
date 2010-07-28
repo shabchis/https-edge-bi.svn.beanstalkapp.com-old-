@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="e4282e73-c79f-4a26-a6c7-fdda3451339a" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main_write.html" afterPath="$PROJECT_DIR$/main_write.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/style2.css" afterPath="$PROJECT_DIR$/style2.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testing.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/style_write.css" afterPath="$PROJECT_DIR$/style_write.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.html" afterPath="$PROJECT_DIR$/main.html" />
     </list>
     <ignored path="dim_fact.iws" />
@@ -30,26 +34,55 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="main.html" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="main.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="35" selection-start="716" selection-end="716" vertical-scroll-proportion="-6.8">
+            <state line="297" column="20" selection-start="7200" selection-end="7200" vertical-scroll-proportion="0.19465649">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="charts.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="http://www.sencha.com/deploy/dev/examples/chart/charts.html">
-          <provider selected="true" editor-type-id="httpFileEditor">
-            <state />
+      <file leaf-file-name="testing.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testing.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="319" column="10" selection-start="7780" selection-end="7780" vertical-scroll-proportion="-29.24">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="json2.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/json2.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main_write.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main_write.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="111" column="58" selection-start="2829" selection-end="2829" vertical-scroll-proportion="-43.6">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="json.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/json.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="23" selection-start="23" selection-end="23" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="style_write.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/style_write.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="371" column="0" selection-start="5492" selection-end="5492" vertical-scroll-proportion="0.0">
+            <state line="373" column="17" selection-start="5518" selection-end="5518" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -67,7 +100,7 @@
       <file leaf-file-name="style2.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/style2.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="62" column="17" selection-start="1193" selection-end="1193" vertical-scroll-proportion="-17.2">
+            <state line="149" column="0" selection-start="2180" selection-end="2180" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -87,7 +120,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/templatedemo" />
         <option value="$PROJECT_DIR$/json.js" />
         <option value="$PROJECT_DIR$/template.html" />
         <option value="$PROJECT_DIR$/json2.js" />
@@ -99,10 +131,11 @@
         <option value="$PROJECT_DIR$/mojo.js" />
         <option value="$PROJECT_DIR$/effects.js" />
         <option value="$PROJECT_DIR$/download.php" />
+        <option value="$PROJECT_DIR$/main.html" />
+        <option value="$PROJECT_DIR$/style2.css" />
         <option value="$PROJECT_DIR$/style_write.css" />
         <option value="$PROJECT_DIR$/main_write.html" />
-        <option value="$PROJECT_DIR$/style2.css" />
-        <option value="$PROJECT_DIR$/main.html" />
+        <option value="$PROJECT_DIR$/testing.html" />
       </list>
     </option>
   </component>
@@ -159,10 +192,10 @@
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="recentsLimit" value="5" />
     <property name="options.lastSelected" value="preferences.lookFeel" />
-    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="recentsLimit" value="5" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="OPEN_URL_DIALOG">
@@ -280,7 +313,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32942554" sideWeight="0.0" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32750398" sideWeight="0.3352872" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3298887" sideWeight="0.59320045" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3298887" sideWeight="0.6623681" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3985932" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -326,21 +359,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/template_test_new.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-3.2748091" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jquery-ui-1.8.2.custom.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="91" selection-start="3157" selection-end="3157" vertical-scroll-proportion="0.20961775" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/json.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="http://aktagon.com/projects/jquery/in-place-edit/examples">
       <provider selected="true" editor-type-id="httpFileEditor">
         <state />
@@ -376,44 +394,63 @@
         <state line="7" column="8" selection-start="155" selection-end="155" vertical-scroll-proportion="0.22118959" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main_write.html">
+    <entry file="file://$PROJECT_DIR$/effects.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="94" column="36" selection-start="2319" selection-end="2319" vertical-scroll-proportion="1.1267056">
+        <state line="18" column="0" selection-start="371" selection-end="371" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="http://www.sencha.com/deploy/dev/examples/chart/charts.html">
+      <provider selected="true" editor-type-id="httpFileEditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/style2.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="149" column="0" selection-start="2180" selection-end="2180" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/style_write.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="371" column="0" selection-start="5492" selection-end="5492" vertical-scroll-proportion="0.0">
+        <state line="373" column="17" selection-start="5518" selection-end="5518" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/effects.js">
+    <entry file="file://$PROJECT_DIR$/json2.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="0" selection-start="371" selection-end="371" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/style2.css">
+    <entry file="file://$PROJECT_DIR$/json.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="17" selection-start="1193" selection-end="1193" vertical-scroll-proportion="-17.2">
+        <state line="0" column="23" selection-start="23" selection-end="23" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_write.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="111" column="58" selection-start="2829" selection-end="2829" vertical-scroll-proportion="-43.6">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testing.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="319" column="10" selection-start="7780" selection-end="7780" vertical-scroll-proportion="-29.24">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="35" selection-start="716" selection-end="716" vertical-scroll-proportion="-6.8">
+        <state line="297" column="20" selection-start="7200" selection-end="7200" vertical-scroll-proportion="0.19465649">
           <folding />
         </state>
-      </provider>
-    </entry>
-    <entry file="http://www.sencha.com/deploy/dev/examples/chart/charts.html">
-      <provider selected="true" editor-type-id="httpFileEditor">
-        <state />
       </provider>
     </entry>
   </component>
