@@ -19,8 +19,8 @@
 <script type="text/javascript">
  var _col = "";
     $(function(){
-       
-
+       $('<option>Select all dim tables</option>').prependTo('#dimcombo');
+        $('<option>Select all fact tables</option>').prependTo('#factcombo');
         GetTableListData('dim');
         GetTableListData('fact');
         GetDimTable('dim');
