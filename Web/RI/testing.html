@@ -6,7 +6,7 @@
     <link type="text/css" rel="stylesheet" href="jquery-ui-1.8.2.custom.css">
 
 
-    <title>Dim fact tables</title>
+    <title>Testing environment</title>
     <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
 
 
@@ -27,13 +27,13 @@
         GetDimTable('fact');
 
         $('a.delete').live("click",function(){
-         
+
 
            var id =   $(this).parent().attr('id');
-          
 
 
-              
+
+
 
 
             $('#confirm').dialog({
@@ -47,7 +47,7 @@
                                          Cancel: function() {
                                              $(this).dialog('close');
                                          }
-                         
+
 
                      }
 
@@ -102,7 +102,7 @@
         })
 
 
-        
+
     })
 
 
@@ -119,14 +119,14 @@
                 <label for="radio2" class="cb-disable"><span>Dimension table</span></label>
             </p>
 
-       
+
         </div>
         <div class="clear"></div>
         <div id="confirm">
 
             <span>Are you sure you want to delete</span>
-                
-            
+
+
 
         </div>
 
@@ -270,7 +270,7 @@
 
         $.ajax({
             type: "GET",
-            url: "http://qa/ri/service.svc/tables?type="+factOrDim,/*http://qa/ri/service.svc/tables?type=fact*/
+            url: "json.js?type="+factOrDim,/*http://qa/ri/service.svc/tables?type=fact*/
             dataType:"json",
             success: function(data){
                 $("#template2").render(data).appendTo("#"+factOrDim+"combo");
@@ -297,8 +297,10 @@
 
             $.ajax({
                 type: "GET",
-                url: "http://qa/ri/service.svc/relations?tableid="+id+"&type="+factOrDim+"",/*http://qa:8000/ri/tables*/
+                url: "json.js?tableid="+id+"&type="+factOrDim+"",/*http://qa:8000/ri/tables*/
                 dataType:"json",
+                cache: 'false',
+                
                 success: function(data){
 
                     for(var relationKey in data)
@@ -322,7 +324,7 @@
                 //$("#template").render(data).appendTo("#content");
 
                 error:function(data,error){
-                  
+
 
                     $('#error').append(error);
                     $('#error').dialog({title:''+error+''});
@@ -350,15 +352,15 @@
             success:function(data){
 
                        $('#columns_containers').render(data).appendTo('#block_'+RalationId);
-                       
+
                      $('#block_'+RalationId).appendTo('#confim');
-                   
+
 
                        $('ul.list_'+RalationId+' li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
 
-                            
+
                           title.toggleClass("active").next().slideToggle("slow");
-                        
+
 
                 $('li#'+RalationId).live("click",function(){
 
@@ -366,14 +368,14 @@
 
                  $('#factcombo').appendTo('#col_edit #rightcol');
                   $('#dimcombo').appendTo('#col_edit #leftcol');
-                    
+
                     $("#col_edit").dialog({
                         width:1000,
                         buttons:{
                             "ok":function(){
                        var col =   $('#leftcol option:selected').text();
 
-                       
+
 
 
                                         $(this).dialog('close');
@@ -388,7 +390,7 @@
 
                     }
 
-                        
+
 
 
 
@@ -399,7 +401,7 @@
 
 
 
-              
+
               }
 
 
@@ -469,4 +471,5 @@
 
 </body>
 
+</html>
 </html>
