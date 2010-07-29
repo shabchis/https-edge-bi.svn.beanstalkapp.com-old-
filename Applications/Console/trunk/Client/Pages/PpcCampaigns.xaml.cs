@@ -175,6 +175,10 @@ namespace Easynet.Edge.UI.Client.Pages
 			GetCampaigns(() => _changingStatus = false);
 		}
 
+		void _filterButton_Click(object sender, RoutedEventArgs e)
+		{
+		}
+
 		public override bool OnAccountChanging(Oltp.AccountRow account)
 		{
 			// Confirm save changes
@@ -272,6 +276,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			int? channelID =  _channelPicker.SelectedIndex < 1 ? null : new int?((_channelPicker.SelectedValue as Oltp.ChannelRow).ID);
 			int? statusID = _campaignStatusPicker.SelectedIndex < 1 ? null : new int?((_campaignStatusPicker.SelectedValue as Oltp.CampaignStatusRow).ID);
+			string filter = _campaignFilterTextBox.Text.Trim();
 
 			Window.AsyncOperation(delegate()
 			{
@@ -281,7 +286,9 @@ namespace Easynet.Edge.UI.Client.Pages
 					_campaigns = proxy.Service.Campaign_Get(
 						account.ID,
 						channelID,
-						statusID
+						statusID,
+						filter,
+						_campaignFilterIncludeAdgroups.IsChecked.Value
 						);
 				}
 			},
@@ -290,7 +297,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				if (onComplete != null)
 					onComplete();
 
-				MessageBoxError("Failed not get campaigns.", ex);
+				MessageBoxError("Failed to get campaigns.", ex);
 				return false;
 			},
 			delegate()

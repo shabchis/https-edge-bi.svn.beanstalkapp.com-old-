@@ -150,7 +150,7 @@ namespace Easynet.Edge.UI.Server
 		Oltp.PageDataTable Page_Save(Oltp.PageDataTable pageTable);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
-		Oltp.CampaignDataTable Campaign_Get(int accountID, int? channelID, int? statusID);
+		Oltp.CampaignDataTable Campaign_Get(int accountID, int? channelID, int? statusID, string filter, bool filterByAdgroup);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
 		Oltp.CampaignDataTable Campaign_GetIndividualCampaigns(long[] campaignGKs);
