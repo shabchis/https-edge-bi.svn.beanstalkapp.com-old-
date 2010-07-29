@@ -219,10 +219,10 @@
     </script>
 <script id="columns_containers" type="text/html">
 
-    <ul class="list_${RelationID}" id="list">
+    <!--<ul class="list_${RelationID}" id="list">-->
         <li id="${RelationID}"><a href="#">${DimField}</a> - <a href="#">${FactField}</a></li>
 
-    </ul>
+    <!--</ul>-->
 
 </script>
 
@@ -346,7 +346,7 @@
             dataType:"json",
             success:function(data){
 
-                       $('#columns_containers').render(data).appendTo('#block_'+RalationId);
+                       $('#columns_containers').render(data).appendTo('#block_'+RalationId).wrapAll('<ul class="list_'+RalationId+'"id="list">');
                        
                      $('#block_'+RalationId).appendTo('#confim');
                    
