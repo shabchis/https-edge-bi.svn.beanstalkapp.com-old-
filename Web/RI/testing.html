@@ -252,7 +252,7 @@
 <script id="columns_containers" type="text/html">
 
 
-        <li id="${RelationID}" class="${status}"><a href="#">${DimField}</a> - <a href="#">${FactField}</a></li>
+        <li id="listitem_${RelationID}" class="${status}"><a href="#">${DimField}</a> - <a href="#">${FactField}</a></li>
 
 
 
@@ -377,7 +377,7 @@
         var block =  $('#block_'+RalationId);
         $('#block_'+RalationId).empty();
 
-        var list  = $('ul.list_'+RalationId+'');
+        var list  = $('#list_'+RalationId+'');
 
         $.ajax({
             type: "GET",
@@ -389,6 +389,43 @@
                 $('#columns_containers').render(data).appendTo('#block_'+RalationId).wrapAll('<ul class="list" id="list_'+RalationId+'></ul>');
 
                 $('#block_'+RalationId).appendTo('#confim');
+
+                    $('.newer').before('<input type="checkbox" class="checkbox">');
+                       $('.old').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
+      /*          if ($('.list li').hasClass('newer')){
+
+                    console.log('has');
+               $('.list li.newer').before('<input type="checkbox" class="checkbox">');
+                }
+
+                else
+
+                {
+            $('li.old').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>') ;
+                    console.log('not');
+                }*/
+/*
+                $('ul.list li').hasClass('newer')?$('.ul.list li').before('<input type="checkbox" class="checkbox">'): $('ul.list li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>')   ;
+*/
+            
+               /* if ($('ul.list li').hasClass('newer')){
+
+
+
+
+                $('ul.list li.newer').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>')   ;
+                }
+
+                else
+
+                {
+                  $('.ul.list li:not.newer').before('<input type="checkbox" class="checkbox">');
+
+
+                }*/
+
+
+
 
 
                /* if (list.hasClass('new')) {
