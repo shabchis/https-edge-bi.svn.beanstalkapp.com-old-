@@ -343,3 +343,8 @@ a.delete{
     margin-right:167px;
     margin-top:38px;
 }
+
+#approval{
+
+    display:none;
+}

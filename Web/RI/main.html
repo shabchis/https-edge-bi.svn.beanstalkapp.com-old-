@@ -19,6 +19,25 @@
 <script type="text/javascript">
  var _col = "";
     $(function(){
+
+        $('#submit').click(function(){
+            $('#approval').empty();
+          $('input[type=checkbox]:checked').each(function(){
+         var id =  $(this).next().attr('id');
+              id+=",";
+   
+
+            
+
+              
+        $('#approval').append(id);
+
+              $('#approval').dialog();
+
+});
+
+        })
+     
        $('<option>Select all dim tables</option>').prependTo('#dimcombo');
         $('<option>Select all fact tables</option>').prependTo('#factcombo');
         GetTableListData('dim');
@@ -142,6 +161,10 @@
 
         </div>
 
+        <div id="approval">
+            
+        </div>
+
         <select id="dimcombo">
 
         </select>
@@ -220,7 +243,7 @@
 <script id="columns_containers" type="text/html">
 
     <!--<ul class="list_${RelationID}" id="list">-->
-        <li id="${RelationID}"><a href="#">${DimField}</a> - <a href="#">${FactField}</a></li>
+        <li id="${RelationID}" class="new"><a href="#">${DimField}</a> - <a href="#">${FactField}</a></li>
 
     <!--</ul>-->
 
@@ -304,6 +327,7 @@
 
                     $("#headers").render(data).appendTo('#content');
 
+                 
 
                     $('h2.trigger').bind("click",function(){
                         var RalationId = $(this).attr('id');
@@ -348,36 +372,28 @@
 
                        $('#columns_containers').render(data).appendTo('#block_'+RalationId).wrapAll('<ul class="list_'+RalationId+'"id="list">');
                        
-                     $('#block_'+RalationId).appendTo('#confim');
+                     /*$('#block_'+RalationId).appendTo('#confirm');*/
                    
-
-                       $('ul.list_'+RalationId+' li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
+                       $('ul.list_'+RalationId+' li.new').before('<input type="checkbox" class="checkbox">');
+                       $('ul.list_'+RalationId+' li.old').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
 
                             
                           title.toggleClass("active").next().slideToggle("slow");
                         
 
                 $('li#'+RalationId).live("click",function(){
-
-
-
                  $('#factcombo').appendTo('#col_edit #rightcol');
-                  $('#dimcombo').appendTo('#col_edit #leftcol');
-                    
                     $("#col_edit").dialog({
                         width:1000,
                         buttons:{
                             "ok":function(){
-                       var col =   $('#leftcol option:selected').text();
+                                var col =   $('#leftcol option:selected').text();
 
-                       
-
-
-                                        $(this).dialog('close');
+                                $(this).dialog('close');
 
                             },
                             "apply":function(){
-                                    $(this).dialog('close');
+                                $(this).dialog('close');
 
                             }
 
@@ -385,18 +401,16 @@
 
                     }
 
-                        
 
 
 
-                );
+
+                            );
+
+                  $('#dimcombo').appendTo('#col_edit #leftcol');
 
                 })
 
-
-
-
-              
               }
 
 
