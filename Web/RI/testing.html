@@ -19,6 +19,9 @@
 <script type="text/javascript">
  var _col = "";
     $(function(){
+
+         
+             
        $('<option>Select all dim tables</option>').prependTo('#dimcombo');
         $('<option>Select all fact tables</option>').prependTo('#factcombo');
         GetTableListData('dim');
@@ -56,6 +59,26 @@
 
 
         })
+
+        $('#submit').click(function(){
+        $('#count span').empty();
+         $('#count #values').empty();
+        var length = ($(':checkbox:checked').length)
+
+        $('input[type=checkbox]:checked').each(function(){
+         var value =  $(this).next().find('.field').text();
+        $('#count #values').append(value);
+
+});
+
+            $('#count span').append(length);
+
+                   $('#count').dialog();
+            
+        })
+
+
+
         $('a.new').live("click",function(){
             var title  =   $(this).parent().find('a.link').text();
             $('#col_edit').dialog({title:''+title+''},{
@@ -150,10 +173,7 @@
 
         </select>
 
-        <a class="button">
-            Analyze
-
-        </a>
+        
     </div>
     <div id="modal">
         <table id="map">
@@ -206,6 +226,15 @@
         </div>
     </div>
 
+
+        
+
+</div>
+<div id="count">
+    your about to send <span></span> records
+    <div id="values"><br/></div>
+
+
 </div>
 
       <script type="text/html" id="mapping">
@@ -222,10 +251,10 @@
     </script>
 <script id="columns_containers" type="text/html">
 
-    <ul class="list_${RelationID}" id="list">
-        <li id="${RelationID}"><a href="#">${DimField}</a> - <a href="#">${FactField}</a></li>
 
-    </ul>
+        <li id="${RelationID}" class="${status}"><a href="#">${DimField}</a> - <a href="#">${FactField}</a></li>
+
+
 
 </script>
 
@@ -246,6 +275,8 @@
     </h2>
     <div class="toggle_container">
         <div class="block" id="block_${RelationID}">
+            <div id="list_${RelationID}" class="list"></div>
+           
         </div>
     </div>
 </script>
@@ -297,9 +328,9 @@
 
             $.ajax({
                 type: "GET",
-                url: "json.js?tableid="+id+"&type="+factOrDim+"",/*http://qa:8000/ri/tables*/
-                dataType:"json",
-                cache: 'false',
+                url: "accounts_dim.js?tableid=62&type=dim",  /*http://qa:8000/ri/tables*/
+               dataType:"json",
+
                 
                 success: function(data){
 
@@ -343,46 +374,66 @@
 
         var title = $('h2.trigger#'+RalationId);
         var LastTitle = $('h2.trigger:last');
+        var block =  $('#block_'+RalationId);
         $('#block_'+RalationId).empty();
+
+        var list  = $('ul.list_'+RalationId+'');
 
         $.ajax({
             type: "GET",
-            url: "http://qa/ri/service.svc/relations/"+RalationId+"/columns",/*http://qa:8000/ri/tables*/
+            url: "columns.js?3",/*http://qa:8000/ri/tables*/
             dataType:"json",
+
             success:function(data){
 
-                       $('#columns_containers').render(data).appendTo('#block_'+RalationId);
+                $('#columns_containers').render(data).appendTo('#block_'+RalationId).wrapAll('<ul class="list" id="list_'+RalationId+'></ul>');
 
-                     $('#block_'+RalationId).appendTo('#confim');
-
-
-                       $('ul.list_'+RalationId+' li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
+                $('#block_'+RalationId).appendTo('#confim');
 
 
-                          title.toggleClass("active").next().slideToggle("slow");
+               /* if (list.hasClass('new')) {
+
+                        $('#list_'+RalationId+' li').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
+
+                }
+                else
+                {
+                $('#list_'+RalationId+' li').before('<input type="checkbox" class="checkbox">');
+
+                  
+                            
+                }
+*/
+               
+
+
+
+
+
+                title.toggleClass("active").next().slideToggle("slow");
 
 
                 $('li#'+RalationId).live("click",function(){
 
 
 
-                 $('#factcombo').appendTo('#col_edit #rightcol');
-                  $('#dimcombo').appendTo('#col_edit #leftcol');
+                    $('#factcombo').appendTo('#col_edit #rightcol');
+                    $('#dimcombo').appendTo('#col_edit #leftcol');
 
                     $("#col_edit").dialog({
                         width:1000,
                         buttons:{
                             "ok":function(){
-                       var col =   $('#leftcol option:selected').text();
+                                var col =   $('#leftcol option:selected').text();
 
 
 
 
-                                        $(this).dialog('close');
+                                $(this).dialog('close');
 
                             },
                             "apply":function(){
-                                    $(this).dialog('close');
+                                $(this).dialog('close');
 
                             }
 
@@ -394,7 +445,7 @@
 
 
 
-                );
+                            );
 
                 })
 
@@ -402,8 +453,7 @@
 
 
 
-              }
-
+            }
 
 
 
@@ -471,5 +521,4 @@
 
 </body>
 
-</html>
 </html>
