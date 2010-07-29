@@ -1,0 +1,1 @@
+[{"DimTableID":62,"DimTableName":"Dwh_Dim_Accounts","FactTableID":64,"FactTableName":"Dwh_Dim_Getways","RelationID":3},]
