@@ -95,7 +95,7 @@
 				</StackPanel>
 			</Canvas>
 			
-			<StackPanel DockPanel.Dock="Top" Margin="0,15,0,0" Orientation="Horizontal" VerticalAlignment="Bottom">
+			<StackPanel DockPanel.Dock="Top" Margin="0,15,0,0" Orientation="Horizontal" VerticalAlignment="Bottom" this:AccessKeyScoper.IsAccessKeyScope="true">
 				<StackPanel.Resources>
 					<Style TargetType="{x:Type ComboBox}">
 						<Setter Property="Width" Value="130"/>
@@ -113,12 +113,44 @@
 				</StackPanel.Resources>
 				<StackPanel Orientation="Vertical">
 					<Label Content="Channel"/>
-					<ComboBox x:Name="_channelPicker" Width="200" ItemTemplateSelector="{StaticResource ChannelPickerChannelTemplateSelector}"/>
+					<ComboBox x:Name="_channelPicker" Width="160" ItemTemplateSelector="{StaticResource ChannelPickerChannelTemplateSelector}"/>
 				</StackPanel>
 				<StackPanel Orientation="Vertical">
 					<Label Content="Campaign Status"/>
-					<ComboBox x:Name="_campaignStatusPicker" Width="200" ItemTemplateSelector="{StaticResource CampaignStatusPickerTemplateSelector}"/>
+					<ComboBox x:Name="_campaignStatusPicker" Width="160" ItemTemplateSelector="{StaticResource CampaignStatusPickerTemplateSelector}"/>
 				</StackPanel>
+				<Canvas>
+					<Rectangle x:Name="_campainFilterBackground" Fill="Red" Width="180" Height="100" Canvas.Left="-10" Canvas.Right="-10" Opacity="0"/>
+					<StackPanel Orientation="Vertical">
+						<Label Content="Name"/>
+						<TextBox x:Name="_campaignFilterTextBox" Width="160">
+							<TextBox.Triggers>
+								<EventTrigger RoutedEvent="GotFocus">
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="_campainFilterBackground"
+															 Storyboard.TargetProperty="UIElement.Opacity" To="1"/>
+											<DoubleAnimation Storyboard.TargetName="_campaignFilterIncludeAdgroups"
+															 Storyboard.TargetProperty="UIElement.Opacity" To="1"/>
+										</Storyboard>
+									</BeginStoryboard>
+								</EventTrigger>
+								<EventTrigger RoutedEvent="LostFocus">
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="_campainFilterBackground"
+															 Storyboard.TargetProperty="UIElement.Opacity" To="0"/>
+											<DoubleAnimation Storyboard.TargetName="_campaignFilterIncludeAdgroups"
+															 Storyboard.TargetProperty="UIElement.Opacity" To="0"/>
+										</Storyboard>
+									</BeginStoryboard>
+								</EventTrigger>
+							</TextBox.Triggers>
+						</TextBox>
+					</StackPanel>
+					<CheckBox x:Name="_campaignFilterIncludeAdgroups" Opacity="0">Include adgroups</CheckBox>
+				</Canvas>
+				<Button Content="Filter" Click="_filterButton_Click" IsDefault="True"/>
 			</StackPanel>
 			
 			<this:ListTable x:Name="_listTable"

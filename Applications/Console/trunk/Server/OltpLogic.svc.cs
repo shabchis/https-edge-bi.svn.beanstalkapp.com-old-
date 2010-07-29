@@ -967,9 +967,9 @@ namespace Easynet.Edge.UI.Server
 			// Return only new rows
 			return hasNew ? table : null;
 		}
-		public Oltp.CampaignDataTable Campaign_Get(int accountID, int? channelID, int? statusID)
+		public Oltp.CampaignDataTable Campaign_Get(int accountID, int? channelID, int? statusID, string filter, bool filterByAdgroup)
 		{
-			return From<CampaignTableAdapter>().Get(accountID, channelID, statusID);
+			return From<CampaignTableAdapter>().Get(accountID, channelID, statusID, filter, filterByAdgroup);
 		}
 
 		public Oltp.CampaignDataTable Campaign_GetIndividualCampaigns(long[] campaignGKs)
