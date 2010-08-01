@@ -117,7 +117,10 @@
         })
         $('#radio2').click(function() {
             $('#factcombo').hide();
+            getAllData('fact');
+
             $('#dimcombo').show();
+            $('#dimcombo option:first-child').attr('selected','selected');
 
             $('#title').html(fact);
         });
@@ -129,8 +132,10 @@
         $('#factcombo').hide();
         $('#title').html(title);
         $('#radio1').click(function(){
+            getAllData('dim');
             $('#dimcombo').hide();
             $('#factcombo').show();
+            $('#factcombo option:first-child').attr('selected','selected');
 
             $('#title').html(dim);
 
@@ -250,7 +255,7 @@
     </div>
 
 </div>
-<a class="button" id="submit">Submit</a>
+        <a class="button" id="submit">Submit</a>
       <script type="text/html" id="mapping">
 
           <tr>
@@ -265,10 +270,10 @@
     </script>
 <script id="columns_containers" type="text/html">
 
-    <!--<ul class="list_${RelationID}" id="list">-->
-        <li id="${RelationID}" class="new"><a href="#">${DimField}</a> - <a href="#">${FactField}</a></li>
 
-    <!--</ul>-->
+        <li id="${RelationID}" class="old"><a href="#">${DimField}</a> - <a href="#">${FactField}</a></li>
+
+ 
 
 </script>
 
@@ -293,6 +298,32 @@
     </div>
 </script>
 
+<script type="text/html" id="full">
+    <h2 class="trigger" id="${RelationID}">
+        <a class = "link"  href="#">${TableName}</a>
+        <a class="mapping" id="${DimTableID}">Mapping</a>
+        <a class="new">New</a>
+        <a class="delete">Delete</a>
+    </h2>
+    <div class="toggle_container">
+        <div class="block" id="block_${RelationID}">
+            <ul class="list" id="list">
+             <li id="${RelationID}" class="${RelationStatus}">
+                 <a href="#">{{each(i,RelationField) RelationFields}}
+                     ${DimTableName},
+                 {{/each}}</a>
+                 - <a href="#">
+                 {{each(i,RelationField) RelationFields}}
+                 ${FactTableName}
+             {{/each}}
+             </a>
+             </li>
+                </ul>
+        </div>
+    </div>
+
+</script>
+
 <script type="text/html" id="template2">
 
     <option id="${TableID}">${TableName}</option>
@@ -304,7 +335,40 @@
 
     var _tables = new Object();
 
+    function getAllData(factOrDim){
+        $('#content').empty();
 
+          $.ajax({
+            type: "GET",
+            url: "http://qa/ri/service.svc/relations?type="+factOrDim,/*http://qa/ri/service.svc/tables?type=fact*/
+            dataType:"json",
+            success: function(data){
+
+                 for(var relationKey in data)
+                        data[relationKey].TableName = factOrDim == 'dim' ?  data[relationKey].FactTableName :  data[relationKey].DimTableName;
+                $("#full").render(data).appendTo("#content");
+
+
+                 $('ul.list li.1').before('<input type="checkbox" class="checkbox">');
+                 $('ul.list li.0').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
+                $('h2.trigger').toggleClass("active").next().slideToggle("slow");
+
+
+
+
+                /*_tables[factOrDim] = data;*/
+
+
+
+
+            },
+            error:function(data,error){
+                $('#error').append(error);
+                $('#error').dialog();
+            }
+        });
+
+    }
 
     function GetTableListData(factOrDim){
 
@@ -331,7 +395,7 @@
     }
 
     function GetDimTable(factOrDim){
-
+        var content = $('#content');
 
         $('#'+factOrDim+'combo').change(function(){
             $('#content').empty();
@@ -349,6 +413,15 @@
 
                    
                     $("#headers").render(data).appendTo('#content');
+
+                  if($('#content').is(':empty')){
+
+                      $('#modal').text('no data found');
+
+                      $('#modal').dialog();
+                  }
+
+
 
                  
 
@@ -384,7 +457,7 @@
 
 
         var title = $('h2.trigger#'+RalationId);
-        var LastTitle = $('h2.trigger:last');
+        var LastTitle = $('h2.trigger').last();
         $('#block_'+RalationId).empty();
 
         $.ajax({
@@ -400,8 +473,18 @@
                        $('ul.list_'+RalationId+' li.new').before('<input type="checkbox" class="checkbox">');
                        $('ul.list_'+RalationId+' li.old').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
 
-                            
-                          title.toggleClass("active").next().slideToggle("slow");
+                            if (title.length >= 1){
+
+                                 title.toggleClass("active").next().slideToggle("slow");
+                            }
+                         else
+                            {
+                                  LastTitle.toggleClass("active").next().slideToggle("slow");
+
+                            }
+
+
+
 
                         $(title).click(function(){
                              title.toggleClass("active").next().slideToggle("slow");
