@@ -348,3 +348,8 @@ a.delete{
 
     display:none;
 }
+
+#check{
+    float:left;
+   margin:  155px 15px 0px 10px
+}

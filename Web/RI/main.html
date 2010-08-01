@@ -19,6 +19,23 @@
 <script type="text/javascript">
  var _col = "";
     $(function(){
+         $("a#check").toggle(function() {
+
+
+        $(".checkbox").attr('checked', true);
+         $("a#check").text('Uncheck');
+
+             
+
+},
+                 function() {
+
+                      $(".checkbox").attr('checked', false);
+                     $("a#check").text('Check all');
+                 }
+
+
+                 );
        
 
         $('#submit').click(function(){
@@ -141,7 +158,10 @@
 
        
         </div>
+
+
         <div class="clear"></div>
+
         <div id="confirm">
 
             <span>Are you sure you want to delete</span>
@@ -176,6 +196,8 @@
 
         
     </div>
+
+      <a id="check" class="button">Check all</a>
     <div id="modal">
         <table id="map">
             <thead>
@@ -330,7 +352,7 @@
 
                  
 
-                    $('h2.trigger').bind("click",function(){
+                    $('h2.trigger').each(function(){
                         var RalationId = $(this).attr('id');
 
 
@@ -380,37 +402,14 @@
 
                             
                           title.toggleClass("active").next().slideToggle("slow");
+
+                        $(title).click(function(){
+                             title.toggleClass("active").next().slideToggle("slow");
+
+                        })
                         
 
-                $('li#'+RalationId).live("click",function(){
-                 $('#factcombo').appendTo('#col_edit #rightcol');
-                    $("#col_edit").dialog({
-                        width:1000,
-                        buttons:{
-                            "ok":function(){
-                                var col =   $('#leftcol option:selected').text();
-
-                                $(this).dialog('close');
-
-                            },
-                            "apply":function(){
-                                $(this).dialog('close');
-
-                            }
-
-                        }
-
-                    }
-
-
-
-
-
-                            );
-
-                  $('#dimcombo').appendTo('#col_edit #leftcol');
-
-                })
+               
 
               }
 
