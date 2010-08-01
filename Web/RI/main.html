@@ -19,6 +19,7 @@
 <script type="text/javascript">
  var _col = "";
     $(function(){
+       
 
         $('#submit').click(function(){
             $('#approval').empty();
@@ -324,7 +325,7 @@
                     for(var relationKey in data)
                         data[relationKey].TableName = factOrDim == 'dim' ?  data[relationKey].FactTableName :  data[relationKey].DimTableName;
 
-
+                   
                     $("#headers").render(data).appendTo('#content');
 
                  
