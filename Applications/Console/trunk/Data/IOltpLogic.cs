@@ -165,7 +165,7 @@ namespace Easynet.Edge.UI.Server
 		void Campaign_Merge(int accountID, long targetCampaignGK, long[] otherCampaignGKs);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
-		Oltp.AdgroupDataTable Adgroup_Get(long campaignGK);
+		Oltp.AdgroupDataTable Adgroup_Get(long campaignGK, string filter);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
 		Oltp.AdgroupDataTable Adgroup_GetSingle(long adgroupGK);

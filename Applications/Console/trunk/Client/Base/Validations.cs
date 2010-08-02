@@ -302,6 +302,29 @@ namespace Easynet.Edge.UI.Client
 				return new ValidationResult(false, errorMsg);
 		}
 
+		public double? GetNumber(object value)
+		{
+			double val;
+
+			if (value is int || value is long || value is double || value is float)
+			{
+				return Convert.ToDouble(value);
+			}
+			else if (this.AllowEmpty && value != null && value.ToString().Trim().Length < 1)
+			{
+				return null;
+			}
+			else if (Double.TryParse(value.ToString(), out val))
+			{
+				return val;
+			}
+			else
+			{
+				// Failed to parse
+				return null;
+			}
+		}
+
 	}
 
 #endregion

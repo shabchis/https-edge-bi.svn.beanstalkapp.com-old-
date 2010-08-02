@@ -43,6 +43,7 @@
 
 <asp:Content ID="Content3" ContentPlaceHolderID="ResultsPlaceHolder" runat="server">
 	<div class="errorMessage" ><%= ErrorMessage %></div>
+	<div class="successMessage" ><%= SuccessMessage %></div>
 
 	<div class="formField">
 	    <div class="label">Source:</div>

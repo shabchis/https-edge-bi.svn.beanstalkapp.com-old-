@@ -219,7 +219,7 @@
 										</this:ListTable>
 									</DockPanel>
 
-									<Grid this:AccessKeyScoper.IsAccessKeyScope="true" Width="300" Height="215" Visibility="Collapsed" x:Name="_batchKeywordsDialog" >
+									<Grid this:AccessKeyScoper.IsAccessKeyScope="true" Width="400" Height="215" Visibility="Collapsed" x:Name="_batchKeywordsDialog" >
 										<Grid.RowDefinitions>
 											<RowDefinition Height="45" />
 											<RowDefinition Height="*" />
@@ -241,7 +241,7 @@
 										<TextBlock Grid.Row="0" Foreground="White" Margin="8">Enter words separated by commas or returns (enter).<LineBreak/><Underline>Note</Underline>: If you use returns, commas will be ignored.</TextBlock>
 
 										<DockPanel Grid.Row="1" LastChildFill="True">
-											<TextBox Width="270" x:Name="_batchKeywordsText" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"/>											
+											<TextBox Width="370" x:Name="_batchKeywordsText" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"/>											
 										</DockPanel>
 
 										<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="15,0,15,0">

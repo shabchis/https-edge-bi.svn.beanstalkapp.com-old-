@@ -4,7 +4,7 @@
     >
 	
 	<UserControl.Resources>
-		<XmlDataProvider x:Key="MenuData" XPath="/Sections" Source="../Menu.xml" />
+		<XmlDataProvider x:Key="MenuData" XPath="/Sections"/>
 		
 		<Style x:Key="AnimatedExpander" TargetType="{x:Type Expander}">
 			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>

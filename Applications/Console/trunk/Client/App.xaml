@@ -26,6 +26,16 @@
 				<Setter Property="Foreground" Value="#7CA81D"/>
 				<Setter Property="Template" Value="{StaticResource LinkButtonTemplate}" />
 			</Style>
+			
+			<Style x:Key="PlainTextButton" TargetType="{x:Type Button}">
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type Button}">
+							<TextBlock x:Name="ButtonText" Text="{TemplateBinding Content}"/>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
 
 			<Style x:Key="FormContents" TargetType="{x:Type StackPanel}">
 				<Setter Property="Margin" Value="10"/>

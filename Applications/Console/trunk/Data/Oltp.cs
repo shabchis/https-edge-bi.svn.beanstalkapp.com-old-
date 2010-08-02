@@ -789,10 +789,10 @@ namespace Easynet.Edge.UI.Data
 	[Serializable]
 	public class Measure: ISerializable
 	{
-		public readonly int MeasureID;
-		public readonly string FieldName;
-		public readonly string DisplayName;
-		public readonly bool IsAbsolute;
+		public int MeasureID { get; private set; }
+		public string FieldName { get; private set; }
+		public string DisplayName { get; set; }
+		public bool IsAbsolute { get; private set; }
 
 		#region ISerializable Members
 
@@ -1027,7 +1027,7 @@ namespace Easynet.Edge.UI.Data
 		{
 			get
 			{
-				return _row == null || _row.RowState == DataRowState.Deleted || _row.IsNull(measure) ?
+				return _row == null || _row.RowState == DataRowState.Detached || _row.RowState == DataRowState.Deleted || _row.IsNull(measure) ?
 					null :
 					new Nullable<double>((double)_row[measure]); 
 			}
