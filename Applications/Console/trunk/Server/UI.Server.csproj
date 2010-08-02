@@ -21,11 +21,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Content Include="Configuration\Debug\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Production' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -34,11 +29,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Production' ">
-    <Content Include="Configuration\Production\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-  </ItemGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Seperia' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Demo' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -47,11 +45,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Demo' ">
-    <Content Include="Configuration\Demo\Web.config">
-      <Link>Web.config</Link>
-    </Content>
-  </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -78,7 +71,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Menu.xml" />
     <Content Include="OltpLogic.svc" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OltpLogic.svc.cs">

@@ -1187,9 +1187,9 @@ namespace Easynet.Edge.UI.Server
 			}
 		}
 
-		public Oltp.AdgroupDataTable Adgroup_Get(long campaignGK)
+		public Oltp.AdgroupDataTable Adgroup_Get(long campaignGK, string filter)
 		{
-			return From<AdgroupTableAdapter>().Get(campaignGK);
+			return From<AdgroupTableAdapter>().Get(campaignGK, filter);
 		}
 
 		public Oltp.AdgroupDataTable Adgroup_GetSingle(long adgroupGK)
