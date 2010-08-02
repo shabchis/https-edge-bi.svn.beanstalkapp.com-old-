@@ -37,21 +37,26 @@
        
 
         $('#submit').click(function(){
+            var id = "";
             $('#approval').empty();
           $('input[type=checkbox]:checked').each(function(){
-         var id =  $(this).next().attr('id');
-              id+=",";
-   
+          id =  $(this).next().attr('id');
 
-            
+      
+
+//        id =  id.substring(0,id.length -1);
+
+
+
 
               
         $('#approval').append(id);
 
-              $('#approval').dialog();
+              $('#approval').dialog({modal:true});
 
 });
 
+            
         })
      
        $('<option>Please select a dimension table</option>').prependTo('#dimcombo');
@@ -115,7 +120,7 @@
         })
         $('#radio2').click(function() {
             $('#factcombo').hide();
-            getAllData('fact');
+            getAllData('dim');
 
             $('#dimcombo').show();
             $('#dimcombo option:first-child').attr('selected','selected');
@@ -130,7 +135,7 @@
         $('#factcombo').hide();
         $('#title').html(title);
         $('#radio1').click(function(){
-            getAllData('dim');
+            getAllData('fact');
             $('#dimcombo').hide();
             $('#factcombo').show();
             $('#factcombo option:first-child').attr('selected','selected');
@@ -269,7 +274,7 @@
 <script id="columns_containers" type="text/html">
 
 
-        <li id="${RelationID}" ><a href="#">${DimField}</a> - <a href="#">${FactField}</a></li>
+        <li id="${RelationColsID}" class="${ColStatus}" ><a href="#">${DimField}</a> - <a href="#">${FactField}</a></li>
 
  
 
@@ -304,17 +309,14 @@
         <a class="delete">Delete</a>
     </h2>
     <div class="toggle_container">
-        <div class="block" id="block_${RelationID}">
+        <div class="block" id="${RelationID}">
             <ul class="list" id="list">
-             <li id="${RelationID}" class="${RelationStatus}">
-                 <a href="#">{{each(i,RelationField) RelationFields}}
-                     ${DimTableName},
-                 {{/each}}</a>
-                 - <a href="#">
-                 {{each(i,RelationField) RelationFields}}
-                 ${FactTableName}
-             {{/each}}
-             </a>
+             <li id="{{each(i,RelationField) RelationFields}}
+                        ${RelationColsID}
+                 {{/each}}" class="{{each(i,RelationField) RelationFields}}
+                        ${ColStatus}
+                 {{/each}}">
+                 <a href="#"> ${DimTableName}</a> - <a href="#">${FactTableName}</a>
              </li>
                 </ul>
         </div>
@@ -347,14 +349,15 @@ var RelationStatus = "";
                  for(var relationKey in data)
                         data[relationKey].TableName = factOrDim == 'dim' ?  data[relationKey].FactTableName :  data[relationKey].DimTableName;
 
-                     RelationStatus = data[relationKey].RelationStatus;
+                
 
 
                 $("#full").render(data).appendTo("#content");
 
-
-                 $('ul.list li.1').before('<input type="checkbox" class="checkbox">');
-                 $('ul.list li.0').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
+                    $('ul.list li').attr('class')
+                 $('ul.list li.0').before('<input type="checkbox" class="checkbox">');
+                 $('ul.list li.1').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
+                  $('ul.list li.2').before('<span id="bullet"><img src="images/ui-anim_basic_16x16.gif" alt="bullet"/></span>');
                 $('h2.trigger').toggleClass("active").next().slideToggle("slow");
 
                $('h2.trigger').click(function(){
@@ -377,8 +380,11 @@ var RelationStatus = "";
             }
         });
 
-    }
+    
+    
 
+
+    }
     function GetTableListData(factOrDim){
 
 
@@ -438,7 +444,7 @@ var RelationStatus = "";
                         var RalationId = $(this).attr('id');
 
 
-                        GetRelationCol(RalationId,RelationStatus);
+                        GetRelationCol(RalationId);
 
 
                     })
@@ -460,11 +466,11 @@ var RelationStatus = "";
     }
 
 
+var _allData = {};
 
+    function GetRelationCol(RalationId){
 
-    function GetRelationCol(RalationId,RelationStatus){
-
-          console.log(RelationStatus);
+ 
 
 
         var title = $('h2.trigger#'+RalationId);
@@ -477,23 +483,30 @@ var RelationStatus = "";
             dataType:"json",
             success:function(data){
 
+                _allData[RelationID] = data;
                        $('#columns_containers').render(data).appendTo('#block_'+RalationId).wrapAll('<ul class="list_'+RalationId+'"id="list">');
                        
                      /*$('#block_'+RalationId).appendTo('#confirm');*/
-                   if (RelationStatus == 0 ){
-                        $('ul.list_'+RalationId+' li').addClass('old');
+                   /*if (RelationStatus == 0 ){
+                        $('ul.list_'+RalationId+' li').addClass('new');
 
 
                    }
 
                      if(RelationStatus == 1){
-                          $('ul.list_'+RalationId+' li').addClass('new');
+                          $('ul.list_'+RalationId+' li').addClass('enabled');
 
                    }
-                       $('ul.list_'+RalationId+' li.new').before('<input type="checkbox" class="checkbox">');
-                       $('ul.list_'+RalationId+' li.old').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
+                    if(RelationStatus == 2){
+                          $('ul.list_'+RalationId+' li').addClass('disable');
 
-                            if (title.length >= 1){
+                   }*/
+
+                       $('ul.list_'+RalationId+' li.0').before('<input type="checkbox" class="checkbox">');
+                       $('ul.list_'+RalationId+' li.1').before('<span id="bullet"><img src="images/bullet.png" alt="bullet"/></span>');
+                       $('ul.list_'+RalationId+' li.2').before('<span id="bullet"><img src="images/ui-anim_basic_16x16.gif" alt="bullet"/></span>');
+
+                    if (title.length >= 1){
 
                                  title.toggleClass("active").next().slideToggle("slow");
                             }
@@ -508,10 +521,58 @@ var RelationStatus = "";
 
                         $(title).click(function(){
                              title.toggleClass("active").next().slideToggle("slow");
+                            return false;
 
                         })
-                        
 
+
+                    /****************************************************/
+                    /* EXAMPLES FOR POST */
+
+                    var selectedColumnIDs = [12,23,3];
+
+                    // Create new Array
+                    var columnListToSend = [];
+
+                    //===================
+                    // NEW
+                    // This is done from 'new' dialog and values taken from combos
+                    var newCol =
+                    {
+                        "ColStatus":0,
+                        "DimField":"Account_ID",
+                        "DimFieldStatement":null,
+                        "DimTable":null,
+                        "FactField":"Account_ID",
+                        "FactFieldStatement":null,
+                        "FactTable":null,
+                        "RelationColsID":-1, // This is -1 when it is a new column from gui
+                        "RelationID":6,
+                        "ToSend": true // This is true if to we need to add to columnListToSend
+                    };
+
+                    columnListToSend.push(newCol);
+
+                    _allData["6"].push(newCol);
+                    //===================
+                    // CHANGE STATUS
+
+                    // Go over each column in data
+                    for(var key in _allData["6"])
+                    {
+                        var col = _allData["6"][key];
+                        if (selectedColumnIDs.contains(col.RelationColsID))
+                        {
+                            // Change col status
+                            col.ColStatus = 1;
+                            //col.ToSend = true;
+                            //columnListToSend.push(col);
+                        }
+                    }
+
+                    //$.ajax(......
+
+                       /****************************************************/
                
 
               }
