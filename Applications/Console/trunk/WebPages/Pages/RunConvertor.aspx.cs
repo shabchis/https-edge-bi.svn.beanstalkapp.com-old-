@@ -34,6 +34,7 @@ namespace Easynet.Edge.UI.WebPages
     public partial class RunConvertor : System.Web.UI.Page
     {
         protected string ErrorMessage = null;
+        protected string SuccessMessage = null;
         private Dictionary<string, string> listOfFilesToUpload = new Dictionary<string, string>();
         Converters.BaseConvertor _Convertor;
         protected void Page_Load(object sender, EventArgs e)
@@ -44,6 +45,7 @@ namespace Easynet.Edge.UI.WebPages
 
             if (Session["listOfFilesToUpload"] != null)
                 listOfFilesToUpload = (Dictionary<string, string>)Session["listOfFilesToUpload"];
+            _submit.Enabled = false;
         }
 
        
@@ -165,13 +167,14 @@ namespace Easynet.Edge.UI.WebPages
                 {
                     saveFilePathTextBox.Text = "EX :" + ex.Message;
                 }
+                _submit.Enabled = true;
             }
         }
 
         void _submit_Click(object sender, EventArgs e)
         {
            RunRquest(); 
-        } 
+        }
 
         void RunRquest()
         {
@@ -199,7 +202,7 @@ namespace Easynet.Edge.UI.WebPages
                 string accountID = Convert.ToInt32(Request.QueryString["accountID"]).ToString();
                 string SourceType = _sourceSelector.Text;
                 SourceType = manager.DoWork(accountID, listOfFiles, saveFilePathTextBox.Text, SourceType);
-                ErrorMessage = SourceType;
+                SuccessMessage = SourceType;
                 listboxFiles.Items.Clear();
 
                 saveFilePathTextBox.Text = "";

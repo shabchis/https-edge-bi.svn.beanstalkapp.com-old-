@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:this="clr-namespace:Easynet.Edge.UI.Client"
 	xmlns:local="clr-namespace:Easynet.Edge.UI.Client.PpcCampaignsLocal"
+	xmlns:data="clr-namespace:Easynet.Edge.UI.Data;assembly=Edge.UI.Data"
 	x:Name="_page"
 >
 	
@@ -87,15 +88,7 @@
 	<Grid>
 		<DockPanel LastChildFill="True">
 			
-			<Canvas DockPanel.Dock="Top">
-				<StackPanel Orientation="Horizontal" Canvas.Right="50" VerticalAlignment="Center" HorizontalAlignment="Right">
-                    <Button x:Name="_buttonMerge" Style="{StaticResource Link}" Content="Merge" Click="CampaignMerge_Open" Margin="0,0,15,0"/>
-                    <Button x:Name="_buttonTargetsSave" Style="{StaticResource Link}" Content="Save" Click="Targets_SaveClick" Visibility="Collapsed" Margin="0,0,15,0"/>
-					<Button x:Name="_buttonTargetsToggle" Style="{StaticResource Link}" Content="Show targets" Click="Targets_Toggle"/>
-				</StackPanel>
-			</Canvas>
-			
-			<StackPanel DockPanel.Dock="Top" Margin="0,15,0,0" Orientation="Horizontal" VerticalAlignment="Bottom" this:AccessKeyScoper.IsAccessKeyScope="true">
+			<StackPanel DockPanel.Dock="Top" Margin="0,8,0,0" Orientation="Horizontal" VerticalAlignment="Bottom" this:AccessKeyScoper.IsAccessKeyScope="true">
 				<StackPanel.Resources>
 					<Style TargetType="{x:Type ComboBox}">
 						<Setter Property="Width" Value="130"/>
@@ -119,40 +112,32 @@
 					<Label Content="Campaign Status"/>
 					<ComboBox x:Name="_campaignStatusPicker" Width="160" ItemTemplateSelector="{StaticResource CampaignStatusPickerTemplateSelector}"/>
 				</StackPanel>
-				<Canvas>
-					<Rectangle x:Name="_campainFilterBackground" Fill="Red" Width="180" Height="100" Canvas.Left="-10" Canvas.Right="-10" Opacity="0"/>
-					<StackPanel Orientation="Vertical">
-						<Label Content="Name"/>
-						<TextBox x:Name="_campaignFilterTextBox" Width="160">
-							<TextBox.Triggers>
-								<EventTrigger RoutedEvent="GotFocus">
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="_campainFilterBackground"
-															 Storyboard.TargetProperty="UIElement.Opacity" To="1"/>
-											<DoubleAnimation Storyboard.TargetName="_campaignFilterIncludeAdgroups"
-															 Storyboard.TargetProperty="UIElement.Opacity" To="1"/>
-										</Storyboard>
-									</BeginStoryboard>
-								</EventTrigger>
-								<EventTrigger RoutedEvent="LostFocus">
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="_campainFilterBackground"
-															 Storyboard.TargetProperty="UIElement.Opacity" To="0"/>
-											<DoubleAnimation Storyboard.TargetName="_campaignFilterIncludeAdgroups"
-															 Storyboard.TargetProperty="UIElement.Opacity" To="0"/>
-										</Storyboard>
-									</BeginStoryboard>
-								</EventTrigger>
-							</TextBox.Triggers>
-						</TextBox>
-					</StackPanel>
-					<CheckBox x:Name="_campaignFilterIncludeAdgroups" Opacity="0">Include adgroups</CheckBox>
-				</Canvas>
-				<Button Content="Filter" Click="_filterButton_Click" IsDefault="True"/>
+				<StackPanel Orientation="Vertical" Margin="0,0,2,0">
+					<Label>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Margin="0,0,5,0">Name of </TextBlock>
+							<RadioButton IsChecked="True" Margin="0,0,5,0">Campaign</RadioButton>
+							<RadioButton x:Name="_campaignFilterByAdgroup">Adgroup</RadioButton>
+						</StackPanel>
+					</Label>
+					<TextBox x:Name="_campaignFilterTextBox" Width="240"/>
+				</StackPanel>
+				<Button Content="Filter" Click="_filterButton_Click" IsDefault="True" Height="{Binding ElementName=_campaignFilterTextBox, Path=ActualHeight}" VerticalAlignment="Bottom"/>
 			</StackPanel>
-			
+
+			<Canvas DockPanel.Dock="Top" Margin="0,8,20,10">
+				<StackPanel Orientation="Horizontal" Canvas.Right="50" VerticalAlignment="Center" HorizontalAlignment="Right">
+					<Button x:Name="_buttonSelectAll" Style="{StaticResource Link}" Content="Select All" Click="_listTable_SelectAll" Margin="0,0,15,0"/>
+					<Button x:Name="_buttonMerge" Style="{StaticResource Link}" Content="Merge" Click="CampaignMerge_Open" Margin="0,0,15,0"/>
+					<StackPanel x:Name="_targetButtons" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
+						<TextBlock Text="|" Margin="0,0,15,0" Foreground="#666"/>
+						<Button x:Name="_buttonTargetsBatch" Style="{StaticResource Link}" Content="Batch" Click="Targets_BatchOpen" Margin="0,0,15,0"/>
+						<Button x:Name="_buttonTargetsSave" Style="{StaticResource Link}" Content="Save" Click="Targets_SaveClick" Margin="0,0,15,0"/>
+					</StackPanel>
+					<Button x:Name="_buttonTargetsToggle" Style="{StaticResource Link}" Content="Show targets" Click="Targets_Toggle"/>
+				</StackPanel>
+			</Canvas>
+
 			<this:ListTable x:Name="_listTable"
 				Margin="0,12,50,10"
 				SelectionMode="Extended"
@@ -160,7 +145,6 @@
 				GroupExpanded="_listTable_GroupExpanded"
 				GroupCollapsed="_listTable_GroupCollapsed"
 			> 
-
 				<this:ListTable.View>
 					<GridView>
 						<GridViewColumn						CellTemplateSelector="{DynamicResource GroupExpandTemplateSelector}" Width="45"/>
@@ -512,7 +496,51 @@
                     </DataTemplate>
                 </this:FloatingDialog.ContentTemplate>
             </this:FloatingDialog>
-        </Grid>
+			
+			<this:FloatingDialog
+				x:Name="BatchTargets_dialog"
+				Width="400"
+				Height="250"
+				Title="Bath Targets"
+				ApplyingChanges="Targets_BatchApply"
+				ApplyButtonVisibility="Collapsed"
+				>
+				<this:FloatingDialog.ContentTemplate>
+					<DataTemplate>
+						<DataTemplate.Resources>
+							<Style TargetType="{x:Type Label}">
+								<Setter Property="Width" Value="190"/>
+								<Setter Property="Foreground" Value="White"/>
+								<Setter Property="FontWeight" Value="Bold"/>
+							</Style>
+							<Style TargetType="{x:Type TextBox}">
+								<Setter Property="Width" Value="80"/>
+							</Style>
+						</DataTemplate.Resources>
+						<StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+							<TextBlock TextWrapping="Wrap" Foreground="White" Margin="8">Enter target values to be applied to the selected campaigns.</TextBlock>
+							<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+								<ItemsControl>
+									<ItemsControl.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+										</ItemsPanelTemplate>
+									</ItemsControl.ItemsPanel>
+									<ItemsControl.ItemTemplate>
+										<DataTemplate DataType="{x:Type data:Measure}">
+											<StackPanel Style="{StaticResource FormField}">
+												<Label Content="{Binding DisplayName}"/>
+												<TextBox/>
+											</StackPanel>
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+								</ItemsControl>
+							</ScrollViewer>
+						</StackPanel>
+					</DataTemplate>
+				</this:FloatingDialog.ContentTemplate>
+			</this:FloatingDialog>
+		</Grid>
 
 	</Grid>
 </this:PageBase>

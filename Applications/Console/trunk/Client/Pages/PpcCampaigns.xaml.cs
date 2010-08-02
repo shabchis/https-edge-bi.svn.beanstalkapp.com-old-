@@ -43,8 +43,8 @@ namespace Easynet.Edge.UI.Client.Pages
 		ListTable _adgroupCreatives;
 		public Oltp.ChannelDataTable _channelTable;
 		public Oltp.CampaignStatusDataTable _campaignStatusTable;
-		bool _changingChannel = false;
-		bool _changingStatus = false;
+		//bool _changingChannel = false;
+		//bool _changingStatus = false;
 		Oltp.KeywordDataTable _adgroupKeywordPickerKeywords;
 		Oltp.CreativeDataTable _adgroupCreativePickerCreatives;
 		ComboBox _campaignChannelPicker;
@@ -65,6 +65,9 @@ namespace Easynet.Edge.UI.Client.Pages
 		List<GridViewColumn> _targetColumns;
 		bool _targetsEnabled = false;
 		Measure[] _measures;
+
+		string _filter;
+		bool _filterAdgroups;
 
 		/*=========================*/
 		#endregion
@@ -113,7 +116,7 @@ namespace Easynet.Edge.UI.Client.Pages
 					channelPickerSource.Add(ch);
 				_channelPicker.ItemsSource = channelPickerSource;
 				_channelPicker.SelectedIndex = 0;
-				_channelPicker.SelectionChanged += new SelectionChangedEventHandler(_channelPicker_SelectionChanged);
+				//_channelPicker.SelectionChanged += new SelectionChangedEventHandler(_channelPicker_SelectionChanged);
 
 				// Status picker
 				ObservableCollection<object> statusPickerSource = new ObservableCollection<object>();
@@ -129,7 +132,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				}
 				_campaignStatusPicker.ItemsSource = statusPickerSource;
 				_campaignStatusPicker.SelectedIndex = activeRow == null ? 0 : statusPickerSource.IndexOf(activeRow);
-				_campaignStatusPicker.SelectionChanged += new SelectionChangedEventHandler(_statusPicker_SelectionChanged);
+				//_campaignStatusPicker.SelectionChanged += new SelectionChangedEventHandler(_statusPicker_SelectionChanged);
 
 				_listTable.ChildItemTypes = new Type[] { typeof(Oltp.AdgroupRow) };
 			});
@@ -157,6 +160,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		#region General Methods
 		/*=========================*/
 
+		/*
 		void _channelPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if (_changingChannel)
@@ -174,9 +178,11 @@ namespace Easynet.Edge.UI.Client.Pages
 			_changingStatus = true;
 			GetCampaigns(() => _changingStatus = false);
 		}
+		*/
 
 		void _filterButton_Click(object sender, RoutedEventArgs e)
 		{
+			GetCampaigns(null);
 		}
 
 		public override bool OnAccountChanging(Oltp.AccountRow account)
@@ -204,6 +210,10 @@ namespace Easynet.Edge.UI.Client.Pages
 			// General
 			_items = null;
 			_campaigns = null;
+
+			_filter = null;
+			if (_campaignFilterTextBox != null)
+				_campaignFilterTextBox.Clear();
 
 			//..............................
 			// Segments
@@ -276,7 +286,12 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			int? channelID =  _channelPicker.SelectedIndex < 1 ? null : new int?((_channelPicker.SelectedValue as Oltp.ChannelRow).ID);
 			int? statusID = _campaignStatusPicker.SelectedIndex < 1 ? null : new int?((_campaignStatusPicker.SelectedValue as Oltp.CampaignStatusRow).ID);
-			string filter = _campaignFilterTextBox.Text.Trim();
+			_filterAdgroups = _campaignFilterByAdgroup.IsChecked != null && _campaignFilterByAdgroup.IsChecked.Value;
+			_filter = _campaignFilterTextBox.Text.Trim();
+			_filter = _filter.Length < 1 ?
+				null :
+				_filter.Contains('*') ?
+					_filter.Replace('*', '%') : _filter + '%';
 
 			Window.AsyncOperation(delegate()
 			{
@@ -287,8 +302,8 @@ namespace Easynet.Edge.UI.Client.Pages
 						account.ID,
 						channelID,
 						statusID,
-						filter,
-						_campaignFilterIncludeAdgroups.IsChecked.Value
+						_filter,
+						_filterAdgroups
 						);
 				}
 			},
@@ -319,6 +334,20 @@ namespace Easynet.Edge.UI.Client.Pages
 				}
 
 				_listTable.ListView.ItemsSource = _items;
+				
+				// Expand groups to show adgroups we found
+				if (_filter != null && _filterAdgroups && _items.Count > 1)
+				{
+					_listTable.UpdateLayout();
+					List<ToggleButton> expandButtons = new List<ToggleButton>();
+					for (int i = 0; i < _listTable.ListView.Items.Count; i++)
+					{
+						DependencyObject item = _listTable.ListView.ItemContainerGenerator.ContainerFromIndex(i);
+						expandButtons.Add(Visual.GetDescendant<ToggleButton>(item));
+					}
+					foreach (ToggleButton button in expandButtons)
+						button.IsChecked = true;
+				}
 
 				if (onComplete != null)
 					onComplete();
@@ -358,6 +387,14 @@ namespace Easynet.Edge.UI.Client.Pages
 		*/
 		#endregion
 
+		private void _listTable_SelectAll(object sender, RoutedEventArgs e)
+		{
+			if (_listTable.ListView.SelectedItems.Count == _listTable.ListView.Items.Count)
+				_listTable.ListView.SelectedItems.Clear();
+			else
+				_listTable.ListView.SelectAll();
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -371,7 +408,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			{
 				using (OltpProxy proxy = new OltpProxy())
 				{
-					adgroups = proxy.Service.Adgroup_Get(campaign.GK);
+					adgroups = proxy.Service.Adgroup_Get(campaign.GK, _filterAdgroups ? _filter : null);
 				}
 			},
 			delegate()
@@ -450,7 +487,8 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			_targetsEnabled = !_targetsEnabled;
 			_buttonTargetsToggle.Content = _targetsEnabled ? hideText : showText;
-			_buttonTargetsSave.Visibility = _targetsEnabled ? Visibility.Visible : Visibility.Collapsed;
+
+			_targetButtons.Visibility = _targetsEnabled ? Visibility.Visible : Visibility.Collapsed;
 
 			Targets_BuildDisplay(Window.CurrentAccount.ID);
 		}
@@ -477,6 +515,8 @@ namespace Easynet.Edge.UI.Client.Pages
 				},
 				delegate()
 				{
+					// Apply measures to batch dialog
+					Visual.GetDescendant<ItemsControl>(BatchTargets_dialog).ItemsSource = _measures;
 
 					foreach (Measure measure in _measures)
 					{
@@ -498,6 +538,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 						FrameworkElementFactory textBox = new FrameworkElementFactory();
 						textBox.Type = typeof(TextBox);
+						textBox.SetValue(TextBox.NameProperty, "measure" + measure.MeasureID.ToString());
 						textBox.SetValue(TextBox.WidthProperty, c_textboxWidth);
 						textBox.SetValue(TextBox.TextAlignmentProperty, TextAlignment.Right);
 
@@ -729,6 +770,88 @@ namespace Easynet.Edge.UI.Client.Pages
 			{
 				Targets_TextBoxLostFocus(sender, new RoutedEventArgs());
 				e.Handled = true;
+			}
+		}
+
+		void Targets_BatchOpen(object sender, RoutedEventArgs e)
+		{
+			List<Oltp.CampaignRow> campaigns = new List<Oltp.CampaignRow>();
+			foreach (DataRow row in _listTable.ListView.SelectedItems)
+			{
+				if (!(row is Oltp.CampaignRow))
+				{
+					MessageBoxError("Please select campaigns only.", null);
+					return;
+				}
+				else
+					campaigns.Add((Oltp.CampaignRow)row);
+			}
+			if (campaigns.Count < 1)
+			{
+				MessageBoxError("Please select one or more campaigns.", null);
+				return;
+			}
+
+			BatchTargets_dialog.IsOpen = true;
+		}
+
+		private void Targets_BatchApply(object sender, CancelRoutedEventArgs e)
+		{
+			// Get target campaigns
+			List<Oltp.CampaignRow> campaigns = new List<Oltp.CampaignRow>();
+			foreach (DataRow row in _listTable.ListView.SelectedItems)
+			{
+				if (row is Oltp.CampaignRow)
+					campaigns.Add((Oltp.CampaignRow)row);
+			}
+
+			NumberValidationRule rule = new NumberValidationRule();
+			rule.MinValue = 0;
+			rule.AllowEmpty = true;
+
+			ItemsControl dialogItems = Visual.GetDescendant<ItemsControl>(BatchTargets_dialog);
+			Dictionary<Measure, double?> values = new Dictionary<Measure, double?>();
+			
+			// Get measure values and stop for errors
+			foreach(Measure measue in _measures)
+			{
+				TextBox valueTextbox = Visual.GetDescendant<TextBox>(dialogItems.ItemContainerGenerator.ContainerFromItem(measue));
+				
+				ValidationResult validation =  rule.Validate(valueTextbox.Text, null);
+				if (!validation.IsValid)
+				{
+					MessageBoxError("Please enter valid numbers only.", null);
+					e.Cancel = true;
+					return;
+				}
+
+				values[measue] = rule.GetNumber(valueTextbox.Text);
+			}
+
+			// Confirm the operation
+			MessageBoxResult result = MessageBox.Show(
+				"This will override targets for all selected campaigns. Are you sure?",
+				"Warning",
+				MessageBoxButton.OKCancel,
+				MessageBoxImage.Warning);
+
+			if (result != MessageBoxResult.OK)
+			{
+				e.Cancel = true;
+				return;
+			}
+
+			// Apply values
+			foreach (Oltp.CampaignRow campaign in campaigns)
+			{
+				DependencyObject container = (DependencyObject)_listTable.ListView.ItemContainerGenerator.ContainerFromItem(campaign);
+				foreach (Measure measure in _measures)
+				{
+					if (values[measure] == null)
+						continue;
+
+					Visual.GetDescendant<TextBox>(container, "measure" + measure.MeasureID.ToString()).Text = values[measure].ToString();
+				}
 			}
 		}
 	
@@ -1851,11 +1974,6 @@ namespace Easynet.Edge.UI.Client.Pages
 			}
 
 			_adgroupTabSegmentsInitialized = true;
-		}
-
-		private void _buttonTargetsSave_Click(object sender, RoutedEventArgs e)
-		{
-
 		}
 
 		/*=========================*/

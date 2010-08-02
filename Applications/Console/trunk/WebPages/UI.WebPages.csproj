@@ -131,13 +131,6 @@
     <Compile Include="Pages\graph.aspx.designer.cs">
       <DependentUpon>graph.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Intelligence.aspx.cs">
-      <DependentUpon>Intelligence.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\Intelligence.aspx.designer.cs">
-      <DependentUpon>Intelligence.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\AssemblyInfo.cs.template" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -189,6 +182,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <Content Include="Global.asax" />
+    <Content Include="Pages\BU-Intelligence.aspx" />
     <Content Include="Pages\AdTest.aspx" />
     <Content Include="Pages\Alerts.aspx" />
     <Content Include="Pages\graph.aspx" />

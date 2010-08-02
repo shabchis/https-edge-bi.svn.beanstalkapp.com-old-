@@ -472,7 +472,7 @@ namespace Easynet.Edge.UI.Client
 	public partial class Const
 	{
 		public static readonly Type[] DefaultPermissions =
-			new Type[] { typeof(Pages.MasterKeywords) };
+			new Type[] { /*typeof(Pages.MasterKeywords)*/ };
 	}
 
 }

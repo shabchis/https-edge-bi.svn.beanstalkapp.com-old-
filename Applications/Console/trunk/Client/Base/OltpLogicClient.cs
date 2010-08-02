@@ -19,7 +19,7 @@ namespace Easynet.Edge.UI.Client
 
 		static Oltp.UserRow _currentUser = null;
 		static ServiceClient<IOltpLogic> _internalProxy = null;
-		public static string ServerAddress = null;
+		static string _serverAddress = null;
 
 		static void InitProxy()
 		{
@@ -30,22 +30,29 @@ namespace Easynet.Edge.UI.Client
 				throw new InvalidOperationException("A session is already open.");
 			}
 
-			_internalProxy = new ServiceClient<IOltpLogic>("IOltpLogic_Endpoint", GetAddress());
+			_internalProxy = new ServiceClient<IOltpLogic>("IOltpLogic_Endpoint", ServerAddress);
 		}
 
-		static string GetAddress()
+		public static string ServerAddress
 		{
-			if (ServerAddress == null)
+			get
 			{
-				string serverAddressRelative = AppSettings.Get(typeof(OltpProxy), "ServerAddress.Relative");
-				string serverAddressAbsolute = AppSettings.Get(typeof(OltpProxy), "ServerAddress.Absolute");
-				if (!ApplicationDeployment.IsNetworkDeployed )
-					ServerAddress = serverAddressAbsolute;
-				else
-					ServerAddress = new Uri(ApplicationDeployment.CurrentDeployment.ActivationUri, serverAddressRelative).ToString();
-			}
+				if (_serverAddress == null)
+				{
+					if (!ApplicationDeployment.IsNetworkDeployed)
+					{
+						string serverAddressAbsolute = AppSettings.Get(typeof(OltpProxy), "ServerAddress.Absolute");
+						_serverAddress = serverAddressAbsolute;
+					}
+					else
+					{
+						string serverAddressRelative = AppSettings.Get(typeof(OltpProxy), "ServerAddress.Relative");
+						_serverAddress = new Uri(ApplicationDeployment.CurrentDeployment.ActivationUri, serverAddressRelative).ToString();
+					}
+				}
 
-			return ServerAddress;
+				return _serverAddress;
+			}
 		}
 
 		public static void SessionStart(string email, string password)

@@ -16,6 +16,8 @@ using System.Windows.Controls.Primitives;
 using System.Xml;
 using Easynet.Edge.UI.Data;
 using System.Data;
+using Easynet.Edge.Core.Configuration;
+using System.Deployment.Application;
 
 
 
@@ -35,6 +37,19 @@ namespace Easynet.Edge.UI.Client
 		public MainMenu()
 		{
 			InitializeComponent();
+
+			// Get the menu xml URL
+			XmlDataProvider xmlProvider = (XmlDataProvider)this.Resources["MenuData"];
+			if (!ApplicationDeployment.IsNetworkDeployed)
+			{
+				string absolute = AppSettings.Get(this, "MenuXmlAddress.Absolute");
+				xmlProvider.Source = new Uri(absolute);
+			}
+			else
+			{
+				string relative = AppSettings.Get(this, "MenuXmlAddress.Relative");
+				xmlProvider.Source = new Uri(ApplicationDeployment.CurrentDeployment.ActivationUri, relative);
+			}
 
 			// Event handlers
 			this.Loaded += new RoutedEventHandler(MainMenu_Loaded);
