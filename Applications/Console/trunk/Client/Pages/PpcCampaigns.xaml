@@ -131,7 +131,7 @@
 					<Button x:Name="_buttonMerge" Style="{StaticResource Link}" Content="Merge" Click="CampaignMerge_Open" Margin="0,0,15,0"/>
 					<StackPanel x:Name="_targetButtons" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
 						<TextBlock Text="|" Margin="0,0,15,0" Foreground="#666"/>
-						<Button x:Name="_buttonTargetsBatch" Style="{StaticResource Link}" Content="Batch" Click="Targets_BatchOpen" Margin="0,0,15,0"/>
+						<Button x:Name="_buttonTargetsBatch" Style="{StaticResource Link}" Content="Assign" Click="Targets_BatchOpen" Margin="0,0,15,0"/>
 						<Button x:Name="_buttonTargetsSave" Style="{StaticResource Link}" Content="Save" Click="Targets_SaveClick" Margin="0,0,15,0"/>
 					</StackPanel>
 					<Button x:Name="_buttonTargetsToggle" Style="{StaticResource Link}" Content="Show targets" Click="Targets_Toggle"/>
@@ -501,7 +501,7 @@
 				x:Name="BatchTargets_dialog"
 				Width="400"
 				Height="250"
-				Title="Bath Targets"
+				Title="Assign Targets"
 				ApplyingChanges="Targets_BatchApply"
 				ApplyButtonVisibility="Collapsed"
 				>

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/default.Master" AutoEventWireup="true" CodeBehind="Intelligence.aspx.cs" Inherits="Easynet.Edge.UI.WebPages.WebForm1" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/default.Master" AutoEventWireup="true" %>
 
 <asp:Content ContentPlaceHolderID="HeadPlaceHolder" runat="server">
 </asp:Content>

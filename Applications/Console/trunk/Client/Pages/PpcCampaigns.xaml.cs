@@ -43,8 +43,6 @@ namespace Easynet.Edge.UI.Client.Pages
 		ListTable _adgroupCreatives;
 		public Oltp.ChannelDataTable _channelTable;
 		public Oltp.CampaignStatusDataTable _campaignStatusTable;
-		//bool _changingChannel = false;
-		//bool _changingStatus = false;
 		Oltp.KeywordDataTable _adgroupKeywordPickerKeywords;
 		Oltp.CreativeDataTable _adgroupCreativePickerCreatives;
 		ComboBox _campaignChannelPicker;
@@ -160,7 +158,10 @@ namespace Easynet.Edge.UI.Client.Pages
 		#region General Methods
 		/*=========================*/
 
-		/*
+		
+		bool _changingChannel = false;
+		bool _changingStatus = false;
+
 		void _channelPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if (_changingChannel)
@@ -178,11 +179,84 @@ namespace Easynet.Edge.UI.Client.Pages
 			_changingStatus = true;
 			GetCampaigns(() => _changingStatus = false);
 		}
-		*/
 
 		void _filterButton_Click(object sender, RoutedEventArgs e)
 		{
 			GetCampaigns(null);
+		}
+
+		private void GetCampaigns(Action onComplete)
+		{
+			Oltp.AccountRow account = Window.CurrentAccount;
+
+			int? channelID = _channelPicker.SelectedIndex < 1 ? null : new int?((_channelPicker.SelectedValue as Oltp.ChannelRow).ID);
+			int? statusID = _campaignStatusPicker.SelectedIndex < 1 ? null : new int?((_campaignStatusPicker.SelectedValue as Oltp.CampaignStatusRow).ID);
+			_filterAdgroups = _campaignFilterByAdgroup.IsChecked != null && _campaignFilterByAdgroup.IsChecked.Value;
+			_filter = _campaignFilterTextBox.Text.Trim();
+			_filter = _filter.Length < 1 ?
+				null :
+				_filter.Contains('*') ?
+					_filter.Replace('*', '%') : _filter + '%';
+
+			Window.AsyncOperation(delegate()
+			{
+				using (OltpProxy proxy = new OltpProxy())
+				{
+					// Get the channel filter from the channel picker
+					_campaigns = proxy.Service.Campaign_Get(
+						account.ID,
+						channelID,
+						statusID,
+						_filter,
+						_filterAdgroups
+						);
+				}
+			},
+			delegate(Exception ex)
+			{
+				if (onComplete != null)
+					onComplete();
+
+				MessageBoxError("Failed to get campaigns.", ex);
+				return false;
+			},
+			delegate()
+			{
+				// Get an empty new list
+				_items = new ObservableCollection<DataRow>();
+
+				// Add all campaigns
+				foreach (Oltp.CampaignRow r in _campaigns.Rows)
+				{
+					// Get target data if available
+					if (_targetData != null)
+					{
+						r.Targets = _targetData.GetCampaignTargets(r.GK);
+						r.OnAllPropertiesChanged();
+					}
+
+					_items.Add(r);
+				}
+
+				_listTable.ListView.ItemsSource = _items;
+
+				// Expand groups to show adgroups we found
+				if (_filter != null && _filterAdgroups && _items.Count > 1)
+				{
+					_listTable.UpdateLayout();
+					List<ToggleButton> expandButtons = new List<ToggleButton>();
+					for (int i = 0; i < _listTable.ListView.Items.Count; i++)
+					{
+						DependencyObject item = _listTable.ListView.ItemContainerGenerator.ContainerFromIndex(i);
+						expandButtons.Add(Visual.GetDescendant<ToggleButton>(item));
+					}
+					foreach (ToggleButton button in expandButtons)
+						button.IsChecked = true;
+				}
+
+				if (onComplete != null)
+					onComplete();
+			});
 		}
 
 		public override bool OnAccountChanging(Oltp.AccountRow account)
@@ -278,80 +352,6 @@ namespace Easynet.Edge.UI.Client.Pages
 		{
 			// Confirm save changes
 			return base.Unload() && (!_targetsEnabled || Targets_Save());
-		}
-
-		private void GetCampaigns(Action onComplete)
-		{
-			Oltp.AccountRow account = Window.CurrentAccount;
-
-			int? channelID =  _channelPicker.SelectedIndex < 1 ? null : new int?((_channelPicker.SelectedValue as Oltp.ChannelRow).ID);
-			int? statusID = _campaignStatusPicker.SelectedIndex < 1 ? null : new int?((_campaignStatusPicker.SelectedValue as Oltp.CampaignStatusRow).ID);
-			_filterAdgroups = _campaignFilterByAdgroup.IsChecked != null && _campaignFilterByAdgroup.IsChecked.Value;
-			_filter = _campaignFilterTextBox.Text.Trim();
-			_filter = _filter.Length < 1 ?
-				null :
-				_filter.Contains('*') ?
-					_filter.Replace('*', '%') : _filter + '%';
-
-			Window.AsyncOperation(delegate()
-			{
-				using (OltpProxy proxy = new OltpProxy())
-				{
-					// Get the channel filter from the channel picker
-					_campaigns = proxy.Service.Campaign_Get(
-						account.ID,
-						channelID,
-						statusID,
-						_filter,
-						_filterAdgroups
-						);
-				}
-			},
-			delegate(Exception ex)
-			{
-				if (onComplete != null)
-					onComplete();
-
-				MessageBoxError("Failed to get campaigns.", ex);
-				return false;
-			},
-			delegate()
-			{
-				// Get an empty new list
-				_items = new ObservableCollection<DataRow>();
-
-				// Add all campaigns
-				foreach (Oltp.CampaignRow r in _campaigns.Rows)
-				{
-					// Get target data if available
-					if (_targetData != null)
-					{
-						r.Targets = _targetData.GetCampaignTargets(r.GK);
-						r.OnAllPropertiesChanged();
-					}
-
-					_items.Add(r);
-				}
-
-				_listTable.ListView.ItemsSource = _items;
-				
-				// Expand groups to show adgroups we found
-				if (_filter != null && _filterAdgroups && _items.Count > 1)
-				{
-					_listTable.UpdateLayout();
-					List<ToggleButton> expandButtons = new List<ToggleButton>();
-					for (int i = 0; i < _listTable.ListView.Items.Count; i++)
-					{
-						DependencyObject item = _listTable.ListView.ItemContainerGenerator.ContainerFromIndex(i);
-						expandButtons.Add(Visual.GetDescendant<ToggleButton>(item));
-					}
-					foreach (ToggleButton button in expandButtons)
-						button.IsChecked = true;
-				}
-
-				if (onComplete != null)
-					onComplete();
-			});
 		}
 
 		#region Render to file - for PNG
