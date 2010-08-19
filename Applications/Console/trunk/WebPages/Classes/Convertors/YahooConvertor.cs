@@ -20,6 +20,8 @@ namespace Easynet.Edge.UI.WebPages.Converters
 {
     public partial class YahooConvertor : BaseConvertor
     {
+        string _errorMessage = string.Empty;
+        int _errorsCounter = 0;
         string _destURLInHeader = string.Empty;
         StreamWriter _wrtTxtFile = null;
         private int firstRow = 0;
@@ -346,7 +348,7 @@ ZWD-Zimbabwe Dollar
             System.Xml.XmlNodeList list = GetConvertionTypeNode();
             string preGatewaySign = list[0].SelectNodes("PreGatewaySign")[0].ChildNodes[0].Value;
             string destURl = string.Empty;
-            string gateway = string.Empty; ;
+            string gateway = string.Empty;
 
             destURl = rowValues[destURLColumn];
             int index = destURl.IndexOf(preGatewaySign);
@@ -358,7 +360,7 @@ ZWD-Zimbabwe Dollar
             else
                 return -1;
         }
-        private string FindAccountName(string gateway)
+        private string FindAccountName(string gateway, Int32 scopeID)
         {
             DataTable accountByGateway = null;
             lock (Easynet.Edge.Core.Data.DataManager.ConnectionString)
@@ -367,12 +369,17 @@ ZWD-Zimbabwe Dollar
                 {
                     try
                     {
-                        string comnd = "select * from dbo.UserProcess_GUI_Gateway where gateway_id = " + gateway;
+                        string comnd = @"select Account_Name, gt.Account_ID,Gateway_GK 
+                                from dbo.UserProcess_GUI_Gateway gt inner join  dbo.User_GUI_Account ac on ac.Account_ID = gt.Account_ID 
+                                inner join dbo.Constant_Channel ch on ch.Channel_ID = gt.Channel_ID 
+                                where gateway_id = " + gateway + " and gt.account_id > 0 and ac.Scope_ID = " + scopeID + " and ch.Channel_ID = " + 2;
+                        //"select * from dbo.UserProcess_GUI_Gateway where gateway_id = " + gateway + " and account_id > 0";
                         SqlCommand cmd = DataManager.CreateCommand(comnd);
-
                         System.Data.SqlClient.SqlDataAdapter adapter1 = new System.Data.SqlClient.SqlDataAdapter(cmd);
                         adapter1.SelectCommand.Connection = new System.Data.SqlClient.SqlConnection();
                         adapter1.SelectCommand.Connection.ConnectionString = Easynet.Edge.Core.Data.DataManager.ConnectionString;
+                        adapter1 = new System.Data.SqlClient.SqlDataAdapter(cmd);
+                        
 
 
                         try
@@ -380,6 +387,10 @@ ZWD-Zimbabwe Dollar
                             accountByGateway = new DataTable();
 
                             adapter1.Fill(accountByGateway);
+                            //if two rows retrieved for the same gateway we'll export all retrieved data to an error log file
+                            if (accountByGateway.Rows.Count > 1)
+                                createErrorLog(accountByGateway);
+
                         }
                         catch (Exception ex)
                         {
@@ -398,12 +409,24 @@ ZWD-Zimbabwe Dollar
             if(accountByGateway.Rows.Count == 0)
                 return base.errorAccountString;
             else
-                return accountByGateway.Rows[0]["Account_Id"].ToString();
+                return accountByGateway.Rows[0]["Account_Name"].ToString();
 
+        }
+        private void createErrorLog(DataTable dt)
+        {
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    _errorMessage += dt.Rows[i][j].ToString();
+                    _errorMessage += "/n";
+                }
+            }
+            _errorsCounter++;
         }
         private void ReadTSVFile(List<string> sourceFiles)
         {
-            string firstRowsStr = string.Empty;
+            //string firstRowsStr = string.Empty;
             string country = string.Empty;
             string date = GetDatetimeFromFile(sourceFiles[0]);
             System.Collections.Hashtable headersHash = null;
@@ -415,7 +438,11 @@ ZWD-Zimbabwe Dollar
             int firstHeaderRowNum;
             int firstDataRowNum;
             int countryRowNum;
+            bool accountIdFound = false;
+            string accountIdInFile = string.Empty;
+            string accountNameInAccountSettings = string.Empty;
             string beforeCountrySignInTSV;
+            DataTable scopeByAccountID;
 
             try
             {
@@ -425,14 +452,14 @@ ZWD-Zimbabwe Dollar
             {
                 throw new Exception(ex.Message.ToString());
             }
-            try
-            {
-                firstRowsStr = list[0].SelectNodes("FirstRowName")[0].ChildNodes[0].Value;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("FirstRowName Node wasn't found in configuration. " + ex.Message.ToString());
-            }
+            //try
+            //{
+            //    firstRowsStr = list[0].SelectNodes("FirstRowName")[0].ChildNodes[0].Value;
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new Exception("FirstRowName Node wasn't found in configuration. " + ex.Message.ToString());
+            //}
             try
             {
                 firstHeaderRowNum = Int32.Parse(list[0].SelectNodes("FirstHeaderRowNum")[0].ChildNodes[0].Value);
@@ -465,6 +492,23 @@ ZWD-Zimbabwe Dollar
             {
                 throw new Exception("SignForCountryInTSV Node wasn't found in configuration. " + ex.Message.ToString());
             }
+            int scopeID;
+            try
+            {
+                string comnd = "select Scope_ID from dbo.User_GUI_Account where Account_ID = " + accountID;
+                SqlCommand cmd = DataManager.CreateCommand(comnd);
+                System.Data.SqlClient.SqlDataAdapter adapter1 = new System.Data.SqlClient.SqlDataAdapter(cmd);
+                adapter1.SelectCommand.Connection = new System.Data.SqlClient.SqlConnection();
+                adapter1.SelectCommand.Connection.ConnectionString = Easynet.Edge.Core.Data.DataManager.ConnectionString;
+                scopeByAccountID = new DataTable();
+
+                adapter1.Fill(scopeByAccountID);
+                scopeID = (Int32)scopeByAccountID.Rows[0]["Scope_ID"];
+            }
+            catch(Exception ex)
+            {
+                throw new Exception();
+            }
             try
             {
                 foreach (var item in sourceFiles)
@@ -475,6 +519,8 @@ ZWD-Zimbabwe Dollar
                         // Read first line in the CSV file.
                         string tsvTextLine = textReader.ReadLine();
                         int iterCounter = 1;
+                        //read account table in db - account_name and account_settings
+                        FillAccountNames2DataSet();
                         // Read the CSV lines and insert them to the DB.
                         while (!textReader.EndOfStream || !string.IsNullOrEmpty(tsvTextLine))
                         {
@@ -488,7 +534,14 @@ ZWD-Zimbabwe Dollar
                             try
                             {
                                 tsvValues = readLine(tsvTextLine);
-
+                                if (!accountIdFound && tsvTextLine.Contains("Account Id"))
+                                {
+                                    //in file the format is: account id, equelas, number..
+                                    accountIdInFile = tsvValues[2];
+                                    accountNameInAccountSettings = findAccountNameInAccountTable(accountIdInFile);
+                                    accountIdFound = true;
+                                }
+                                
                                 foreach (string value in tsvValues)
                                 {
                                     //find country name in the row it exists
@@ -527,7 +580,20 @@ ZWD-Zimbabwe Dollar
                                         if (isNewRow)
                                         {
                                             int gatewayNum = findGatewayInDest(tsvValues);
-                                            base._account = FindAccountName(gatewayNum.ToString());
+                                            if (!accountIdFound)
+                                            {
+                                                base._account = FindAccountName(gatewayNum.ToString(),scopeID);
+                                                if (_errorsCounter == 50)
+                                                {
+                                                    _errorsCounter = 0;
+                                                    Log.Write("Yahoo Convertor",_errorMessage,LogMessageType.Error);
+                                                }
+                                            }
+                                            else if (accountNameInAccountSettings.Equals(""))
+                                                base._account = base.errorAccountString;
+                                            else
+                                                base._account = accountNameInAccountSettings;
+                                            
                                             isNewRow = false;
 
                                             sBuilder.Append("Yahoo\t" + base._account);
@@ -540,7 +606,7 @@ ZWD-Zimbabwe Dollar
                                                     if (columnToConvertToUSD == columNumber)//CONVERT TO USD!
                                                     {
                                                         cost = tsvValues[columNumber].Replace(",", ".");
-                                                        cost = (Convert.ToDouble(cost) * ConvertionRate).ToString();
+                                                        //cost = (Convert.ToDouble(cost) * ConvertionRate).ToString();
                                                         sBuilder.Append("\t" + (Convert.ToDouble(cost) * ConvertionRate).ToString());
                                                     }
                                                     else
@@ -565,144 +631,174 @@ ZWD-Zimbabwe Dollar
                                 _wrtTxtFile.WriteLine(sBuilder);
                             sBuilder = new StringBuilder();
                         }
-                        _wrtTxtFile.Close();
-                        _wrtTxtFile.Dispose();
                     }
                 }
+                _wrtTxtFile.Close();
+                _wrtTxtFile.Dispose();
+                CopyFile();
             }
             catch (Exception ex)
             {
             }
         }
+        private string findAccountNameInAccountTable(string accountIdInFile)
+        {
+            string accountSettings = string.Empty;
+            string accountID = string.Empty;
+            string accountName = string.Empty;
+            string[] FieldsValues;
+
+            for(int i = 0; i < accountNamesDS.Tables[0].Rows.Count; i++)
+            {
+                accountSettings = accountNamesDS.Tables[0].Rows[i]["accountSettings"].ToString();
+                FieldsValues = accountSettings.Split(';');
+                foreach (string item in FieldsValues)
+                {
+                    if (item.ToLower().Contains("yahoo_account_id"))
+                    {
+                        accountID = item.Substring(item.IndexOf(':') + 1);
+                        if (accountID == accountIdInFile)
+                        {
+                            accountName = accountNamesDS.Tables[0].Rows[i]["account_name"].ToString();
+                            break;
+                        }
+                    }
+                }
+                if (!accountName.Equals(""))
+                    break;
+            }
+            return accountName;
+        }
+
         private string[] readLine(string csvTextLine)
         {
             string[] FieldsValues = csvTextLine.Split('\t');
             return FieldsValues;
         }
-        private void createTXTfromTSV(List<string> soureFilePath)
-        {
-            DataSet dataSet1 = new DataSet();
+        //private void createTXTfromTSV(List<string> soureFilePath)
+        //{
+        //    DataSet dataSet1 = new DataSet();
 
-            DataTable dt = new DataTable();
+        //    DataTable dt = new DataTable();
 
-            DateTime date = new DateTime();
-            StringBuilder sBuilder = new StringBuilder();
-            string rowString = "";
-            string firstRowsStr = null, firstHeaderRowsStr = null;
-            string header = null;
-            try
-            {
+        //    DateTime date = new DateTime();
+        //    StringBuilder sBuilder = new StringBuilder();
+        //    string rowString = "";
+        //    string firstRowsStr = null, firstHeaderRowsStr = null;
+        //    string header = null;
+        //    try
+        //    {
 
-                System.Xml.XmlNodeList list = GetConvertionTypeNode();
+        //        System.Xml.XmlNodeList list = GetConvertionTypeNode();
 
-                firstRowsStr = list[0].SelectNodes("FirstRowName")[0].ChildNodes[0].Value;
-                firstHeaderRowsStr = list[0].SelectNodes("FirstHeaderRowName")[0].ChildNodes[0].Value;
+        //        firstRowsStr = list[0].SelectNodes("FirstRowName")[0].ChildNodes[0].Value;
+        //        firstHeaderRowsStr = list[0].SelectNodes("FirstHeaderRowName")[0].ChildNodes[0].Value;
 
 
-                header = ReadHeaders(list[0].SelectNodes("tmpHeader")[0].Attributes);
-                header = "Channel AccountName day_code " + header + "CostConversionRate CostBeforeConversion";
+        //        header = ReadHeaders(list[0].SelectNodes("tmpHeader")[0].Attributes);
+        //        header = "Channel AccountName day_code " + header + "CostConversionRate CostBeforeConversion";
 
-                header = header.Replace(@" ", "\t");
-                date = DateTime.Now;
+        //        header = header.Replace(@" ", "\t");
+        //        date = DateTime.Now;
 
-                if (saveFilePath != "")
-                    _wrtTxtFile = new StreamWriter(saveFilePath, false, Encoding.Unicode);
-                else
-                {//default header = ReadHeaders(list[0].SelectNodes("tmpHeader")[0].Attributes);
-                    header = "Channel AccountName day_code " + header;
-                    _wrtTxtFile = new StreamWriter(saveFilePath,//saveFilePath + "\\" + "CSV_EF_Yahoo_" + date.Day.ToString() + "." + date.Month.ToString() + "." + date.Year.ToString() + ".xls",//+DateTime.Now.Month.ToString().Substring(0,3)+"_"+  "Dec_22.12.09.xls",
-                  false, Encoding.Unicode);
-                }
+        //        if (saveFilePath != "")
+        //            _wrtTxtFile = new StreamWriter(saveFilePath, false, Encoding.Unicode);
+        //        else
+        //        {//default header = ReadHeaders(list[0].SelectNodes("tmpHeader")[0].Attributes);
+        //            header = "Channel AccountName day_code " + header;
+        //            _wrtTxtFile = new StreamWriter(saveFilePath,//saveFilePath + "\\" + "CSV_EF_Yahoo_" + date.Day.ToString() + "." + date.Month.ToString() + "." + date.Year.ToString() + ".xls",//+DateTime.Now.Month.ToString().Substring(0,3)+"_"+  "Dec_22.12.09.xls",
+        //          false, Encoding.Unicode);
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                // WriteToEventLog("Converter: \n" + ex.ToString());
-                if (_wrtTxtFile != null)
-                {
-                    _wrtTxtFile.Close();
-                    _wrtTxtFile.Dispose();
-                }
-            }
-            try
-            {
-                _wrtTxtFile.WriteLine(header);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // WriteToEventLog("Converter: \n" + ex.ToString());
+        //        if (_wrtTxtFile != null)
+        //        {
+        //            _wrtTxtFile.Close();
+        //            _wrtTxtFile.Dispose();
+        //        }
+        //    }
+        //    try
+        //    {
+        //        _wrtTxtFile.WriteLine(header);
 
-                int accountIDRowIndex;
-                for (int i = 0; i < listTables.Count; i++)
-                {
-                    int FirstRowHeaders = 0;
-                    FillAccountNames2DataSet();
+        //        int accountIDRowIndex;
+        //        for (int i = 0; i < listTables.Count; i++)
+        //        {
+        //            int FirstRowHeaders = 0;
+        //            FillAccountNames2DataSet();
      
-                    FirstRowHeaders = GetFirstRowIndex(firstHeaderRowsStr, dt);   
-                    System.Collections.Hashtable headersHash = BuildHeadersOrder(headersStrings, dt, FirstRowHeaders,"Cost");
+        //            FirstRowHeaders = GetFirstRowIndex(firstHeaderRowsStr, dt);   
+        //            System.Collections.Hashtable headersHash = BuildHeadersOrder(headersStrings, dt, FirstRowHeaders,"Cost");
 
 
 
-                    double ConvertionRate = 1.0;
-                    string cost = string.Empty;
-                    // double ConvertionRate = Convert.ToDouble( ConvertionRates[country]);
-                    for (int rowsCounter = firstRow; rowsCounter < dt.Rows.Count; rowsCounter++)
-                    {
-                        if (dt.Rows[rowsCounter][0].ToString().Equals(""))
-                        {
-                        }
-                        else
-                        {
-                            sBuilder.Append("Yahoo\t" + base._account);
-                            sBuilder.Append("\t" + rowString);
+        //            double ConvertionRate = 1.0;
+        //            string cost = string.Empty;
+        //            // double ConvertionRate = Convert.ToDouble( ConvertionRates[country]);
+        //            for (int rowsCounter = firstRow; rowsCounter < dt.Rows.Count; rowsCounter++)
+        //            {
+        //                if (dt.Rows[rowsCounter][0].ToString().Equals(""))
+        //                {
+        //                }
+        //                else
+        //                {
+        //                    sBuilder.Append("Yahoo\t" + base._account);
+        //                    sBuilder.Append("\t" + rowString);
 
 
 
-                            for (int k = 0; k < headersHash.Count; k++)
-                            {
-                                int columNumber = Convert.ToInt32(headersHash[k]);
-                                if (columNumber != -1)
-                                {
+        //                    for (int k = 0; k < headersHash.Count; k++)
+        //                    {
+        //                        int columNumber = Convert.ToInt32(headersHash[k]);
+        //                        if (columNumber != -1)
+        //                        {
 
 
-                                    //if (accountNamesDS.Tables.Count == 0)
-                                    //{
-                                    //    base._account = "-1";
-                                    //}
-                                    //else
-                                    //    base._account = FindAccountName(accountIDStr, "Yahoo_Account_Name", dt.Rows[rowsCounter][7].ToString());
+        //                            //if (accountNamesDS.Tables.Count == 0)
+        //                            //{
+        //                            //    base._account = "-1";
+        //                            //}
+        //                            //else
+        //                            //    base._account = FindAccountName(accountIDStr, "Yahoo_Account_Name", dt.Rows[rowsCounter][7].ToString());
 
 
 
-                                    if (columnToConvertToUSD == columNumber)//CONVERT TO USD!
-                                    {
-                                        cost = dt.Rows[rowsCounter][columNumber].ToString().Replace(",", ".");
-                                        //    cost = (Convert.ToDouble(cost) * ConvertionRate).ToString();
-                                        sBuilder.Append("\t" + (Convert.ToDouble(cost) * ConvertionRate).ToString());
-                                    }
-                                    else
-                                        sBuilder.Append("\t" + dt.Rows[rowsCounter][columNumber].ToString());
-                                }
-                            }
+        //                            if (columnToConvertToUSD == columNumber)//CONVERT TO USD!
+        //                            {
+        //                                cost = dt.Rows[rowsCounter][columNumber].ToString().Replace(",", ".");
+        //                                //    cost = (Convert.ToDouble(cost) * ConvertionRate).ToString();
+        //                                sBuilder.Append("\t" + (Convert.ToDouble(cost) * ConvertionRate).ToString());
+        //                            }
+        //                            else
+        //                                sBuilder.Append("\t" + dt.Rows[rowsCounter][columNumber].ToString());
+        //                        }
+        //                    }
 
-                            sBuilder.Append("\t" + ConvertionRate);
-                            sBuilder.Append("\t" + cost);
+        //                    sBuilder.Append("\t" + ConvertionRate);
+        //                    sBuilder.Append("\t" + cost);
 
-                            _wrtTxtFile.WriteLine(sBuilder);
-                            sBuilder = new StringBuilder();
-                        }
-                    }
-                }
-                _wrtTxtFile.Close();
+        //                    _wrtTxtFile.WriteLine(sBuilder);
+        //                    sBuilder = new StringBuilder();
+        //                }
+        //            }
+        //        }
+        //        _wrtTxtFile.Close();
 
-                CopyFile();
-                _wrtTxtFile.Dispose();
-            }
-            catch (Exception ex)
-            {
-            }
-            finally
-            {
-                _wrtTxtFile.Close();
-                _wrtTxtFile.Dispose();
-            }
-        }
+        //        CopyFile();
+        //        _wrtTxtFile.Dispose();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //    }
+        //    finally
+        //    {
+        //        _wrtTxtFile.Close();
+        //        _wrtTxtFile.Dispose();
+        //    }
+        //}
         public override bool DoWork(List<string> soureFilePath, string saveFilePath)
         {
 
