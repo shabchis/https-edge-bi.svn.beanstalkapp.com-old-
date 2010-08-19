@@ -61,7 +61,7 @@ namespace Easynet.Edge.UI.WebPages.Converters
 
                 _sqlCommand = @"select  [easynet_OLTP].[dbo].[User_GUI_Account].[Account_Name]  
                   FROM [easynet_OLTP].[dbo].[UserProcess_GUI_Gateway],[easynet_OLTP].[dbo].[User_GUI_Account]
-                  where  [Gateway_id] =" +key
+                  where  [Gateway_id] =" + key + @" and [easynet_OLTP].[dbo].[UserProcess_GUI_Gateway].account_id > 0 "
 
                               
                 +
@@ -171,51 +171,83 @@ namespace Easynet.Edge.UI.WebPages.Converters
 
             MyLogger.Instance.Write("ssssssssss");
             System.Xml.XmlAttributeCollection item = null;
-            for (int TableHeaderCounter = 0; TableHeaderCounter < TableHeaderCounterFromConfig-3; TableHeaderCounter++)
+            int ClientNo = 1;
+            for (int TableHeaderCounter = 0; TableHeaderCounter < dt.Columns.Count; TableHeaderCounter++)
             {
-                 
-                string temp = dt.Columns[TableHeaderCounter].ColumnName.ToString();
-                temp = temp.Replace(" ", "_");
-
-                 try
+                if (TableHeaderCounter < TableHeaderCounterFromConfig)
                 {
+                    string temp = dt.Columns[TableHeaderCounter].ColumnName.ToString();
+                    temp = temp.Replace(" ", "_");
+
                     if (TableHeaderCounter == 1)
                     {
                         rowString += "AccountName"+ "\t";
                     }
 
                     item = list[0].SelectNodes("tmpHeader")[0].Attributes;
-                    
                     for (int i = 0; i < item.Count; i++)
-			        {
-        			    if(item[i].Name.ToLower().Equals(temp.ToLower()))
+                    {   
+                        //if(temp.ToLower().Contains(item[i].Name.ToLower()))
+                        if (item[i].Name.ToLower().Equals(temp.ToLower()))
                         {
-                            
-                           tmpHeader = item[i].Value;
-                           _headers.Add(temp);
-                           rowString += tmpHeader + "\t";
+                            tmpHeader = item[i].Value;
+                            _headers.Add(temp);
+                            rowString += tmpHeader + "\t";
                         }
-			        }
-                     
+                    }
+                }
+                else
+                {
+                    rowString += ClientSpecific + ClientNo + "\t";
+                    ClientNo++;
                 }
 
+            }
+            //for (int TableHeaderCounter = 0; TableHeaderCounter < TableHeaderCounterFromConfig-3; TableHeaderCounter++)
+            //{
+                 
+            //    string temp = dt.Columns[TableHeaderCounter].ColumnName.ToString();
+            //    temp = temp.Replace(" ", "_");
+
+            //     try
+            //    {
+            //        if (TableHeaderCounter == 1)
+            //        {
+            //            rowString += "AccountName"+ "\t";
+            //        }
+
+            //        item = list[0].SelectNodes("tmpHeader")[0].Attributes;
+                    
+            //        for (int i = 0; i < item.Count; i++)
+            //        {
+            //            if(item[i].Name.ToLower().Equals(temp.ToLower()))
+            //            {
+                            
+            //               tmpHeader = item[i].Value;
+            //               _headers.Add(temp);
+            //               rowString += tmpHeader + "\t";
+            //            }
+            //        }
+                     
+            //    }
+
                    
-                  catch (Exception ex) { }
+            //      catch (Exception ex) { }
 
                 
-            }
+            //}
 
 
 
            
-            int ClientNo = 1;
+            //int ClientNo = 1;
             
           
-            for (int TableHeaderCounter = TableHeaderCounterFromConfig; TableHeaderCounter < dt.Columns.Count; TableHeaderCounter++)
-            {
-                rowString += ClientSpecific + ClientNo + "\t";
-                ClientNo++;
-            }
+            //for (int TableHeaderCounter = TableHeaderCounterFromConfig; TableHeaderCounter < dt.Columns.Count; TableHeaderCounter++)
+            //{
+            //    rowString += ClientSpecific + ClientNo + "\t";
+            //    ClientNo++;
+            //}
 
             MyLogger.Instance.Write("rowString: " + rowString);
             //Writing headers to file
@@ -248,44 +280,59 @@ namespace Easynet.Edge.UI.WebPages.Converters
                     {
                         for (int columnsCounter = 0; columnsCounter <= TableHeaderCounterFromConfig; columnsCounter++)
                         {
-                            if (_headers.Contains(dt.Columns[columnsCounter].Caption))
-                            {
-                                if (columnsCounter == 1) //account = serial
-                                {
-                                    //  rowString += "\t" + dt.Rows[rowsCounter][columnsCounter].ToString();
-                                    string accoutnName = FindAccountName(dt.Rows[rowsCounter][columnsCounter].ToString(), " ");
-                                    rowString += "\t" + accoutnName; //adding accountName
-                                    rowString += "\t" + dt.Rows[rowsCounter][columnsCounter].ToString();//adding the current culomn in table
-                                }
-                                else if (columnsCounter == 0) //first column - date
-                                {
-                                    //   rowString = dt.Rows[rowsCounter][columnsCounter].ToString();
 
-                                    if (this.DateFormat.Equals("yyyy/mm/dd"))
+                            if ((_headers.Contains(dt.Columns[columnsCounter].Caption) && (columnsCounter == 0))) //first column - date
+                            {
+                                //   rowString = dt.Rows[rowsCounter][columnsCounter].ToString();
+
+                                if (this.DateFormat.Equals("yyyy/mm/dd"))
+                                {
+                                    string[] strDate = dt.Rows[rowsCounter][columnsCounter].ToString().Split(@"/".ToCharArray());
+                                    if (strDate[0].Length >= 4)
                                     {
-                                        string[] strDate = dt.Rows[rowsCounter][columnsCounter].ToString().Split(@"/".ToCharArray());
+                                        date = new DateTime(Convert.ToInt32(strDate[0].Substring(0, 4))
+                                      , Convert.ToInt32(strDate[1])
+                                         , Convert.ToInt32(strDate[2]));
+                                    }
+                                    else
                                         date = new DateTime(Convert.ToInt32(strDate[2].Substring(0, 4))
                                            , Convert.ToInt32(strDate[0])
                                               , Convert.ToInt32(strDate[1]));
 
+                                }
+                                else
+                                {
+                                    string[] strDate = dt.Rows[rowsCounter][columnsCounter].ToString().Split(@"/".ToCharArray());
+                                    if (strDate[0].Length >= 4)
+                                    {
+                                        date = new DateTime(Convert.ToInt32(strDate[0].Substring(0, 4))
+                                      , Convert.ToInt32(strDate[2])
+                                         , Convert.ToInt32(strDate[1]));
                                     }
                                     else
-                                    {
-                                        string[] strDate = dt.Rows[rowsCounter][columnsCounter].ToString().Split(@"/".ToCharArray());
                                         date = new DateTime(Convert.ToInt32(strDate[2].Substring(0, 4))
                                            , Convert.ToInt32(strDate[1])
                                               , Convert.ToInt32(strDate[0]));
 
-                                    }
-                                    //  DateTime.ParseExact(dt.Rows[rowsCounter][columnsCounter].ToString(),base.DateFormat,null);
-                                    //  date = (DateTime)dt.Rows[rowsCounter][columnsCounter];
-                                    rowString = checkDateValidation(date, rowsCounter, dt.Rows.Count, ref wrtTxtFile);
-                                    if (rowString == null)  //date is not valid
-                                    {
-                                        isValidDate = true;   //initilize
-                                        return true;
-                                    }
                                 }
+                                //  DateTime.ParseExact(dt.Rows[rowsCounter][columnsCounter].ToString(),base.DateFormat,null);
+                                //  date = (DateTime)dt.Rows[rowsCounter][columnsCounter];
+                                rowString = checkDateValidation(date, rowsCounter, dt.Rows.Count, ref wrtTxtFile);
+                                if (rowString == null)  //date is not valid
+                                {
+                                    isValidDate = true;   //initilize
+                                    return true;
+                                }
+                            }
+                            else if (_headers.Contains(dt.Columns[columnsCounter].Caption))
+                            {
+                                //if (columnsCounter == 1) //account = serial
+                                //{
+                                //  rowString += "\t" + dt.Rows[rowsCounter][columnsCounter].ToString();
+                                string accoutnName = FindAccountName(dt.Rows[rowsCounter][columnsCounter].ToString(), " ");
+                                rowString += "\t" + accoutnName; //adding accountName
+                                rowString += "\t" + dt.Rows[rowsCounter][columnsCounter].ToString();//adding the current culomn in table
+                                //}
                             }
                         }
                         for (int columnsCounter2 = TableHeaderCounterFromConfig; columnsCounter2 < dt.Columns.Count; columnsCounter2++)

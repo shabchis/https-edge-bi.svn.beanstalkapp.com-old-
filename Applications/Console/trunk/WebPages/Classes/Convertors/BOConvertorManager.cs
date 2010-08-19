@@ -142,8 +142,10 @@ namespace Easynet.Edge.UI.WebPages.Converters
                 listOfConvertorsToRun[i].saveFileName = saveFileName;
                 listOfConvertorsToRun[i].DoWork();
             }
-            return "success";
-
+            if (DateTime.Now.Hour < 9)
+                return "Data was successfully uploaded.\nIt will be visible at 10:00 AM GMT";
+            else
+                return "Data was successfully uploaded.\nIt will be visible tomorrow at 7:00 AM GMT";
         }
 
 

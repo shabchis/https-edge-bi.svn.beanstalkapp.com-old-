@@ -440,9 +440,6 @@ namespace Easynet.Edge.UI.WebPages.Converters
 
         }
 
-
-       
-
         public virtual bool DoWork()
         {
             return DoWork(this.uploadFilePath, this.saveFilePath + this.saveFileName);
