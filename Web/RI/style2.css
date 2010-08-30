@@ -1,9 +1,15 @@
+
+body{
+    font-family:verdana;
+
+}
+
 h2.trigger {
 	background:#F5F5F5 url('images/tb-closed.png') left no-repeat ;
     border-top:1px solid #C2C3C5;
     float:left;
     font-family:"verdana";
-    font-size:12px;
+    font-size:14px;
     font-weight:normal;
     height:23px;
     line-height:23px;
@@ -12,6 +18,7 @@ h2.trigger {
     padding:0 0 0 50px;
     width:100%;
         position:relative;
+		width:95%\9;
 
 }
 h2.trigger a {
@@ -38,11 +45,12 @@ h2.active {
 	height:23px;
     line-height:23px;
 	width: 100%;
-	font-size: 12px;
+	font-size: 14px;
     font-family:"verdana";
 	font-weight: normal;
 	float: left;
     position:relative;
+	width:95%\9;
     
 }
 
@@ -84,12 +92,21 @@ h2.active:hover{
     width:96%;
     height:26px;
     -moz-border-radius:5px 5px 0px 0px ;
+	-webkit-border-radius:5px 5px 0px 0px ;
     line-height:26px;
-
+	_padding-right:10px  ;
+	_margin-left:0px  ;
+	
+	
     
 
 }
-
+#status{
+	left:597px;
+	position:relative;
+	top:-26px;
+	
+}
 #header ul li{
     float:left;
     list-style:none;
@@ -142,9 +159,10 @@ h2.active:hover{
 
 #dim{
     background-color:#E3EDCB;
-   height:194px;
-    width:300px;
+  /* height:194px;*/
+    width:960px;
     -moz-border-radius:10px;
+	-webkit-border-radius:10px;
     float:left;
     overflow:hidden;
 
@@ -169,6 +187,7 @@ h4{
 
 .clear{
     clear: both;
+
     
 }
 
@@ -189,16 +208,21 @@ h4{
 
 
 
-.cb-enable, .cb-disable, .cb-enable span, .cb-disable span { background: url(switch.gif) repeat-x;  display: block; float: left;  }
-    .cb-enable span, .cb-disable span { line-height: 30px; display: block; background-repeat: no-repeat; font-weight: bold; }
-    .cb-enable span { background-position: left -90px; padding: 0 10px; }
-    .cb-disable span { background-position: right -180px;padding: 0 10px; }
+.cb-enable, .cb-disable, .cb-enable span, .cb-disable span { background: url(switch.gif) repeat-x 0 -30px;  display: block; float: left;  }
+    .cb-enable span, .cb-disable span { line-height: 30px; display: block; background-repeat: no-repeat; font-weight: bold;color:#d3d3d3; }
+    .cb-enable span { background-position: left -120px; padding: 0 23px; }
+    .cb-disable span { background-position: right -210px;padding: 0 32px; }
     .cb-disable.selected { background-position:0 -60px; }
     .cb-disable.selected span { background-position: right -240px; color: #fff; }
     .cb-enable.selected { background-position: 0 -60px; }
     .cb-enable.selected span { background-position: left -150px; color: #fff; }
     .switch label { cursor: pointer; }
-    .switch input { display: none; }
+    .switch input { 
+	display:block;
+	position:absolute;
+	z-index:-10000;
+	
+	}
 
 
 #switcher{
@@ -206,26 +230,28 @@ h4{
 
 }
 
-#dimcombo{
-margin-left:9px;
-margin-top:40px;
+#factcombo,#dimcombo{
+	float:left;
+	font-family:"verdana";
+	margin-left:406px;
+	margin-top:-30px;
+	position:relative;
+	width:261px;
+	font-size:14px;
 
 }
 
-#factcombo{
-margin-left:9px;
-margin-top:40px;
-}
+
 span#bullet{
-float:left;
-margin-top:3px;
-margin-left:40px;
-margin-right:10px;
+	float:left;
+	margin-top:3px;
+	margin-left:40px;
+	margin-right:10px;
 }
 
 .mapping{
 position:absolute;
-    left:824px;
+   left:744px;
     top:-1px;
 }
 #modal{
@@ -258,6 +284,7 @@ table#map {
 #map thead td{
 font-weight:bold;
 text-align:center;
+color:#90B63D;
 }
 
 
@@ -276,9 +303,9 @@ a.new{
 
 a.delete{
 
-   left:893px;
-    position:absolute;
-    top:-1px
+    float:right;
+    margin-right:114px;
+
 }
 
 .delete span{
@@ -300,7 +327,12 @@ a.delete{
 
 .button {
     -moz-border-radius:5px 5px 5px 5px;
-    background:-moz-linear-gradient(center top , #7DB72F, #4E7D0E) repeat scroll 0 0 transparent;
+	-webkit-border-radius:5px 5px 5px 5px;
+  background-color: #7DB72F;
+  background-image: -moz-linear-gradient(top, #7DB72F, #4E7D0E); /* FF3.6 */
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #7DB72F),color-stop(1, #4E7D0E)); /* Saf4+, Chrome */
+            filter:  progid:DXImageTransform.Microsoft.gradient(startColorStr='#7DB72F', EndColorStr='#4E7D0E'); /* IE6,IE7 */
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#7DB72F', EndColorStr='#4E7D0E')"; /* IE8 */
     border:1px solid #538312;
     color:#E8F0DE;
     padding:5px;
@@ -342,6 +374,8 @@ a.delete{
     float:right;
     margin-right:167px;
     margin-top:38px;
+    margin-bottom:20px;
+    font-weight:bold;
 }
 
 #approval{
@@ -350,6 +384,91 @@ a.delete{
 }
 
 #check{
-    float:left;
-   margin:  155px 15px 0px 10px
+    float:right;
+	margin:-33px 128px 0 0;
+	position:relative;
 }
+#upperSubmit{
+		  float:right;
+			font-weight:bold;
+			margin:-33px 25px 0 0;
+			position:relative;
+}
+
+#New_col{
+
+    display:none;
+}
+
+#allnew{
+
+    float:left;
+
+    margin-top:141px;
+}
+
+#newonly{
+    
+
+}
+
+#newcheck{
+
+    margin-left:10px;
+}
+
+
+a.edit{
+	position:absolute;
+	right:419px;
+}
+
+#newlbl,#disabledlbl
+{
+	font-size:14px;
+	  color:black;
+	   clear: left;
+}
+#disabledCheck
+{
+	
+	 margin-left:10px;
+	 
+	
+}
+
+span#disable{
+	
+	float:left;
+margin-left:37px;
+margin-right:10px;
+margin-top:3px;
+}
+
+#deleteApproval{
+	display:none;
+	
+}
+
+ul#combos{
+	float:left;
+margin-left:356px;
+margin-top:-2px;
+position:relative;
+	
+}
+ul#combos li{
+	float:left;
+	list-style:none;
+	
+}
+#disabledCheck{
+	
+}
+
+#easyTooltip{
+	padding:5px;
+	border:1px solid #ccc;
+	background:#f1f1f1;
+	}
+
