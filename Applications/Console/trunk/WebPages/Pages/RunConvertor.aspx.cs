@@ -156,6 +156,7 @@ namespace Easynet.Edge.UI.WebPages
                                 string name = Path.GetFileName(outputFileName);
                                 string exten = Path.GetExtension(name);
                                 saveFilePathTextBox.Text = name.Remove(name.Length - exten.Length, exten.Length);
+                                saveFilePathTextBox.Text = Request.QueryString["accountID"] + "@" + DayCode.ToDayCode(DateTime.Today);
                             }
                         }
                     }
