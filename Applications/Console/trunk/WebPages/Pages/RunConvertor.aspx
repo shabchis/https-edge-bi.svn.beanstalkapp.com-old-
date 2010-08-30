@@ -48,7 +48,7 @@
 	<div class="formField">
 	    <div class="label">Source:</div>
 	    <div class="control">
-		    <asp:DropDownList runat="server" AutoPostBack="true" id="_sourceSelector"/>
+		    <asp:DropDownList runat="server" AutoPostBack="false" id="_sourceSelector"/>
 	    </div>
     </div>
     
