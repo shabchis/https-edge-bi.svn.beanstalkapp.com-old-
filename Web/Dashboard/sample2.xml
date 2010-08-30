@@ -1,0 +1,26 @@
+<slickboard>
+   
+   <!-- background design and animation ******************************** -->
+   <rect x='0' y='0' width='480' height='300' fill_color='fffffff'  bevel='gradiant' />
+   <object>
+      
+      <rotate x='145' y='50' start='0' span='0' step='1' shake_frequency='.95' shake_span='45' /> 
+      <blink on='2' fade_out='.5' off='0' fade_in='1' />
+   </object>
+  
+   <circle x='145' y='130' radius='100' start='270' end='451' fill_color='fffffff' fill_alpha='.9' line_thickness='4' line_alpha='.2' shadow='inner' glow='fffff' />
+   <circle x='145' y='130' radius='94' start='80' end='115' fill_color='fffffff' />
+   <filter>
+      <shadow id='default' />
+      <shadow id='low' alpha='.25' blurX='3' blurY='3' />
+      <shadow id='high' alpha='.5' blurX='10' blurY='10' />
+      <shadow id='inner' alpha='.5' blurX='20' blurY='20' inner='true' />
+      <bevel id='dial' distance='11' angle='135' blurX='50' blurY='75' strength='3' quality='3' />
+      <bevel id='gloss' distance='1' angle='135' blurX='50' blurY='75' strength='3' quality='3' />
+      <bevel id='cap' distance='1' angle='135' blurX='20' blurY='20' quality='3' />
+      <glow id='blue' color='8888ff' alpha='.5' blurX='50' blurY='20' inner='true' />   
+      <glow id='blue2' color='8888ff' alpha='.3' blurX='20' blurY='5' />   
+   </filter>
+
+</slickboard>
+

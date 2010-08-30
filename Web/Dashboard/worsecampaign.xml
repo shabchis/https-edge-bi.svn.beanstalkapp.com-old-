@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<campaigns>
+	<campaign>
+		<name>GO. 2tier - US - Search </name>
+		<cpa>13.30</cpa>
+			<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>YA. APP---Spain</name>
+		<cpa>12.60</cpa>
+		<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>GO. Content---Germany </name>
+		<cpa>10.56</cpa>
+		<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>BI. APP---US</name>
+		<cpa>10.51</cpa>
+		<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>GO. APP---UK </name>
+		<cpa>10.30</cpa>
+			<diff>8%</diff>
+		</campaign>
+	
+	<campaign>
+	<name>GO. CONTENT---French</name>
+	<cpa>9.86</cpa>
+	<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>YA. APP---France</name>
+		<cpa>9.48</cpa>
+		<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>BA. APP---Main</name>
+		<cpa>8.63</cpa>
+		<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>YA. APP---Italy </name>
+		<cpa>8.26</cpa>
+		<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>GO. CONTENT---Spain </name>
+		<cpa>7.62</cpa>
+		<diff>8%</diff>
+	</campaign>
+</campaigns>

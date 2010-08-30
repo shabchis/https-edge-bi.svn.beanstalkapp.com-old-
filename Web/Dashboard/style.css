@@ -1,0 +1,388 @@
+/************************************
+            By Dan Harper
+        http://www.danharper.me
+
+           For NETTUTS.com
+
+     Check out http://vivawp.com
+************************************/
+
+* {
+margin: 0;
+padding: 0;
+color: #222;
+}
+
+body {
+font-size: 75%;
+color: #8d8d8d;
+background: #ffffff;
+font-family: "verdana","Helvetica Neue", Helvetica, Arial, sans-serif;
+line-height: 1.6em;
+
+}
+#wrapper{
+
+overflow:hidden;
+margin:10px 10px 10px 10px ;
+min-width:650px;
+max-width:1260px;
+}
+
+
+
+#tabvanilla{
+float:left;
+margin-left:1%;
+margin-right:1%;
+margin-bottom:35px;
+margin-top:5px;
+ min-width:440px;
+max-width:700px;
+
+   
+}
+
+#atten{
+float:left;
+max-width:500px;
+height:377px;
+min-width:300px;
+
+
+}
+
+#oper{
+float:left;
+margin-left:1%;
+margin-right:1%;
+margin-bottom:35px;
+min-width:440px;
+max-width:700px;
+
+}
+
+#maps{
+float:left;
+margin-left:0px;
+/*width:500px;*/
+min-width:400px;
+max-width:500px;
+margin-top:5px;
+    
+}
+
+
+
+#inner{
+width:100%;
+}
+
+
+.header{
+ position:relative;
+ background-color:#90B63D;
+ position:relative;
+ padding:5px;
+
+ margin-bottom:0px;
+ margin-top:-10px;
+ width:100%;
+ margin-left:-5px;
+ -moz-border-radius:5px 5px 0 0 ;
+
+}
+.header h3{
+
+color:white;
+
+
+}
+.widget {
+
+
+        padding: 5px;
+        background: #FFFFFF;
+        border-left:1px solid #dedbd1;
+        border-bottom:1px solid #dedbd1;
+        border-right:1px solid #dedbd1;
+
+
+
+
+}
+
+
+	.widget a {
+	color: #222;
+	text-decoration: none;
+	}
+	
+	.widget a:hover {
+	color: #009;
+	text-decoration: underline;
+	}
+
+	.tabnav li {
+   
+	display: block;
+	list-style: none;
+	padding-right: 5px;
+    border-right:2px solid #DEDBD1;
+    padding-top:10px;
+    height:23px;
+        float:left;
+        line-height:13px;
+
+
+        
+
+   
+       
+	}
+	
+	.tabnav li:last-child{
+      border-right:0px !important;
+
+    }
+.tabnav li:first-child{
+   
+
+    }
+	
+		.tabnav li a {
+		text-decoration: none;
+		
+		color: #222;
+		font-weight: normal;
+		padding: 4px 4px 10px;
+		outline: none;
+
+		}
+		
+		.tabnav li a:hover, .tabnav li a:active, .tabnav li.ui-tabs-selected a {
+		font-weight:normal;
+		color: #90B63D;
+		text-decoration: none;
+   
+       
+		
+		padding: 4px 4px 10px;
+
+		}
+
+.tabnav li:not(.ui-tabs-selected){
+      border-bottom:1px solid #DEDBD1;
+     background-image: -moz-linear-gradient(center bottom, rgb(222,218,222) 2%, rgb(250,250,250) 10%);
+}
+		
+	.tabdiv {
+	margin-top: 2px;
+	background: #fff;
+	/*border: 1px solid #dedbd1;*/
+	margin-top:56px;
+	/*width:390px;*/
+	height:300px;
+    margin-right:15px;
+	}
+	
+		.tabdiv li {
+		list-style-image: url("star.png");
+		margin-left: 20px;
+		}
+
+.ui-tabs-hide {
+		display: none;
+		}
+
+		#featuredvid {
+		text-align: center;
+		}
+		
+			.fvid {
+			margin-bottom: 5px;
+			}
+		
+			.vidselector li {
+			text-align: left;
+			list-style: none;
+			padding: 5px;
+			background: #ffffff;
+			border: 1px solid #dedbd1;
+			text-transform: uppercase;
+			margin-bottom: 5px;
+
+			}
+.clear{
+clear:both;
+}
+	#table1{
+	float:right;
+	margin-right:10px;
+	
+	}
+	
+	#table2{
+	float:left;
+        margin-left:10px;
+
+	}
+#timeline {
+width:976px;
+    
+}
+
+#title{
+background-color:white;
+
+width:990px;
+-moz-border-radius:2px;
+overflow:hidden;
+margin:0  auto 15px auto ;
+ padding-top:5px;
+ padding-bottom:5px;
+
+
+}
+
+#title ul{
+float:left;
+
+}
+
+#title li{
+float:left;
+display:inline;
+padding-right:10px;
+color:black;
+font-weight:bold;
+margin-left:10px;
+}
+
+
+table {
+    border-spacing: 0px;
+    border-collapse: collapse;
+    /*width:228px;*/
+}
+#Worse{
+
+    font-family:Verdana;
+    font-size:10px;
+    margin-top:-1px;
+    max-width:243px;
+    min-width: 229px;
+}
+table#Worse th {
+
+    text-align: center;
+    font-weight: normal;
+    padding: 0.1em 0.5em;
+    border-bottom: 2px solid #FFFFFF;
+  background-image:-moz-linear-gradient(
+    center bottom,
+    rgb(194,194,194) 0%,
+    rgb(222,222,222) 19%,
+    rgb(255,255,255) 100%
+)
+;
+   
+   
+}
+table#Worse td  {
+    text-align: left;
+    border-bottom: 1px solid #dedbd1;
+    padding: 0.1em 0.5em;
+    background: #FFFFFF;
+   
+    width:64%;
+    color:red;
+
+}
+
+table#top{
+    width:229px;
+    font-family:Verdana;
+    font-size:10px;
+    margin-right:16px;
+
+}
+
+
+table#top td  {
+    text-align: left;
+  
+    padding: 0.1em 0.5em;
+    background: #FFFFFF;
+    border-bottom: 1px solid #dedbd1;
+    width:64%;
+    color:green;
+
+}
+table thead th {
+    background: #FFFFFF;
+    color: #FFFFFF;
+    text-align: center;
+    
+}
+table th {
+    text-align: center;
+}
+
+#table1 h3,#table2 h3{
+    text-align:center;
+margin-bottom:13px;
+font-weight:normal;
+color:#222222;
+    font-size:12px;
+}
+
+table tr:first-child{
+    -moz-border-radius:10px ;
+
+}
+.rightround{
+    color:#AAAAAA;
+  
+    background-image:-moz-linear-gradient(
+    center bottom,
+    rgb(194,194,194) 0%,
+    rgb(222,222,222) 19%,
+    rgb(255,255,255) 100%
+)
+;
+    font-weight:normal;
+
+}
+.leftround{
+     color:#AAAAAA;
+   
+  background-image: -moz-linear-gradient(
+    center bottom,
+    rgb(194,194,194) 0%,
+    rgb(222,222,222) 19%,
+    rgb(255,255,255) 100%
+)
+;
+    font-weight:normal;
+}
+
+#last{
+padding-left:0px;
+}
+
+#lastc{
+
+    padding-right:169px;
+}
+
+#lastg{
+
+    padding-right:160px;
+}
+
+#dropdown{
+    margin-bottom:10px;
+    margin-left:10px;
+
+}

@@ -1,0 +1,245 @@
+<!--
+  copyright (c) 2009 Google inc.
+
+  You are free to copy and use this sample.
+  License can be found here: http://code.google.com/apis/ajaxsearch/faq/#license
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js'></script>
+<script type="text/javascript" src="jquery.corners.js"></script>
+<script type="text/javascript" src="jquery-ui-personalized-1.5.2.packed.js"></script>
+<script type="text/javascript" src="sprinkle.js"></script>
+<script type="text/javascript" src="visualize.jQuery.js"></script>
+ <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+ <script type="text/javascript" src="jquery.fusioncharts.js"></script>
+ <script type="text/javascript" src="Map.js"></script>
+ 
+
+
+    <title>
+      DashBoard
+    </title>
+
+
+
+
+
+  </head>
+  <body style="font-family: Arial;border: 0 none;">
+
+  <div id="title">
+      <ul>
+          <li>Merge </li>
+          <li>Show Targets</li>
+      </ul>
+  </div>
+  <div id="wrapper">
+	 <div id="tabvanilla" class="widget rounded">
+
+            <ul class="tabnav">
+                <li><a href="#weekago">Yesterday VS 7 days ago</a></li>
+                <li><a href="#yesterday">Yesterday</a></li>
+                <li><a href="#lastweek">Last Week</a></li>
+                <li><a href="#lastmonth">Last Month</a></li>
+
+            </ul>
+             <div id="weekago" class="tabdiv" >
+                 <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="300" height="300" id="MSColumn3D" >
+                    <param name="movie" value="Charts/MSColumn3D.swf" />
+                    <param name="FlashVars" value="&dataURL=Data1.xml&chartWidth=400&chartHeight=300">
+                    <param name="quality" value="high" />
+                    <embed src="Charts/MSColumn3D.swf" flashVars="&dataURL=Data1.xml&chartWidth=400&chartHeight=300" quality="high" width="500" height="300" name="MSColumn3D" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+</object>
+                </script>
+            </div><!--/popular-->
+            <div id="yesterday" class="tabdiv" >
+
+            </div><!--/popular-->
+
+            <div id="lastweek" class="tabdiv">
+
+            </div><!--/recent-->
+
+            <div id="lastmonth" class="tabdiv">
+
+            </div><!--featured-->
+
+        </div><!--/widget-->
+
+
+		<div id="maps" class="widget rounded">
+		<h3>WORLD MAP</h3>
+		<div id="inner">
+		</div>
+
+
+		</div>
+		<div class="clear"></div>
+		<div id="oper" class="widget rounded">
+
+            <ul class="tabnav">
+                <li><a href="#gouge1">Yesterday VS 7 days ago</a></li>
+                <li><a href="#gouge2">Yesterday</a></li>
+                <li><a href="#gouge3">Last Week</a></li>
+                <li><a href="#gouge4">Last Month</a></li>
+
+            </ul>
+              <div id="gouge1" class="tabdiv" >
+                <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="300" height="300" id="MSColumn3D" >
+                    <param name="movie" value="Charts/AngularGauge.swf" />
+                    <param name="FlashVars" value="&dataURL=cpa.xml&chartWidth=400&chartHeight=300">
+                    <param name="quality" value="high" />
+                    <embed src="Charts/AngularGauge.swf" flashVars="&dataURL=cpa.xml&chartWidth=400&chartHeight=300" quality="high" width="500" height="300" name="MSColumn3D" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+</object>
+            </div><!--/popular-->
+            <div id="gouge2" class="tabdiv" >
+
+            </div><!--/popular-->
+
+            <div id="gouge3" class="tabdiv">
+
+            </div><!--/recent-->
+
+            <div id="gouge4" class="tabdiv">
+
+            </div><!--featured-->
+
+        </div><!--/widget-->
+
+<div id="atten" class="widget rounded">
+			<div id="table2" class="widget" >
+		<h3>Top 10 campigns by CPA</h3>
+		<table  id="top">
+			<tr>
+                    <th>Campaign</th>
+                    <th>CPA</th>
+				</tr>
+			<tr>
+			<td> GO. Content---Russia </td>
+			<td>1.51</td>
+			</tr>
+			<tr>
+			<td> GO. CONTENT---Turky</td>
+			<td>1.84</td>
+			</tr>
+			<tr>
+			<td> BA. top performers </td>
+			<td>2.04</td>
+			</tr>
+			<tr>
+			<td> GO. Content---India </td>
+			<td>2.19</td>
+			</tr>
+			<tr>
+			<td> GO. APP - Russia </td>
+			<td>2.38</td>
+			</tr>
+			<tr>
+			<td> GO. CONTENT---World </td>
+			<td>2.67</td>
+			</tr>
+			<tr>
+			<td>GO. APP---Turkey</td>
+			<td>2.84</td>
+			</tr>
+			<tr>
+			<td>FA. APP---World</td>
+			<td>3.77</td>
+			</tr>
+			<tr>
+			<td>GO. APP---Romania </td>
+			<td>3.98</td>
+			</tr>
+			<tr>
+			<td> GO. APP---Netherlands </td>
+			<td>4.14</td>
+			</tr>
+		</table>
+		</div>
+		<div id="table1" class="widget" >
+			<h3>Worst 10 campigns by CPA</h3>
+			<table id="Worse">
+				<tr>
+                    <th>Campaign</th>
+                    <th>CPA</th>
+				</tr>
+				<tr>
+				<td>GO. CONTENT---Spain</td>
+				<td>7.62</td>
+				</tr>
+				<tr>
+				<td>YA. APP---Italy</td>
+				<td>8.26</td>
+				</tr>
+				<tr>
+				<td>BA. APP---Main</td>
+				<td>8.63</td>
+				</tr>
+				<tr>
+				<td>YA. APP---France </td>
+				<td>9.48</td>
+				</tr>
+				<tr>
+				<td>GO. CONTENT---French </td>
+				<td>9.86</td>
+				</tr>
+				<tr>
+				<td>GO. APP---UK </td>
+				<td>10.3</td>
+				</tr>
+				<tr>
+				<td>BI. APP---US</td>
+				<td>10.51</td>
+				</tr>
+				<tr>
+				<td>GO. Content---Germany</td>
+				<td>10.56</td>
+				</tr>
+				<tr>
+				<td>YA. APP---Spain </td>
+				<td>12.6</td>
+				</tr>
+				<tr>
+				<td>GO. 2tier - US - Search </td>
+				<td>13.3</td>
+				</tr>
+
+			</table>
+		</div>
+
+		</div>
+	<div class="clear"></div>
+	<div id="timeline" class="widget rounded">
+          <script src="https://spreadsheets.google.com/gpub?url=http%3A%2F%2Foj0ijfii34kccq3ioto7mdspc7r2s7o9.spreadsheets.gmodules.com%2Fgadgets%2Fifr%3Fup__table_query_url%3Dhttps%253A%252F%252Fspreadsheets.google.com%252Ftq%253Frange%253DA1%25253AE4%2526headers%253D-1%2526key%253D0Am8FdMSV93vvdDF2UDkzVWI0TFRUNGlYZHgzUkRRSnc%2526gid%253D0%2526pub%253D1%26up_title%3DRevenue%2520by%2520USP%26up_initialstate%26up__table_query_refresh_interval%3D300%26url%3Dhttp%253A%252F%252Fwww.google.com%252Fig%252Fmodules%252Fmotionchart.xml&height=320&width=976"></script>
+	</div>
+
+		</div>
+  <script type="text/javascript">
+  $(document).ready(function() {
+      $("table td:nth-child(2)").append("<span>$</span>");
+      $("table#top th").eq(0).addClass("rightround");
+      $("table#top th").eq(1).addClass("leftround");
+      $("table#Worse th").eq(0).addClass("rightround");
+      $("table#Worse th").eq(1).addClass("leftround");
+
+      });
+
+
+  </script>
+  <script type="text/javascript">
+$(document).ready( function(){
+  $('.rounded').corners("10px");
+
+
+});</script>
+
+  </body>
+
+
+</html>

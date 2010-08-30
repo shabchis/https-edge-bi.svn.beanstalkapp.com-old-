@@ -1,0 +1,9 @@
+<graph caption='Cost/BO New Users' xAxisName='Channel' yAxisName='Cost/BO New Users' numberPrefix='$'>
+    <set name='Google' value='4.83' color='AFD8F8' />
+    <set name='Facebook' value='4.88' color='AFD8F8' />
+    <set name='Bing' value='129.19' color='8BBA00' />
+    <set name='Google' value='161.72' color='8BBA00' />
+	<set name='Facebook' value='129.19' color='FF8E46' />
+    <set name='Bing' value='161.72' color='FF8E46' />
+</graph>
+
