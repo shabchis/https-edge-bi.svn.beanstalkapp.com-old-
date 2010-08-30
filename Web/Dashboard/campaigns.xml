@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<campaigns>
+	<campaign>
+		<name>GO. Content---Russia </name>
+		<cpa>1.51</cpa>
+			<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>GO. CONTENT---Turky</name>
+		<cpa>1.84</cpa>
+		<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>BA. top performers </name>
+		<cpa>2.04</cpa>
+		<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>GO. Content---India  </name>
+		<cpa>2.19</cpa>
+		<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>GO. APP - Russia </name>
+		<cpa>2.38</cpa>
+			<diff>8%</diff>
+		</campaign>
+	
+	<campaign>
+	<name>GO. CONTENT---World </name>
+	<cpa>2.67</cpa>
+	<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>GO. APP---Turkey</name>
+		<cpa>2.84</cpa>
+		<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>FA. APP---World</name>
+		<cpa>3.77</cpa>
+		<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>GGO. APP---Romania </name>
+		<cpa>3.98</cpa>
+		<diff>8%</diff>
+	</campaign>
+	<campaign>
+		<name>GO. APP---Netherlands </name>
+		<cpa>4.14</cpa>
+		<diff>8%</diff>
+	</campaign>
+</campaigns>

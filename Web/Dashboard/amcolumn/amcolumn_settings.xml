@@ -1,0 +1,78 @@
+<settings>
+  <colors>8d8d8d,90B63D,E3EDCB</colors>
+  <background>
+    <alpha>100</alpha>
+    <border_alpha>20</border_alpha>
+  </background>
+  <grid>
+    <category>
+      <dashed>1</dashed>
+       
+    </category>
+    <value>
+      <dashed>1</dashed>
+    </value>
+  </grid>
+  <axes>
+    <category>
+      <width>1</width>
+      <color>E7E7E7</color>
+    </category>
+    <value>
+      <width>1</width>
+      <color>E7E7E7</color>
+    </value>
+  </axes>
+  <values>
+    <value>
+      <min>0</min>
+    </value>
+  </values>
+  <depth>0</depth>
+  <column>
+    <width>53</width>
+    <balloon_text>{title}: {value} CPA</balloon_text>
+    <grow_time>3</grow_time>
+    <grow_effect>regular</grow_effect>
+      <spacing>0</spacing>
+  </column>
+  <graphs>
+      
+    <graph gid="0">
+      <title>Google</title>
+      <color>E3EDCB</color>
+    </graph>
+    <graph gid="1">
+      <title>Facebook</title>
+      <color>90B63D</color>
+    </graph>
+    <graph gid="2">
+      <title>Bing</title>
+      <color>8d8d8d</color>
+        
+    </graph>
+  </graphs>
+  <labels>
+    <label lid="0">
+      <text><![CDATA[<b>CPA</b>]]></text>
+      <y>18</y>
+      <text_color>8D8D8D</text_color>
+      <text_size>13</text_size>
+      <align>center</align>
+    </label>
+      <label lid="1">
+      <text><![CDATA[<b>CPA</b>]]></text>
+      <y>18</y>
+      <text_color>000000</text_color>
+      <text_size>13</text_size>
+      <align>center</align>
+    </label>
+      <label lid="2">
+      <text><![CDATA[<b>CPA</b>]]></text>
+      <y>18</y>
+      <text_color>8D8D8D</text_color>
+      <text_size>13</text_size>
+      <align>center</align>
+    </label>
+  </labels>
+</settings>
