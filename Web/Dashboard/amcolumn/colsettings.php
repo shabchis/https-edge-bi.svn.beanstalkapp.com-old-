@@ -2,6 +2,7 @@
 <?php $colors = array('8d8d8d','90B63D','E3EDCB','BBBDBC'); ?>
 <?php $startdate = $_GET['startDate'];?>
 <?php $endDate = $_GET['endDate'];?>
+<?php $measure = $_GET['measure'];?>
 
 <settings>
   <colors>8d8d8d,90B63D,E3EDCB</colors>
@@ -11,12 +12,10 @@
   </background>
   <grid>
     <category>
-      <dashed>1</dashed>
+      <dashed>0</dashed>
 
     </category>
-    <value>
-      <dashed>1</dashed>
-    </value>
+   
   </grid>
   <axes>
    <y_left>
@@ -35,7 +34,7 @@
   <depth>0</depth>
   <column>
     <width>53</width>
-    <balloon_text>{title}: {value} CPA</balloon_text>
+    <balloon_text>{title}: {value} <?php echo $measure; ?></balloon_text>
     <grow_time>3</grow_time>
     <grow_effect>regular</grow_effect>
       <spacing>0</spacing>
@@ -71,7 +70,7 @@ foreach($xml->xpath('//book') as $key=>$value)
 foreach($xml->xpath('//book') as $key=>$value)
 	{
         echo '<label lid="'.$value->id.'">';
-             echo  '<text><![CDATA[<b>'.$startdate." -  " .$endDate. '</b>]]></text>';
+             echo  '<text><![CDATA[<b>'.$startdate." -   " .$endDate. '</b>]]></text>';
              echo   '<y>18</y>';
              echo   '<text_color>'.$colors[$key].'</text_color>';
              echo  '<text_size>13</text_size>';
