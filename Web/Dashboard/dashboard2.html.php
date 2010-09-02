@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns=”http://www.w3.org/1999/xhtml”>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 	<link href="style.css" rel="stylesheet" type="text/css" />
@@ -46,66 +46,51 @@
   	 <div id="dropdown">
  
   		<select name="combo" id="combo">
-  			<?php include 'timeDropDown.php'?>
+  			<?php include 'dropdown.php'?>
   		</select>
   
   		<script type="text/javascript">
-			
   				var startDate = "";
   				var endDate = "";
-  				$("#combo").change(function(){
-  					$('span.timevalue').empty();
-  				var text = $("#combo option:selected").text();
+			$("#combo").change(function(){
+
 				var time = 	$("#combo option:selected").val();
 		
-				getMainTime();
-				$('span.timevalue').append(text);
+				if (time == "1"){
+					startDate = <?php echo (date("dmy", mktime(0,0,0,date("m"),date("d")-2,date("Y"))));?>;
+					endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
+					}
+				if (time == "2"){
+					startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-14,date("Y"))));?>;
+					endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?>;
+					}
+				if (time == "3"){
+					startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-30,date("Y"))));?>;
+					endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
+					}
+				if (time == "4"){
+					startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m")-1,date("d"),date("Y"))));?>;
+					endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
+					}
+				if (time == "5"){
+					startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m")-2,date("d"),date("Y"))));?>;
+					endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m")-1,date("d"),date("Y"))));?>;
+					}
+				if (time == "6"){
+					startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-8,date("Y"))));?>;
+					endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
+					}
+				if (time == "7"){
+					startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-14,date("Y"))));?>;
+					endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?>;
+					}
 				LoadGraph(startDate,endDate);
 				LoadMap(startDate,endDate);
 				LoadTopCampaigns();
 				LoadWorstCampaigns();
-			
-				
-			
 					})
-					
-			 $("#innertimecombo").change(function(){
-				 var sectionTime = $(".innertimecombo option:selected").val();
-					
-					if (sectionTime == "1"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
-						}
-					if (sectionTime == "2"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?>;
-						}
-					if (sectionTime == "3"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
-						}
-					if (sectionTime == "4"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
-						}
-					if (sectionTime == "5"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m")-1,date("d"),date("Y"))));?>;
-						}
-					if (sectionTime == "6"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
-						}
-					if (sectionTime == "7"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?>;
-						}
-				 console.log(sectionTime);
-				 LoadGraph(startDate,endDate);
-				 
-				 })		
 	
-  		
+  
   	</script>
   	</div>
 	<div class="clear"></div>
@@ -113,15 +98,12 @@
 
 	 <div id="tabvanilla" class="widget" >
  	 <div class="header">
-        <h3>CHANNEL PERFORMANCE</h3>
-         <select id="GraphCombo">
-		<?php include 'measureDropDown.php'?>
-		</select>
-		
+        <h3>CPA GRAPH</h3>
+
      </div>
-     <div class="timeframe">
-       <span class="timevalue"></span> VS <select class="innertimecombo"><?php include 'timeDropDown.php'?></select>
-	</div>
+       
+
+
 
       <div id="weekagograph">
       <strong>You need to upgrade your Flash Player</strong>
@@ -129,30 +111,23 @@
          
                
         <!--/popular-->
-          
+         
       </div><!--/widget-->
 
 
 	<div id="maps" class="widget rounded">
          <div class="header">
-               <h3>GEO DISTRIBUTION</h3>
-               <select id="MapCombo">
-				<?php include 'measureDropDown.php'?>
-				</select>
+               <h3>MAP</h3>
        	 </div>
 
           <div id="map1">
 		      
             </div>
-              
     </div>
 	<div class="clear"></div>
 		<div id="oper" class="widget">
             <div class="header">
-                        <h3>PERFORMANCE BY TARGETS</h3>
-                        <select id="GaugeCombo">
-							<?php include 'measureDropDown.php'?>
-						</select>
+                        <h3>GAUGE</h3>
 
                     </div>
             
@@ -210,14 +185,11 @@
 		
 	<div id="atten" class="widget rounded">
 	   <div class="header">
-	            <h3>CAMPAIGN PERFORMANCE - REVENUE</h3>
-	            <select id="TopCombo">
-					<?php include 'measureDropDown.php'?>
-				</select>
+	            <h3>CPA</h3>
 		    </div>
 
 		<div id="table2" >
-			<h3>Top 10 campaigns by <span></span></h3>
+			<h3>Top 10 campaigns by CPA</h3>
 				<table id="top">
 				<tr id="tableheader">
 	                    <th>Campaign</th>
@@ -227,7 +199,7 @@
 			</table>
 		</div>
 		<div id="table1" >
-			<h3>Worst 10 campaigns by <span></span></h3>
+			<h3>Worst 10 campaigns by CPA</h3>
 			<table id="Worse">
 				<tr>
                     <th>Campaign</th>
@@ -236,28 +208,10 @@
 				
 			</table>
 		</div>
-			
 		</div>
-	
 	<div class="clear"></div>
-	<div id="trendcahnges" class="widget rounded">
-	 <div class="header">
-               <h3>GEO DISTRIBUTION</h3>
-               <select id="MapCombo">
-				<?php include 'measureDropDown.php'?>
-				</select>
-       	 </div>
-	<div class="timeframe">
-       <span class="timevalue"></span> VS <select class="innertimecombo"><?php include 'timeDropDown.php'?></select>
-	</div>
-	</div>
-	<div id="topspenders" class="widget rounded">
-	<div class="header">
-               <h3>GEO DISTRIBUTION</h3>
-               <select id="MapCombo">
-				<?php include 'measureDropDown.php'?>
-				</select>
-       	 </div>
+	<div id="timeline" class="widget rounded">
+          <script src="https://spreadsheets.google.com/gpub?url=http%3A%2F%2Foj0ijfii34kccq3ioto7mdspc7r2s7o9.spreadsheets.gmodules.com%2Fgadgets%2Fifr%3Fup__table_query_url%3Dhttps%253A%252F%252Fspreadsheets.google.com%252Ftq%253Frange%253DA1%25253AE4%2526headers%253D-1%2526key%253D0Am8FdMSV93vvdDF2UDkzVWI0TFRUNGlYZHgzUkRRSnc%2526gid%253D0%2526pub%253D1%26up_title%3DRevenue%2520by%2520USP%26up_initialstate%26up__table_query_refresh_interval%3D300%26url%3Dhttp%253A%252F%252Fwww.google.com%252Fig%252Fmodules%252Fmotionchart.xml&height=320&width=976"></script>	
 	</div>
 </div>
 	
@@ -290,25 +244,39 @@ $(document).ready( function(){
  <script type="text/javascript">
 $(function(){
 	var time = 	$("#combo option:selected").val();
-	var text = $("#combo option:selected").text();
-	var width = $("#atten").width();
-	var performancewidth  = $("#tabvanilla").width();
-
-	$("#trendcahnges,#oper").width(performancewidth);
-	$("#maps,#topspenders").width(width);
-
-
 	
-
-	getMainTime();
-	getSectionTime();
-	
-	$('span.timevalue').append(text);
+	if (time == "1"){
+		startDate = <?php echo (date("dmy", mktime(0,0,0,date("m"),date("d")-2,date("Y"))));?>;
+		endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
+		}
+	if (time == "2"){
+		startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-14,date("Y"))));?>;
+		endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?>;
+		}
+	if (time == "3"){
+		startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-30,date("Y"))));?>;
+		endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
+		}
+	if (time == "4"){
+		startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m")-1,date("d"),date("Y"))));?>;
+		endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
+		}
+	if (time == "5"){
+		startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m")-2,date("d"),date("Y"))));?>;
+		endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m")-1,date("d"),date("Y"))));?>;
+		}
+	if (time == "6"){
+		startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-8,date("Y"))));?>;
+		endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
+		}
+	if (time == "7"){
+		startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-14,date("Y"))));?>;
+		endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?>;
+		}
 	LoadGraph(startDate,endDate);
 	LoadMap(startDate,endDate);
 	LoadTopCampaigns();
 	LoadWorstCampaigns();
-	
 })
  
     function LoadGraph(startdate,endDate){
@@ -343,6 +311,18 @@ $(function(){
         so.write("map1");
 
 		}
+                    </script>
+                    
+                  
+
+  </body>
+
+
+</html>
+
+
+<script type="text/javascript">
+
 	function LoadTopCampaigns(){
 		$('tr.topcpa').remove();
 	$.ajax({
@@ -378,111 +358,6 @@ $(function(){
 					
 					$('<tr class="worstcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp('+diff+') </td></tr>').appendTo('#Worse');
 					
-			
-	  					var title = "";
-	  $('#TopCombo').change(function(){
-					 title = $('#TopCombo option:selected').text();
-
-					$('#table2 h3 span,#table1 h3 span').text(title);
-					
-
-					})
-
-				
-					
-				});
-			}
-		});
-		
-
-		}
-
-	function getMainTime(){
-
-		var time = 	$("#combo option:selected").val();
-		if (time == "1"){
-			startDate = <?php echo (date("dmy", mktime(0,0,0,date("m"),date("d")-2,date("Y"))));?>;
-			
-			}
-		if (time == "2"){
-			startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-14,date("Y"))));?>;
-			
-			}
-		if (time == "3"){
-			startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-30,date("Y"))));?>;
-		
-			}
-		if (time == "4"){
-			startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m")-1,date("d"),date("Y"))));?>;
-		
-			}
-		if (time == "5"){
-			startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m")-2,date("d"),date("Y"))));?>;
-		
-			}
-		if (time == "6"){
-			startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-8,date("Y"))));?>;
-			
-			}
-		if (time == "7"){
-			startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-14,date("Y"))));?>;
-
-			}
-		}
-
-	function getSectionTime(){
-
-		
-		var sectionTime = $(".innertimecombo option:selected").val();
-		
-		if (sectionTime == "1"){
-			
-			endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
-			}
-		if (sectionTime == "2"){
-			
-			endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?>;
-			}
-		if (sectionTime == "3"){
-			
-			endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
-			}
-		if (sectionTime == "4"){
-			
-			endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
-			}
-		if (sectionTime == "5"){
-			
-			endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m")-1,date("d"),date("Y"))));?>;
-			}
-		if (sectionTime == "6"){
-			
-			endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
-			}
-		if (sectionTime == "7"){
-			
-			endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?>;
-			}
-
-		return endDate;
-		}
-	function LoadMeasures(){
-			$('#GaugeCombo,#GraphCombo,#MapCombo,#TopCombo').empty();
-		
-		$.ajax({
-			type: "GET",
-			url: "http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Measures?AccountID=106",
-
-		
-			success: function(xml) {
-		
-				$(xml).find('Measure').each(function(){
-					var name = $(this).find('DisplayName').text();
-					var value = $(this).find('MeasureID').text();
-				
-					
-					$('<option value="'+value+'">'+name+'</option>').appendTo('#TopCombo,#GraphCombo,#MapCombo,#GaugeCombo');
-				
 					
 					
 				});
@@ -490,16 +365,6 @@ $(function(){
 		});
 		
 
-
 		}
-                    </script>
-                    
-                  
 
-  </body>
-
-
-</html>
-
-
-
+</script>
