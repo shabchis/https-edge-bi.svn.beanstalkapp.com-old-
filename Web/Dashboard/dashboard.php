@@ -49,64 +49,7 @@
   			<?php include 'timeDropDown.php'?>
   		</select>
   
-  		<script type="text/javascript">
-			
-  				var startDate = "";
-  				var endDate = "";
-  				$("#combo").change(function(){
-  					$('span.timevalue').empty();
-  				var text = $("#combo option:selected").text();
-				var time = 	$("#combo option:selected").val();
-		
-				getMainTime();
-				$('span.timevalue').append(text);
-				LoadGraph(startDate,endDate);
-				LoadMap(startDate,endDate);
-				LoadTopCampaigns();
-				LoadWorstCampaigns();
-			
-				
-			
-					})
-					
-			 $("#innertimecombo").change(function(){
-				 var sectionTime = $(".innertimecombo option:selected").val();
-					
-					if (sectionTime == "1"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
-						}
-					if (sectionTime == "2"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?>;
-						}
-					if (sectionTime == "3"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
-						}
-					if (sectionTime == "4"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
-						}
-					if (sectionTime == "5"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m")-1,date("d"),date("Y"))));?>;
-						}
-					if (sectionTime == "6"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>;
-						}
-					if (sectionTime == "7"){
-						
-						endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?>;
-						}
-				 console.log(sectionTime);
-				 LoadGraph(startDate,endDate);
-				 
-				 })		
-	
   		
-  	</script>
   	</div>
 	<div class="clear"></div>
 
@@ -120,7 +63,7 @@
 		
      </div>
      <div class="timeframe">
-       <span class="timevalue"></span> VS <select class="innertimecombo"><?php include 'timeDropDown.php'?></select>
+       <span class="timevalue"></span> VS <select id="second"><?php include 'timeDropDown.php'?></select>
 	</div>
 
       <div id="weekagograph">
@@ -164,10 +107,10 @@
 						var requiredRevision = 45;
 						-->
 					</script>
-					<BODY bgcolor="#FFFFFF">
+				
 					
 					
-					<script language="JavaScript" type="text/javascript">
+					<script  type="text/javascript">
 					<!--
 						if (AC_FL_RunContent == 0 || DetectFlashVer == 0) {
 							alert("This page requires AC_RunActiveContent.js.");
@@ -288,33 +231,64 @@ $(document).ready( function(){
   DD_roundies.addRule('.tabnav ui-tabs-nav>li', '10px');
  </script>
  <script type="text/javascript">
+
+ var startDate = "";
+	var endDate = "";
+	var measure =  $("#GraphCombo option:selected").text();
 $(function(){
+	
 	var time = 	$("#combo option:selected").val();
 	var text = $("#combo option:selected").text();
 	var width = $("#atten").width();
 	var performancewidth  = $("#tabvanilla").width();
-
 	$("#trendcahnges,#oper").width(performancewidth);
 	$("#maps,#topspenders").width(width);
-
-
-	
-
-	getMainTime();
-	getSectionTime();
-	
 	$('span.timevalue').append(text);
-	LoadGraph(startDate,endDate);
-	LoadMap(startDate,endDate);
-	LoadTopCampaigns();
-	LoadWorstCampaigns();
+	
+		$("#GraphCombo").change(function(){
+			measure  = $("#GraphCombo option:selected").text();
+			LoadGraph(startDate,endDate,measure);
+			})
+	
+		$("#combo").change(function(){
+			var text = $("#combo option:selected").text();
+			$('span.timevalue').empty();
+			
+			
+	 			$('span.timevalue').append(text);
+	 			getMainTime();
+				LoadMap(startDate,endDate);
+				LoadTopCampaigns();
+				LoadWorstCampaigns();
+				
+
+		})
+		
+		
+	 $("select#second").change(function(){
+		 var sectionTime = $("#second option:selected").val();
+		 
+		 getSectionTime();
+		LoadGraph(startDate,endDate,measure);
+	
+		 })		
+
+		 getMainTime();
+		 getSectionTime();
+		LoadMap(startDate,endDate);
+		LoadTopCampaigns();
+		LoadWorstCampaigns();
+		LoadGraph(startDate,endDate,measure);
 	
 })
- 
-    function LoadGraph(startdate,endDate){
+
+	
+	
+    function LoadGraph(startdate,endDate,measure){
+
                var so = new SWFObject("amcolumn/amcolumn.swf", "amcolumn", "100%", "300", "8", "#FFFFFF");
                so.addVariable("path", "amcolumn/");
-               so.addVariable("settings_file", encodeURIComponent("amcolumn/colsettings.php?startDate="+startdate+"&endDate="+endDate+""));        // you can set two or more different settings files here (separated by commas)
+               so.addVariable("settings_file", encodeURIComponent("amcolumn/colsettings.php?startDate="+startdate+"&endDate="+endDate+"&measure="+measure+""));        // you can set two or more different settings files here (separated by commas)
                so.addVariable("data_file", encodeURIComponent("amcolumn/coldata.php?startDate="+startdate+"&endDate="+endDate+""));
                                     
             //	so.addVariable("chart_data", encodeURIComponent("data in CSV or XML format"));                // you can pass chart data as a string directly from this file
@@ -327,7 +301,7 @@ $(function(){
                so.write("weekagograph");
     }   
 
-	function LoadMap(startdate,endDate){
+	function LoadMap(startdate,endDate,measure){
 		var so = new SWFObject("ammap/ammap.swf", "ammap", "100%", "300", "8", "#e8f6f7");
 		so.addVariable("path", "ammap/");
 		so.addVariable("settings_file", escape("ammap/ammap_settings.xml"));                  // you can set two or more different settings files here (separated by commas)
@@ -398,20 +372,24 @@ $(function(){
 		}
 
 	function getMainTime(){
-
+	
 		var time = 	$("#combo option:selected").val();
 		if (time == "1"){
 			startDate = <?php echo (date("dmy", mktime(0,0,0,date("m"),date("d")-2,date("Y"))));?>;
 			
 			}
+		
 		if (time == "2"){
 			startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-14,date("Y"))));?>;
 			
 			}
+
 		if (time == "3"){
 			startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-30,date("Y"))));?>;
 		
 			}
+
+
 		if (time == "4"){
 			startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m")-1,date("d"),date("Y"))));?>;
 		
@@ -428,12 +406,13 @@ $(function(){
 			startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-14,date("Y"))));?>;
 
 			}
+		LoadGraph(startDate,endDate,measure);
 		}
 
 	function getSectionTime(){
 
+		 var sectionTime = $("#second option:selected").val();
 		
-		var sectionTime = $(".innertimecombo option:selected").val();
 		
 		if (sectionTime == "1"){
 			
@@ -464,7 +443,6 @@ $(function(){
 			endDate =   <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?>;
 			}
 
-		return endDate;
 		}
 	function LoadMeasures(){
 			$('#GaugeCombo,#GraphCombo,#MapCombo,#TopCombo').empty();
