@@ -4,23 +4,19 @@
     <book>
       <id>1</id>
       <title title="United States" mc_name="US">98</title>
-      <author>Wiwit Siswoutomo</author>
+      <author>Google</author>
     </book>
         <book>
-    <id>3</id>
-      <title title="nana" mc_name="UK">98</title>
-      <author>TEST1</author>
+    <id>2</id>
+      <title title="nana" mc_name="UK">200</title>
+      <author>Bing</author>
     </book>
        
     <book>
       <id>3</id>
-      <title title="Israel" mc_name="IL">5900</title>     
-      <author>Yaron kinar</author>
+      <title title="Israel" mc_name="IL">900</title>     
+      <author>Facebook</author>
     </book>
-      <book>
-      <id>4</id>
-      <title title="Israel" mc_name="IL">54</title>
-      <author>Liran amir</author>
-    </book>
+     
   </books>
 </datas>

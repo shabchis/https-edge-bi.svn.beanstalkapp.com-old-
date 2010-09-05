@@ -63,7 +63,10 @@
 		
      </div>
      <div class="timeframe">
-       <span class="timevalue"></span> VS <select id="second"><?php include 'timeDropDown.php'?></select>
+       <span class="timevalue"></span> VS 
+       <select id="second"><?php include 'timeDropDown.php'?></select>
+      
+      
 	</div>
 
       <div id="weekagograph">
@@ -236,6 +239,7 @@ $(document).ready( function(){
 	var endDate = "";
 	var measure =  $("#GraphCombo option:selected").text();
 $(function(){
+
 	
 	var time = 	$("#combo option:selected").val();
 	var text = $("#combo option:selected").text();
@@ -264,6 +268,7 @@ $(function(){
 
 		})
 		
+	
 		
 	 $("select#second").change(function(){
 		 var sectionTime = $("#second option:selected").val();

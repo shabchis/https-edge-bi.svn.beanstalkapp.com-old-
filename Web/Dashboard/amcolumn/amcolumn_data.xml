@@ -1,7 +1,7 @@
 <chart>
   <series>
-    <value xid="0">21 Jan</value>
-    <value xid="1">22 Jan</value>
+    <value xid="0">Yesterday</value>
+    <value xid="1">Today</value>
 
   </series>
   <graphs>
@@ -16,11 +16,6 @@
       <value xid="1">87</value>
       
     </graph>
-    <graph gid="2">
-      &lt;graph gid='2'&gt;&lt;/graph&gt;
-      <value xid="0">69</value>
-      <value xid="1">101</value>
-
-    </graph>
+   
   </graphs>
 </chart>
