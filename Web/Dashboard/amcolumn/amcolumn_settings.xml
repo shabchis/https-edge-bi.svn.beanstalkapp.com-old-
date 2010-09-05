@@ -1,24 +1,36 @@
 <settings>
-  <colors>8d8d8d,90B63D,E3EDCB</colors>
+  <font>Verdana</font>
+  <redraw>1</redraw>
   <background>
     <alpha>100</alpha>
+    <border_color>FFFFFF</border_color>
     <border_alpha>20</border_alpha>
   </background>
+  <plot_area>
+    <margins>
+      <left>48</left>
+      <right>11</right>
+    </margins>
+  </plot_area>
   <grid>
     <category>
+      <color>FFFFFF</color>
       <dashed>1</dashed>
-       
+      <dash_length>1</dash_length>
     </category>
     <value>
-      <dashed>1</dashed>
+      <dash_length>1</dash_length>
+      <approx_count>7</approx_count>
     </value>
   </grid>
   <axes>
     <category>
+      <tick_length>1</tick_length>
       <width>1</width>
       <color>E7E7E7</color>
     </category>
     <value>
+      <tick_length>19</tick_length>
       <width>1</width>
       <color>E7E7E7</color>
     </value>
@@ -28,51 +40,44 @@
       <min>0</min>
     </value>
   </values>
-  <depth>0</depth>
+  <balloon>
+    <color>8DB53B</color>
+    <border_width>1</border_width>
+    <border_color>FFFFFF</border_color>
+  </balloon>
   <column>
-    <width>53</width>
-    <balloon_text>{title}: {value} CPA</balloon_text>
+    <width>85</width>
+    <balloon_text>{title}: {value} downloads</balloon_text>
     <grow_time>3</grow_time>
     <grow_effect>regular</grow_effect>
-      <spacing>0</spacing>
   </column>
+  <line>
+    <width>0</width>
+  </line>
   <graphs>
-      
     <graph gid="0">
-      <title>Google</title>
-      <color>E3EDCB</color>
+      <title>Stock</title>
+      <color>ADD981</color>
     </graph>
     <graph gid="1">
-      <title>Facebook</title>
-      <color>90B63D</color>
+      <title>Column</title>
+      <color>7F8DA9</color>
     </graph>
     <graph gid="2">
-      <title>Bing</title>
-      <color>8d8d8d</color>
-        
+      <title>Line</title>
+      <color>FEC514</color>
     </graph>
   </graphs>
   <labels>
     <label lid="0">
-      <text><![CDATA[<b>CPA</b>]]></text>
-      <y>18</y>
-      <text_color>8D8D8D</text_color>
-      <text_size>13</text_size>
-      <align>center</align>
-    </label>
-      <label lid="1">
-      <text><![CDATA[<b>CPA</b>]]></text>
+      <text><![CDATA[<b>Daily downloads</b>]]></text>
       <y>18</y>
       <text_color>000000</text_color>
       <text_size>13</text_size>
       <align>center</align>
     </label>
-      <label lid="2">
-      <text><![CDATA[<b>CPA</b>]]></text>
-      <y>18</y>
-      <text_color>8D8D8D</text_color>
-      <text_size>13</text_size>
-      <align>center</align>
-    </label>
   </labels>
+  <guides>
+    <guide gid="1"/>
+  </guides>
 </settings>

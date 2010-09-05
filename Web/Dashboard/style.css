@@ -43,7 +43,9 @@ position: relative;
 
    
 }
-
+#weekagograph{
+z-index: -100;
+}
 #atten{
 float:left;
 max-width:500px;
@@ -91,6 +93,7 @@ float: left;
 .timeframe{
 margin-top: 10px;
 margin-bottom: 10px;
+z-index: 1000;'
 }
 
 #inner{
@@ -445,3 +448,11 @@ color: #8FB53E;
 font-weight: bold;
 }
 
+
+ul.sub{
+display: none;
+z-index: 1000;
+float: none;
+list-style:none;
+position:absolute;
+}

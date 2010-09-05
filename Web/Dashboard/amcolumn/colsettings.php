@@ -5,40 +5,61 @@
 <?php $measure = $_GET['measure'];?>
 
 <settings>
-  <colors>8d8d8d,90B63D,E3EDCB</colors>
+  <font>Verdana</font>
+  <redraw>1</redraw>
   <background>
     <alpha>100</alpha>
+    <border_color>FFFFFF</border_color>
     <border_alpha>20</border_alpha>
   </background>
+  <plot_area>
+    <margins>
+      <left>70</left>
+      <right>11</right>
+    </margins>
+  </plot_area>
   <grid>
     <category>
-      <dashed>0</dashed>
-
+      <color>FFFFFF</color>
+      <dashed>1</dashed>
+      <dash_length>1</dash_length>
     </category>
-   
+    <value>
+      <dash_length>1</dash_length>
+      <approx_count>7</approx_count>
+    </value>
   </grid>
   <axes>
-   <y_left>
-<alpha>15</alpha>
-</y_left>
-<y_right>
-<alpha>10</alpha>
-<dashed>true</dashed>
-</y_right>
+    <category>
+      <tick_length>1</tick_length>
+      <width>1</width>
+      <color>E7E7E7</color>
+    </category>
+    <value>
+      <tick_length>19</tick_length>
+      <width>1</width>
+      <color>E7E7E7</color>
+    </value>
   </axes>
   <values>
     <value>
-      <min>0</min>
-    </value>
+    <enabled>1</enabled>
+      </value>
   </values>
-  <depth>0</depth>
+  <balloon>
+    <color>8DB53B</color>
+    <border_width>1</border_width>
+    <border_color>FFFFFF</border_color>
+  </balloon>
   <column>
-    <width>53</width>
-    <balloon_text>{title}: {value} <?php echo $measure; ?></balloon_text>
+    <width>85</width>
+    <balloon_text>{title}: {value} <?php echo $measure?></balloon_text>
     <grow_time>3</grow_time>
     <grow_effect>regular</grow_effect>
-      <spacing>0</spacing>
   </column>
+  <line>
+    <width>0</width>
+  </line>
   <graphs>
 
 
