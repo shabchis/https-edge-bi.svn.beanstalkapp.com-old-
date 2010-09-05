@@ -301,7 +301,7 @@ $(function(){
                so.write("weekagograph");
     }   
 
-	function LoadMap(startdate,endDate,measure){
+	function LoadMap(startdate,endDate){
 		var so = new SWFObject("ammap/ammap.swf", "ammap", "100%", "300", "8", "#e8f6f7");
 		so.addVariable("path", "ammap/");
 		so.addVariable("settings_file", escape("ammap/ammap_settings.xml"));                  // you can set two or more different settings files here (separated by commas)
