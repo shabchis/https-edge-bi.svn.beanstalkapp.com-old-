@@ -1,21 +1,20 @@
 <chart>
   <series>
-    <value xid="0">Yesterday</value>
-    <value xid="1">Today</value>
-
+    <value xid="0">Google</value>
+    <value xid="1">Facebook</value>
+    <value xid="2">Bing</value>
   </series>
   <graphs>
     <graph gid="0">
-      <value xid="0">96</value>
-      <value xid="1">112</value>
-
+      <value xid="0">1</value>
+      <value xid="1">101</value>
+      <value xid="2">61</value>
     </graph>
     <graph gid="1">
-      &lt;graph gid='0'&gt;&lt;/graph&gt;
-      <value xid="0">91</value>
-      <value xid="1">87</value>
-      
+      <value xid="0">12</value>
+      <value xid="1">101</value>
+      <value xid="2">903</value>
     </graph>
-   
+	
   </graphs>
 </chart>

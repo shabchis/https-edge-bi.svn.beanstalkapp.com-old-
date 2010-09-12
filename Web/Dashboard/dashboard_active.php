@@ -1,4 +1,4 @@
-
+ï»¿
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns=”http://www.w3.org/1999/xhtml”>
@@ -10,7 +10,8 @@
       <![endif]-->
 
 
-	<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js'></script>
+	
+	<script type='text/javascript' src='jquery-1.4.2.min.js'></script>
 	<script type="text/javascript" src="jquery.corners.js"></script>
 	<script type="text/javascript" src="DD_roundies_0.0.2a-min.js"></script>
 	<script type="text/javascript" src="js/jquery.fusioncharts.js"></script>
@@ -67,8 +68,9 @@
 		
      </div>
      <div class="timeframe">
-       <span class="timevalue"></span> VS 
-       <select id="second"><?php include 'timeDropDown.php'?></select>
+       <span class="timevalue"></span> vs.
+	   <div class="equal"><select id="second"><?php include 'timeDropDown.php'?></select></div>
+       
       
       
 	</div>
@@ -83,90 +85,19 @@
       </div><!--/widget-->
 
 
-	<div id="maps" class="widget rounded">
-         <div class="header">
-               <h3>Geo Distribution</h3>
-               <select id="MapCombo">
-				<!--<?php include 'measureDropDown.php'?>-->
-		<option>New Users</option>
-		<option>New Active Users</option>
-		<option>Cpa</option>
-		<option>Cost</option>
-				</select>
-       	 </div>
-
-          <div id="map1">
-		      
-            </div>
-              
-    </div>
-	<div class="clear"></div>
-		<div id="oper" class="widget">
-            <div class="header">
-                        <h3>Performance by Targets</h3>
-                        <select id="GaugeCombo">
-							<?php include 'measureDropDown.php'?>
-						</select>
-
-                    </div>
-            
-              <div id="gouge1" class="tabdiv" >
-                  <script language="JavaScript" type="text/javascript">
-						<!--
-						var requiredMajorVersion = 9;
-						var requiredMinorVersion = 0;
-						var requiredRevision = 45;
-						-->
-					</script>
-				
-					
-					
-					<script  type="text/javascript">
-					<!--
-						if (AC_FL_RunContent == 0 || DetectFlashVer == 0) {
-							alert("This page requires AC_RunActiveContent.js.");
-						} else {
-							var hasRightVersion = DetectFlashVer(requiredMajorVersion, requiredMinorVersion, requiredRevision);
-							if(hasRightVersion) { 
-								AC_FL_RunContent(
-								'codebase', 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,45,0',
-								'width', '100%',
-								'height', '300',
-								'scale', 'noscale',
-								'salign', 'TL',
-								'bgcolor', '#666666',
-								'wmode', 'opaque',
-								'movie', 'slickboard',
-								'src', 'slickboard',
-								'FlashVars', 'xml_source=sample.xml', 
-								'id', 'my_board',
-								'name', 'my_board',
-								'menu', 'true',
-								'allowFullScreen', 'true',
-								'allowScriptAccess','sameDomain',
-								'quality', 'high',
-								'align', 'middle',
-								'pluginspage', 'http://www.macromedia.com/go/getflashplayer',
-								'play', 'true',
-								'devicefont', 'false'
-								); 
-							} else { 
-							var alternateContent = 'This content requires the Adobe Flash Player. '
-							+ '<u><a href=http://www.macromedia.com/go/getflash/>Get Flash</a></u>.';
-							document.write(alternateContent); 
-						}
-					}
-					// -->
-					</script>
-            </div><!--end gauge1-->
-         
-        </div><!--/widget-->
-		
 	<div id="atten" class="widget rounded">
 	   <div class="header">
 	            <h3>Campaign performance - Revenue</h3>
 	            <select id="TopCombo">
-					<?php include 'measureDropDown.php'?>
+					<!--<?php include 'measureDropDown.php'?>-->
+					<option>New Users</option>
+		<option>New Active Users</option>
+		<option>Cpa</option>
+		<option>Cost</option>
+				</select>
+			
+				<!--<?php include 'measureDropDown.php'?>-->
+		
 				</select>
 		    </div>
 
@@ -192,41 +123,82 @@
 		</div>
 			
 		</div>
-	
 	<div class="clear"></div>
+		<div id="maps" class="widget rounded">
+         <div class="header">
+               <h3>Geo Distribution</h3>
+               <select id="MapCombo">
+				<!--<?php include 'measureDropDown.php'?>-->
+		<option>New Users</option>
+		<option>New Active Users</option>
+		<option>Cpa</option>
+		<option>Cost</option>
+				</select>
+       	 </div>
+
+          <div id="map1">
+		      
+            </div>
+		
+	
+	
+	
+	
+	
+		 
+</div>
 	<div id="trendcahnges" class="widget rounded">
 	 <div class="header">
                <h3>Campaign performance-Trend Changes</h3>
                <select id="MapCombo">
-				<?php include 'measureDropDown.php'?>
+				<!--<?php include 'measureDropDown.php'?>-->
+		<option>New Users</option>
+		<option>New Active Users</option>
+		<option>Cpa</option>
+		<option>Cost</option>
 				</select>
 				
        	 </div>
 		 
 	<div class="timeframe">
-       <span class="timevalue"></span> VS <select class="innertimecombo"><?php include 'timeDropDown.php'?></select>
+       <span class="timevalue"></span> vs.  <div class="equal"></div>
 	</div>
-	</div>
-	<div id="topspenders" class="widget rounded">
-	<div class="header">
-               <h3>Top Spenders</h3>
-               <select id="MapCombo">
-				<?php include 'measureDropDown.php'?>
-				</select>
-				
-       	 </div>
-		 
-</div>
 	
+	<div id="table3" >
+			<h3>Upwords Trending Campaigns </h3>
+				<table id="upward">
+				<tr id="tableheader">
+	                    <th>Campaign</th>
+	                    <th>Change</th>
+				</tr>
+				
+			</table>
+		</div>
+		<div id="table4" >
+			<h3>Downward Trending Campaigns</h3>
+			<table id="downward">
+				<tr>
+                    <th>Campaign</th>
+                    <th>Change</th>
+				</tr>
+				
+			</table>
+		</div>
+	</div>
+	</div>
   <script type="text/javascript">
   $(document).ready(function() {
-       $("table tr td:nth-child(1)").css("color","black");
-      $("table td:nth-child(2)").css("text-align","left");
+       // $("table tr td:nth-child(1)").css("color","black");
+      // $("table td:nth-child(2)").css("text-align","left");
 
       $("table#top th").eq(0).addClass("rightround");
       $("table#top th").eq(1).addClass("leftround");
       $("table#Worse th").eq(0).addClass("rightround");
       $("table#Worse th").eq(1).addClass("leftround");
+	   $("table#upward th").eq(0).addClass("rightround");
+      $("table#upward th").eq(1).addClass("leftround");
+	  $("table#downward th").eq(0).addClass("rightround");
+      $("table#downward th").eq(1).addClass("leftround");
 
       });
   
@@ -235,13 +207,13 @@
   <script type="text/javascript">
 $(document).ready( function(){
 
-  /*$('.rounded').corners("10px 10px");*/
+// $('.rounded').corners("10px 10px");
 
 
 });</script>
  <script type="text/javascript">
  
-/* DD_roundies.addRule('.rounded', '10px 10px 0px 0px');*/
+ // DD_roundies.addRule('.rounded', '10px 10px 0px 0px');
   DD_roundies.addRule('.tabnav ui-tabs-nav>li', '10px');
  </script>
  <script type="text/javascript">
@@ -251,16 +223,25 @@ $(document).ready( function(){
 	var measure =  $("#GraphCombo option:selected").text();
 	var startTimeFrame = $("combo option:selected").text();
 	var endTimeFrame = $("second option:selected").text();
-$(function(){
-
+$(function(){	
 	
+	var percent = $("span.precent").text();
+
 	var time = 	$("#combo option:selected").val();
 	var text = $("#combo option:selected").text();
 	var width = $("#atten").width();
+		var yesterday = $("<select id='yesterdayCombo'><option value = '1'>Previous Day</option><option value ='2'>7 days ago</option></select>");
 	var performancewidth  = $("#tabvanilla").width();
-	$("#trendcahnges,#oper").width(performancewidth);
-	$("#maps,#topspenders").width(width);
+	$("#trendcahnges").width(width);
+	var height = $("#trendcahnges").height();
+
+
+	$("#maps").width(performancewidth);
 	$('span.timevalue').append(text);
+	$('.equal').empty();
+	ChangeStatus();
+			
+	
 	
 		$("#GraphCombo").change(function(){
 			measure  = $("#GraphCombo option:selected").text();
@@ -269,20 +250,27 @@ $(function(){
 	
 		$("#combo").change(function(){
 			var text = $("#combo option:selected").text();
+			var selectValue = $("#combo option:selected").val();
+			var yesterday = $("<select id='yesterdayCombo'><option value = '1'>Previous Day</option><option value ='2'>7 days ago</option></select>");
 			$('span.timevalue').empty();
-			
-			
+			$('.equal').empty();
+				
+				ChangeStatus();
 	 			$('span.timevalue').append(text);
 	 			getMainTime();
 				LoadMap(startDate,endDate);
 				LoadTopCampaigns();
 				LoadWorstCampaigns();
+			
+				
 				
 
 		})
 		
 	
-		
+		$("#yesterdayCombo").change(function(){
+		LoadGraph(startDate,endDate,measure);
+	})
 	 $("select#second").change(function(){
 		 var sectionTime = $("#second option:selected").val();
 		 
@@ -296,18 +284,55 @@ $(function(){
 		LoadMap(startDate,endDate);
 		LoadTopCampaigns();
 		LoadWorstCampaigns();
-		LoadGraph(startDate,endDate,measure);
+		LoadGraph(startDate,endDate,measure,startTimeFrame,endTimeFrame);
+		Colorise();
 	
 })
+	$("#TopCombo").change(function(){
+				LoadTopCampaigns();
 
 	
+	})
 	
-    function LoadGraph(startdate,endDate,measure){
+	$("#MapCombo").change(function(){
+	LoadMap(startDate,endDate);
+	})
+	
+	function ChangeStatus(){
+	var selectValue = $("#combo option:selected").val();
+			var yesterday = $("<select id='yesterdayCombo'><option value = '1'>Previous Day</option><option value ='2'>7 days ago</option></select>");
+	if(selectValue == 1){
+						$(".equal").append(yesterday);
+				}
+				if(selectValue == 2){
+						$(".equal").append("Previous 7 days");
+				}
+			
+				if(selectValue == 3){
+						$(".equal").append("Previous 30 days");
+				}
+				if(selectValue == 4){
+						$(".equal").append("Last Month");
+				}
+			
+				if(selectValue == 5){
+						$(".equal").append("Previous Month");
+				}
+				if(selectValue == 6){
+						$(".equal").append("Last Week");
+				}
+				if(selectValue == 7){
+						$(".equal").append("Previous Week");
+				}
+	}
+	
+    function LoadGraph(startdate,endDate,measure,startTimeFrame,endTimeFrame){
 
                var so = new SWFObject("amcolumn/amcolumn.swf", "amcolumn", "100%", "300", "8", "#FFFFFF");
                so.addVariable("path", "amcolumn/");
-               so.addVariable("settings_file", encodeURIComponent("amcolumn/colsettings.php?startDate="+startdate+"&endDate="+endDate+"&measure="+measure+""));        // you can set two or more different settings files here (separated by commas)
-               so.addVariable("data_file", encodeURIComponent("amcolumn/amcolumn_data.xml"));
+               // so.addVariable("settings_file", encodeURIComponent("amcolumn/amcolumn_settings.xml"));        // you can set two or more different settings files here (separated by commas)
+               so.addVariable("settings_file", encodeURIComponent("amcolumn/colsettings.php?startDate="+startdate+"&startDateName="+startTimeFrame+"&endDate="+endDate+"&endDateName="+endTimeFrame+"&measure="+measure+""));                     
+			 so.addVariable("data_file", encodeURIComponent("amcolumn/amcolumn_data.php"));
             //       so.addVariable("data_file", encodeURIComponent("amcolumn/coldata.php?startDate="+startdate+"&endDate="+endDate+""));                   
             //	so.addVariable("chart_data", encodeURIComponent("data in CSV or XML format"));                // you can pass chart data as a string directly from this file
             //	so.addVariable("chart_settings", encodeURIComponent("<settings>...</settings>"));             // you can pass chart settings as a string directly from this file
@@ -337,20 +362,30 @@ $(function(){
 		}
 	function LoadTopCampaigns(){
 		$('tr.topcpa').remove();
+		
+		
+		
 	$.ajax({
 		type: "GET",
-		url: "campaigns.xml",
+		url: "campaigns.php",
 		dataType: "xml",
 		success: function(xml) {
+		
 			$(xml).find('campaign').each(function(){
 				var name = $(this).find('name').text();
 				var cpa = $(this).find('cpa').text();
 				var diff = $(this).find('diff').text();
+					var number = $(this).find('diff_number').text();
 				
-				$('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp('+diff+') </td></tr>').appendTo('#top');
+				$('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp(<span class="precent">'+diff+'</span>%)</td></tr>').appendTo('#top,#Worse');
+				// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp('+number+') </td></tr>').appendTo('#upward');
+		
 				
+				$("span.precent:contains(-)").css('color','red').parent("td").css('color','red');
+			
+				$("span.precent").not(":contains(-)").css('color','green').parent("td").css('color','green');
 				
-				
+			
 			});
 		}
 	});
@@ -360,19 +395,22 @@ $(function(){
 		$('tr.worstcpa').remove();
 		$.ajax({
 			type: "GET",
-			url: "worsecampaign.xml",
+			url: "worsecampaign.php",
 			dataType: "xml",
 			success: function(xml) {
 				$(xml).find('campaign').each(function(){
 					var name = $(this).find('name').text();
 					var cpa = $(this).find('cpa').text();
 					var diff = $(this).find('diff').text();
-					
-					$('<tr class="worstcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp('+diff+') </td></tr>').appendTo('#Worse');
-					
+					var number = $(this).find('diff_number').text();
+					// $('<tr class="worstcpa"><td>'+name+'</td><td class="color">'+cpa+'&nbsp &nbsp(<span class="precent">'+diff+'</span>%)</td></tr>').appendTo('#Worse');
+						$('<tr class="worstcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp('+number+') </td></tr>').appendTo('#downward,#upward');
+		 	
+				$("span.precent:contains(-)").css('color','red').parent("td").css('color','red');
 			
+				$("span.precent").not(":contains(-)").css('color','green').parent("td").css('color','green');
 	  					var title = "";
-	  $('#TopCombo').change(function(){
+				$('#TopCombo').change(function(){
 					 title = $('#TopCombo option:selected').text();
 
 					$('#table2 h3 span,#table1 h3 span').text(title);
@@ -424,7 +462,7 @@ $(function(){
 			startDate = <?php echo (date("Ymd", mktime(0,0,0,date("m"),date("d")-14,date("Y"))));?>;
 
 			}
-		LoadGraph(startDate,endDate,measure);
+		LoadGraph(startDate,endDate,measure,startTimeFrame,endTimeFrame);
 		}
 
 	function getSectionTime(){

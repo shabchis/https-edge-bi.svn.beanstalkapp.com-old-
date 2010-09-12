@@ -27,6 +27,7 @@ overflow:hidden;
 margin:10px 10px 10px 10px ;
 min-width:650px;
 max-width:1260px;
+_width:1260px;
 }
 
 
@@ -36,7 +37,7 @@ float:left;
 margin-left:1%;
 margin-right:1%;
 margin-bottom:35px;
-margin-top:5px;
+margin-top:6px;
  min-width:440px;
 max-width:700px;
 position: relative;
@@ -48,11 +49,12 @@ z-index: -100;
 }
 #atten{
 float:left;
-max-width:500px;
-height:377px;
+max-width:600px;
+height:363px;
 min-width:300px;
 position: relative;
-width:500px;
+width:570px;
+margin-top:6px;
 
 
 }
@@ -70,8 +72,8 @@ position: relative;
 
 #maps{
 float:left;
-margin-left:0px;
-
+<!- margin-left:0px -->;
+margin:5px 1% 35px;
 min-width:400px;
 max-width:500px;
 margin-top:5px;
@@ -80,7 +82,8 @@ position: relative;
 }
 #trendcahnges{
 float: left;
-margin-left:1%;
+margin-top:5px;
+<!--margin-left:1%-->;
 margin-right:1%;
 margin-bottom:35px;
 
@@ -239,16 +242,30 @@ color:white;
 .clear{
 clear:both;
 }
-	#table1{
+	#table4,#table1{
 	float:right;
-	margin-right:10px;
+	margin-right:4px;
+	margin-top:10px;
+	border:1px solid #DEDBD1;
+
 	
 	}
 	
-	#table2{
+	#table3,#table2{
 	float:left;
-        margin-left:10px;
+    margin-left:10px;
+	margin-top:10px;
+	border:1px solid #DEDBD1;
 
+
+	}
+	
+	.red{
+	color:red;
+	}
+	
+	.green{
+	color:green;
 	}
 #timeline {
 width:976px;
@@ -288,13 +305,14 @@ table {
     border-collapse: collapse;
     /*width:228px;*/
 }
-#Worse{
+#downward,#Worse{
 
     font-family:Verdana;
     font-size:10px;
-    margin-top:-1px;
-    max-width:243px;
-    min-width: 229px;
+    margin-top:0px;
+    max-width:264px;
+    min-width: 235px;
+	width:283px;
 }
 table#Worse th {
 
@@ -302,44 +320,51 @@ table#Worse th {
     font-weight: normal;
     padding: 0.1em 0.5em;
     border-bottom: 2px solid #FFFFFF;
-  background-image:-moz-linear-gradient(
-    center bottom,
-    rgb(194,194,194) 0%,
-    rgb(222,222,222) 19%,
-    rgb(255,255,255) 100%
-)
-;
+ 
+
    
    
 }
-table#Worse td  {
-    text-align: left;
-    border-bottom: 1px solid #dedbd1;
-    padding: 0.1em 0.5em;
-    background: #FFFFFF;
-   
-    width:64%;
-    color:red;
-
-}
-
-table#top{
-    width:229px;
+#upward{
+ width:229px;
     font-family:Verdana;
     font-size:10px;
     margin-right:16px;
+	
+}
+
+
+table#downward td,table#Worse td  {
+    text-align: left;
+    border: 1px solid #dedbd1;
+    padding: 0.1em 0.5em;
+    background: #FFFFFF;
+   
+    width:61%;
+    color:#6C6A6B;
+
+}
+
+table#upward,table#top{
+    width:250px;
+    font-family:Verdana;
+    font-size:10px;
+    margin-right:0px;
+	
+	
 
 }
 
 
-table#top td  {
+table#upward td,table#top td  {
     text-align: left;
   
     padding: 0.1em 0.5em;
     background: #FFFFFF;
-    border-bottom: 1px solid #dedbd1;
-    width:64%;
-    color:green;
+    border: 1px solid #dedbd1;
+    width:61%;
+    color:#6C6A6B;
+	
 
 }
 table thead th {
@@ -351,42 +376,39 @@ table thead th {
 table th {
     text-align: center;
 }
-
-#table1 h3,#table2 h3{
-    text-align:center;
-margin-bottom:13px;
-font-weight:normal;
-color:#222222;
-    font-size:12px;
+#tableheader{
+border: 1px solid #dedbd1;
 }
+
+#table3 h3,#table4 h3,#table1 h3,#table2 h3{
+ text-align:center;
+margin-bottom:3px;
+font-weight:normal;
+color:white;
+    font-size:12px;
+	background-color:#8D8D8D;
+}
+
+#table2 h3,#table3 h3{
+width:100%;
+}
+
 
 table tr:first-child{
     -moz-border-radius:10px ;
 
 }
 .rightround{
-    color:#AAAAAA;
-  
-    background-image:-moz-linear-gradient(
-    center bottom,
-    rgb(194,194,194) 0%,
-    rgb(222,222,222) 19%,
-    rgb(255,255,255) 100%
-)
-;
+    color:#8D8D8D;
+  background:#E3E3E3;
     font-weight:normal;
+	border: 1px solid #dedbd1;
 
 }
 .leftround{
-     color:#AAAAAA;
-   
-  background-image: -moz-linear-gradient(
-    center bottom,
-    rgb(194,194,194) 0%,
-    rgb(222,222,222) 19%,
-    rgb(255,255,255) 100%
-)
-;
+     color:#8D8D8D;
+   background:#E3E3E3;
+  border: 1px solid #dedbd1;
     font-weight:normal;
 }
 
@@ -406,7 +428,9 @@ padding-left:0px;
 
 #dropdown{
     margin-bottom:10px;
-    margin-left:10px;
+    margin-left:5px;
+	width:960px;
+	float:none;
    
 
 }
@@ -418,12 +442,14 @@ padding-left:0px;
  -webkit-border-radius:5px;
  border: 3px #BBBDBC solid;
  outline: none;
- margin-left:5px;
+float:right;
  padding: 5px;
+margin-right:-93px;
+ margin-bottom:10px;
  
 }
 #combo option{
-color: white;
+color: #BBBDBC;
 font-weight: bold;
 margin-left: 5px;
 
@@ -444,7 +470,7 @@ margin-right: 10px;
 }
 
 .timevalue{
-color: #8FB53E;
+color: #8D8D8D;
 font-weight: bold;
 }
 
@@ -456,3 +482,12 @@ float: none;
 list-style:none;
 position:absolute;
 }
+
+#trendcahnges h3 {
+	
+	font-size:12px;
+}
+.equal{
+display:inline;
+}
+
