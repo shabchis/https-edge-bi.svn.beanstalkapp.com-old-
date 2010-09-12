@@ -148,7 +148,7 @@
   </line>
 
   <legend>                                                    <!-- LEGEND -->
-    <enabled>true</enabled>                                       <!-- [true] (true / false) -->
+    <enabled>[false]</enabled>                                       <!-- [true] (true / false) -->
     <x></x>                                                   <!-- [20] (Number / Number% / !Number)  -->
     <y>80%</y>                                                   <!-- [!55] (Number / Number% / !Number)  -->
     <width></width>                                           <!-- [] (Number / Number%) -->
@@ -165,11 +165,7 @@
       <size></size>                                           <!-- [16] (Number) key size-->
       <border_color></border_color>                           <!-- [] (hex color code) leave empty if you don't want to have border -->
     </key>
-    <entries>                                                 <!-- legend entries go gere-->
-     <entry color="#daebc1">LOW</entry>
-      
-     <entry color="#90B63D">HIGH</entry>     <!-- You can have any number of legend entries, uncomment this line and copy as many times as you need -->
-    </entries>
+    
   </legend>
 
   <object_list>                                               <!-- OBJECT LIST -->

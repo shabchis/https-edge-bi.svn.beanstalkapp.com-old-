@@ -3,6 +3,8 @@
 <?php $startdate = $_GET['startDate'];?>
 <?php $endDate = $_GET['endDate'];?>
 <?php $measure = $_GET['measure'];?>
+<?php $startDateName = $_GET['startDateName']; ?>
+<?php $endDateName = $_GET['endDateName']; ?>
 
 <settings>
   <font>Verdana</font>
@@ -14,8 +16,8 @@
   </background>
   <plot_area>
     <margins>
-      <left>70</left>
-      <right>11</right>
+      <left>50</left>
+      <right>0</right>
     </margins>
   </plot_area>
   <grid>
@@ -31,23 +33,26 @@
   </grid>
   <axes>
     <category>
-      <tick_length>1</tick_length>
+      <tick_length>13</tick_length>
       <width>1</width>
       <color>E7E7E7</color>
     </category>
     <value>
-      <tick_length>19</tick_length>
       <width>1</width>
       <color>E7E7E7</color>
     </value>
   </axes>
-  <values>
+   <values>
+    <category>
+      <enabled>1</enabled>
+    </category>
     <value>
-    <enabled>1</enabled>
-      </value>
+      <min>0</min>
+    </value>
   </values>
   <balloon>
-    <color>8DB53B</color>
+   
+	<corner_radius>5</corner_radius>
     <border_width>1</border_width>
     <border_color>FFFFFF</border_color>
   </balloon>
@@ -74,9 +79,9 @@ foreach($xml->xpath('//book') as $key=>$value)
 
 
 
-	        echo '<graph gid="'.$value->id.'">';
+	        echo '<graph gid="'.$key.'">';
 	        echo '<axis>right</axis>';
-            echo  '<title>'.$value->author.'</title>';
+            echo  '<title>'.$value->date.'</title>';
             echo   '<color>'.$colors[$key].'</color>';
             echo '</graph>';
 
@@ -87,19 +92,19 @@ foreach($xml->xpath('//book') as $key=>$value)
  </graphs>
 
 <labels>
-<?php
-foreach($xml->xpath('//book') as $key=>$value)
-	{
-        echo '<label lid="'.$value->id.'">';
-             echo  '<text><![CDATA[<b>'.$startdate." -   " .$endDate. '</b>]]></text>';
-             echo   '<y>18</y>';
-             echo   '<text_color>'.$colors[$key].'</text_color>';
-             echo  '<text_size>13</text_size>';
-             echo '<align>center</align>';
-        echo   '</label>';
 
-}
- ?>
+
+
+       <label lid="0">
+            <text><![CDATA[<b></b>]]></text>
+           <y>18</y>
+            <text_color></text_color>
+            <text_size>13</text_size>
+           <align>center</align>
+        </label>
+
+
+
 
   </labels>
 </settings>
