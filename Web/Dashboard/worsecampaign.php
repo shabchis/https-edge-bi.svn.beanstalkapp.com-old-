@@ -2,64 +2,74 @@
 
 <campaigns>
 	<campaign>
-		<name>GO. 2tier - US - Search </name>
+		<name>GO. Content-- World</name>
 		<cpa>13.30</cpa>
 			<diff><?php echo rand(-100,100)?></diff>
-			<diff_number>12</diff_number>
+			<diff_number>90.05</diff_number>
+			<percent>64</percent>
 	</campaign>
 	<campaign>
-		<name>YA. APP---Spain</name>
+		<name>GO.US.Secondary - Search</name>
 		<cpa>12.60</cpa>
 		<diff><?php echo rand(-100,100)?></diff>
-		<diff_number>13</diff_number>
+		<diff_number>63.95</diff_number>
+		<percent>31</percent>
 	</campaign>
 	<campaign>
-		<name>GO. Content---Germany </name>
+		<name>GO. Content---US </name>
 		<cpa>10.56</cpa>
 		<diff><?php echo rand(-100,100)?></diff>
-		<diff_number>31</diff_number>
+		<diff_number>51.45</diff_number>
+		<percent>-10</percent>
 	</campaign>
 	<campaign>
-		<name>BI. APP---US</name>
+		<name>GO. Content---UK</name>
 		<cpa>10.51</cpa>
 		<diff><?php echo rand(-100,100)?></diff>
-		<diff_number>23</diff_number>
+		<diff_number>80</diff_number>
+		<percent>-31</percent>
 	</campaign>
 	<campaign>
-		<name>GO. APP---UK </name>
-		<cpa>10.30</cpa>
+		<name>GO. Content---Romania </name>
+		<cpa>1,797</cpa>
 			<diff><?php echo rand(-100,100)?></diff>
-			<diff_number>1</diff_number>
+			<diff_number>100</diff_number>
+			<percent>-43</percent>
 		</campaign>
 	
 	<campaign>
-	<name>GO. CONTENT---French</name>
-	<cpa>9.86</cpa>
+	<name>GO.UK.Secondary - Search</name>
+	<cpa>1,224</cpa>
 	<diff><?php echo rand(-100,100)?></diff>
-	<diff_number>3</diff_number>
+	<diff_number>45</diff_number>
+	<percent>-53</percent>
 	</campaign>
 	<campaign>
-		<name>YA. APP---France</name>
-		<cpa>9.48</cpa>
+		<name>GO.TOOLBAR - India</name>
+		<cpa>-1,068</cpa>
 		<diff><?php echo rand(-100,100)?></diff>
-		<diff_number>2</diff_number>
+		<diff_number>17.87</diff_number>
+		<percent>-40</percent>
 	</campaign>
 	<campaign>
-		<name>BA. APP---Main</name>
-		<cpa>8.63</cpa>
+		<name>GO. Content-Arabic - Global</name>
+		<cpa>-933</cpa>
 		<diff><?php echo rand(-100,100)?></diff>
 		<diff_number>13</diff_number>
+		<percent>50</percent>
 	</campaign>
 	<campaign>
-		<name>YA. APP---Italy </name>
-		<cpa>8.26</cpa>
+		<name>GO.CONTENT- Israel </name>
+		<cpa>-589</cpa>
 		<diff><?php echo rand(-100,100)?></diff>
 		<diff_number>11</diff_number>
+		<percent>50</percent>
 	</campaign>
 	<campaign>
-		<name>GO. CONTENT---Spain </name>
-		<cpa>7.62</cpa>
+		<name>FA.bloggers-US </name>
+		<cpa>-933</cpa>
 		<diff><?php echo rand(-100,100)?></diff>
-		<diff_number>11</diff_number>
+		<diff_number>9</diff_number>
+		<percent>60</percent>
 	</campaign>
 </campaigns>
