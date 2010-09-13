@@ -46,7 +46,7 @@
   	 <div id="dropdown">
  
   		<select name="combo" id="combo">
-  		<?php  include 'timeDropDown.php' ?>   
+  		<?php /* include 'timeDropDown.php' */?>   
   		</select>
   
   		
@@ -58,7 +58,7 @@
  	 <div class="header">
         <h3>Channel Performance</h3>
          <select id="GraphCombo">
-	
+		<!--<?php include 'measureDropDown.php'?>-->
 		<option>New Users</option>
 		<option>New Active Users</option>
 		<option>CPA</option>
@@ -88,16 +88,16 @@
 	   <div class="header">
 	            <h3>Campaign Performance – ROI</h3>
 	            <select id="TopCombo">
-					
+					<!--<?php include 'measureDropDown.php'?>-->
 					<option>New Users</option>
 		<option>New Active Users</option>
 		<option>CPA</option>
 		<option>Cost</option>
 				</select>
 			
-				
+				<!--<?php include 'measureDropDown.php'?>-->
 		
-			
+				</select>
 		    </div>
 
 		<div id="innertables">
@@ -129,10 +129,11 @@
          <div class="header">
                <h3>Geo Distribution</h3>
                <select id="MapCombo">
-					<option>New Users</option>
-					<option>New Active Users</option>
-					<option>CPA</option>
-					<option>Cost</option>
+				<!--<?php include 'measureDropDown.php'?>-->
+		<option>New Users</option>
+		<option>New Active Users</option>
+		<option>CPA</option>
+		<option>Cost</option>
 				</select>
        	 </div>
 
@@ -151,10 +152,11 @@
 	 <div class="header">
                <h3>Fluctuating Campaigns – ROI</h3>
                <select id="flcamp">
-					 <option>New Users</option>
-					<option>New Active Users</option>
-					<option>CPA</option>
-					 <option>Cost</option>  
+				<!--<?php include 'measureDropDown.php'?>-->
+		<option>New Users</option>
+		<option>New Active Users</option>
+		<option>CPA</option>
+		<option>Cost</option>
 				</select>
 				
        	 </div>
@@ -353,7 +355,7 @@ $(function(){
     }   
 
 	function LoadMap(startdate,endDate){
-		var so = new SWFObject("ammap/ammap.swf", "ammap", "100%", "460px", "8", "#e8f6f7");
+		var so = new SWFObject("ammap/ammap.swf", "ammap", "100%", "320px", "8", "#e8f6f7");
 		so.addVariable("path", "ammap/");
 		so.addVariable("settings_file", escape("ammap/ammap_settings.xml"));                  // you can set two or more different settings files here (separated by commas)
 		so.addVariable("data_file", escape("ammap/xpath.php"));

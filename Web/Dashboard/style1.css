@@ -1,0 +1,519 @@
+/************************************
+            By Dan Harper
+        http://www.danharper.me
+
+           For NETTUTS.com
+
+     Check out http://vivawp.com
+************************************/
+
+* {
+margin: 0;
+padding: 0;
+color: #222;
+}
+
+body {
+font-size: 75%;
+color: #8d8d8d;
+background: #ffffff;
+font-family: "verdana","Helvetica Neue", Helvetica, Arial, sans-serif;
+line-height: 1.6em;
+
+}
+#wrapper{
+
+overflow:hidden;
+margin:10px 10px 10px 10px ;
+min-width:167px;
+max-width:1064px;
+_width:1260px;
+}
+
+
+
+#barPanel{
+-webkit-border-radius:5px 5px 0 0;
+-moz-border-radius:5px 5px 0 0;
+float:left;
+margin:6px 10px 10px 0;
+max-width:700px;
+min-width:350px; 
+position:relative;
+width:45%;
+height:480px;
+   
+}
+#weekagograph{
+z-index: -100;
+}
+#atten{
+float:left;
+max-width:650px;
+min-width:309px;
+position: relative;
+width:52%;
+margin-top:6px;
+margin-bottom:10px;
+
+
+}
+#innertables{
+margin-bottom:30px;
+overflow:hidden;
+}
+td:last-child{
+border-left:0px;
+}
+#oper{
+float:left;
+margin-left:0px;
+margin-right:10px;
+margin-bottom:35px;
+min-width:440px;
+max-width:700px;
+position: relative;
+
+}
+
+#maps{
+float:left;
+
+margin:5px 10px 35px 0px;
+max-width:700px;
+min-width:350px; 
+margin-top:5px;
+position: relative;
+height:496px;
+
+    
+}
+#trendcahnges{
+float: left;
+margin-top:5px;
+margin-left:0px;
+margin-right:0px;
+margin-bottom:35px;
+min-width:350px;
+}
+
+#topspenders{
+
+float: left;
+}
+.timeframe{
+margin-top: 10px;
+margin-bottom: 10px;
+z-index: 1000;'
+}
+
+#inner{
+width:100%;
+}
+
+
+.header{
+ position:relative;
+ background-color:#BCBEBD;
+ position:relative;
+ padding:5px;
+
+ -moz-border-radius:5px 5px 0 0 ;
+  -webkit-border-radius:5px 5px 0 0 ;
+
+}
+.header h3{
+font-size:12px;
+color:black;
+
+
+}
+.widget {
+
+
+      
+        background: #FFFFFF;
+        border-left:1px solid #dedbd1;
+        border-bottom:1px solid #dedbd1;
+        border-right:1px solid #dedbd1;
+
+
+
+
+}
+
+
+	.widget a {
+	color: #222;
+	text-decoration: none;
+	}
+	
+	.widget a:hover {
+	color: #009;
+	text-decoration: underline;
+	}
+
+	.tabnav li {
+   
+	display: block;
+	list-style: none;
+	padding-right: 5px;
+    border-right:2px solid #DEDBD1;
+    padding-top:10px;
+    height:23px;
+        float:left;
+        line-height:13px;
+
+
+        
+
+   
+       
+	}
+	
+	.tabnav li:last-child{
+      border-right:0px !important;
+
+    }
+.tabnav li:first-child{
+   
+
+    }
+	
+		.tabnav li a {
+		text-decoration: none;
+		
+		color: #222;
+		font-weight: normal;
+		padding: 4px 4px 10px;
+		outline: none;
+
+		}
+		
+		.tabnav li a:hover, .tabnav li a:active, .tabnav li.ui-tabs-selected a {
+		font-weight:normal;
+		color: #90B63D;
+		text-decoration: none;
+   
+       
+		
+		padding: 4px 4px 10px;
+
+		}
+
+.tabnav li:not(.ui-tabs-selected){
+      border-bottom:1px solid #DEDBD1;
+     background-image: -moz-linear-gradient(center bottom, rgb(222,218,222) 2%, rgb(250,250,250) 10%);
+}
+		
+	.tabdiv {
+	margin-top: 2px;
+	background: #fff;
+	/*border: 1px solid #dedbd1;*/
+	margin-top:56px;
+	/*width:390px;*/
+	height:300px;
+    margin-right:15px;
+	}
+	
+		.tabdiv li {
+		list-style-image: url("star.png");
+		margin-left: 20px;
+		}
+
+.ui-tabs-hide {
+		display: none;
+		}
+
+		#featuredvid {
+		text-align: center;
+		}
+		
+			.fvid {
+			margin-bottom: 5px;
+			}
+		
+			.vidselector li {
+			text-align: left;
+			list-style: none;
+			padding: 5px;
+			background: #ffffff;
+			border: 1px solid #dedbd1;
+			text-transform: uppercase;
+			margin-bottom: 5px;
+
+			}
+.clear{
+clear:both;
+}
+	#table4,#table1{
+	float:right;
+	margin-right:4px;
+	margin-top:10px;
+	border:1px solid #DEDBD1;
+	padding-right:2px;
+	padding-top:2px;
+	padding-left:1px;
+	width:50%;
+
+
+	
+	}
+	
+	#table3,#table2{
+	float:left;
+    margin-left:10px;
+	margin-top:10px;
+	border:1px solid #DEDBD1;
+		padding-left:1px;
+		padding-right:2px;
+		padding-top:2px;
+		width:43%;
+
+
+	}
+	
+	.red{
+	color:red;
+	}
+	
+	.green{
+	color:green;
+	}
+#timeline {
+width:976px;
+    
+}
+
+#title{
+background-color:white;
+
+width:990px;
+-moz-border-radius:2px;
+overflow:hidden;
+margin:0  auto 15px auto ;
+ padding-top:5px;
+ padding-bottom:5px;
+
+
+}
+
+#title ul{
+float:left;
+
+}
+
+#title li{
+float:left;
+display:inline;
+padding-right:10px;
+color:black;
+font-weight:bold;
+margin-left:10px;
+}
+
+
+table {
+    border-spacing: 0px;
+    border-collapse: collapse;
+    /*width:228px;*/
+}
+#downward,#Worse{
+
+    font-family:Verdana;
+    font-size:10px;
+     margin:auto auto 1px;
+    max-width:350px;
+    min-width: 235px;
+	width:100%;
+float:left;
+	
+}
+
+#innertables2{
+margin-bottom:10px;
+overflow:hidden;
+}
+table#Worse th {
+
+    text-align: center;
+    font-weight: normal;
+    padding: 0.1em 0.5em;
+    border-bottom: 1px solid #DEDBD1;
+ 
+
+   
+   
+}
+#upward{
+ 
+    font-family:Verdana;
+    font-size:10px;
+    margin-right:16px;
+	
+}
+
+
+table#downward td,table#Worse td  {
+    text-align: left;
+    border: 1px solid #dedbd1;
+    padding: 0.1em 0.5em;
+    background: #FFFFFF;
+      color:black;
+
+}
+
+table#upward,table#top{
+   
+    font-family:Verdana;
+    font-size:10px;
+   margin:auto auto 1px;
+	
+	
+	
+
+}
+
+
+table#upward td,table#top td  {
+    text-align: left;
+  
+    padding: 0.1em 0.5em;
+    background: #FFFFFF;
+    border: 1px solid #dedbd1;
+     color:black;
+	
+
+}
+table thead th {
+    background: #FFFFFF;
+    color: #FFFFFF;
+    text-align: center;
+    
+}
+table th {
+    text-align: center;
+}
+#tableheader{
+border: 1px solid #dedbd1;
+}
+
+#table3 h3,#table4 h3,#table1 h3,#table2 h3{
+ text-align:center;
+margin-bottom:3px;
+font-weight:normal;
+color:white;
+    font-size:12px;
+	background-color:#8D8D8D;
+
+}
+
+
+
+
+table tr:first-child{
+    -moz-border-radius:10px ;
+
+}
+.rightround{
+  /*   color:#8D8D8D; */
+  color:black;
+  background:#E3E3E3;
+    font-weight:normal;
+	border: 1px solid #dedbd1;
+
+}
+.leftround{
+   /*   color:#8D8D8D; */
+   color:black;
+   background:#E3E3E3;
+  border: 1px solid #dedbd1;
+    font-weight:normal;
+}
+
+#last{
+padding-left:0px;
+}
+
+#lastc{
+
+    padding-right:169px;
+}
+
+#lastg{
+
+    padding-right:160px;
+}
+
+#dropdown{
+    margin-bottom:10px;
+    margin-left:5px;
+	width:100%;
+	float:right;
+   
+
+}
+#combo{
+ background-color: #E3E3E3;
+ color:#90B63D;
+ font-weight: bolder;
+ -moz-border-radius:5px;
+ -webkit-border-radius:5px;
+ border: 3px #BBBDBC solid;
+ outline: none;
+float:right;
+ padding: 5px;
+/* margin-right:-93px; */
+ margin-bottom:10px;
+ width:255px;
+ margin-right:17px;
+ 
+}
+#combo option{
+color: black;
+font-weight: bold;
+margin-left: 5px;
+
+}
+
+#TopCombo,#GaugeCombo,#MapCombo,#GraphCombo,#flcamp{
+position:absolute;
+right:5px;
+top:5px;
+background:#D1D1D1;
+border: 0px;
+outline: none;
+
+}
+#TopCombo option ,#GaugeCombo option,#MapCombo option,#GraphCombo option{
+margin-right: 10px;
+
+}
+
+.timevalue{
+color: #8D8D8D;
+margin-left:5px;
+font-weight: bold;
+}
+
+
+ul.sub{
+display: none;
+z-index: 1000;
+float: none;
+list-style:none;
+position:absolute;
+}
+
+#trendcahnges h3 {
+	
+	/* font-size:12px; */
+}
+.equal{
+display:inline;
+}
+
+.campaign{
+
+width:110px;
+}
