@@ -39,7 +39,7 @@ namespace Easynet.Edge.UI.Client
 			InitializeComponent();
 
 			// Get the menu xml URL
-			XmlDataProvider xmlProvider = (XmlDataProvider)this.Resources["MenuData"];
+			XmlDataProvider xmlProvider = this.XmlProvider;
 			if (!ApplicationDeployment.IsNetworkDeployed)
 			{
 				string absolute = AppSettings.Get(this, "MenuXmlAddress.Absolute");
@@ -134,13 +134,9 @@ namespace Easynet.Edge.UI.Client
 		#region Public Properties
 		/*=========================*/
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public Uri XmlDefinition
+		public XmlDataProvider XmlProvider
 		{
-			get { return (this.Resources["MenuData"] as XmlDataProvider).Source; }
-			set { (this.Resources["MenuData"] as XmlDataProvider).Source = value; }
+			get { return (this.Resources["MenuData"] as XmlDataProvider); }
 		}
 
 		/*=========================*/

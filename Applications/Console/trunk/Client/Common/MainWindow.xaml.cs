@@ -53,7 +53,7 @@ namespace Easynet.Edge.UI.Client
 			InitializeComponent();
 
 			// HACK due to shitty namescope-related bug
-			_mainMenu.RegisterName("_menuColumn", _menuColumn);
+			MainMenu.RegisterName("_menuColumn", _menuColumn);
 
 			// Event handlers
 			this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
@@ -139,9 +139,9 @@ namespace Easynet.Edge.UI.Client
 			delegate()
 			{
 				// Hide all menu items/sections that have NO PERMISSIONS at all (account = null)
-				_mainMenu.Visibility = Visibility.Visible;
-				_mainMenu.UpdateLayout();
-				_mainMenu.ApplyPermissions(null);
+				MainMenu.Visibility = Visibility.Visible;
+				MainMenu.UpdateLayout();
+				MainMenu.ApplyPermissions(null);
 
 				_header.Visibility = Visibility.Visible;
 				_currentPageViewer.Content = CurrentPage = null;
@@ -170,8 +170,8 @@ namespace Easynet.Edge.UI.Client
 			OltpProxy.SessionEnd();
 			App.Cookies.ClearCookie(Const.Cookies.Login);
 
-			_mainMenu.Visibility = Visibility.Hidden;
-			_mainMenu.CollapseAll();
+			MainMenu.Visibility = Visibility.Hidden;
+			MainMenu.CollapseAll();
 			_accountsSelector.ItemsSource = null;
 			_accountsSelector.SelectedItem = null;
 			_header.Visibility = Visibility.Hidden;
@@ -293,7 +293,7 @@ namespace Easynet.Edge.UI.Client
 			}
 
 			// Disable unavialable menu items for this account
-			_mainMenu.ApplyPermissions(accountToChangeTo);
+			MainMenu.ApplyPermissions(accountToChangeTo);
 
 			if (CurrentPage != null && !HasPermission(accountToChangeTo, CurrentPage.PageData))
 			{
@@ -322,7 +322,7 @@ namespace Easynet.Edge.UI.Client
 		/// </summary>
 		private void _mainMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (!_mainMenu.IsLoaded)
+			if (!MainMenu.IsLoaded)
 				return;
 
 			if (e.AddedItems.Count < 1)

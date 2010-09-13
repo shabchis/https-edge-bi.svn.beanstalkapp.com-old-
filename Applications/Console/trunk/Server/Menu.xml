@@ -2,7 +2,7 @@
 <Sections xmlns="" >
 
 	<Section Title="Dashboard" IsOpen="true">
-		<Page Title="Overview" Class="Easynet.Edge.UI.Client.Pages.WebFramePage" Permission="web/dashboard" Url="http://qa/yaron"/>
+		<Page Title="Overview" Class="Easynet.Edge.UI.Client.Pages.ChromiumPage" Permission="web/dashboard" Url="http://qa:7070/Version%201.0.1/dashboard_active_test.php"/>
 	</Section>
 
 	<Section Title="Intelligence" IsOpen="true">
