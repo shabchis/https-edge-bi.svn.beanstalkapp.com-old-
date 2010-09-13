@@ -4,12 +4,13 @@
 <html xmlns=”http://www.w3.org/1999/xhtml”>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	<link href="style1.css" rel="stylesheet" type="text/css" />
+	<link href="style.css" rel="stylesheet" type="text/css" />
       <!--[if IE]>
   <link href="ie.css" rel="stylesheet" type="text/css" />
       <![endif]-->
 
 
+	
 	<script type='text/javascript' src='jquery-1.4.2.min.js'></script>
 	<script type="text/javascript" src="jquery.corners.js"></script>
 	<script type="text/javascript" src="DD_roundies_0.0.2a-min.js"></script>
@@ -46,7 +47,7 @@
   	 <div id="dropdown">
  
   		<select name="combo" id="combo">
-  		<?php  include 'timeDropDown.php' ?>   
+  			<?php include 'timeDropDown.php'?>
   		</select>
   
   		
@@ -54,11 +55,11 @@
 	<div class="clear"></div>
 
 
-	 <div id="barPanel" class="widget" >
+	 <div id="tabvanilla" class="widget" >
  	 <div class="header">
         <h3>Channel Performance</h3>
          <select id="GraphCombo">
-	
+		<!--<?php include 'measureDropDown.php'?>-->
 		<option>New Users</option>
 		<option>New Active Users</option>
 		<option>CPA</option>
@@ -88,40 +89,38 @@
 	   <div class="header">
 	            <h3>Campaign Performance â€“ ROI</h3>
 	            <select id="TopCombo">
-					
+					<!--<?php include 'measureDropDown.php'?>-->
 					<option>New Users</option>
 		<option>New Active Users</option>
 		<option>CPA</option>
 		<option>Cost</option>
 				</select>
 			
-				
+				<!--<?php include 'measureDropDown.php'?>-->
 		
-			
+				</select>
 		    </div>
 
-		<div id="innertables">
 		<div id="table2" >
-					<h3>Top Positive</h3>
-						<table id="top">
-						<tr id="tableheader">
-					                    <th class="campaign">Campaign</th>
-					                    <th colspan=2>Net Revenue </th>
-						</tr>
-						
-					</table>
-				</div>
-				<div id="table1" >
-					<h3>Top Negative</h3>
-					<table id="Worse">
-						<tr>
-				                    <th class="campaign">Campaign</th>
-				                    <th colspan=2>Net Revenue </th>
-						</tr>
-						
-					</table>
-				</div>
-				</div>
+			<h3>Top Positive</h3>
+				<table id="top">
+				<tr id="tableheader">
+	                    <th>Campaign</th>
+	                    <th>Net Revenue </th>
+				</tr>
+				
+			</table>
+		</div>
+		<div id="table1" >
+			<h3>Top Negative</h3>
+			<table id="Worse">
+				<tr>
+                    <th>Campaign</th>
+                    <th>Net Revenue </th>
+				</tr>
+				
+			</table>
+		</div>
 			
 		</div>
 	<div class="clear"></div>
@@ -129,10 +128,11 @@
          <div class="header">
                <h3>Geo Distribution</h3>
                <select id="MapCombo">
-					<option>New Users</option>
-					<option>New Active Users</option>
-					<option>CPA</option>
-					<option>Cost</option>
+				<!--<?php include 'measureDropDown.php'?>-->
+		<option>New Users</option>
+		<option>New Active Users</option>
+		<option>CPA</option>
+		<option>Cost</option>
 				</select>
        	 </div>
 
@@ -151,10 +151,11 @@
 	 <div class="header">
                <h3>Fluctuating Campaigns â€“ ROI</h3>
                <select id="flcamp">
-					 <option>New Users</option>
-					<option>New Active Users</option>
-					<option>CPA</option>
-					 <option>Cost</option>  
+				<!--<?php include 'measureDropDown.php'?>-->
+		<option>New Users</option>
+		<option>New Active Users</option>
+		<option>CPA</option>
+		<option>Cost</option>
 				</select>
 				
        	 </div>
@@ -163,28 +164,25 @@
        <span class="timevalue"></span> vs.  <div class="equal"></div>
 	</div>
 	
-	<div id="innertables2">
-	
 	<div id="table3" >
-				<h3>Top Positive</h3>
-					<table id="upward">
-					<tr id="tableheader">
-		                    <th class="campaign">Campaign</th>
-		                    <th colspan=2>% Change</th>
-					</tr>
-					
-				</table>
-			</div>
-			<div id="table4" >
-				<h3>Top Negative</h3>
-				<table id="downward">
-					<tr>
-		                    <th class="campaign">Campaign</th>
-		                    <th colspan=2>% Change</th>
-					</tr>
-					
-				</table>
-			</div>
+			<h3>Top Positive</h3>
+				<table id="upward">
+				<tr id="tableheader">
+	                    <th>Campaign</th>
+	                    <th>Percent Change</th>
+				</tr>
+				
+			</table>
+		</div>
+		<div id="table4" >
+			<h3>Top Negative</h3>
+			<table id="downward">
+				<tr>
+                    <th>Campaign</th>
+                    <th>Percent Change</th>
+				</tr>
+				
+			</table>
 		</div>
 	</div>
 	</div>
@@ -224,7 +222,6 @@ $(document).ready( function(){
 	var measure =  $("#GraphCombo option:selected").text();
 	var startTimeFrame = $("combo option:selected").text();
 	var endTimeFrame = $("second option:selected").text();
-		var bar = $("#weekagograph").height();
 $(function(){	
 	
 	var percent = $("span.precent").text();
@@ -232,10 +229,8 @@ $(function(){
 	var time = 	$("#combo option:selected").val();
 	var text = $("#combo option:selected").text();
 	var width = $("#atten").width();
-
-	
 		var yesterday = $("<select id='yesterdayCombo'><option value = '1'>Previous Day</option><option value ='2'>7 days ago</option></select>");
-	var performancewidth  = $("#barPanel").width();
+	var performancewidth  = $("#tabvanilla").width();
 	$("#trendcahnges").width(width);
 	
 	$("#maps").width(performancewidth);
@@ -353,7 +348,7 @@ $(function(){
     }   
 
 	function LoadMap(startdate,endDate){
-		var so = new SWFObject("ammap/ammap.swf", "ammap", "100%", "460px", "8", "#e8f6f7");
+		var so = new SWFObject("ammap/ammap.swf", "ammap", "100%", "340px", "8", "#e8f6f7");
 		so.addVariable("path", "ammap/");
 		so.addVariable("settings_file", escape("ammap/ammap_settings.xml"));                  // you can set two or more different settings files here (separated by commas)
 		so.addVariable("data_file", escape("ammap/xpath.php"));
@@ -388,14 +383,13 @@ $(function(){
 				var	percent = $(this).find('percent').text();
 			
 				
-					$('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#top');
+				$('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp<span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#top');
 				// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp('+number+') </td></tr>').appendTo('#upward');
-		$('<tr class="worstcpa"><td>'+name+'</td><td>'+percent+'%</td><td>('+number+')</td></tr>').appendTo("#upward");
+			$('<tr class="worstcpa"><td>'+name+'</td><td>'+percent+'%&nbsp &nbsp('+number+') </td></tr>').appendTo("#upward");
 				
+				$("span.precent:contains(-)").css('color','red').parent(".con").css('color','red');
 			
-				$("span.precent:contains(-)").css('color','red').parent("td.last").css('color','red');
-			
-				$("span.precent").not(":contains(-)").css('color','green').parent("td.last").css('color','green');
+				$("span.precent").not(":contains(-)").css('color','green').parent(".con").css('color','green');
 				
 			
 			});
@@ -418,8 +412,8 @@ $(function(){
 					var number = $(this).find('diff_number').text();
 						var	percent = $(this).find('percent').text();
 					// $('<tr class="worstcpa"><td>'+name+'</td><td class="color">'+cpa+'&nbsp &nbsp(<span class="precent">'+diff+'</span>%)</td></tr>').appendTo('#Worse');
-					$('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class ="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#Worse');
-						$('<tr class="worstcpa"><td>'+name+'</td><td>'+percent+'%</td><td>('+number+')</td></tr>').appendTo('#downward');
+					$('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp<span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#Worse');
+						$('<tr class="worstcpa"><td>'+name+'</td><td>'+percent+'%&nbsp &nbsp('+number+') </td></tr>').appendTo('#downward');
 		 	
 				$("span.precent:contains(-)").css('color','red').parent(".con").css('color','red');
 			
