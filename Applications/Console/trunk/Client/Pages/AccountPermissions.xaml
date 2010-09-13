@@ -6,7 +6,6 @@
 >
 	
 	<this:PageBase.Resources>
-		<XmlDataProvider x:Key="MenuData" XPath="/Sections/Section/Page" Source="../Menu.xml" />
 		
 		<Style TargetType="{x:Type TextBlock}">
 			<Setter Property="Padding" Value="0,6,0,6"/>
