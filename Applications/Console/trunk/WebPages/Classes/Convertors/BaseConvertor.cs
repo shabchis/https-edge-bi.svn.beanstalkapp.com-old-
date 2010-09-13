@@ -66,7 +66,7 @@ namespace Easynet.Edge.UI.WebPages.Converters
         }
          
         protected string _sqlCommand = @"select  Account_Name,accountSettings
-                                    FROM [easynet_OLTP].[dbo].[User_GUI_Account]
+                                    FROM [dbo].[User_GUI_Account]
                                     where accountSettings != '' ";
 
         protected int columnToConvertToUSD = -1;
