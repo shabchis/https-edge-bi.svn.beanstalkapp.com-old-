@@ -442,8 +442,16 @@ namespace Easynet.Edge.UI.WebPages.Converters
 
         public virtual bool DoWork()
         {
-            return DoWork(this.uploadFilePath, this.saveFilePath + this.saveFileName);
+            if (this.convertionType.Equals("EasyForexCreativeTXTfile"))
+                return DoWork(saveFilePath);
+            else
+                return DoWork(this.uploadFilePath, this.saveFilePath + this.saveFileName);
 
+        }
+
+        public virtual bool DoWork(string saveFilePath)
+        {
+            return true;
         }
 
 

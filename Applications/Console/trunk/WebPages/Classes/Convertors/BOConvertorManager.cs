@@ -102,8 +102,13 @@ namespace Easynet.Edge.UI.WebPages.Converters
                                 //   myConvertor. = item.ChildNodes[i].Attributes["FileSavePath"];
 
 
-                                myConvertor.processorSaveFilePath = list2[0].SelectNodes("FileSavePath")[0].InnerText;
+                                try
+                                {
+                                    myConvertor.processorSaveFilePath = list2[0].SelectNodes("FileSavePath")[0].InnerText;
+                                }
+                                catch { }
                                 myConvertor.saveFilePath = list2[0].SelectNodes("ProcessorFilePath")[0].InnerText;
+                                
                                 myConvertor.convertionType = convertorData;
 
                                 //   myConvertor.saveFilePath = item.ChildNodes[i].Attributes["FileSavePath"].Value;
@@ -174,6 +179,11 @@ namespace Easynet.Edge.UI.WebPages.Converters
                 myConvertor = new FacebookConvertor(CurrencyCode, dateformat);
 
             }
+            else if (convertor.Equals("CreativeTXTfileConvertor"))
+            {
+                myConvertor = new CreativeTXTfileConvertor();
+            }
+            
             return myConvertor;
 
         }
