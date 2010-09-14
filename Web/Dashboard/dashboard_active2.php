@@ -1,7 +1,7 @@
-ï»¿
+
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns=”http://www.w3.org/1999/xhtml”>
+<html xmlns=?ttp://www.w3.org/1999/xhtml?
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 	<link href="style1.css" rel="stylesheet" type="text/css" />
@@ -86,7 +86,7 @@
 
 	<div id="atten" class="widget rounded">
 	   <div class="header">
-	            <h3>Campaign Performance â€“ ROI</h3>
+	            <h3>Campaign Performance – ROI</h3>
 	            <select id="TopCombo">
 					
 					<option>New Users</option>
@@ -149,7 +149,7 @@
 </div>
 	<div id="trendcahnges" class="widget rounded">
 	 <div class="header">
-               <h3>Fluctuating Campaigns â€“ ROI</h3>
+               <h3>Fluctuating Campaigns – ROI</h3>
                <select id="flcamp">
 					 <option>New Users</option>
 					<option>New Active Users</option>
@@ -353,7 +353,7 @@ $(function(){
     }   
 
 	function LoadMap(startdate,endDate){
-		var so = new SWFObject("ammap/ammap.swf", "ammap", "100%", "388px", "8", "#e8f6f7");
+		var so = new SWFObject("ammap/ammap.swf", "ammap", "100%", "460px", "8", "#e8f6f7");
 		so.addVariable("path", "ammap/");
 		so.addVariable("settings_file", escape("ammap/ammap_settings.xml"));                  // you can set two or more different settings files here (separated by commas)
 		so.addVariable("data_file", escape("ammap/xpath.php"));
