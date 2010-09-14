@@ -286,7 +286,8 @@ namespace Easynet.Edge.UI.WebPages
                 //_sourceSelector.Items.Add("Facebook");
                 _sourceSelector.Items.Add("Bing");
                  _sourceSelector.Items.Add("Yahoo");
-                 _sourceSelector.Items.Add("Customized Creative");
+                 _sourceSelector.Items.Add("CreativeTXTfile");
+                 _sourceSelector.Items.Add("BoTXTfile");
                
             }
             catch (Exception ex)
