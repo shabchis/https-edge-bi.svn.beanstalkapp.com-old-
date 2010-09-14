@@ -3,9 +3,41 @@
 <?php $startdate = $_GET['startDate'];?>
 <?php $endDate = $_GET['endDate'];?>
 <?php $measure = $_GET['measure'];?>
-<?php $startDateName = $_GET['startDateName']; ?>
-<?php $endDateName = $_GET['endDateName']; ?>
+<?php /* $startDateName = $_GET['startDateName']; */ ?>
+<?php /* $endDateName = $_GET['endDateName']; */ ?>
+<?php 
+	switch ($endDate){
+		case 1: 
+		$startDateName = $startdate;
+		$endDateName = "Yesterday";
+		break;
+		case 2: 
+		$startDateName = "Previous 7 days";
+		$endDateName = "Last 7 days";
+		break;
+		case 3: 
+		$startDateName = "Previous 30 days";
+		$endDateName = "Last 30 days";
+	break;
+	case 4: 
+		$startDateName = "Last Month";
+		$endDateName = "This Month";
+	break;
+	case 5: 
+		$startDateName = "Last Month";
+		$endDateName = "Previous Month";
+		break;
+		case 6: 
+		$startDateName = "This Week";
+		$endDateName = "Last Week";
+		break;
+		case 7: 
+		$startDateName = "Previous Week";
+		$endDateName = "Last Week";
+		break;
+	}
 
+?>
 <settings>
   <font>Verdana</font>
   <redraw>1</redraw>
@@ -66,29 +98,20 @@
     <width>0</width>
   </line>
   <graphs>
+<graph gid="0">
 
+</graph>
+<graph gid="0">
+<axis>right</axis>
+<title><?php echo $startDateName ;?></title>
+<color>8D8D8D</color>
+</graph>
+<graph gid="1">
+<axis>right</axis>
+<title><?php echo $endDateName;?></title>
+<color>90B63D</color>
+</graph>
 
-<?php
-$xml = simplexml_load_file("books.xml")
-    or die("Error: Cannot create object");
-
-	// we want to show just <title> nodes
-
-foreach($xml->xpath('//book') as $key=>$value)
-	{
-
-
-
-	        echo '<graph gid="'.$key.'">';
-	        echo '<axis>right</axis>';
-            echo  '<title>'.$value->date.'</title>';
-            echo   '<color>'.$colors[$key].'</color>';
-            echo '</graph>';
-
-	}
-
-
-?>
  </graphs>
 
 <labels>
