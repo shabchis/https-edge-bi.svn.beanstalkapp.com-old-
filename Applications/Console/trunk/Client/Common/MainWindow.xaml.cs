@@ -395,8 +395,17 @@ namespace Easynet.Edge.UI.Client
 				catch (Exception ex)
 				{
 					CurrentPage = null;
-					_currentPageViewer.Content = 
+					string error = 
 						String.Format("Failed to load page. \n\n {0} ({1})", ex.Message, ex.GetType().FullName);
+
+					Exception innerEx = ex.InnerException;
+					while (innerEx != null)
+					{
+						error += String.Format("\n {0} ({1})", innerEx.Message, innerEx.GetType().FullName);
+						innerEx = innerEx.InnerException;
+					}
+
+					_currentPageViewer.Content = error;
 				}
 
 			}
