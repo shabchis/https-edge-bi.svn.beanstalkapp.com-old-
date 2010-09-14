@@ -30,7 +30,7 @@
 		<percent>-31</percent>
 	</campaign>
 	<campaign>
-		<name>FA.Cont -  Romania </name>
+		<name>FA.Cont- Roman </name>
 		<cpa>1,797</cpa>
 			<diff><?php echo rand(-100,100)?></diff>
 			<diff_number>100</diff_number>

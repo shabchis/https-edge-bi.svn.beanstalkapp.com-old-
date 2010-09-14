@@ -59,10 +59,7 @@
         <h3>Channel Performance</h3>
          <select id="GraphCombo">
 	
-		<option>New Users</option>
-		<option>New Active Users</option>
-		<option>CPA</option>
-		<option>Cost</option>
+		<?php include 'measureDropDown.php'; ?>
 		</select>
 		
      </div>
@@ -88,11 +85,8 @@
 	   <div class="header">
 	            <h3>Campaign Performance – ROI</h3>
 	            <select id="TopCombo">
-					
-					<option>New Users</option>
-		<option>New Active Users</option>
-		<option>CPA</option>
-		<option>Cost</option>
+					<?php include 'measureDropDown.php'; ?>
+
 				</select>
 			
 				
@@ -219,14 +213,14 @@ $(document).ready( function(){
  </script>
  <script type="text/javascript">
 
- var startDate = "";
-	var endDate = "";
-	var measure =  $("#GraphCombo option:selected").text();
+	var startDate = $("#yesterdayCombo option:selected").text();
+	var endDate = $("#combo option:selected").val();
+	var measure =  $("#GraphCombo option:selected").val();
 	var startTimeFrame = $("combo option:selected").text();
 	var endTimeFrame = $("second option:selected").text();
 		var bar = $("#weekagograph").height();
 $(function(){	
-	
+	startDate = "Previous Day";
 	var percent = $("span.precent").text();
 
 	var time = 	$("#combo option:selected").val();
@@ -244,26 +238,31 @@ $(function(){
 	ChangeStatus();
 			
 	
-	
+
 		$("#GraphCombo").change(function(){
-			measure  = $("#GraphCombo option:selected").text();
+			 measure =  $("#GraphCombo option:selected").val();
 			LoadGraph(startDate,endDate,measure);
+			
 			})
 	
 		$("#combo").change(function(){
+		// var endDate = $("#combo option:selected").val()
 			var text = $("#combo option:selected").text();
 			var selectValue = $("#combo option:selected").val();
 			var yesterday = $("<select id='yesterdayCombo'><option value = '1'>Previous Day</option><option value ='2'>7 days ago</option></select>");
+				var endDate = $("#combo option:selected").val();
+				startDate = "Previous Day";
 			$('span.timevalue').empty();
 			$('.equal').empty();
 				
 				ChangeStatus();
 	 			$('span.timevalue').append(text);
-	 			getMainTime();
+				
+	 			// getMainTime();
 				LoadMap(startDate,endDate);
 				LoadTopCampaigns();
 				LoadWorstCampaigns();
-			
+			LoadGraph(startDate,endDate,measure);
 				
 				
 
@@ -271,23 +270,25 @@ $(function(){
 		
 	
 		$("#yesterdayCombo").change(function(){
+		startDate = $("#yesterdayCombo option:selected").text();
 		LoadGraph(startDate,endDate,measure);
 	})
 	 $("select#second").change(function(){
 		 var sectionTime = $("#second option:selected").val();
 		 
-		 getSectionTime();
-		LoadGraph(startDate,endDate,measure);
+		// getSectionTime();
+		// LoadGraph(startDate,endDate,measure);
 	
 		 })		
 
-		 getMainTime();
-		 getSectionTime();
+		 // getMainTime();
+		 // getSectionTime();
 		LoadMap(startDate,endDate);
 		LoadTopCampaigns();
 		LoadWorstCampaigns();
-		LoadGraph(startDate,endDate,measure,startTimeFrame,endTimeFrame);
-		Colorise();
+		LoadGraph(startDate,endDate,measure);
+		// LoadGraph(startDate,endDate,measure,startTimeFrame,endTimeFrame);
+	
 	
 })
 	$("#TopCombo").change(function(){
@@ -334,14 +335,15 @@ $(function(){
 				}
 	}
 	
-    function LoadGraph(startdate,endDate,measure,startTimeFrame,endTimeFrame){
-
+    function LoadGraph(startdate,endDate,measure){
+			
                var so = new SWFObject("amcolumn/amcolumn.swf", "amcolumn", "100%", "300", "8", "#FFFFFF");
                so.addVariable("path", "amcolumn/");
                // so.addVariable("settings_file", encodeURIComponent("amcolumn/amcolumn_settings.xml"));        // you can set two or more different settings files here (separated by commas)
-               so.addVariable("settings_file", encodeURIComponent("amcolumn/colsettings.php?startDate="+startdate+"&startDateName="+startTimeFrame+"&endDate="+endDate+"&endDateName="+endTimeFrame+"&measure="+measure+""));                     
-			 so.addVariable("data_file", encodeURIComponent("amcolumn/amcolumn_data.php"));
-            //       so.addVariable("data_file", encodeURIComponent("amcolumn/coldata.php?startDate="+startdate+"&endDate="+endDate+""));                   
+               so.addVariable("settings_file", encodeURIComponent("amcolumn/colsettings.php?measure="+measure+"&endDate="+endDate+"&startDate="+startdate+""));                          
+			 so.addVariable("data_file", encodeURIComponent("amcolumn/amcolumn_data.php?startDate="+startdate+"&endDate="+endDate+"&measure="+measure+""));
+            //       so.addVariable("data_file", encodeURIComponent("amcolumn/coldata.php?startDate="+startdate+"&endDate="+endDate+""));                  
+ // so.addVariable("settings_file", encodeURIComponent("amcolumn/colsettings.php?startDate="+startdate+"&startDateName="+startTimeFrame+"&endDate="+endDate+"&endDateName="+endTimeFrame+"&measure="+measure+""));     			
             //	so.addVariable("chart_data", encodeURIComponent("data in CSV or XML format"));                // you can pass chart data as a string directly from this file
             //	so.addVariable("chart_settings", encodeURIComponent("<settings>...</settings>"));             // you can pass chart settings as a string directly from this file
             //	so.addVariable("additional_chart_settings", encodeURIComponent("<settings>...</settings>"));  // you can append some chart settings to the loaded ones
@@ -350,10 +352,11 @@ $(function(){
             //  so.addVariable("preloader_color", "#000000");
             //  so.addVariable("error_loading_file", "ERROR LOADING FILE");                                   // you can set custom "error loading file" text here
                so.write("weekagograph");
+			   console.log(measure);
     }   
 
 	function LoadMap(startdate,endDate){
-		var so = new SWFObject("ammap/ammap.swf", "ammap", "100%", "388px", "8", "#e8f6f7");
+		var so = new SWFObject("ammap/ammap.swf", "ammap", "100%", "368px", "8", "#e8f6f7");
 		so.addVariable("path", "ammap/");
 		so.addVariable("settings_file", escape("ammap/ammap_settings.xml"));                  // you can set two or more different settings files here (separated by commas)
 		so.addVariable("data_file", escape("ammap/xpath.php"));
