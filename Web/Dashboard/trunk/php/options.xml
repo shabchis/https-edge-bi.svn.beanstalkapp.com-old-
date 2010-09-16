@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<date>
+	<time value="1">Yesterday</time>
+	<time value="2">Last 7 days</time>
+	<time value="3">Last 30 days</time>
+	<time value="4">This Month</time>
+	<time value="5">Last Month</time>
+	<time value="6">This Week</time>
+	<time value="7">Last Week</time>
+</date>
