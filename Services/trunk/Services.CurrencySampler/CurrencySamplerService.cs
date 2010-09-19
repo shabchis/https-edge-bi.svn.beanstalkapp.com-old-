@@ -87,7 +87,7 @@ namespace Easynet.Edge.Services.CurrencySampler
 																	@dateValue:int)");
 								cmd.Parameters["@rateDateTime"].Value = DateTime.Now;
 								cmd.Parameters["@id"].Value = currencyDictionary[rate.To.Symbol.ToString()];
-								cmd.Parameters["@rate"].Value = rate.Rate;
+								cmd.Parameters["@rate"].Value = rate.Rate;//digit after point?? , double to decimal??
 								cmd.Parameters["@dateValue"].Value = Core.Utilities.DayCode.ToDayCode(DateTime.Today);
 								cmd.ExecuteNonQuery();
 								
