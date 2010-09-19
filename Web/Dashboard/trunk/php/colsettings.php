@@ -3,9 +3,16 @@
 <?php $startdate = $_GET['startDate'];?>
 <?php $endDate = $_GET['endDate'];?>
 <?php $measure = $_GET['measure'];?>
-<?php /* $startDateName = $_GET['startDateName']; */ ?>
-<?php /* $endDateName = $_GET['endDateName']; */ ?>
+<?php  $startDateName = $_GET['startDateName'];  ?>
+<?php  $endDateName = $_GET['endDateName'];  ?>
 <?php 
+
+switch ($startdate){
+		case 1:
+			$startdate  =  "Previous Day";
+			case 2:
+			$startdate  =  "7 days ago";
+			}
 	switch ($endDate){
 		case 1: 
 		$startDateName = $startdate;
@@ -46,6 +53,7 @@
     <border_color>FFFFFF</border_color>
     <border_alpha>20</border_alpha>
   </background>
+  
   <plot_area>
     <margins>
       <left>50</left>
@@ -88,9 +96,13 @@
     <border_width>1</border_width>
     <border_color>FFFFFF</border_color>
   </balloon>
+  <error_messages>
+    <color>90B63D</color>
+    <alpha>100</alpha>
+  </error_messages>
   <column>
     <width>85</width>
-    <balloon_text>{title}: {value} <?php echo $measure?></balloon_text>
+    <balloon_text>{title}: {value} <?php echo $measure;?></balloon_text>
     <grow_time>3</grow_time>
     <grow_effect>regular</grow_effect>
   </column>
