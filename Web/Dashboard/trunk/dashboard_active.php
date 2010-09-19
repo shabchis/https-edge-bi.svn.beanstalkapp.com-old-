@@ -17,11 +17,11 @@
 <body>
 	<div id="dropdown"> 
 		<select name="combo" id="combo">
-					<option value="1"><span class="period">Yesterday</span> - <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?></option>
+					<option value="1"><span class="period">Yesterday</span> - <span class="dates"><?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?></option></span>
 						<option value="2"><span class="period">Last 7 days</span> - <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?> - <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?></option>
 						<option value="3"><span class="period">Last 30 days</span> -  <?php echo (date("d/m/y", mktime(0,0,0,date("m")-1,date("d")-1,date("Y"))));?> -  <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?></option>
-						<option value="4"><span class="period">This Month</span> - <?php echo date("m/y",mktime(0,0,0,date("m"),date("d"),date("Y")));?></option>
-						<option value="5"><span class="period">Last Month</span> - <?php echo date("m/y",strtotime('-1 month'));?></option>
+						<option value="4"><span class="period">This Month</span> - <?php echo date("M",mktime(0,0,0,date("m"),date("d"),date("Y")));?></option>
+						<option value="5"><span class="period">Last Month</span> - <?php echo date("M",strtotime('-1 month'));?></option>
 						<option value="6"><span class="period">This Week</span> - <?php echo date("d/m/y",strtotime('last sunday'));?> - <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?></option>
 						<option value="7"><span class="period">Last Week</span> - <?php echo date("d/m/y",strtotime('-1 week'));?></option>
 		</select>
@@ -216,7 +216,7 @@ $(function(){
 	
 		$("#yesterdayCombo").change(function(){
 		startDate = $("#yesterdayCombo option:selected").val();
-		LoadGraph(startDate,endDate,measure);
+		LoadGraph(startDate,endDate,measure,measureText);
 	})
 	 $("select#second").change(function(){
 		 var sectionTime = $("#second option:selected").val();
@@ -242,6 +242,7 @@ $(function(){
 
 	
 	})
+
 	
 	$("#MapCombo").change(function(){
 		LoadMap(startDate,endDate);

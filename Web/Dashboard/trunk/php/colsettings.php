@@ -3,15 +3,17 @@
 <?php $startdate = $_GET['startDate'];?>
 <?php $endDate = $_GET['endDate'];?>
 <?php $measure = $_GET['measure'];?>
-<?php  $startDateName = $_GET['startDateName'];  ?>
-<?php  $endDateName = $_GET['endDateName'];  ?>
+<?php $startDateName = $_GET['startDateName'];  ?>
+<?php $endDateName = $_GET['endDateName'];  ?>
 <?php 
 
-switch ($startdate){
-		case 1:
+		switch ($startdate){
+			case 1:
 			$startdate  =  "Previous Day";
+			break;
 			case 2:
 			$startdate  =  "7 days ago";
+			break;
 			}
 	switch ($endDate){
 		case 1: 
@@ -53,10 +55,13 @@ switch ($startdate){
     <border_color>FFFFFF</border_color>
     <border_alpha>20</border_alpha>
   </background>
-  
+  <decimals_separator>.</decimals_separator>
+  <thousands_separator>,</thousands_separator>
+  <add_time_stamp>true</add_time_stamp>
+  <digits_after_decimal>1</digits_after_decimal>
   <plot_area>
     <margins>
-      <left>50</left>
+      <left>60</left>
       <right>0</right>
     </margins>
   </plot_area>
