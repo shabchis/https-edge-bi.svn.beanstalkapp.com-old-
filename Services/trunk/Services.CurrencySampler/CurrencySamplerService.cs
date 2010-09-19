@@ -43,25 +43,25 @@ namespace Easynet.Edge.Services.CurrencySampler
 				}
 				reader.Close();
 				toCurrency.Remove(toCurrency.Length - 1, 1); // remove last "," 
+
 			#endregion
-				
-				
 
 
-		#if DEBUG  //Only for tests without the real service
-				CrossRate[] rates = new CrossRate[2];
-				CrossRate rt = new CrossRate() { To = new Currency() { Name = "EUR" }, Rate = 1.3 };
-				rates[0] = rt;
-				rt = new CrossRate() { To = new Currency() { Name = "EUS" }, Rate = 2.3 };
-				rates[1] = rt;
+
+				////Only for tests without the real service
+		  //      CrossRate[] rates = new CrossRate[2];
+		  //      CrossRate rt = new CrossRate() { To = new Currency() { Name = "EUR" }, Rate = 1.3 };
+		  //      rates[0] = rt;
+		  //      rt = new CrossRate() { To = new Currency() { Name = "EUS" }, Rate = 2.3 };
+		  //      rates[1] = rt;
 				 
 	
 
 
 
-#else
-			CrossRate[] rates = exchangeRates.GetLatestCrossRates(fromCurrency, toCurrecny);
-#endif
+				//the service
+				CrossRate[] rates = exchangeRates.GetLatestCrossRates(fromCurrency, toCurrency.ToString());
+
 
 				if (rates != null)
 				{
@@ -86,7 +86,7 @@ namespace Easynet.Edge.Services.CurrencySampler
 																	@rate:Decimal,
 																	@dateValue:int)");
 								cmd.Parameters["@rateDateTime"].Value = DateTime.Now;
-								cmd.Parameters["@id"].Value = currencyDictionary[rate.To.Name];
+								cmd.Parameters["@id"].Value = currencyDictionary[rate.To.Symbol.ToString()];
 								cmd.Parameters["@rate"].Value = rate.Rate;
 								cmd.Parameters["@dateValue"].Value = Core.Utilities.DayCode.ToDayCode(DateTime.Today);
 								cmd.ExecuteNonQuery();
