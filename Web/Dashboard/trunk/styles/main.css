@@ -314,3 +314,9 @@ position:absolute;
 .equal{
 display:inline;
 }
+
+select span.dates{
+
+color:red;
+
+}

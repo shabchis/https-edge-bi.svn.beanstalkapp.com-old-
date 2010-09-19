@@ -6,9 +6,10 @@
 	switch ($startdate){
 		case 1:
 			$yesterdayStart  =  date("Ymd", mktime(0,0,0,date("m"),date("d")-2,date("Y")));
-	
+		break;
 		case 2:
 			$yesterdayStart  =  date("Ymd", mktime(0,0,0,date("m"),date("d")-8,date("Y")));
+			break;
 			}
 	switch ($endDate){
 	case 1: 
@@ -58,7 +59,7 @@
 // $url ='http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Data?AccountID=7&MeasureID=1&DateRanges=20100917-20100917,20100811-20100917&Diff=True&Group_By=channel&Top=10';
  $url = 'http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Data?AccountID=95&MeasureID='.$measureId.'&DateRanges='.$startDateName1.'-'.$startDateName2.','.$endDateName1.'-'.$endDateName2.'&Diff=True&Group_By=channel&Top=10';
  
-
+echo $url;
  ?>
 
 <chart>
@@ -81,7 +82,7 @@ foreach($xml as $measure){
   <?php
     echo '<graph gid="0">';
 	foreach($xml as  $value){
-
+    
     echo '<value xid="'.$value->ID.'">'.$value->Value->clsvalue[0]->ValueData.'</value>' ;
 
 }
