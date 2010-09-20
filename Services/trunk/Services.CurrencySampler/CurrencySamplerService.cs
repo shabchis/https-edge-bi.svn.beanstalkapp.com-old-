@@ -13,6 +13,9 @@ namespace Easynet.Edge.Services.CurrencySampler
 {
 	public class CurrencySamplerService : Service
 	{
+		private const string ServiceUserName = "UserName";
+		private const string ServicePassword = "Password";
+		private const string ServiceFromCurrency = "FromCurrency";
 		protected override ServiceOutcome DoWork()
 		{
 
@@ -21,12 +24,12 @@ namespace Easynet.Edge.Services.CurrencySampler
 			XigniteCurrencies exchangeRates;
 			exchangeRates = new XigniteCurrencies();
 			Header header = new Header();
-			header.Username = Instance.Configuration.Options["UserName"];
-			header.Password = Instance.Configuration.Options["Password"];
+			header.Username = Instance.Configuration.Options[ServiceUserName];
+			header.Password = Instance.Configuration.Options[ServicePassword];
 			exchangeRates.HeaderValue = header;
 
 
-			string fromCurrency = Instance.Configuration.Options["FromCurrency"];
+			string fromCurrency = Instance.Configuration.Options[ServiceFromCurrency];
 			StringBuilder toCurrency = new StringBuilder();
 			using (DataManager.Current.OpenConnection())
 			{
@@ -36,9 +39,14 @@ namespace Easynet.Edge.Services.CurrencySampler
 				SqlDataReader reader = cmd.ExecuteReader();
 				while (reader.Read())
 				{
-					currencyDictionary.Add(reader.GetString(1), reader.GetInt32(0));
-					toCurrency.Append(reader.GetString(1));
-					toCurrency.Append(",");
+					if (reader.GetString(1).Trim().ToUpper()!=fromCurrency.Trim().ToUpper())
+					{
+						currencyDictionary.Add(reader.GetString(1), reader.GetInt32(0));
+						toCurrency.Append(reader.GetString(1));
+						toCurrency.Append(",");
+						
+					}
+					
 
 				}
 				reader.Close();
@@ -48,14 +56,15 @@ namespace Easynet.Edge.Services.CurrencySampler
 
 
 
-				////Only for tests without the real service
-		  //      CrossRate[] rates = new CrossRate[2];
-		  //      CrossRate rt = new CrossRate() { To = new Currency() { Name = "EUR" }, Rate = 1.3 };
-		  //      rates[0] = rt;
-		  //      rt = new CrossRate() { To = new Currency() { Name = "EUS" }, Rate = 2.3 };
-		  //      rates[1] = rt;
-				 
-	
+			/*	-----------------------Only for tests without the real service-----------------------------
+
+				CrossRate[] rates = new CrossRate[2];
+				CrossRate rt = new CrossRate() { To = new Currency() { Name = "EUR" }, Rate = 1.3 };
+				rates[0] = rt;
+				rt = new CrossRate() { To = new Currency() { Name = "EUS" }, Rate = 2.3 };
+				rates[1] = rt;
+
+				-----------------------Only for tests without the real service-----------------------------*/
 
 
 
@@ -63,7 +72,9 @@ namespace Easynet.Edge.Services.CurrencySampler
 				CrossRate[] rates = exchangeRates.GetLatestCrossRates(fromCurrency, toCurrency.ToString());
 
 
-				if (rates != null)
+				
+				//////check service outcome
+				if (rates != null) 
 				{
 					if (rates[0].Outcome != OutcomeTypes.Success)
 					{
@@ -72,7 +83,7 @@ namespace Easynet.Edge.Services.CurrencySampler
 					else
 					{
 
-						
+						///Update ExchangeRate table
 						foreach (CrossRate rate in rates)
 						{					
 								cmd = DataManager.CreateCommand(@"INSERT INTO [testdb].[dbo].[ExchangeRates]
