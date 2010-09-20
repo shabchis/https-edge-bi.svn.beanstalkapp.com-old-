@@ -31,26 +31,30 @@ namespace Easynet.Edge.Services.CurrencySampler
 
 			string fromCurrency = Instance.Configuration.Options[ServiceFromCurrency];
 			StringBuilder toCurrency = new StringBuilder();
+			Dictionary<string, int> currencyDictionary;
 			using (DataManager.Current.OpenConnection())
 			{
 				SqlCommand cmd = DataManager.CreateCommand(@"SELECT ID,CurrencyIso
 												FROM Currencies");
-				Dictionary<string, int> currencyDictionary = new Dictionary<string, int>();
-				SqlDataReader reader = cmd.ExecuteReader();
-				while (reader.Read())
+				currencyDictionary = new Dictionary<string, int>();
+				using (SqlDataReader reader = cmd.ExecuteReader())
 				{
-					if (reader.GetString(1).Trim().ToUpper()!=fromCurrency.Trim().ToUpper())
+					while (reader.Read())
 					{
-						currencyDictionary.Add(reader.GetString(1), reader.GetInt32(0));
-						toCurrency.Append(reader.GetString(1));
-						toCurrency.Append(",");
-						
-					}
-					
+						if (reader.GetString(1).Trim().ToUpper() != fromCurrency.Trim().ToUpper())
+						{
+							currencyDictionary.Add(reader.GetString(1), reader.GetInt32(0));
+							toCurrency.Append(reader.GetString(1));
+							toCurrency.Append(",");
 
+						}
+
+
+					}
+					reader.Close();
 				}
-				reader.Close();
-				toCurrency.Remove(toCurrency.Length - 1, 1); // remove last "," 
+			}
+			toCurrency.Remove(toCurrency.Length - 1, 1); // remove last "," 
 
 			#endregion
 
@@ -68,40 +72,50 @@ namespace Easynet.Edge.Services.CurrencySampler
 
 
 
-				//the service
-				CrossRate[] rates = exchangeRates.GetLatestCrossRates(fromCurrency, toCurrency.ToString());
+			//the service
+			CrossRate[] rates;
+			try
+			{
+				rates = exchangeRates.GetLatestCrossRates(fromCurrency, toCurrency.ToString());
+			}
+			catch (Exception ex)
+			{
+
+				throw new Exception("Error Connecting the WebService", ex);
+			}
 
 
-				
-				//////check service outcome
-				if (rates != null) 
+
+			//////check service outcome
+			if (rates != null)
+			{
+				if (rates[0].Outcome != OutcomeTypes.Success)
 				{
-					if (rates[0].Outcome != OutcomeTypes.Success)
+					throw new Exception(string.Format("Web service error:{0}", rates[0].Message));
+				}
+				else
+				{
+					using (DataManager.Current.OpenConnection())
 					{
-						throw new Exception(string.Format("Web service error:{0}", rates[0].Message));
-					}
-					else
-					{
-
 						///Update ExchangeRate table
 						foreach (CrossRate rate in rates)
-						{					
-								cmd = DataManager.CreateCommand(@"INSERT INTO [testdb].[dbo].[ExchangeRates]
+						{
+							SqlCommand sqlCommandInsertExchangeRates = DataManager.CreateCommand(@"INSERT INTO [testdb].[dbo].[ExchangeRates]
 																   ([RateDateTime]
 																   ,[currencyID]
 																   ,[Rate]
-																	,[DateValue])
+																	,[DayCode])
 																	VALUES (
 																	@rateDateTime:DateTime,
 																	@id:int,																	
 																	@rate:Decimal,
-																	@dateValue:int)");
-								cmd.Parameters["@rateDateTime"].Value = DateTime.Now;
-								cmd.Parameters["@id"].Value = currencyDictionary[rate.To.Symbol.ToString()];
-								cmd.Parameters["@rate"].Value = rate.Rate;//digit after point?? , double to decimal??
-								cmd.Parameters["@dateValue"].Value = Core.Utilities.DayCode.ToDayCode(DateTime.Today);
-								cmd.ExecuteNonQuery();
-								
+																	@DayCode:int)");
+							sqlCommandInsertExchangeRates.Parameters["@rateDateTime"].Value = DateTime.Now;
+							sqlCommandInsertExchangeRates.Parameters["@id"].Value = currencyDictionary[rate.To.Symbol.ToString()];
+							sqlCommandInsertExchangeRates.Parameters["@rate"].Value = rate.Rate;//digit after point?? , double to decimal??
+							sqlCommandInsertExchangeRates.Parameters["@DayCode"].Value = Core.Utilities.DayCode.ToDayCode(DateTime.Today);
+							sqlCommandInsertExchangeRates.ExecuteNonQuery();
+
 						}
 					}
 				}
