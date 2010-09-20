@@ -13,7 +13,7 @@ foreach($xml->xpath('//Measure') as $measure)
 	}
 */
 
-if(!$xml=simplexml_load_file('http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Measures?AccountID=7')){
+if(!$xml=simplexml_load_file('http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Measures?AccountID=61')){
     trigger_error('Error reading XML file',E_USER_ERROR);
 }
 
