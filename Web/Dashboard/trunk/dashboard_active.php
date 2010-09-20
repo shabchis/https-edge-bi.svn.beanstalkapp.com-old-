@@ -17,13 +17,13 @@
 <body>
 	<div id="dropdown"> 
 		<select name="combo" id="combo">
-					<option value="1"><span class="period">Yesterday</span> - <span class="dates"><?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?></option></span>
-						<option value="2"><span class="period">Last 7 days</span> - <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?> - <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?></option>
-						<option value="3"><span class="period">Last 30 days</span> -  <?php echo (date("d/m/y", mktime(0,0,0,date("m")-1,date("d")-1,date("Y"))));?> -  <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?></option>
-						<option value="4"><span class="period">This Month</span> - <?php echo date("M",mktime(0,0,0,date("m"),date("d"),date("Y")));?></option>
-						<option value="5"><span class="period">Last Month</span> - <?php echo date("M",strtotime('-1 month'));?></option>
-						<option value="6"><span class="period">This Week</span> - <?php echo date("d/m/y",strtotime('last sunday'));?> - <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?></option>
-						<option value="7"><span class="period">Last Week</span> - <?php echo date("d/m/y",strtotime('-1 week'));?></option>
+					<option value="1"><span class="period">Yesterday</span>	 (<span class="dates"><?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>)</option></span>
+						<option value="2"><span class="period">Last 7 days</span>	(<?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?> - <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>)</option>
+						<option value="3"><span class="period">Last 30 days</span>	(<?php echo (date("d/m/y", mktime(0,0,0,date("m")-1,date("d")-1,date("Y"))));?> -  <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>)</option>
+						<option value="4"><span class="period">This Month</span>	(<?php echo date("M",mktime(0,0,0,date("m"),date("d"),date("Y")));?>)</option>
+						<option value="5"><span class="period">Last Month</span>	(<?php echo date("M",strtotime('-1 month'));?>)</option>
+						<option value="6"><span class="period">This Week</span>	(<?php echo date("d/m/y",strtotime('last sunday'));?> - <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>)</option>
+						<option value="7"><span class="period">Last Week</span>	(<?php echo date("d/m/y",strtotime('-1 week'));?>)</option>
 		</select>
 	</div>
 	
@@ -157,7 +157,8 @@
 	DD_roundies.addRule('.header', '5px 5px 0px 0px');
   DD_roundies.addRule('.tabnav ui-tabs-nav>li', '10px');
 
-	var startDate = $("#yesterdayCombo option:selected").text();
+	var startDateText = $("#yesterdayCombo option:selected").text();
+	var startDate = $("#yesterdayCombo option:selected").val();
 	var endDate = $("#combo option:selected").val();
 	var measure =  $("#GraphCombo option:selected").val();
 	var measureText = $("#GraphCombo option:selected").text();
@@ -165,7 +166,7 @@
 	var endTimeFrame = $("second option:selected").text();
 	var bar = $("#weekagograph").height();
 $(function(){	
-	startDate = "Previous Day";
+	
 	var percent = $("span.precent").text();
 
 	var time = 	$("#combo option:selected").val();
@@ -182,42 +183,34 @@ $(function(){
 	ChangeStatus();
 			
 	
-
-		$("#GraphCombo").change(function(){
-			 measure =  $("#GraphCombo option:selected").val();
-			 measureText = $("#GraphCombo option:selected").text();
-			LoadGraph(startDate,endDate,measure,measureText);
-			
-			})
-	
+		
+	 graphcombo();
 		$("#combo").change(function(){
 		// var endDate = $("#combo option:selected").val()
-			var text = $("#combo option:selected").text();
-			var selectValue = $("#combo option:selected").val();
+			// var text = $("#combo option:selected").text();
+			// var selectValue = $("#combo option:selected").val();
 			var yesterday = $("<select id='yesterdayCombo'><option value = '1'>Previous Day</option><option value ='2'>7 days ago</option></select>");
 				var endDate = $("#combo option:selected").val();
-				startDate = "Previous Day";
+				// startDate = "Previous Day";
 			$('span.timevalue').empty();
 			$('.equal').empty();
 				
 				ChangeStatus();
 	 			$('span.timevalue').append(text);
+				graphcombo();
 				
 	 			// getMainTime();
 				LoadMap(startDate,endDate);
-				LoadTopCampaigns();
-				LoadWorstCampaigns();
-			LoadGraph(startDate,endDate,measure,measureText);
-				
-				
-
-		})
-		
+				// LoadTopCampaigns();
+				// LoadWorstCampaigns();
+				graphcombo();
+				ChangeYesterdayMatch();
+				LoadGraph(startDate,endDate,measure,measureText);
+				 
 	
-		$("#yesterdayCombo").change(function(){
-		startDate = $("#yesterdayCombo option:selected").val();
-		LoadGraph(startDate,endDate,measure,measureText);
-	})
+		})
+			
+	
 	 $("select#second").change(function(){
 		 var sectionTime = $("#second option:selected").val();
 		 
@@ -229,28 +222,33 @@ $(function(){
 		 // getMainTime();
 		 // getSectionTime();
 		LoadMap(startDate,endDate);
-		LoadTopCampaigns();
-		LoadWorstCampaigns();
-		LoadGraph(startDate,endDate,measure,measureText);
+	 // LoadTopCampaigns();
+		 // LoadWorstCampaigns();
+		 LoadGraph(startDate,endDate,measure,measureText);
+		 ChangeYesterdayMatch();
+		
 		// LoadGraph(startDate,endDate,measure,startTimeFrame,endTimeFrame);
 	
 	
 })
 	$("#TopCombo").change(function(){
-		LoadTopCampaigns();
-		LoadWorstCampaigns();
+	measure = $("#TopCombo option:selected").val();
+	
+	
+		// LoadTopCampaigns(endDate,measure);
+	
 
 	
 	})
 
-	
+	ChangeYesterdayMatch();
 	$("#MapCombo").change(function(){
 		LoadMap(startDate,endDate);
 	})
 	
 	$("#flcamp").change(function(){
-		LoadWorstCampaigns();
-		LoadTopCampaigns();
+		// LoadWorstCampaigns();
+		// LoadTopCampaigns();
 	})
 	
 	function ChangeStatus(){
@@ -284,13 +282,29 @@ $(function(){
 				}
 	}
 	
-    function LoadGraph(startdate,endDate,measure,measureText){
+	function ChangeYesterdayMatch(){
+		$("#yesterdayCombo").change(function(){
+		startDate = $("#yesterdayCombo option:selected").val();
+		LoadGraph(startDate,endDate,measure,measureText);
+	})
+	
+	}
+	function graphcombo() {
+		$("#GraphCombo").change(function(){
+			 measure =  $("#GraphCombo option:selected").val();
+			 measureText = $("#GraphCombo option:selected").text();
+			LoadGraph(startDate,endDate,measure,measureText);
 			
+			})
+			}
+    function LoadGraph(startDate,endDate,measure,measureText){
+				console.log('php/amcolumn_data.php?endDate='+endDate+'&measure='+measure+'&startdate='+startDate+'');
+				console.log("php/colsettings.php?measure="+measureText+"&endDate="+endDate+"&startDate="+startDate+"");
                var so = new SWFObject("charts/amcolumn/amcolumn.swf", "amcolumn", "100%", "300", "8", "#FFFFFF");
                so.addVariable("path", "charts/amcolumn/");
                // so.addVariable("settings_file", encodeURIComponent("amcolumn/amcolumn_settings.xml"));        // you can set two or more different settings files here (separated by commas)
-               so.addVariable("settings_file", encodeURIComponent("php/colsettings.php?measure="+measureText+"&endDate="+endDate+"&startDate="+startdate+""));                          
-			 so.addVariable("data_file", encodeURIComponent("php/amcolumn_data.php?endDate="+endDate+"&measure="+measure+"&startdate="+startdate+""));
+               so.addVariable("settings_file", encodeURIComponent("php/colsettings.php?measure="+measureText+"&endDate="+endDate+"&startDate="+startDate+""));                          
+			 so.addVariable("data_file", encodeURIComponent("php/amcolumn_data.php?endDate="+endDate+"&measure="+measure+"&startdate="+startDate+""));
 			  // so.addVariable("data_file", encodeURIComponent("php/amcolumn_data.php?startDate="+startdate+"&endDate="+endDate+"&measure="+measure+""));
             //       so.addVariable("data_file", encodeURIComponent("amcolumn/coldata.php?startDate="+startdate+"&endDate="+endDate+""));                  
  // so.addVariable("settings_file", encodeURIComponent("amcolumn/colsettings.php?startDate="+startdate+"&startDateName="+startTimeFrame+"&endDate="+endDate+"&endDateName="+endTimeFrame+"&measure="+measure+""));     			
@@ -321,26 +335,31 @@ $(function(){
         so.write("map1");
 
 		}
-	function LoadTopCampaigns(){
+	function LoadTopCampaigns(endDate,measure){
+	var orderby = 0;
+	
 			$('tr.topcpa').remove();
 			$('tr.worstcpa').remove();
-	$.ajax({
+			orderby = 'DESC';
+			$.ajax({
+	
+	
 		type: "GET",
-		url: "php/campaigns.php",
+		url: "php/campaignPerformance.php?endDate=1&startdate=1&measure=1&orderby='"+orderby+"'",
 		dataType: "xml",
 		success: function(xml) {
 				
+				
 			$(xml).find('campaign').each(function(){
 				var name = $(this).find('name').text();
-				var cpa = $(this).find('cpa').text();
+				var cpa = $(this).find('value').text();
 				var diff = $(this).find('diff').text();
-					var number = $(this).find('diff_number').text();
-				var	percent = $(this).find('percent').text();
+			
 			
 				
 					$('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#top');
 				// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp('+number+') </td></tr>').appendTo('#upward');
-		$('<tr class="worstcpa"><td>'+name+'</td><td>'+percent+'%</td><td>('+number+')</td></tr>').appendTo("#upward");
+		 // $('<tr class="worstcpa"><td>'+name+'</td><td>'+percent+'%</td><td>('+number+')</td></tr>').appendTo("#upward");
 				
 			
 				$("span.precent:contains(-)").css('color','red').parent("td.last").css('color','red');
@@ -351,6 +370,36 @@ $(function(){
 			});
 		}
 	});
+		orderby = 'ASC';
+	$.ajax({
+	
+	
+		type: "GET",
+		url: "php/campaignPerformance.php?endDate=1&startdate=1&measure=1&orderby=desc",
+		dataType: "xml",
+		success: function(xml) {
+				
+			$(xml).find('campaign').each(function(){
+				var name = $(this).find('name').text();
+				var cpa = $(this).find('value').text();
+				var diff = $(this).find('diff').text();
+				
+			
+				
+					$('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#Worse');
+				// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp('+number+') </td></tr>').appendTo('#upward');
+		 // $('<tr class="worstcpa"><td>'+name+'</td><td>'+percent+'%</td><td>('+number+')</td></tr>').appendTo("#upward");
+				
+			
+				$("span.precent:contains(-)").css('color','red').parent("td.last").css('color','red');
+			
+				$("span.precent").not(":contains(-)").css('color','green').parent("td.last").css('color','green');
+				
+			
+			});
+		}
+	});
+	
 	}
 
 	function LoadWorstCampaigns(){
@@ -368,7 +417,7 @@ $(function(){
 					var number = $(this).find('diff_number').text();
 						var	percent = $(this).find('percent').text();
 					// $('<tr class="worstcpa"><td>'+name+'</td><td class="color">'+cpa+'&nbsp &nbsp(<span class="precent">'+diff+'</span>%)</td></tr>').appendTo('#Worse');
-					$('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class ="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#Worse');
+					// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class ="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#Worse');
 						$('<tr class="worstcpa"><td>'+name+'</td><td>'+percent+'%</td><td>('+number+')</td></tr>').appendTo('#downward');
 		 	
 				$("span.precent:contains(-)").css('color','red').parent(".con").css('color','red');

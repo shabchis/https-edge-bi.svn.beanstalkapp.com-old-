@@ -1,8 +1,10 @@
-﻿<?php  header ("Content-Type:text/xml");
-		
-			$startdate = $_GET['startdate'];
-			$endDate = $_GET['endDate'];
-			$measureId = $_GET['measure'];
+<?php  header ("Content-Type:text/xml");
+
+	$startdate = $_GET['startdate'];
+	$measureId = $_GET['measure'];
+	$endDate = $_GET['endDate'];
+	$orderby = $_GET['orderby'];
+	
 	switch ($startdate){
 		case 1:
 			$yesterdayStart  =  date("Ymd", mktime(0,0,0,date("m"),date("d")-2,date("Y")));
@@ -55,52 +57,25 @@
 		$endDateName2 = date("Ymd",strtotime('last sunday'));
 		break;
 	}
+?>
+<campaigns>
+<?php
 
-// $url ='http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Data?AccountID=7&MeasureID=1&DateRanges=20100917-20100917,20100811-20100917&Diff=True&Group_By=channel&Top=10';
-$url = 'http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Data?AccountID=61&MeasureID='.$measureId.'&DateRanges='.$startDateName1.'-'.$startDateName2.','.$endDateName1.'-'.$endDateName2.'&Diff=True&Group_By=channel&Top=10';
-echo $url;
- ?>
+ // $url = 'http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Data?AccountID=95&MeasureID='.$measureId.'&DateRanges='.$startDateName1.'-'.$startDateName2.','.$endDateName1.'-'.$endDateName2.'&Diff=True&Group_By=campaign&Top=10&dataSort=Diff2&viewSort=value1&dataSortDir=desc';
+$url = 'http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Data?AccountID=61&MeasureID=1&DateRanges=20100801-20100901,20100820-20100831&Diff=True&Group_By=campaign&Top=10&dataSort=Diff2&viewSort=value1&dataSortDir=ASC';
 
-<chart>
-  <series>
-
-  <?php
-  if(!$xml=simplexml_load_file($url)){
+    if(!$xml=simplexml_load_file($url)){
     trigger_error('Error reading XML file',E_USER_ERROR);
 }
 
-foreach($xml as $measure){
-
-    echo '<value xid="'.$measure->ID.'"> '.$measure->Name.'</value>' ;
-	
+foreach($xml as  $value){
+	echo '<campaign>';
+    echo '<name>'.$value->Name.'</name>';
+	echo '<value>'.$value->Value->clsvalue[0]->ValueData.'</value>';
+	echo '<diff>'.$value->Value->clsvalue[2]->ValueData.'</diff>';
+	echo '</campaign>';
 }
-?>
 
-  </series>
-  <graphs>
-  <?php
-    echo '<graph gid="0">';
-	foreach($xml as  $value){
-    
-    echo '<value xid="'.$value->ID.'">'.$value->Value->clsvalue[0]->ValueData.'</value>' ;
+	?>
 
-}
-     
-	  ?>
-	
-    </graph>
-		 
-	<?php
-   echo '<graph gid="1">';
-      foreach($xml as  $value){
-	
-    echo '<value xid="'.$value->ID.'"> '.$value->Value->clsvalue[1]->ValueData.'</value>' ;
-}
-     
-	  ?>
-		
-    </graph>
-	
-  </graphs>
-  
-</chart>
+	</campaigns>

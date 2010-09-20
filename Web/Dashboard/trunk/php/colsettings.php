@@ -1,13 +1,12 @@
 <?php  header ("Content-Type:text/xml");?>
 <?php $colors = array('8d8d8d','90B63D','E3EDCB','BBBDBC'); ?>
-<?php $startdate = $_GET['startDate'];?>
+<?php $startdateName = $_GET['startDate'];?>
 <?php $endDate = $_GET['endDate'];?>
 <?php $measure = $_GET['measure'];?>
-<?php $startDateName = $_GET['startDateName'];  ?>
-<?php $endDateName = $_GET['endDateName'];  ?>
+
 <?php 
 
-		switch ($startdate){
+		switch ($startdateName){
 			case 1:
 			$startdate  =  "Previous Day";
 			break;
