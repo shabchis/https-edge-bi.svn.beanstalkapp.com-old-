@@ -1,75 +1,81 @@
-<?php  header ("Content-Type:text/xml");?>
+<?php  header ("Content-Type:text/xml");
 
-<campaigns>
-	<campaign>
-		<name>GO.Cont - World</name>
-		<cpa>13.30</cpa>
-			<diff><?php echo rand(-100,100)?></diff>
-			<diff_number>90.05</diff_number>
-			<percent>64</percent>
-	</campaign>
-	<campaign>
-		<name>GO.Search - US</name>
-		<cpa>12.60</cpa>
-		<diff><?php echo rand(-100,100)?></diff>
-		<diff_number>63.95</diff_number>
-		<percent>31</percent>
-	</campaign>
-	<campaign>
-		<name>GO.Cont - US </name>
-		<cpa>10.56</cpa>
-		<diff><?php echo rand(-100,100)?></diff>
-		<diff_number>51.45</diff_number>
-		<percent>-10</percent>
-	</campaign>
-	<campaign>
-		<name>GO.Cont - UK</name>
-		<cpa>10.51</cpa>
-		<diff><?php echo rand(-100,100)?></diff>
-		<diff_number>80</diff_number>
-		<percent>-31</percent>
-	</campaign>
-	<campaign>
-		<name>FA.Cont- Roman </name>
-		<cpa>1,797</cpa>
-			<diff><?php echo rand(-100,100)?></diff>
-			<diff_number>100</diff_number>
-			<percent>-43</percent>
-		</campaign>
+	$startdate = $_GET['startdate'];
+	$measureId = $_GET['measure'];
+	$endDate = $_GET['endDate'];
+	$orderby = $_GET['orderby'];
 	
-	<campaign>
-	<name>BI.Search - UK </name>
-	<cpa>1,224</cpa>
-	<diff><?php echo rand(-100,100)?></diff>
-	<diff_number>45</diff_number>
-	<percent>-53</percent>
-	</campaign>
-	<campaign>
-		<name>GO.TOOLBAR - India</name>
-		<cpa>-1,068</cpa>
-		<diff><?php echo rand(-100,100)?></diff>
-		<diff_number>17.87</diff_number>
-		<percent>-40</percent>
-	</campaign>
-	<campaign>
-		<name>GO.Cont -Arabic - Global</name>
-		<cpa>-933</cpa>
-		<diff><?php echo rand(-100,100)?></diff>
-		<diff_number>13</diff_number>
-		<percent>50</percent>
-	</campaign>
-	<campaign>
-		<name>GO.Cont - Israel </name>
-		<cpa>-589</cpa>
-		<diff><?php echo rand(-100,100)?></diff>
-		<diff_number>11</diff_number>
-		<percent>50</percent>
-	</campaign>
-	<campaign>
-		<name>FA.bloggers-US </name>
-		<cpa>-933</cpa>
-		<diff><?php echo rand(-100,100)?></diff>
-		<diff_number>9</diff_number>
-		<percent>60</percent>
-	</campaign>
-</campaigns>
+	switch ($startdate){
+		case 1:
+			$yesterdayStart  =  date("Ymd", mktime(0,0,0,date("m"),date("d")-2,date("Y")));
+		break;
+		case 2:
+			$yesterdayStart  =  date("Ymd", mktime(0,0,0,date("m"),date("d")-8,date("Y")));
+			break;
+			}
+	switch ($endDate){
+	case 1: 
+		 $startDateName1 = $yesterdayStart;
+		 $startDateName2 = $yesterdayStart;
+		 $endDateName1 =    date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y")));
+		 $endDateName2 =    date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y")));
+		break;
+	case 2: 
+		$startDateName1 = date("Ymd", mktime(0,0,0,date("m"),date("d")-15,date("Y")));
+		$startDateName2 = date("Ymd", mktime(0,0,0,date("m"),date("d")-8,date("Y")));
+		$endDateName1 = date("Ymd", mktime(0,0,0,date("m"),date("d")-8,date("Y")));
+		$endDateName2 = date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y")));
+		break;
+	case 3: 
+		$startDateName1 =(date("Ymd", mktime(0,0,0,date("m")-2,date("d")-1,date("Y"))));
+		$startDateName2 = date("Ymd", mktime(0,0,0,date("m")-1,date("d")-1,date("Y")));
+		$endDateName1 = date("Ymd", mktime(0,0,0,date("m")-1,date("d")-1,date("Y")));
+		$endDateName2 = date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y")));
+		break;
+	case 4: 
+		$startDateName1 =date("Ymd",strtotime('-2 month'));
+		$startDateName2 = date("Ymd",strtotime('-1 month'));
+		$endDateName1 = date("Ymd",strtotime('-1 month'));
+		$endDateName2 =date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y")));
+		break;
+	case 5: 
+		$startDateName1 =date("Ymd",strtotime('-3 month'));
+		$startDateName2 = date("Ymd",strtotime('-2 month'));
+		$endDateName1 = date("Ymd",strtotime('-2 month'));
+		$endDateName2 =date("Ymd",strtotime('-1 month'));
+		break;
+	case 6: 
+		$startDateName1 =date("Ymd",strtotime('-2 week'));
+		$startDateName2 = date("Ymd",strtotime('last sunday'));
+		$endDateName1 = date("Ymd",strtotime('last sunday'));
+		$endDateName2 = date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y")));
+		break;
+	case 7: 
+		$startDateName1 =date("Ymd",strtotime('-3 week'));
+		$startDateName2 = date("Ymd",strtotime('-2 week'));
+		$endDateName1 = date("Ymd",strtotime('-2 week'));
+		$endDateName2 = date("Ymd",strtotime('last sunday'));
+		break;
+	}
+?>
+<campaigns>
+<?php
+
+ // $url = 'http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Data?AccountID=95&MeasureID='.$measureId.'&DateRanges='.$startDateName1.'-'.$startDateName2.','.$endDateName1.'-'.$endDateName2.'&Diff=True&Group_By=campaign&Top=10&dataSort=Diff2&viewSort=value1&dataSortDir='.$orderby.'';
+$url = 'http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Data?AccountID=61&MeasureID=1&DateRanges=20100801-20100901,20100820-20100831&Diff=True&Group_By=campaign&Top=10&dataSort=Diff2&viewSort=value1&dataSortDir=ASC';
+
+    if(!$xml=simplexml_load_file($url)){
+    trigger_error('Error reading XML file', E_USER_ERROR);
+}
+
+foreach($xml as  $value){
+	echo '<campaign>';
+    echo '<name>'.$value->Name.'</name>';
+	echo '<value>'.$value->Value->clsvalue[0]->ValueData.'</value>';
+	echo '<diff>'.$value->Value->clsvalue[2]->ValueData.'</diff>';
+	echo '</campaign>';
+}
+
+	?>
+
+	</campaigns>

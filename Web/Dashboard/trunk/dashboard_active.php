@@ -201,11 +201,12 @@ $(function(){
 				
 	 			// getMainTime();
 				LoadMap(startDate,endDate);
-				// LoadTopCampaigns();
-				// LoadWorstCampaigns();
+				LoadGraph(startDate,endDate,measure,measureText);
+				LoadTopCampaigns();
+				LoadWorstCampaigns();
 				graphcombo();
 				ChangeYesterdayMatch();
-				LoadGraph(startDate,endDate,measure,measureText);
+			
 				 
 	
 		})
@@ -222,8 +223,8 @@ $(function(){
 		 // getMainTime();
 		 // getSectionTime();
 		LoadMap(startDate,endDate);
-	 // LoadTopCampaigns();
-		 // LoadWorstCampaigns();
+		LoadTopCampaigns();
+		 LoadWorstCampaigns();
 		 LoadGraph(startDate,endDate,measure,measureText);
 		 ChangeYesterdayMatch();
 		
@@ -232,24 +233,23 @@ $(function(){
 	
 })
 	$("#TopCombo").change(function(){
-	measure = $("#TopCombo option:selected").val();
-	
-	
-		// LoadTopCampaigns(endDate,measure);
-	
-
-	
+					LoadTopCampaigns();
+		
 	})
-
+	
+	
 	ChangeYesterdayMatch();
 	$("#MapCombo").change(function(){
 		LoadMap(startDate,endDate);
 	})
 	
 	$("#flcamp").change(function(){
-		// LoadWorstCampaigns();
-		// LoadTopCampaigns();
+			measure = $("#flcamp option:selected").val();
+			
+			LoadWorstCampaigns();
 	})
+	
+	
 	
 	function ChangeStatus(){
 	
@@ -286,9 +286,17 @@ $(function(){
 		$("#yesterdayCombo").change(function(){
 		startDate = $("#yesterdayCombo option:selected").val();
 		LoadGraph(startDate,endDate,measure,measureText);
-	})
+			})
 	
+		}
+	function fluncuatingMeasure(){
+		$("#flcamp").change(function(){
+		measure = $("#flcamp option:selected").val();
+		LoadWorstCampaigns();
+		})
 	}
+	
+	
 	function graphcombo() {
 		$("#GraphCombo").change(function(){
 			 measure =  $("#GraphCombo option:selected").val();
@@ -298,8 +306,8 @@ $(function(){
 			})
 			}
     function LoadGraph(startDate,endDate,measure,measureText){
-				console.log('php/amcolumn_data.php?endDate='+endDate+'&measure='+measure+'&startdate='+startDate+'');
-				console.log("php/colsettings.php?measure="+measureText+"&endDate="+endDate+"&startDate="+startDate+"");
+				 console.log('php/amcolumn_data.php?endDate='+endDate+'&measure='+measure+'&startdate='+startDate+'');
+				// console.log("php/colsettings.php?measure="+measureText+"&endDate="+endDate+"&startDate="+startDate+"");
                var so = new SWFObject("charts/amcolumn/amcolumn.swf", "amcolumn", "100%", "300", "8", "#FFFFFF");
                so.addVariable("path", "charts/amcolumn/");
                // so.addVariable("settings_file", encodeURIComponent("amcolumn/amcolumn_settings.xml"));        // you can set two or more different settings files here (separated by commas)
@@ -335,17 +343,20 @@ $(function(){
         so.write("map1");
 
 		}
-	function LoadTopCampaigns(endDate,measure){
-	var orderby = 0;
+	function LoadTopCampaigns(){
 	
+	measure = $("#TopCombo option:selected").val();
+		endDate = $("#combo option:selected").val();
+			$("#table2,#table1").hide();
+			 $("#innertables").append('<div class="loader1"><img src="images/ajax-loader.gif"></img></div>');
 			$('tr.topcpa').remove();
-			$('tr.worstcpa').remove();
-			orderby = 'DESC';
+		
+		
 			$.ajax({
 	
-	
+		
 		type: "GET",
-		url: "php/campaignPerformance.php?endDate=1&startdate=1&measure=1&orderby='"+orderby+"'",
+		url: "php/campaignPerformance.php?endDate="+endDate+"&startdate=1&measure="+measure+"&orderby='DESC'",
 		dataType: "xml",
 		success: function(xml) {
 				
@@ -368,14 +379,15 @@ $(function(){
 				
 			
 			});
+		
 		}
 	});
-		orderby = 'ASC';
+		
 	$.ajax({
 	
 	
 		type: "GET",
-		url: "php/campaignPerformance.php?endDate=1&startdate=1&measure=1&orderby=desc",
+		url: "php/campaignPerformance.php?endDate=1&startdate=1&measure=1&orderby='ASC'",
 		dataType: "xml",
 		success: function(xml) {
 				
@@ -397,28 +409,68 @@ $(function(){
 				
 			
 			});
+					$("div.loader1").fadeOut(100);
+					$("#table2,#table1").show();
 		}
+	
 	});
 	
 	}
 
 	function LoadWorstCampaigns(){
-		$('tr.topcpa').remove();
+		measure = $("#flcamp option:selected").val();
+		endDate = $("#combo option:selected").val();
+			$("#table3,#table4").hide();
+			 $("#innertables2").append('<div class="loader2"><img src="images/ajax-loader.gif"></img></div>');
+	
 		$('tr.worstcpa').remove();
 		$.ajax({
 			type: "GET",
-			url: "php/worsecampaign.php",
+			url: "php/worsecampaign.php?endDate="+endDate+"&startdate=1&measure="+measure+"&orderby='ASC'",
 			dataType: "xml",
 			success: function(xml) {
 				$(xml).find('campaign').each(function(){
 					var name = $(this).find('name').text();
-					var cpa = $(this).find('cpa').text();
+					var cpa = $(this).find('value').text();
 					var diff = $(this).find('diff').text();
 					var number = $(this).find('diff_number').text();
 						var	percent = $(this).find('percent').text();
 					// $('<tr class="worstcpa"><td>'+name+'</td><td class="color">'+cpa+'&nbsp &nbsp(<span class="precent">'+diff+'</span>%)</td></tr>').appendTo('#Worse');
 					// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class ="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#Worse');
-						$('<tr class="worstcpa"><td>'+name+'</td><td>'+percent+'%</td><td>('+number+')</td></tr>').appendTo('#downward');
+						$('<tr class="worstcpa"><td>'+name+'</td><td>'+diff+'%</td><td>('+cpa+')</td></tr>').appendTo('#downward');
+		 	
+				$("span.precent:contains(-)").css('color','red').parent(".con").css('color','red');
+			
+				$("span.precent").not(":contains(-)").css('color','green').parent(".con").css('color','green');
+	  					// var title = "";
+					// $('#TopCombo').change(function(){
+						 // title = $('#TopCombo option:selected').text();
+
+						// $('#table2 h3 span,#table1 h3 span').text(title);
+						
+
+					// })
+
+	
+					
+				});
+			}
+		});
+		
+$.ajax({
+			type: "GET",
+			url: "php/worsecampaign.php?endDate="+endDate+"&startdate=1&measure="+measure+"&orderby='ASC'",
+			dataType: "xml",
+			success: function(xml) {
+				$(xml).find('campaign').each(function(){
+					var name = $(this).find('name').text();
+					var cpa = $(this).find('value').text();
+					var diff = $(this).find('diff').text();
+					var number = $(this).find('diff_number').text();
+						var	percent = $(this).find('percent').text();
+					// $('<tr class="worstcpa"><td>'+name+'</td><td class="color">'+cpa+'&nbsp &nbsp(<span class="precent">'+diff+'</span>%)</td></tr>').appendTo('#Worse');
+					// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class ="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#Worse');
+						$('<tr class="worstcpa"><td>'+name+'</td><td>'+diff+'%</td><td>('+cpa+')</td></tr>').appendTo('#upward');
 		 	
 				$("span.precent:contains(-)").css('color','red').parent(".con").css('color','red');
 			
@@ -435,10 +487,14 @@ $(function(){
 	
 					
 				});
+				$("div.loader2").hide();
+				$("#table3,#table4").show();
 			}
+			
+			
 		});
 		
-
+		
 		}
 
 	function getMainTime(){

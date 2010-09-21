@@ -61,11 +61,11 @@
 <campaigns>
 <?php
 
- // $url = 'http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Data?AccountID=95&MeasureID='.$measureId.'&DateRanges='.$startDateName1.'-'.$startDateName2.','.$endDateName1.'-'.$endDateName2.'&Diff=True&Group_By=campaign&Top=10&dataSort=Diff2&viewSort=value1&dataSortDir=desc';
-$url = 'http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Data?AccountID=61&MeasureID=1&DateRanges=20100801-20100901,20100820-20100831&Diff=True&Group_By=campaign&Top=10&dataSort=Diff2&viewSort=value1&dataSortDir=ASC';
-
+ // $url = 'http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Data?AccountID=95&MeasureID='.$measureId.'&DateRanges='.$startDateName1.'-'.$startDateName2.','.$endDateName1.'-'.$endDateName2.'&Diff=True&Group_By=campaign&Top=10&dataSort=Diff2&viewSort=value1&dataSortDir='.$orderby.'';
+$url = 'http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Data?AccountID=61&MeasureID=1&DateRanges=20100801-20100901,20100820-20100831&Diff=True&Group_By=campaign&Top=10&dataSort=Diff2&viewSort=value1&dataSortDir='.$orderby.'';
+// echo $url;
     if(!$xml=simplexml_load_file($url)){
-    trigger_error('Error reading XML file',E_USER_ERROR);
+    trigger_error('Error reading XML file', E_USER_ERROR);
 }
 
 foreach($xml as  $value){
