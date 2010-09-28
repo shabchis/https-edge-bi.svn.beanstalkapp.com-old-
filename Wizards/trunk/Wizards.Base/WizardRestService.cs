@@ -7,7 +7,6 @@ using Easynet.Edge.Core.Services;
 using Easynet.Edge.Core.Configuration;
 using Easynet.Edge.Core.Utilities;
 using Easynet.Edge.Core.Data;
-
 using System.Data.SqlClient;
 
 
@@ -17,7 +16,7 @@ namespace Easynet.Edge.Wizards
 	/// WizardSerivce class negotiate with the UI 
 	/// </summary>
 	[ServiceContract]
-	[ServiceBehavior(InstanceContextMode=InstanceContextMode.Single)]
+	[ServiceBehavior(InstanceContextMode=InstanceContextMode.Single)]	
 	public class WizardRestService
 	{
 		#region Fields
@@ -195,7 +194,7 @@ namespace Easynet.Edge.Wizards
 				else
 				{
 					// Build response with Status NextStep
-					 response = new StepCollectResponse() { Errors = null, Result = StepResult.Next, NextStep = new StepConfiguration() { MetaData = null, Step = 1 } };
+					 response = new StepCollectResponse() { Errors = null, Result = StepResult.Next, NextStep = new StepConfiguration() { MetaData = null, Step = request.Step+1 } };
 				}
 			}
 			return response;

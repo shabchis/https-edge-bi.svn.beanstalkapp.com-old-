@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.Serialization;
 
+
 namespace Easynet.Edge.Wizards
 {
-
+	[DataContract(Name="WizardSession",Namespace="Easynet.Edge.Wizards")]
 	public struct WizardSession
 	{
+		[DataMember]
 		public int WizardID;
+		[DataMember]
 		public int SessionID;
-
+		[DataMember]
 		public StepConfiguration CurrentStep;
 	}
-
+	
 	public class StepConfiguration
 	{
 		public int Step;
@@ -26,7 +29,7 @@ namespace Easynet.Edge.Wizards
 		public StepConfiguration NextStep { get; set; } // Null if Result = HasErrors OR if there are no more steps
 		public Dictionary<string, string> Errors;
 	}
-
+	
 	public class StepCollectRequest
 	{
 		public int Step;
