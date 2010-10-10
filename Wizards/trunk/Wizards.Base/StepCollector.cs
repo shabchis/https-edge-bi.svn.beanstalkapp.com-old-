@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Easynet.Edge.Core.Services;
+using Easynet.Edge.Core.Utilities;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Threading;
@@ -11,13 +12,17 @@ using System.Data.SqlClient;
 
 namespace Easynet.Edge.Wizards
 {
+	
 	#region Interfaces
+	/// <summary>
+	/// Step Collector Interface
+	/// </summary>
 	[ServiceContract]
 	public interface IStepCollector
 	{
 		[OperationContract]
 		[NetDataContract]
-		Dictionary<string, string> Collect(Dictionary<string, object> input);
+		StepCollectResponse Collect(Dictionary<string, object> input);
 	}
 	#endregion
 
@@ -27,11 +32,17 @@ namespace Easynet.Edge.Wizards
 	/// </summary>
 	public abstract class StepCollectorService : Service, IStepCollector
 	{
+		#region consts
+		protected const string System_Field_Step_Description = "StepDescription";
+		#endregion
 		#region Fields
-		protected Dictionary<string, object> _validatedInput { get; private set; }
-		protected ServiceHost _stepCollectorHost;
-		protected int _step;
-
+		protected Dictionary<string, object> ValidatedInput { get;  set; }
+		protected ServiceHost StepCollectorHost;
+		protected string  StepName;
+		protected string StepDescription;
+		/// <summary>
+		/// Return the wizard session data
+		/// </summary>
 		protected WizardSession WizardSession
 		{
 
@@ -44,60 +55,104 @@ namespace Easynet.Edge.Wizards
 
 				int sessionID = Int32.Parse(Instance.ParentInstance.ParentInstance.Configuration.Options["SessionID"]);
 				int wizardID = Int32.Parse(Instance.ParentInstance.ParentInstance.Configuration.Options["WizardID"]);
-				return new WizardSession() { WizardID = wizardID, SessionID = sessionID, CurrentStep = new StepConfiguration() { Step = _step, MetaData = null } };
+				return new WizardSession() { WizardID = wizardID, SessionID = sessionID, CurrentStep = new StepConfiguration() { StepName = StepName, MetaData = null } };
 			}
 		}
 		#endregion
 
 		#region Public Methods
-		public Dictionary<string, string> Collect(Dictionary<string, object> inputValues)
+		/// <summary>
+		/// Main function collect data
+		/// </summary>
+		/// <param name="inputValues">keys and values to collect</param>
+		/// <returns>step collect response</returns>
+		public StepCollectResponse Collect(Dictionary<string, object> inputValues)
 		{
 			// Get validation errors from override
 			Dictionary<string, string> errors;
 			try { errors = Validate(inputValues); }
 			catch (Exception ex)
 			{
-				return new Dictionary<string, string>()
+				Log.Write("Error while validating", ex);
+				return new StepCollectResponse()
+				{
+					NextStep = new StepConfiguration() { StepName = Instance.Configuration.Name, MetaData = null },
+					Errors = new Dictionary<string, string>()
 				{
 					{"Unknown error", ex.ToString()}
-				};
+				}, Result=StepResult.HasErrors};
 			}
 
 			// Return validation errors if relevant, otherwise call Run
 			if (errors != null && errors.Count > 0)
 			{
 				// Return errors
-				return errors;
-			}
+				return new StepCollectResponse()
+				{
+					NextStep = new StepConfiguration() { StepName = Instance.Configuration.Name, MetaData = null },
+					Errors =errors, Result=StepResult.HasErrors};
+			}			
 			else
 			{
 				// Save the input for DoWork()
-				_validatedInput = inputValues;
+				ValidatedInput = inputValues;
+
+				// GUIDLINES: Only lightweight operations because the client is waiting for a response from this function
+
+				try
+				{
+					Prepare();
+				}
+				catch (Exception ex)
+				{
+					Log.Write("Error while Peparing", ex);
+					return new StepCollectResponse()
+					{
+						NextStep = new StepConfiguration() { StepName = Instance.Configuration.Name, MetaData = null },
+						Errors = new Dictionary<string, string>()
+				{
+					{"Error while Peparing", ex.ToString()}
+				},
+						Result = StepResult.HasErrors
+					};
+				}
+
 				Thread t = new Thread(new ThreadStart(this.Run));
 				t.Start();
-
-				return null;
+				if (Instance.Configuration.Options["LastStep"]=="true")
+				{
+				return new StepCollectResponse() { Errors=null,NextStep =new StepConfiguration() { MetaData=null,StepName=Instance.Configuration.Name}, Result=StepResult.Done};
+				}
+				else
+				{
+					return new StepCollectResponse() { Errors = null, NextStep = new StepConfiguration() { MetaData = null, StepName = Instance.Configuration.Name }, Result = StepResult.Next };
+				}
 			}
 		}
 		#endregion
 
 		#region Protected Methods
+		/// <summary>
+		/// Start new wcf session
+		/// </summary>
 		protected override void OnInit()
 		{
-			string sessionID = this.Instance.ParentInstance.ParentInstance.Configuration.Options["SessionID"];
-			_stepCollectorHost = new ServiceHost(this);
-			_stepCollectorHost.AddServiceEndpoint(typeof(IStepCollector), new NetTcpBinding("wizardStepBinding"), String.Format("net.tcp://localhost:3636/wizard/step/{0}", sessionID));
-			_stepCollectorHost.Open();
+			string sessionID = WizardSession.SessionID.ToString();
+			StepCollectorHost = new ServiceHost(this,new Uri( String.Format("net.tcp://localhost:3636/wizard/step/{0}", sessionID)));
+			
+			
+			
+			
+			StepCollectorHost.Open();
 
 		}
 		protected override ServiceOutcome DoWork()
 		{
 			// We still haven't gotten a proper Collect()
-			if (_validatedInput == null)
+			if (ValidatedInput == null)
 				return ServiceOutcome.Unspecified;
 
 			// Now we can store the input in the db and report success
-			Prepare();
 			return ServiceOutcome.Success;
 		}
 		protected abstract Dictionary<string, string> Validate(Dictionary<string, object> inputValues);
@@ -107,33 +162,33 @@ namespace Easynet.Edge.Wizards
 			{
 				int sessionID = WizardSession.SessionID;
 				int wizardID = WizardSession.WizardID;
-				int step = WizardSession.CurrentStep.Step;
-				foreach (KeyValuePair<string, object> input in _validatedInput)
+				
+				foreach (KeyValuePair<string, object> input in ValidatedInput)
 				{
 					using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
-																			(WizardID,SessionID,Step,Field,Value)
+																			(WizardID,SessionID,StepName,Field,Value)
 																			Values 
 																			(@WizardID:Int,
 																			@SessionID:Int,
-																			@Step:Int,
+																			@StepName:NvarChar,
 																			@Field:NVarChar,
 																			@Value:NVarChar)"))
 					{
 						sqlCommand.Parameters["@WizardID"].Value = wizardID;
 						sqlCommand.Parameters["@SessionID"].Value = sessionID;
-						sqlCommand.Parameters["@Step"].Value = step;
+						sqlCommand.Parameters["@StepName"].Value = StepName;
 						sqlCommand.Parameters["@Field"].Value = input.Key;
-						sqlCommand.Parameters["@Value"].Value = input.Value.ToString();
+						sqlCommand.Parameters["@Value"].Value = input.Value.ToString();						
 						sqlCommand.ExecuteNonQuery();
 
 					}
 				}
 				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"UPDATE Wizards_Sessions_Data 
 																			SET 
-																			CurrentStep=@CurrentStep:Int
+																			CurrentStepName=@CurrentStepName:NvarChar
 																			WHERE SessionID=@SessionID:Int"))
 				{
-					sqlCommand.Parameters["@CurrentStep"].Value = step+1;
+					sqlCommand.Parameters["@CurrentStepName"].Value = StepName;
 					sqlCommand.Parameters["@SessionID"].Value = sessionID;
 					sqlCommand.ExecuteNonQuery();
 
@@ -141,11 +196,14 @@ namespace Easynet.Edge.Wizards
 			}
 		}
 		#endregion
-
+		/// <summary>
+		/// unload the wcf
+		/// </summary>
+		/// <param name="outcome"></param>
 		protected override void OnEnded(ServiceOutcome outcome)
 		{
-			if (_stepCollectorHost != null && _stepCollectorHost.State == System.ServiceModel.CommunicationState.Opened)
-				_stepCollectorHost.Close();
+			if (StepCollectorHost != null && StepCollectorHost.State == System.ServiceModel.CommunicationState.Opened)
+				StepCollectorHost.Close();
 		}
 	}
 	#endregion

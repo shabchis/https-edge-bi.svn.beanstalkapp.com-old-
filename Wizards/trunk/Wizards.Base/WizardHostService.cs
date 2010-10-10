@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using Easynet.Edge.Core.Services;
 using System.ServiceModel.Web;
+using System.ServiceModel.Description;
 
 namespace Easynet.Edge.Wizards
-{
+{   
+	/// <summary>
+	/// host the wizardServices using wcf
+	/// </summary>
 	public class WizardHostService: Service
 	{
 		WebServiceHost _host = null;
@@ -14,9 +18,18 @@ namespace Easynet.Edge.Wizards
 		protected override void OnInit()
 		{
 			_host = new WebServiceHost(typeof(WizardRestService), new Uri("http://localhost:8080/wizard"));
+			ServiceDebugBehavior sdb = _host.Description.Behaviors.Find<ServiceDebugBehavior>();
+			sdb.IncludeExceptionDetailInFaults = true;
+			
+			sdb.HttpHelpPageEnabled = true;
+			
+			
+			
+			
 			_host.Open();
 		}
 
+		
 		protected override ServiceOutcome DoWork()
 		{
 			
@@ -29,4 +42,6 @@ namespace Easynet.Edge.Wizards
 				_host.Close();
 		}
 	}
+	
+	
 }
