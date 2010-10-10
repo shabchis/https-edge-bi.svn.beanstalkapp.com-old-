@@ -15,12 +15,17 @@ namespace Easynet.Edge.Wizards.AccountWizard
 		}
 		protected override void Prepare()
 		{
-			Console.WriteLine("test with no errors next step");
+
+			StepDescription = "bla bla bla step 2";
+			ValidatedInput.Add(System_Field_Step_Description, StepDescription);
+			base.Prepare();
+
 		}
 		protected override void OnInit()
 		{
 			base.OnInit();
-			_step = 2;
+			this.StepName = Instance.Configuration.Name;
+			this.StepDescription = "Do bla bla bla step2";
 		}
 		#endregion
 	}

@@ -8,6 +8,8 @@ using Easynet.Edge.Core.Configuration;
 using Easynet.Edge.Core.Utilities;
 using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
+using System.ServiceModel.Description;
+using System.Net;
 
 
 namespace Easynet.Edge.Wizards
@@ -16,29 +18,39 @@ namespace Easynet.Edge.Wizards
 	/// WizardSerivce class negotiate with the UI 
 	/// </summary>
 	[ServiceContract]
-	[ServiceBehavior(InstanceContextMode=InstanceContextMode.Single)]	
+	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
 	public class WizardRestService
 	{
 		#region Fields
-		static Dictionary<int, ServiceInstance> _stepInstances=new Dictionary<int,ServiceInstance>();
+		static Dictionary<int, ServiceInstance> StepInstances = new Dictionary<int, ServiceInstance>();
+		static Dictionary<int, ServiceInstance> MainExecuter = new Dictionary<int, ServiceInstance>();
 		#endregion
-		
+
 
 		#region Events
 		void instance_OutcomeReported(object sender, EventArgs e)
 		{
-			
+
+
 		}
 
 		void instance_StateChanged(object sender, ServiceStateChangedEventArgs e)
 		{
-			ServiceInstance instance = (ServiceInstance) sender;
-			
+			ServiceInstance instance = (ServiceInstance)sender;
+
 			if (e.StateAfter == ServiceState.Ready)
 			{
-				Console.WriteLine("Starting {0}\n", instance.Configuration.Name);
-				instance.Start();
-				
+				if (instance.Configuration.Name == "AccountWizardExecutors")
+				{
+					Console.WriteLine("Collect finish waiting for execute command");
+					
+				}
+				else
+				{
+					Console.WriteLine("Starting {0}\n", instance.Configuration.Name);
+					instance.Start();
+				}
+
 			}
 			else if (e.StateAfter == ServiceState.Ended)
 			{
@@ -51,7 +63,7 @@ namespace Easynet.Edge.Wizards
 		{
 			throw new NotImplementedException();
 		}
-		
+
 		void instance_ChildServiceRequested(object sender, ServiceRequestedEventArgs e)
 		{
 			Console.WriteLine(e.RequestedService);
@@ -65,13 +77,20 @@ namespace Easynet.Edge.Wizards
 
 			if (e.RequestedService.Configuration.Options["IsStep"] != null)
 			{
-				int sessionID =int.Parse(e.RequestedService.ParentInstance.ParentInstance.Configuration.Options["SessionID"]);
-				lock (_stepInstances)
-					_stepInstances[sessionID] = e.RequestedService;
-			  
+				int sessionID = int.Parse(e.RequestedService.ParentInstance.ParentInstance.Configuration.Options["SessionID"]);
+				lock (StepInstances)
+					StepInstances[sessionID] = e.RequestedService;
+
+			}
+			if (e.RequestedService.Configuration.Name=="AccountWizardExecutors")
+			{
+				int sessionID = int.Parse(e.RequestedService.ParentInstance.Configuration.Options["SessionID"]);
+				lock (MainExecuter)
+					MainExecuter[sessionID] = e.RequestedService;
+				
 			}
 
-			
+
 		}
 		#endregion
 
@@ -105,8 +124,8 @@ namespace Easynet.Edge.Wizards
 				//Open new session by insert values in to the wizards_sessions_data table
 
 				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO Wizards_Sessions_Data 
-																		    (WizardID,CurrentStep)
-																			Values (@WizardID:Int,1);SELECT @@IDENTITY"))
+																		    (WizardID,CurrentStepName)
+																			Values (@WizardID:Int,0);SELECT @@IDENTITY"))
 				{
 					sqlCommand.Parameters["@WizardID"].Value = wizardID;
 					sessionID = sqlCommand.ExecuteScalar();
@@ -127,6 +146,7 @@ namespace Easynet.Edge.Wizards
 
 
 			ServiceInstance instance = Service.CreateInstance(configurationToRun);
+			
 
 			instance.ChildServiceRequested += new EventHandler<ServiceRequestedEventArgs>(instance_ChildServiceRequested);
 			instance.ProgressReported += new EventHandler(instance_ProgressReported);
@@ -164,38 +184,55 @@ namespace Easynet.Edge.Wizards
 		{
 			throw new NotImplementedException();
 		}
+
 		[WebInvoke(Method = "GET", UriTemplate = "test")]
 		public StepCollectRequest test()
 		{
-			return new StepCollectRequest() { Step=1,CollectedValues=new Dictionary<string,object>(){
+			return new StepCollectRequest()
+			{
+				StepName = "ONE",
+				CollectedValues = new Dictionary<string, object>(){
 				{ "1111","1111"},
-				{ "2222","3333"}}};
-				
+				{ "2222","3333"}}
+			};
+
 		}
 		/// <summary>
 		/// Get the request Call the right class to collect , and return repond
 		/// </summary>
 		/// <param name="stepCollectRequest"></param>
 		/// <returns>Step collect Respond</returns>
-		[WebInvoke(Method = "POST", UriTemplate = "collect?sessionID={sessionID}", RequestFormat = WebMessageFormat.Xml, ResponseFormat = WebMessageFormat.Xml)]
+		[WebInvoke(Method = "POST", UriTemplate = "collect?sessionID={sessionID}", RequestFormat = WebMessageFormat.Xml, ResponseFormat = WebMessageFormat.Xml) ]
 		public StepCollectResponse Collect(int sessionID, StepCollectRequest request)
 		{
-			StepCollectResponse response;
-			using (ServiceClient<IStepCollector> client = new ServiceClient<IStepCollector>("Test" ,String.Format("net.tcp://localhost:3636/wizard/step/{0}", sessionID)))
+			
+			StepCollectResponse response = null;
+			try
 			{
 				
-				Dictionary<string, string> errors = client.Service.Collect(request.CollectedValues);
-				if (errors != null)
+				// TODO: make sure request.StepName matches the step that is running
+
+				using (ServiceClient<IStepCollector> client = new ServiceClient<IStepCollector>("Test", String.Format("net.tcp://localhost:3636/wizard/step/{0}", sessionID)))
 				{
-					//Build StepCollectResponse with errors inside
-					response = new StepCollectResponse() { Errors = errors, NextStep = new StepConfiguration() { MetaData = null, Step = request.Step }, Result = StepResult.HasErrors };
+
+
+
+					response = client.Service.Collect(request.CollectedValues);
 					
+
+
+
 				}
-				else
-				{
-					// Build response with Status NextStep
-					 response = new StepCollectResponse() { Errors = null, Result = StepResult.Next, NextStep = new StepConfiguration() { MetaData = null, Step = request.Step+1 } };
-				}
+			}
+			catch (Exception ex)
+			{
+				//throw new Exception("bla bla bla");
+
+				//throw new WebException("Service not started yet" + ex.Message, WebExceptionStatus.ConnectFailure);
+				throw new WebFaultException<string>("Service not Started yet: " + ex.Message, HttpStatusCode.ServiceUnavailable);
+			//	throw new WebFaultException<string>("bla bla bla", HttpStatusCode.Forbidden);
+				//return new StepCollectResponse() { Errors = new Dictionary<string, string>() { { "Service is not started", ex.Message } }, Result = StepResult.HasErrors, NextStep = null };
+
 			}
 			return response;
 
@@ -206,10 +243,29 @@ namespace Easynet.Edge.Wizards
 		/// </summary>
 		/// <param name="sessionID"></param>
 		/// <returns>string summary</returns>
-		[WebInvoke(Method = "GET", UriTemplate = "summary?sessionID={sessionID}")]
+		[WebInvoke(Method = "POST", UriTemplate = "summary?sessionID={sessionID}", RequestFormat = WebMessageFormat.Xml, ResponseFormat = WebMessageFormat.Xml)]
 		public string GetSummary(int sessionID)
 		{
-			throw new System.NotImplementedException();
+			StringBuilder summary = new StringBuilder();
+			using (DataManager.Current.OpenConnection())
+			{
+				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT StepName,Value 
+																		FROM Wizards_Data_Per_WizardID_SessionID_Step_And_Field
+																		WHERE SessionID=@SessionID:Int AND Field=N'StepDescription'"))
+				{
+					sqlCommand.Parameters["@SessionID"].Value = sessionID;
+					using (SqlDataReader reader = sqlCommand.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							summary.AppendLine(string.Format("Step {0}:  {1}\n", reader.GetString(0), reader.GetString(1)));
+						}
+					}
+				}
+
+			}
+
+			return summary.ToString();
 		}
 
 		/// <summary>
@@ -217,10 +273,12 @@ namespace Easynet.Edge.Wizards
 		/// </summary>
 		/// <param name="sessionID"></param>
 		/// <returns>return error of success </returns>
-		[WebInvoke(Method = "GET", UriTemplate = "execute?sessionID={sessionID}")]
+		[WebInvoke(Method = "POST", UriTemplate = "execute?sessionID={sessionID}", RequestFormat = WebMessageFormat.Xml, ResponseFormat = WebMessageFormat.Xml)]
 		public WizardStatus Execute(int sessionID)
 		{
-			throw new System.NotImplementedException();
+			ServiceInstance executer = MainExecuter[sessionID];
+			executer.Start();
+			return WizardStatus.FinishedSuccessfuly;
 		}
 		#endregion
 
@@ -238,5 +296,5 @@ namespace Easynet.Edge.Wizards
 		FinishedSuccessfuly,
 		Error
 	}
-#endregion
+	#endregion
 }

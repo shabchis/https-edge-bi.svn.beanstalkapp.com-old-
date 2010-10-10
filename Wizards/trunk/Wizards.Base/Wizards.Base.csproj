@@ -21,6 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Debug\Edge.Wizards.Base.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Objects.cs" />
     <Compile Include="StepCollector.cs" />
+    <Compile Include="StepExecuter.cs" />
     <Compile Include="WizardHostService.cs" />
     <Compile Include="WizardRestService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

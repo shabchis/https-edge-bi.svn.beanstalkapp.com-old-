@@ -7,6 +7,8 @@ namespace Easynet.Edge.Wizards.AccountWizard
 {
 	public class Step1Collector : StepCollectorService
 	{
+		
+
 		#region Protected mehods
 		protected override Dictionary<string, string> Validate(Dictionary<string, object> inputValues)
 		{
@@ -36,8 +38,17 @@ namespace Easynet.Edge.Wizards.AccountWizard
 		protected override void OnInit()
 		{
 			base.OnInit();
-			this._step = 1;
+			this.StepName = Instance.Configuration.Name; 
+			
+			this.StepDescription = "Do bla bla bla step1";
 		}
+		protected override void Prepare()
+		{
+			StepDescription = "bla bla bla step 1";
+			ValidatedInput.Add(System_Field_Step_Description, StepDescription);
+			base.Prepare();
+		}
+		 
 		#endregion
 
 
