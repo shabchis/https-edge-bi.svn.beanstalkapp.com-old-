@@ -10,12 +10,15 @@ using System.Net;
 using System.Xml;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Runtime.Serialization;
+using Easynet.Edge.Wizards;
 namespace WFTestWizard
 {
 	public partial class frmTestWizard : Form
 	{
 		const string baseXml = "BaseRequestXml.xml";
 		int? _sessionID = null;
+		string _nextStepName;
 
 		Uri _baseUri = new Uri("http://localhost:8080/wizard");
 
@@ -26,7 +29,7 @@ namespace WFTestWizard
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-
+			
 
 		}
 
@@ -34,15 +37,17 @@ namespace WFTestWizard
 		{
 			try
 			{
-				if (string.IsNullOrEmpty(txtWizardNum.Text))
+				if (string.IsNullOrEmpty(txtWizardName.Text))
 				{
 					MessageBox.Show("Please fill wizard number");
 
 				}
 				else
 				{
-					string sessionID = StartWizard(int.Parse(txtWizardNum.Text));
-					txtResult.Text = string.Format("Account Wizard Service Started:\nSessionID IS:{0}\nReady for First Step\n----------------------", sessionID);
+					
+					WizardSession wizardSession = StartWizard(txtWizardName.Text);
+					txtResult.Text = string.Format("Account Wizard Service Started:\nWizard ID is:{0}\nSessionID IS:{1}\nNext step name is:{2}\n--------------------", wizardSession.WizardID,wizardSession.SessionID,wizardSession.CurrentStep.StepName);
+
 					gvKeyValue.Enabled = true;
 					btnNextStep.Enabled = true;
 					btnExecute.Enabled = false;
@@ -55,18 +60,25 @@ namespace WFTestWizard
 			}
 		}
 
-		private string StartWizard(int? _wizardID)
+		private WizardSession StartWizard(string wizardName)
 		{
+			WizardSession wizardSession;
 			try
 			{
-
-				WebRequest request = HttpWebRequest.Create(_baseUri + "/start?wizardID=1");
+				
+				WebRequest request = HttpWebRequest.Create(string.Format(_baseUri + "/start?wizardName={0}",wizardName));
 				WebResponse response = request.GetResponse();
-				XmlDocument doc = GetXmlResponse(response);
-				string value = GetXmlValue("SessionID", doc);
-				_sessionID = int.Parse(value);
-				return value;
-
+			
+				DataContractSerializer serializer = new DataContractSerializer(typeof(WizardSession));
+				using (XmlReader reader=XmlReader.Create(response.GetResponseStream()))
+				{
+					wizardSession = (WizardSession)serializer.ReadObject(reader,false);
+					
+				}
+				_sessionID = wizardSession.SessionID;
+				_nextStepName = wizardSession.CurrentStep.StepName;
+				
+					
 
 			}
 			catch (Exception)
@@ -74,6 +86,7 @@ namespace WFTestWizard
 				throw;
 
 			}
+			return wizardSession;
 
 		}
 
@@ -120,7 +133,7 @@ namespace WFTestWizard
 			request.Timeout = 130000;
 			try
 			{
-				SetBody(ref request);
+				SetBodyForCollectRequest(ref request);
 			}
 			catch (Exception ex)
 			{
@@ -129,29 +142,37 @@ namespace WFTestWizard
 			}
 			if (result == System.Windows.Forms.DialogResult.Yes)
 			{
+				StepCollectResponse stepCollectResponse;
 				try
 				{
 					try
 					{
 						WebResponse response = request.GetResponse();
-						XmlDocument doc = GetXmlResponse(response);
-						string value = GetXmlValue("Result", doc);
-
-						switch (value)
+						DataContractSerializer serializer = new DataContractSerializer(typeof(StepCollectResponse));
+						using (XmlReader reader = XmlReader.Create(response.GetResponseStream()))
 						{
-							case "Next":
+							stepCollectResponse = (StepCollectResponse)serializer.ReadObject(reader, false);
+							
+						}
+						//XmlDocument doc = GetXmlResponse(response);
+						//string value = GetXmlValue("Result", doc);
+
+						switch (stepCollectResponse.Result)
+						{
+							case StepResult.Next:
 								{
 
-									txtResult.Text = "\n--------------------\nStep Collect Finish\nReady for next step:";
+									txtResult.Text = string.Format("\n--------------------\nStep Collect Finish\nReady for next step: Step {0}",stepCollectResponse.NextStep.StepName);
+									_nextStepName = stepCollectResponse.NextStep.StepName;
 									break;
 								}
-							case "HasErrors":
+							case StepResult.HasErrors:
 								{
-									txtResult.Text = "Error:\n" + doc.OuterXml;
+									txtResult.Text =string.Format("Errors:{0)\n", stepCollectResponse.Errors);
 
 									break;
 								}
-							case "Done":
+							case StepResult.Done:
 								{
 									txtResult.Text = "\nFinsish collecting from all steps\nready to get summary or execute:";
 									btnNextStep.Enabled = false;
@@ -185,23 +206,27 @@ namespace WFTestWizard
 			
 		}
 
-		private void SetBody(ref WebRequest request)
+		private void SetBodyForCollectRequest(ref WebRequest request)
 		{
+			StepCollectRequest stepCollectRequest=new Easynet.Edge.Wizards.StepCollectRequest();
+			stepCollectRequest.StepName = _nextStepName;
+			stepCollectRequest.CollectedValues = new Dictionary<string, object>();
 			bool empty = true;
-			XmlDocument doc = new XmlDocument();
-			doc.Load(string.Format(Path.Combine(Application.StartupPath, baseXml)));
-			XmlNode parentNode = doc.DocumentElement["CollectedValues"];			
+			//XmlDocument doc = new XmlDocument();
+			//doc.Load(string.Format(Path.Combine(Application.StartupPath, baseXml)));
+			
+			//XmlNode parentNode = doc.DocumentElement["CollectedValues"];			
 			foreach (DataGridViewRow row in gvKeyValue.Rows)
 			{
+				
+				
 				if (row.Cells[0].Value != null && row.Cells[1].Value != null)
 				{
 					empty = false;
-					XmlElement elem = doc.CreateElement("KeyValueOfstringanyType");
-					elem.LocalName = "a";
-					
-					elem.InnerText = string.Format("<a:Key>{0}</a:Key><a:Value i:type=\"b:string\" xmlns:b=\"http://www.w3.org/2001/XMLSchema\">{1}</a:Value>\"</a:KeyValueOfstringanyType>", row.Cells[0].Value.ToString(), row.Cells[0].Value.ToString());
-					parentNode.AppendChild(elem);
+					stepCollectRequest.CollectedValues.Add(row.Cells[0].Value.ToString(), row.Cells[1].Value.ToString());
+
 				}
+
 
 
 			}
@@ -212,33 +237,21 @@ namespace WFTestWizard
 			}
 			else
 			{
-				using (StreamWriter writer = new StreamWriter(request.GetRequestStream()))
+
+				DataContractSerializer serializer = new DataContractSerializer(typeof(StepCollectRequest));
+				using (XmlWriter writer=XmlWriter.Create(request.GetRequestStream()))
 				{
-					writer.Write(doc.OuterXml);
+					serializer.WriteObject(writer, stepCollectRequest);
+					writer.Flush();
 				}
+				
 			}
 
 		}
 
 
 
-		private void txtWizardNum_Validating(object sender, CancelEventArgs e)
-		{
-			Regex patern = new Regex(@"\d");
-			TextBox t = (TextBox)sender;
-			for (int i = 0; i < t.Text.Length; i++)
-			{
-				if (!patern.IsMatch(t.Text.Substring(i)))
-				{
-					t.Text = string.Empty;
-					e.Cancel = true;
-
-
-				}
-
-			}
-
-		}
+		
 
 		private void btnGetSummary_Click(object sender, EventArgs e)
 		{
@@ -275,14 +288,7 @@ namespace WFTestWizard
 				request.ContentType = "application/xml";
 				request.ContentLength = 0;
 				WebResponse response = request.GetResponse();
-				XmlDocument strXml = new XmlDocument();
-				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-				{
-
-					strXml.LoadXml(reader.ReadToEnd());
-					txtResult.Text = strXml.DocumentElement.InnerText;
-
-				}
+				txtResult.Text = "EXECUTION FINISHED SUCCESSFULY";
 			}
 			catch (Exception ex)
 			{

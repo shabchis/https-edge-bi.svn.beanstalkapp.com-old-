@@ -9,17 +9,25 @@ namespace Easynet.Edge.Wizards.AccountWizard
 	{
 		protected override Core.Services.ServiceOutcome DoWork()
 		{
-			Console.WriteLine("Update Current Step Name");
-			UpdateCurrentStepNameAndStatus("Step1Executer");
 			
-			Dictionary<string, object> test = this.GetStepCollectedData(Instance.Configuration.Options["CollectorStep"], SessionID);
+			
+
+			Dictionary<string, object> collectedData = this.GetStepCollectedData(Instance.Configuration.Options["CollectorStep"]);
 			Console.WriteLine("Test First executer, Get Field and values of current step");
-			foreach (KeyValuePair<string,object> item in test)
+			foreach (KeyValuePair<string, object> item in collectedData)
 			{
 				Console.WriteLine("Field: {0} | Value: {1}", item.Key, item.Value);
 			}
-			UpdateCurrentStepNameAndStatus("Wizard Finished!");
-
+			Console.WriteLine("Test saving executor datat");
+			SaveExecutorData(new Dictionary<string, object>() {
+				{ "Executor1111","Executor1111"},
+				{ "Executor2222","Executor3333"}});
+			Console.WriteLine("Test Get executor data");
+			Dictionary<string,object> executorData= GetExecutorData("Step1Executor");
+			foreach (KeyValuePair<string, object> item in executorData)
+			{
+				Console.WriteLine("Field: {0} | Value: {1}", item.Key, item.Value);
+			}
 			return base.DoWork();
 		}
 		

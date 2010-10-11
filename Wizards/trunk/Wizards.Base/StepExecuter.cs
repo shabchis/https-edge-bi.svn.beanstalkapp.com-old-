@@ -14,23 +14,36 @@ namespace Easynet.Edge.Wizards
 	/// </summary>
 	public class StepExecuter : Service
 	{
-		#region IStepExecuter Members		
-		public int SessionID
+		protected WizardSession WizardSession
 		{
+
 			get
 			{
-				return int.Parse(this.Instance.ParentInstance.ParentInstance.Configuration.Options["SessionID"]);
+
+				
+
+				int sessionID = Int32.Parse(Instance.ParentInstance.ParentInstance.Configuration.Options["SessionID"]);
+				int wizardID = Int32.Parse(Instance.ParentInstance.ParentInstance.Configuration.Options["WizardID"]);
+				return new WizardSession() { WizardID = wizardID, SessionID = sessionID, CurrentStep = new StepConfiguration() { StepName = this.Instance.Configuration.Name, MetaData = null } };
 			}
 		}
-		#endregion
-		#region Protected Methods
+		//#region IStepExecuter Members		
+		////public int SessionID
+		////{
+		////    get
+		////    {
+		////        return int.Parse(this.Instance.ParentInstance.ParentInstance.Configuration.Options["SessionID"]);
+		////    }
+		////}
+		////#endregion
+		//#region Protected Methods
 		/// <summary>
 		/// Return the collected step respectively
 		/// </summary>
 		/// <param name="StepName"></param>
 		/// <param name="SessionID"></param>
 		/// <returns></returns>
-		protected Dictionary<string, object> GetStepCollectedData(string StepName, int SessionID)
+		protected Dictionary<string, object> GetStepCollectedData(string StepName)
 		{
 			Dictionary<string, object> collectedData=null;
 			using (DataManager.Current.OpenConnection())
@@ -38,10 +51,12 @@ namespace Easynet.Edge.Wizards
 				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT Field,Value
 																		FROM Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
 																			WHERE StepName=@StepName:NVarChar 
-																			AND SessionID=@SessionID:Int"))
+																			AND SessionID=@SessionID:Int 
+																			AND ServiceInstanceID=@ServiceInstanceID:BigInt"))
 				{
-					sqlCommand.Parameters["@SessionID"].Value = SessionID;
+					sqlCommand.Parameters["@SessionID"].Value = WizardSession.SessionID;
 					sqlCommand.Parameters["@StepName"].Value = StepName;
+					sqlCommand.Parameters["@ServiceInstanceID"].Value = this.Instance.ParentInstance.ParentInstance.InstanceID;
 					using (SqlDataReader reader=sqlCommand.ExecuteReader())
 					{
 						if (reader!=null && reader.HasRows)
@@ -59,28 +74,83 @@ namespace Easynet.Edge.Wizards
 			}
 			return collectedData;
 		}
-		/// <summary>
-		/// Update the current step and session on Wizards_Sessions_Data
-		/// </summary>
-		/// <param name="CurrentStepNameOrStatus"></param>
-		protected void UpdateCurrentStepNameAndStatus(string CurrentStepNameOrStatus)
+		protected void SaveExecutorData(Dictionary<string, object> executorData)
 		{
 			using (DataManager.Current.OpenConnection())
 			{
-				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"UPDATE Wizards_Sessions_Data
-																			SET CurrentStepName=@CurrentStepNameOrStatus:NVarChar
-																			WHERE SessionID=@SessionID:Int"))
+				foreach (KeyValuePair<string, object> input in executorData)
 				{
-					sqlCommand.Parameters["@SessionID"].Value = SessionID;
-					sqlCommand.Parameters["@CurrentStepNameOrStatus"].Value = CurrentStepNameOrStatus;
-					sqlCommand.ExecuteNonQuery();
+					
+					using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
+																			(WizardID,SessionID,ServiceInstanceID,StepName,Field,Value)
+																			Values 
+																			(@WizardID:Int,
+																			@SessionID:Int,
+																			@ServiceInstanceID:BigInt,
+																			@StepName:NvarChar,
+																			@Field:NVarChar,
+																			@Value:NVarChar)"))
+					{
+						sqlCommand.Parameters["@WizardID"].Value = WizardSession.WizardID;
+						sqlCommand.Parameters["@SessionID"].Value = WizardSession.SessionID;
+						sqlCommand.Parameters["@ServiceInstanceID"].Value = Instance.ParentInstance.ParentInstance.InstanceID;
+						sqlCommand.Parameters["@StepName"].Value = WizardSession.CurrentStep.StepName;
+						sqlCommand.Parameters["@Field"].Value = input.Key;
+						sqlCommand.Parameters["@Value"].Value = input.Value.ToString();						
+						sqlCommand.ExecuteNonQuery();
+
+					}
 				}
 			}
 
 		}
+		protected Dictionary<string,object> GetExecutorData(string stepName)
+		{
+			Dictionary<string, object> executorData=null;
+			using (DataManager.Current.OpenConnection())
+			{
+				
+
+					using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT Field,Value
+																			   FROM Wizards_Data_Per_WizardID_SessionID_Step_And_Field
+																			   WHERE StepName=@StepName:NvarChar
+																		       AND ServiceInstanceID=@ServiceInstanceID:BigInt
+																			   AND SessionID=@SessionID:Int
+																			   AND WizardID=@WizardID:Int"))
+					{
+						sqlCommand.Parameters["@WizardID"].Value = WizardSession.WizardID;
+						sqlCommand.Parameters["@SessionID"].Value = WizardSession.SessionID;
+						sqlCommand.Parameters["@ServiceInstanceID"].Value = Instance.ParentInstance.ParentInstance.InstanceID;
+						sqlCommand.Parameters["@StepName"].Value = stepName;
+						using (SqlDataReader reader=sqlCommand.ExecuteReader())
+						{
+							if (reader!=null)
+							{
+								if (reader.HasRows)
+								{
+									executorData = new Dictionary<string, object>();
+									while (reader.Read())
+									{
+										executorData.Add(reader.GetString(0), reader.GetString(1));
+										
+									}
+									
+								}
+								
+							}
+
+							
+						}
+
+					}
+				
+			}
+			return executorData;
+		}
+
 
 		
-		#endregion
+		
 
 
 
