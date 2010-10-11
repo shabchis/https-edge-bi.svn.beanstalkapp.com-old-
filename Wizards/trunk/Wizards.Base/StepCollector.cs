@@ -90,14 +90,15 @@ namespace Easynet.Edge.Wizards
 				return new StepCollectResponse()
 				{
 					NextStep = new StepConfiguration() { StepName = Instance.Configuration.Name, MetaData = null },
-					Errors =errors, Result=StepResult.HasErrors};
+					Errors =errors, Result=StepResult.HasErrors
+				};
 			}			
 			else
 			{
 				// Save the input for DoWork()
 				ValidatedInput = inputValues;
 
-				// GUIDLINES: Only lightweight operations because the client is waiting for a response from this function
+				// GUIDLINES: Only lightweight stscoperations because the client is waiting for a response from this function
 
 				try
 				{
@@ -166,16 +167,18 @@ namespace Easynet.Edge.Wizards
 				foreach (KeyValuePair<string, object> input in ValidatedInput)
 				{
 					using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
-																			(WizardID,SessionID,StepName,Field,Value)
+																			(WizardID,SessionID,ServiceInstanceID,StepName,Field,Value)
 																			Values 
 																			(@WizardID:Int,
 																			@SessionID:Int,
+																			@ServiceInstanceID:BigInt,
 																			@StepName:NvarChar,
 																			@Field:NVarChar,
 																			@Value:NVarChar)"))
 					{
 						sqlCommand.Parameters["@WizardID"].Value = wizardID;
 						sqlCommand.Parameters["@SessionID"].Value = sessionID;
+						sqlCommand.Parameters["@ServiceInstanceID"].Value = Instance.ParentInstance.ParentInstance.InstanceID;
 						sqlCommand.Parameters["@StepName"].Value = StepName;
 						sqlCommand.Parameters["@Field"].Value = input.Key;
 						sqlCommand.Parameters["@Value"].Value = input.Value.ToString();						
@@ -183,16 +186,7 @@ namespace Easynet.Edge.Wizards
 
 					}
 				}
-				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"UPDATE Wizards_Sessions_Data 
-																			SET 
-																			CurrentStepName=@CurrentStepName:NvarChar
-																			WHERE SessionID=@SessionID:Int"))
-				{
-					sqlCommand.Parameters["@CurrentStepName"].Value = StepName;
-					sqlCommand.Parameters["@SessionID"].Value = sessionID;
-					sqlCommand.ExecuteNonQuery();
-
-				}
+				
 			}
 		}
 		#endregion

@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.gvKeyValue = new System.Windows.Forms.DataGridView();
 			this.Key = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -37,7 +37,7 @@
 			this.txtResult = new System.Windows.Forms.RichTextBox();
 			this.btnNextStep = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
-			this.txtWizardNum = new System.Windows.Forms.TextBox();
+			this.txtWizardName = new System.Windows.Forms.TextBox();
 			this.btnGetSummary = new System.Windows.Forms.Button();
 			this.btnExecute = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.gvKeyValue)).BeginInit();
@@ -51,8 +51,8 @@
             this.Value});
 			this.gvKeyValue.Location = new System.Drawing.Point(12, 12);
 			this.gvKeyValue.Name = "gvKeyValue";
-			dataGridViewCellStyle1.NullValue = " ";
-			this.gvKeyValue.RowsDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle2.NullValue = " ";
+			this.gvKeyValue.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.gvKeyValue.Size = new System.Drawing.Size(240, 378);
 			this.gvKeyValue.TabIndex = 0;
 			// 
@@ -87,9 +87,9 @@
 			// 
 			// txtResult
 			// 
-			this.txtResult.Enabled = false;
 			this.txtResult.Location = new System.Drawing.Point(539, 25);
 			this.txtResult.Name = "txtResult";
+			this.txtResult.ReadOnly = true;
 			this.txtResult.Size = new System.Drawing.Size(199, 365);
 			this.txtResult.TabIndex = 4;
 			this.txtResult.Text = "";
@@ -114,14 +114,13 @@
 			this.label2.TabIndex = 7;
 			this.label2.Text = "WizardNum";
 			// 
-			// txtWizardNum
+			// txtWizardName
 			// 
-			this.txtWizardNum.Location = new System.Drawing.Point(422, 27);
-			this.txtWizardNum.Name = "txtWizardNum";
-			this.txtWizardNum.Size = new System.Drawing.Size(100, 20);
-			this.txtWizardNum.TabIndex = 8;
-			this.txtWizardNum.Text = "1";
-			this.txtWizardNum.Validating += new System.ComponentModel.CancelEventHandler(this.txtWizardNum_Validating);
+			this.txtWizardName.Location = new System.Drawing.Point(422, 27);
+			this.txtWizardName.Name = "txtWizardName";
+			this.txtWizardName.Size = new System.Drawing.Size(100, 20);
+			this.txtWizardName.TabIndex = 8;
+			this.txtWizardName.Text = "AccountWizard";
 			// 
 			// btnGetSummary
 			// 
@@ -152,7 +151,7 @@
 			this.ClientSize = new System.Drawing.Size(750, 402);
 			this.Controls.Add(this.btnExecute);
 			this.Controls.Add(this.btnGetSummary);
-			this.Controls.Add(this.txtWizardNum);
+			this.Controls.Add(this.txtWizardName);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.btnNextStep);
 			this.Controls.Add(this.txtResult);
@@ -178,7 +177,7 @@
 		private System.Windows.Forms.RichTextBox txtResult;
 		private System.Windows.Forms.Button btnNextStep;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.TextBox txtWizardNum;
+		private System.Windows.Forms.TextBox txtWizardName;
 		private System.Windows.Forms.Button btnGetSummary;
 		private System.Windows.Forms.Button btnExecute;
 	}
