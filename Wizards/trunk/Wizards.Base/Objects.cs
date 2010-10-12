@@ -7,13 +7,19 @@ using System.Runtime.Serialization;
 namespace Easynet.Edge.Wizards
 {
 	/// <summary>
-	/// New wizard parmeters, return when runing the start function
+	/// New wizard parmeters, return when runing the start functionn
 	/// </summary>
 	[DataContract(Name="WizardSession",Namespace="Easynet.Edge.Wizards")]
 	public struct WizardSession
 	{
+		/// <summary>
+		/// The wizard number
+		/// </summary>
 		[DataMember]
 		public int WizardID;
+		/// <summary>
+		/// The session id
+		/// </summary>
 		[DataMember]
 		public int SessionID;
 		[DataMember]
