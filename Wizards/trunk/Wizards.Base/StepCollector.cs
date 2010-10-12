@@ -12,7 +12,7 @@ using System.Data.SqlClient;
 
 namespace Easynet.Edge.Wizards
 {
-	
+
 	#region Interfaces
 	/// <summary>
 	/// Step Collector Interface
@@ -35,10 +35,11 @@ namespace Easynet.Edge.Wizards
 		#region consts
 		protected const string System_Field_Step_Description = "StepDescription";
 		#endregion
+
 		#region Fields
-		protected Dictionary<string, object> ValidatedInput { get;  set; }
+		protected Dictionary<string, object> ValidatedInput { get; set; }
 		protected ServiceHost StepCollectorHost;
-		protected string  StepName;
+		protected string StepName;
 		protected string StepDescription;
 		/// <summary>
 		/// Return the wizard session data
@@ -49,9 +50,7 @@ namespace Easynet.Edge.Wizards
 			get
 			{
 
-				// TODO:
-				//	provide access to the session data (collected data of all
-				//	steps already completed during this session)
+
 
 				int sessionID = Int32.Parse(Instance.ParentInstance.ParentInstance.Configuration.Options["SessionID"]);
 				int wizardID = Int32.Parse(Instance.ParentInstance.ParentInstance.Configuration.Options["WizardID"]);
@@ -80,7 +79,9 @@ namespace Easynet.Edge.Wizards
 					Errors = new Dictionary<string, string>()
 				{
 					{"Unknown error", ex.ToString()}
-				}, Result=StepResult.HasErrors};
+				},
+					Result = StepResult.HasErrors
+				};
 			}
 
 			// Return validation errors if relevant, otherwise call Run
@@ -90,9 +91,10 @@ namespace Easynet.Edge.Wizards
 				return new StepCollectResponse()
 				{
 					NextStep = new StepConfiguration() { StepName = Instance.Configuration.Name, MetaData = null },
-					Errors =errors, Result=StepResult.HasErrors
+					Errors = errors,
+					Result = StepResult.HasErrors
 				};
-			}			
+			}
 			else
 			{
 				// Save the input for DoWork()
@@ -120,9 +122,9 @@ namespace Easynet.Edge.Wizards
 
 				Thread t = new Thread(new ThreadStart(this.Run));
 				t.Start();
-				if (Instance.Configuration.Options["LastStep"]=="true")
+				if (Instance.Configuration.Options["LastStep"] == "true")
 				{
-				return new StepCollectResponse() { Errors=null,NextStep =new StepConfiguration() { MetaData=null,StepName=Instance.Configuration.Name}, Result=StepResult.Done};
+					return new StepCollectResponse() { Errors = null, NextStep = new StepConfiguration() { MetaData = null, StepName = Instance.Configuration.Name }, Result = StepResult.Done };
 				}
 				else
 				{
@@ -139,11 +141,11 @@ namespace Easynet.Edge.Wizards
 		protected override void OnInit()
 		{
 			string sessionID = WizardSession.SessionID.ToString();
-			StepCollectorHost = new ServiceHost(this,new Uri( String.Format("net.tcp://localhost:3636/wizard/step/{0}", sessionID)));
-			
-			
-			
-			
+			StepCollectorHost = new ServiceHost(this, new Uri(String.Format("net.tcp://localhost:3636/wizard/step/{0}", sessionID)));
+
+
+
+
 			StepCollectorHost.Open();
 
 		}
@@ -163,7 +165,7 @@ namespace Easynet.Edge.Wizards
 			{
 				int sessionID = WizardSession.SessionID;
 				int wizardID = WizardSession.WizardID;
-				
+
 				foreach (KeyValuePair<string, object> input in ValidatedInput)
 				{
 					using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
@@ -181,24 +183,26 @@ namespace Easynet.Edge.Wizards
 						sqlCommand.Parameters["@ServiceInstanceID"].Value = Instance.ParentInstance.ParentInstance.InstanceID;
 						sqlCommand.Parameters["@StepName"].Value = StepName;
 						sqlCommand.Parameters["@Field"].Value = input.Key;
-						sqlCommand.Parameters["@Value"].Value = input.Value.ToString();						
+						sqlCommand.Parameters["@Value"].Value = input.Value.ToString();
 						sqlCommand.ExecuteNonQuery();
 
 					}
 				}
-				
+
 			}
 		}
-		#endregion
-		/// <summary>
-		/// unload the wcf
-		/// </summary>
-		/// <param name="outcome"></param>
 		protected override void OnEnded(ServiceOutcome outcome)
 		{
 			if (StepCollectorHost != null && StepCollectorHost.State == System.ServiceModel.CommunicationState.Opened)
 				StepCollectorHost.Close();
 		}
+		#endregion
+
+		/// <summary>
+		/// unload the wcf
+		/// </summary>
+		/// <param name="outcome"></param>
+
 	}
 	#endregion
 }
