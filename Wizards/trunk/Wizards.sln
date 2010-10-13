@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeBI.Wizards.AccountWizar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeBI.Wizards.Utils.WizardTester", "EdgeBI.Wizards.Utils.WizardTester\EdgeBI.Wizards.Utils.WizardTester.csproj", "{846562A5-F415-431E-952C-F47EC038AF9D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "General", "General", "{7BCE4B57-8DB3-4738-8B39-6B43CD4DF5C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,5 +88,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436} = {7BCE4B57-8DB3-4738-8B39-6B43CD4DF5C2}
+		{C1D17284-15C6-4CEC-AF35-D84CC8D5CCA0} = {7BCE4B57-8DB3-4738-8B39-6B43CD4DF5C2}
 	EndGlobalSection
 EndGlobal
