@@ -38,9 +38,9 @@ namespace EdgeBI.Wizards.AccountWizard.CubeCreation
                 if (obDirEntry.Children.Find("CN=" + strLogin, "user") != null)
                     userFound = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                userFound = false;
+                userFound = false; //user not in the system
               //  MessageBox.Show("New User error: " + ex.ToString());
             }
 
@@ -48,23 +48,29 @@ namespace EdgeBI.Wizards.AccountWizard.CubeCreation
             if (!userFound) //If User Not Found In System
             {
                 DirectoryEntry obUser = obDirEntry.Children.Add("CN=" + strLogin, "user");
+				
                 obUser.Properties["sAMAccountName"].Add(strLogin);
+				
                 obUser.CommitChanges();
-                object[] oPassword = new object[] { strPwd };
-                object ret = obUser.Invoke("SetPassword", oPassword);
+				object[] oPassword = new object[] { strPwd };
+				object ret = obUser.Invoke("SetPassword", strPwd);
+			
                 obUser.CommitChanges();
                 //UF_DONT_EXPIRE_PASSWD 0x10000
                 int exp = (int)obUser.Properties["userAccountControl"].Value;
-                obUser.Properties["userAccountControl"].Value = exp | 0x10000;
+                obUser.Properties["userAccountControl"].Value = exp | 0x10000; //what is this?
                 obUser.CommitChanges();
                 if (AccountActive)
                 {
                     //UF_ACCOUNTDISABLE 0x0002
                     int val = (int)obUser.Properties["userAccountControl"].Value;
-                    obUser.Properties["userAccountControl"].Value = val & ~0x0002;
+					obUser.Properties["userAccountControl"].Value = val & ~0x0002;  //what is this?
                     obUser.CommitChanges();
                 }
+				obUser.Close();
+				obUser.Dispose();
             }
+			obDirEntry.Dispose();
         }
      }
 }

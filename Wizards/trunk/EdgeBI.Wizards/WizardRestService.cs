@@ -23,7 +23,8 @@ namespace EdgeBI.Wizards
 	{
 		#region Fields
 		static Dictionary<int, ServiceInstance> StepInstances = new Dictionary<int, ServiceInstance>();
-		static Dictionary<int, ServiceInstance> MainExecuter = new Dictionary<int, ServiceInstance>();
+		static Dictionary<int, ServiceInstance> MainExecuters = new Dictionary<int, ServiceInstance>();
+		static Dictionary<int, List<ServiceInstance>> ExecuterSteps =new Dictionary<int,List<ServiceInstance>>();
 		#endregion
 
 		#region Public Methods
@@ -51,6 +52,11 @@ namespace EdgeBI.Wizards
 			wizardID = int.Parse(requestedWizardConfiguration.Options["WizardID"]); //to insert in database it's int future
 			//first step name
 			ExecutionStepElement FirstStepCollector = GetFirstCollectorStep(requestedWizardConfiguration.ExecutionSteps);
+			if (FirstStepCollector == null)
+				throw new Exception("No step collector found");
+
+
+
 			ActiveServiceElement configurationToRun = new ActiveServiceElement(requestedWizardConfiguration);
 
 
@@ -73,7 +79,7 @@ namespace EdgeBI.Wizards
 
 
 
-				
+
 
 				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO Wizards_Sessions_Data 
 																		    (WizardID,CurrentStepName,ServiceInstanceID,WizardStatus)
@@ -89,7 +95,7 @@ namespace EdgeBI.Wizards
 						throw new Exception("Error: Session not created");
 				}
 			}
-			
+
 			instance.Configuration.Options["SessionID"] = sessionID.ToString();
 
 			//Create WizardSession object to return
@@ -107,59 +113,14 @@ namespace EdgeBI.Wizards
 
 		}
 
-		/// <summary>
-		/// this function run again and again until find the collectorcontainar and gets the first step of it
-		/// </summary>
-		/// <param name="executionStepElementCollection"></param>
-		/// <returns></returns>
-		private ExecutionStepElement GetFirstCollectorStep(ExecutionStepElementCollection executionStepElementCollection)
-		{
-
-			if (executionStepElementCollection != null)
-			{
-				foreach (ExecutionStepElement executionStep in executionStepElementCollection)
-				{
-
-
-					if (executionStep.Options["WizardRole"] != null)
-					{
-						if (executionStep.Options["WizardRole"] == "CollectorContainer")
-						{
-
-
-							if (executionStep.ServiceToUse.Element.ExecutionSteps.Count > 0)
-							{
-
-								return executionStep.ServiceToUse.Element.ExecutionSteps[0];
-							}
-						}
-						else
-						{
-							GetFirstCollectorStep(executionStep.ServiceToUse.Element.ExecutionSteps);
-
-						}
-
-					}
-					else
-					{
-						GetFirstCollectorStep(executionStep.ServiceToUse.Element.ExecutionSteps);
-					}
-
-
-
-				}
-				return null;
-			}
-			return null;
-
-		}
+		
 
 		[WebInvoke(Method = "GET", UriTemplate = "continue?sessionID={sessionID}")]
 		public WizardSession Continue(int sessionID)
 		{
 			throw new NotImplementedException();
 		}
-		
+
 		/// <summary>
 		/// Get the request Call the right class to collect , and return repond
 		/// </summary>
@@ -173,7 +134,7 @@ namespace EdgeBI.Wizards
 			StepCollectResponse tempResponse;
 			try
 			{
-          // make sure request.StepName matches StepInstances[sessionID].Configuration.Name(client is in the right step)
+				// make sure request.StepName matches StepInstances[sessionID].Configuration.Name(client is in the right step)
 				if (request.StepName != StepInstances[sessionID].Configuration.Name)
 				{
 					throw new Exception("Step name is not matching current step!");
@@ -189,7 +150,7 @@ namespace EdgeBI.Wizards
 					if (tempResponse.Errors == null || tempResponse.Errors.Count == 0) //successfuly
 					{
 
-						
+
 						//get next step detalis or if it   finished/
 						ServiceInstance currentInstance = StepInstances[sessionID];
 						ServiceInstance parentInstance = currentInstance.ParentInstance;
@@ -258,8 +219,8 @@ namespace EdgeBI.Wizards
 				}
 			}
 			catch (Exception ex)
-			{								
-				throw new WebFaultException<string>("Service not Started yet: " + ex.Message, HttpStatusCode.ServiceUnavailable);		
+			{
+				throw new WebFaultException<string>("Service not Started yet: " + ex.Message, HttpStatusCode.ServiceUnavailable);
 
 			}
 			return response;
@@ -303,10 +264,113 @@ namespace EdgeBI.Wizards
 		[WebInvoke(Method = "POST", UriTemplate = "execute?sessionID={sessionID}", RequestFormat = WebMessageFormat.Xml, ResponseFormat = WebMessageFormat.Xml)]
 		public void Execute(int sessionID)
 		{
-			ServiceInstance executer = MainExecuter[sessionID];
+			ServiceInstance executer = MainExecuters[sessionID];
 			executer.Start();
 
 		}
+		/// <summary>
+		/// Get the execution progrees
+		/// </summary>
+		/// <param name="sessionID"></param>
+		/// <returns></returns>
+		[WebInvoke(Method = "GET", UriTemplate = "Progress?sessionID={sessionID}")]
+		public ProgressState GetProgress(int sessionID)
+		{
+			int totalExecutionSteps;
+			ProgressState progressState = new ProgressState();
+			
+			try
+			{
+				ServiceInstance serviceExecutorsContainer = ExecuterSteps[sessionID][0].ParentInstance;
+				//Get the count of executors step from configuration
+				totalExecutionSteps = serviceExecutorsContainer.Configuration.ExecutionSteps.Count;
+				foreach (ServiceInstance executionStep in ExecuterSteps[sessionID])
+				{
+					if (executionStep.State!=ServiceState.Ended )
+					{
+						if (progressState.CurrentRuningStepsState == null)
+							progressState.CurrentRuningStepsState = new Dictionary<string, float>();
+						progressState.CurrentRuningStepsState.Add(executionStep.Configuration.Name, executionStep.Progress);
+						
+					}
+					else 
+					{
+						if (progressState.CurrentRuningStepsState == null)
+							progressState.CurrentRuningStepsState = new Dictionary<string, float>();
+						progressState.CurrentRuningStepsState.Add(executionStep.Configuration.Name, (float)1);
+					}					
+				}
+				//Find overall progress
+				float existingStepsProgress = 0;
+				foreach (float progress in progressState.CurrentRuningStepsState.Values)
+				{
+					existingStepsProgress += progress;
+					
+				}
+				progressState.OverAllProgess = existingStepsProgress / totalExecutionSteps;
+
+
+				
+			}
+			catch (Exception ex)
+			{
+
+				throw new Exception("Problem when trying to locate the service by session");
+			}
+			return progressState;
+			
+
+		
+
+			
+
+
+		}
+		#endregion
+		#region Private methods
+		/// <summary>
+		/// this function run again and again until find the collectorcontainar and gets the first step of it
+		/// </summary>
+		/// <param name="executionStepElementCollection"></param>
+		/// <returns></returns>
+		private ExecutionStepElement GetFirstCollectorStep(ExecutionStepElementCollection executionStepElementCollection)
+		{
+
+			if (executionStepElementCollection != null && executionStepElementCollection.Count > 0)
+			{
+				foreach (ExecutionStepElement executionStep in executionStepElementCollection)
+				{
+					if (executionStep.Options["WizardRole"] == "CollectorContainer")
+					{
+						if (executionStep.ServiceToUse.Element.ExecutionSteps.Count > 0)
+						{
+
+							return executionStep.ServiceToUse.Element.ExecutionSteps[0];
+						}
+						else
+							return null;
+					}
+					else
+					{
+						return GetFirstCollectorStep(executionStep.ServiceToUse.Element.ExecutionSteps);
+
+					}
+				}
+				return null; // will never be reached
+			}
+			else
+				return null;
+
+		}
+		private ServiceInstance GetMainParent(ServiceInstance serviceInstance)
+		{
+			while (serviceInstance.ParentInstance!=null)
+			{
+				serviceInstance = GetMainParent(serviceInstance.ParentInstance);
+			}
+			return serviceInstance;
+		}
+
 		#endregion
 
 		#region Events
@@ -367,14 +431,37 @@ namespace EdgeBI.Wizards
 			if (e.RequestedService.Configuration.Options["WizardRole"] == "ExecutorContainer")
 			{
 				int sessionID = int.Parse(e.RequestedService.ParentInstance.Configuration.Options["SessionID"]);
-				lock (MainExecuter)
-					MainExecuter[sessionID] = e.RequestedService;
+				lock (MainExecuters)
+					MainExecuters[sessionID] = e.RequestedService;
+			}
+			if (e.RequestedService.ParentInstance.Configuration.Options["WizardRole"] == "ExecutorContainer")
+			{
+				int sessionID = int.Parse(e.RequestedService.ParentInstance.Configuration.Options["SessionID"]);
+				lock (ExecuterSteps)
+				{
+					if (ExecuterSteps.ContainsKey(sessionID))
+						ExecuterSteps[sessionID].Add(e.RequestedService);
+					else
+					{
+						List<ServiceInstance> listOfServiceInstances = new List<ServiceInstance>();
+						listOfServiceInstances.Add(e.RequestedService);
+						ExecuterSteps.Add(sessionID, listOfServiceInstances);			
+
+					}
+
+						
+					
+
+				}
+
+
+
 
 			}
 
 
 		}
-		#endregion		
+		#endregion
 
 	}
 
@@ -392,7 +479,7 @@ namespace EdgeBI.Wizards
 		/// Execute
 		/// </summary>
 		Execute
-		
+
 	}
 	#endregion
 }

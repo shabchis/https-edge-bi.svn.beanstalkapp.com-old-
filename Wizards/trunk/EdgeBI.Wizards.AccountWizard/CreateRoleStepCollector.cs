@@ -2,43 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EdgeBI.Wizards.AccountWizard.CubeCreation;
 
 namespace EdgeBI.Wizards.AccountWizard
 {
-	public class ActiveDirectoryStepCollector : StepCollectorService
+	class CreateRoleStepCollector : StepCollectorService
 	{
-		
-
-		#region Protected mehods
 		protected override Dictionary<string, string> Validate(Dictionary<string, object> inputValues)
 		{
-			Dictionary<string, string> errors = new Dictionary<string, string>();
+			Dictionary<string, string> errors=null;
 			foreach (KeyValuePair<string, object> input in inputValues)
 			{
 				switch (input.Key)
 				{
-					case "UserName":
-						{
-							//Just example
-							if (input.Value.ToString().Length>20)
-							{
-								errors.Add(input.Key, "UserName is too long");
-								
-							}
-							break;
-						}
-					case "Password":
-						{
-							//errors.Add(input.Key, "Error test");
-							break;
-						}
-					case "FullName":
+					case "RoleName":
 						{
 							break;
 						}
+					case "RoleID":
+						{
+							break;
+						}
+					case "RoleMemberName":
+						{
+							break;
+						}
+					
+						
 				}
 
-				
+
 			}
 			return errors;
 		}
@@ -46,19 +39,12 @@ namespace EdgeBI.Wizards.AccountWizard
 		{
 			base.OnInit();
 			this.StepName = Instance.Configuration.Name; 
-			
-			
 		}
 		protected override void Prepare()
 		{
-			StepDescription = "Create User on active directory";
+			StepDescription = "Create New Role";
 			ValidatedInput.Add(System_Field_Step_Description, StepDescription);
 			base.Prepare();
 		}
-		 
-		#endregion
-
-
-
 	}
 }

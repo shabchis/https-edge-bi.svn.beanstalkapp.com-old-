@@ -32,9 +32,9 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			List<KeyVal> list = new List<KeyVal>();
-			KeyVal keyval = new KeyVal() { Key = "UserName", Value = "Alony" };
+			KeyVal keyval = new KeyVal() { Key = "UserName", Value = "AlonForTest" };
 			list.Add(keyval);
-			keyval = new KeyVal() { Key = "Password", Value = "dgfdgsdfgsdf" };
+			keyval = new KeyVal() { Key = "Password", Value = "Narnia2@" };
 			list.Add(keyval);
 			keyval = new KeyVal() { Key = "FullName", Value = "Alon Yaari" };
 			list.Add(keyval);
@@ -87,6 +87,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 				}
 				_sessionID = wizardSession.SessionID;
 				_nextStepName = wizardSession.CurrentStep.StepName;
+				txtStepName.Text = _nextStepName;
 
 
 
@@ -175,12 +176,17 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 
 									txtResult.Text = string.Format("\n--------------------\nStep Collect Finish\nReady for next step: Step {0}", stepCollectResponse.NextStep.StepName);
 									_nextStepName = stepCollectResponse.NextStep.StepName;
+									txtStepName.Text = _nextStepName;
 
 									break;
 								}
 							case StepResult.HasErrors:
 								{
-									txtResult.Text = string.Format("Errors:{0)\n", stepCollectResponse.Errors);
+									foreach (KeyValuePair<string,string> error in stepCollectResponse.Errors)
+									{
+										txtResult.Text += string.Format("Errors:key {0} Value{1}\n", error.Key,error.Value);
+									}
+									
 
 									break;
 								}
@@ -318,7 +324,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 
 		private void btnTestAddUserActiveDirectory_Click(object sender, EventArgs e)
 		{
-			string guid = CreateUserAccount("LDAP://Edge-BI.Edge.BI/CN=Users,dc=edge,dc=bi", "Alony2", "sfgfdsgsdf");
+			string guid = CreateUserAccount("LDAP://79.125.11.216/CN=Users,dc=edge,dc=bi", gvKeyValue.Rows[0].Cells[1].Value.ToString(), gvKeyValue.Rows[1].Cells[1].Value.ToString());
 		}
 
 		public string CreateUserAccount(string ldapPath, string userName, string userPassword)
@@ -328,13 +334,17 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 			{
 
 				string connectionPrefix =  ldapPath;
-				DirectoryEntry dirEntry = new DirectoryEntry(connectionPrefix,"biadmin", "Narnia2@");
+				DirectoryEntry dirEntry = new DirectoryEntry("LDAP://79.125.11.216/CN=Users,dc=edge,dc=bi", "administrator", "Edgebihas1fish");
 				DirectoryEntry newUser = dirEntry.Children.Add
 					("CN=" + userName, "user");
 				newUser.Properties["samAccountName"].Value = userName;
+
+				//newUser.Properties["userAccountControl"].Value = 512;
 				newUser.CommitChanges();
 				oGUID = newUser.Guid.ToString();
 
+				//byte[] oPassword = System.Text.Encoding.Unicode.GetBytes(userPassword);
+				//newUser.Properties["unicodePwd"].Value = oPassword;
 				newUser.Invoke("SetPassword", new object[] { userPassword });
 				newUser.CommitChanges();
 				dirEntry.Close();
@@ -346,6 +356,27 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 
 			}
 			return oGUID;
+		}
+
+		private void btnLoadStepData_Click(object sender, EventArgs e)
+		{
+			switch (txtStepName.Text)
+			{
+				case "CreateRoleStepCollector":
+					{
+						List<KeyVal> list = new List<KeyVal>();
+						KeyVal keyval = new KeyVal() { Key = "RoleName", Value = "AlonForTest" };
+						list.Add(keyval);
+						keyval = new KeyVal() { Key = "RoleID", Value = "Narnia2@" };
+						list.Add(keyval);
+						keyval = new KeyVal() { Key = "RoleMemberName", Value = "Alon Yaari" };
+						list.Add(keyval);
+						gvKeyValue.DataSource = list;
+						gvKeyValue.Refresh();
+						break;
+					}
+			}
+
 		}
 
 

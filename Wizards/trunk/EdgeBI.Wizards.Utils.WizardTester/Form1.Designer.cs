@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.gvKeyValue = new System.Windows.Forms.DataGridView();
 			this.btnStart = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
@@ -38,7 +38,9 @@
 			this.txtWizardName = new System.Windows.Forms.TextBox();
 			this.btnGetSummary = new System.Windows.Forms.Button();
 			this.btnExecute = new System.Windows.Forms.Button();
-			this.btnTestAddUserActiveDirectory = new System.Windows.Forms.Button();
+			this.btnLoadStepData = new System.Windows.Forms.Button();
+			this.txtStepName = new System.Windows.Forms.TextBox();
+			this.label3 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.gvKeyValue)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -47,8 +49,8 @@
 			this.gvKeyValue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.gvKeyValue.Location = new System.Drawing.Point(12, 12);
 			this.gvKeyValue.Name = "gvKeyValue";
-			dataGridViewCellStyle1.NullValue = " ";
-			this.gvKeyValue.RowsDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle2.NullValue = " ";
+			this.gvKeyValue.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.gvKeyValue.Size = new System.Drawing.Size(240, 378);
 			this.gvKeyValue.TabIndex = 0;
 			// 
@@ -130,22 +132,41 @@
 			this.btnExecute.UseVisualStyleBackColor = true;
 			this.btnExecute.Click += new System.EventHandler(this.btnExecute_Click);
 			// 
-			// btnTestAddUserActiveDirectory
+			// btnLoadStepData
 			// 
-			this.btnTestAddUserActiveDirectory.Location = new System.Drawing.Point(272, 98);
-			this.btnTestAddUserActiveDirectory.Name = "btnTestAddUserActiveDirectory";
-			this.btnTestAddUserActiveDirectory.Size = new System.Drawing.Size(96, 23);
-			this.btnTestAddUserActiveDirectory.TabIndex = 11;
-			this.btnTestAddUserActiveDirectory.Text = "Add User";
-			this.btnTestAddUserActiveDirectory.UseVisualStyleBackColor = true;
-			this.btnTestAddUserActiveDirectory.Click += new System.EventHandler(this.btnTestAddUserActiveDirectory_Click);
+			this.btnLoadStepData.Location = new System.Drawing.Point(272, 104);
+			this.btnLoadStepData.Name = "btnLoadStepData";
+			this.btnLoadStepData.Size = new System.Drawing.Size(89, 23);
+			this.btnLoadStepData.TabIndex = 11;
+			this.btnLoadStepData.Text = "LoadStepData";
+			this.btnLoadStepData.UseVisualStyleBackColor = true;
+			this.btnLoadStepData.Click += new System.EventHandler(this.btnLoadStepData_Click);
+			// 
+			// txtStepName
+			// 
+			this.txtStepName.Enabled = false;
+			this.txtStepName.Location = new System.Drawing.Point(422, 107);
+			this.txtStepName.Name = "txtStepName";
+			this.txtStepName.Size = new System.Drawing.Size(100, 20);
+			this.txtStepName.TabIndex = 12;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(357, 113);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(63, 13);
+			this.label3.TabIndex = 13;
+			this.label3.Text = "Step Name:";
 			// 
 			// frmTestWizard
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(750, 402);
-			this.Controls.Add(this.btnTestAddUserActiveDirectory);
+			this.Controls.Add(this.label3);
+			this.Controls.Add(this.txtStepName);
+			this.Controls.Add(this.btnLoadStepData);
 			this.Controls.Add(this.btnExecute);
 			this.Controls.Add(this.btnGetSummary);
 			this.Controls.Add(this.txtWizardName);
@@ -175,7 +196,9 @@
 		private System.Windows.Forms.TextBox txtWizardName;
 		private System.Windows.Forms.Button btnGetSummary;
 		private System.Windows.Forms.Button btnExecute;
-		private System.Windows.Forms.Button btnTestAddUserActiveDirectory;
+		private System.Windows.Forms.Button btnLoadStepData;
+		private System.Windows.Forms.TextBox txtStepName;
+		private System.Windows.Forms.Label label3;
 	}
 }
 
