@@ -1,20 +1,14 @@
 
+<?php  $account_id = $_GET['account_id'];?>
+
 <?php
-/*
-$xml = simplexml_load_file("http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Measures?AccountID=106")
-     or die("Error: Cannot create object");
-foreach($xml->xpath('//Measure') as $measure)
-	{
 
-
-
-	  echo '<option value="'.$measure->MeasureID.'">'.$measure->DisplayName. '</option>';
-
-	}
-*/
-
-if(!$xml=simplexml_load_file('http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Measures?AccountID=61')){
-    trigger_error('Error reading XML file',E_USER_ERROR);
+// $url = 'http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Measures?AccountID='.$account_id.'';
+ $url = 'http://qa/ConsoleDataServices/service.svc/Measures?AccountID='.$_GET['account_id'].'';
+ 
+ // echo $url;
+if(!$xml=simplexml_load_file($url)){
+    // trigger_error('Error reading XML file',E_USER_ERROR);
 }
 
 foreach($xml as $measure){

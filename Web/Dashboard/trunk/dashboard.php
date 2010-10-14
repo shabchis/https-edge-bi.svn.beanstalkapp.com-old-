@@ -11,35 +11,81 @@
 	<script type="text/javascript" src="scripts/DD_roundies_0.0.2a-min.js"></script>
 	<script type="text/javascript" src="scripts/jquery-ui-personalized-1.5.2.packed.js"></script>
 	<script type="text/javascript" src="scripts/swfobject.js"></script>
+	<!-- <script type="text/javascript" src="scripts/jquery.qtip-1.0.0.min.js"></script> -->
 
 </head>
 
 <body>
+
 	<div id="dropdown"> 
 		<select name="combo" id="combo">
-					<option value="1"><span class="period">Yesterday</span>	 (<span class="dates"><?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>)</option></span>
-						<option value="2">Last 7 days	(<?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?> - <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>)</option>
-						<option value="3">Last 30 days	(<?php echo (date("d/m/y", mktime(0,0,0,date("m")-1,date("d")-1,date("Y"))));?> -  <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>)</option>
-						<option value="4">This Month(<?php echo date("M",mktime(0,0,0,date("m"),date("d"),date("Y")));?>)</option>
-						<option value="5">Last Month(<?php echo date("M",strtotime('-1 month'));?>)</option>
-						<option value="6">This Week	(<?php echo date("d/m/y",strtotime('last sunday'));?> - <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>)</option>
-						<option value="7">Last Week	(<?php echo date("d/m/y",strtotime('-1 week'));?>)</option>
+					<option value="1">Yesterday &nbsp (<?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>)</option>
+						<option value="2">Last 7 days&nbsp(<?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-7,date("Y"))));?> - <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>)</option>
+						<option value="3">Last 30 days&nbsp(<?php echo (date("d/m/y", mktime(0,0,0,date("m")-1,date("d"),date("Y"))));?> -  <?php echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));?>)</option>
+						<option value="4">This Month&nbsp(<?php echo date("M",mktime(0,0,0,date("m"),date("d"),date("Y")));?>)</option>
+						<option value="5">Last Month&nbsp(<?php echo date("M",strtotime('-1 month'));?>)</option>
+						<option value="6">This Week&nbsp(<?php if(strtotime('today') == strtotime('monday')){echo date("d/m/y",strtotime('today'));}else {echo date("d/m/y",strtotime('last monday'));}?> - <?php if (strtotime('today') <= strtotime('monday')){echo (date("d/m/y",strtotime('today')));}else{	echo (date("d/m/y", mktime(0,0,0,date("m"),date("d")-1,date("Y"))));}	?>)	</option>
+						<option value="7">Last Week&nbsp(<?php 	if (strtotime('today') == strtotime('monday')){	echo date("d/m/y",strtotime('last monday'));}else{echo date("d/m/y",strtotime('-2 week monday'));}?> - <?php if(strtotime('today') == strtotime('sunday')){	echo date("d/m/y",strtotime('last sunday'));}else{echo date("d/m/y",strtotime('last sunday'));}	?>)	</option>
 		</select>
 	</div>
 	
 	<div class="clear"></div>
-<?php $Account_id = $_GET['Account_id'];?>
-	
-<?php echo $Account_id ; ?>
+<?php $account_id = $_GET['account_id'];?>
+<?php $measure = '17';?>
 
 	<div id="layout">
 
 		<!--  Channel Performance -->
 		<div class="layoutRow">
+			<div id="atten" class="widget">
+				<div class="header">
+							<h3 title="Campaign Performance – ROI">Campaign Performance – ROI</h3>
+							<select id="TopCombo">
+						<?php include 'php/measureDropDown.php'; ?>
+					</select>
+				</div>
+			
+				<div class="content">
+				<div class="timeframe">
+							<span class="timevalue"></span> vs. 
+							<div class="equal">
+							<select id='yesterdayCombo'class="trend">
+							<option value = '1'>Previous Day</option>
+							<option value ='2'>7 days ago</option>
+							</select>
+							</div>
+						</div>
+					<div id="innertables" class="factTableWrapper">
+						<div id="table2" class="factTable">
+							<h3>Top Positive</h3>
+							<table id="top">
+								<tr id="tableheader">
+									<th class="campaign">Campaign</th>
+									<th colspan=2>Net Revenue </th>
+								</tr>						
+							</table>
+						</div>
+						<div id="table1" class="factTable">
+							<h3>Top Negative</h3>
+							<table id="Worse">
+								<tr>
+									<th class="campaign">Campaign</th>
+									<th colspan=2>Net Revenue </th>
+								</tr>						
+							</table>
+						</div>
+						<div class="error"><h4>No data found for the selection criteria.</h4></div>
+					</div>
+				</div>
+			</div>
+			
+			
+			
+			<!-- Campaign Performance ROI -->
 			
 			<div id="barPanel" class="widget" >
 				<div class="header">
-					<h3>Channel Performance</h3>
+					<h3 title="Channel Performance">Channel Performance</h3>
 					<select id="GraphCombo">
 						<?php include 'php/measureDropDown.php'; ?>
 						
@@ -64,66 +110,16 @@
 				</div>
 			</div>
 			
-			
-			<!-- Campaign Performance ROI -->
-			
-			<div id="atten" class="widget">
-				<div class="header">
-							<h3>Campaign Performance – ROI</h3>
-							<select id="TopCombo">
-						<?php include 'php/measureDropDown.php'; ?>
-					</select>
-				</div>
-			
-				<div class="content">
-					<div id="innertables" class="factTableWrapper">
-						<div id="table2" class="factTable">
-							<h3>Top Positive</h3>
-							<table id="top">
-								<tr id="tableheader">
-									<th class="campaign">Campaign</th>
-									<th colspan=2>Net Revenue </th>
-								</tr>						
-							</table>
-						</div>
-						<div id="table1" class="factTable">
-							<h3>Top Negative</h3>
-							<table id="Worse">
-								<tr>
-									<th class="campaign">Campaign</th>
-									<th colspan=2>Net Revenue </th>
-								</tr>						
-							</table>
-						</div>
-						<div class="error"><h4>There was a problem loading the data</h4></div>
-					</div>
-				</div>
-			</div>
-			
 		</div>
 		
 		<div class="layoutRow">
 			<!-- Geo -->
 			
-				<div id="maps" class="widget">
+					<div id="trendcahnges" class="widget">
 					<div class="header">
-						<h3>Geo Distribution</h3>
-						<select id="MapCombo">
-							<?php include 'php/measureDropDown.php'; ?>
-						</select>
-					</div>
-				
-					<div id="map1" class="content"></div>
-				</div>
-			
-			
-			<!-- Campaign Flucatuations-->
-			
-				<div id="trendcahnges" class="widget">
-					<div class="header">
-						<h3>Fluctuating Campaigns – ROI</h3>
+						<h3 title="Fluctuating Campaigns – ROI">Fluctuating Campaigns – ROI</h3>
 						<select id="flcamp">
-							<?php include 'php/measureDropDown.php'; ?>
+					<?php include 'php/measureDropDown.php'; ?>
 						</select>
 					</div>
 					
@@ -157,17 +153,107 @@
 									</tr>						
 								</table>
 							</div>
-							<div class="error1"><h4>There was a problem loading the data</h4></div>
+							<div class="error1"><h4>No data found for the selection criteria.</h4></div>
+						</div>
+					</div>
+				</div>
+			
+			
+			<!-- Campaign Flucatuations-->
+			
+			<div id="TopSpenders" class="widget">
+					<div class="header">
+						<h3 title="Top Spending campaigns">Top Spending campaigns</h3>
+						<select id="TopSpendCombo">
+								<?php include 'php/measureDropDown.php'; ?>
+									
+						</select>
+					</div>
+					
+					<div class="content">
+						<div class="timeframe">
+							<span class="timevalue"></span> vs. 
+							<div class="equal">
+							<select id='yesterdayCombo'class="trend">
+							<option value = '1'>Previous Day</option>
+							<option value ='2'>7 days ago</option>
+							</select>
+							</div>
+						</div>
+						
+						<div id="innertables3" class="factTableWrapper">
+							<div id="table5" class="factTable">
+								<h3>Top Positive</h3>
+								<table id="spending">
+									<tr id="tableheader">
+										<th class="campaign">Campaign</th>
+										<th class="spendcost">Cost</th>
+										<th class = "spendcpa">CPA</th>
+										<th class="title">Acquisitions</th>
+										<th>ROI</th>
+									</tr>					
+								</table>
+							</div>
+							
+							<div class="error3"><h4>No data found for the selection criteria.</h4></div>
 						</div>
 					</div>
 				</div>
 			
 		</div>
+	<!--- <div class="layoutRow">
+						
+			
+			
+				<div id="gauge" class="widget">
+					<div class="header">
+						<h3>Overall account performance</h3>
+						<select id="gaugeCombo">
+								<?php include 'php/measureDropDown.php'; ?>
+									
+						</select>
+					</div>
+					
+					<div class="content">
+						<div class="timeframe">
+							<span class="timevalue"></span> vs. 
+							<div class="equal">
+							<select id='yesterdayCombo'class="trend">
+							<option value = '1'>Previous Day</option>
+							<option value ='2'>7 days ago</option>
+							</select>
+							</div>
+						</div>
+						
+						<div id="innertables3" class="factTableWrapper">
+							
+							
+							<div class="error3"><h4>There was a problem loading the data</h4></div>
+						</div>
+					</div>
+				</div>
+				<div id="maps" class="widget">
+					<div class="header">
+						<h3>Geo Distribution</h3>
+						<select id="MapCombo">
+						
+						</select>
+					</div>
+				
+					<div id="map1" class="content"></div>
+				</div>
+			
+		</div> -->
 	</div>
 	<script type="text/javascript">
+	
 	DD_roundies.addRule('.header', '5px 5px 0px 0px');
   DD_roundies.addRule('.tabnav ui-tabs-nav>li', '10px');
-var account_id = <?php echo $_GET['Account_id'];?>;
+	// var account_id = <?php echo $_GET['account_id'];?>;
+		var account_id = '<?php echo $_REQUEST['account_id'];?>';
+	var globalMeasure = '17';
+	// var globalMeasure2 = '1';
+	
 	var startDateText = $("#yesterdayCombo option:selected").text();
 	var startDate = $("#yesterdayCombo option:selected").val();
 	var endDate = $("#combo option:selected").val();
@@ -175,11 +261,15 @@ var account_id = <?php echo $_GET['Account_id'];?>;
 	var measureText = $("#GraphCombo option:selected").text();
 	var startTimeFrame = $("combo option:selected").text();
 	var endTimeFrame = $("second option:selected").text();
+	
 	var bar = $("#weekagograph").height();
 $(function(){	
 
+var title = $('#TopSpendCombo option:selected').text();
+	 $('th.title').text(title);
+	
 
-console.log(account_id);
+
 	var percent = $("span.precent").text();
 
 	var time = 	$("#combo option:selected").val();
@@ -190,7 +280,7 @@ console.log(account_id);
 	
 	
 	$('.timevalue').empty();
-	$('span.timevalue').append(text);
+	// $('span.timevalue').append(text);
 	 // $('.equal').empty();
 	
 	ChangeStatus();
@@ -198,11 +288,14 @@ console.log(account_id);
 	
 		// changeCampaignPerforamceCombo();
 	// LoadTopCampaigns();
+	
 	changeCampaignPerforamceCombo();
 	 graphcombo();
+	 LoadGraph(account_id,startDate,endDate,measure,measureText);
 	 // ChangeYesterdayMatch();
-	changeCampaignPerforamceCombo();
+	// changeCampaignPerforamceCombo();
 		$("#combo").change(function(){
+		
 		// var endDate = $("#combo option:selected").val()
 			// var text = $("#combo option:selected").text();
 			// var selectValue = $("#combo option:selected").val();
@@ -214,18 +307,18 @@ console.log(account_id);
 			// $('.equal').hide();
 				
 				ChangeStatus();
-	 			$('span.timevalue').append(text);
+	 			ChangeYesterdayMatch();
 				graphcombo();
 				
 	 			// getMainTime();
-				LoadMap(startDate,endDate);
+				// LoadMap(startDate,endDate);
 				LoadGraph(account_id,startDate,endDate,measure,measureText);
-				graphcombo();
+			
 				// ChangeYesterdayMatch();
-				LoadTopCampaigns(account_id);
-				LoadWorstCampaigns(account_id);
-				 
-	
+				LoadTopCampaigns(account_id,startDate);
+				LoadWorstCampaigns(account_id,startDate);
+				 topSpenders();
+
 
 		})
 
@@ -237,23 +330,23 @@ console.log(account_id);
 	
 		 })		
 		 
- LoadGraph(account_id,startDate,endDate,measure,measureText);
+ 
 		 // getMainTime();
 		 // getSectionTime();
-		LoadMap(startDate,endDate);
+		// LoadMap(startDate,endDate);
 		LoadTopCampaigns();
 		 LoadWorstCampaigns();
 		
 		 ChangeYesterdayMatch();
-		
+		 topSpenders();
+		 
 		// LoadGraph(startDate,endDate,measure,startTimeFrame,endTimeFrame);
 
-	 
 
 })
 function changeCampaignPerforamceCombo(){
 	$("#TopCombo").change(function(){
-		LoadTopCampaigns();
+		LoadTopCampaigns(account_id);
 		
 	})
 	
@@ -266,8 +359,9 @@ function changeCampaignPerforamceCombo(){
 	$("#trendcahnges #flcamp").change(function(){
 			measure = $("#flcamp option:selected").val();
 			
-			LoadWorstCampaigns();
+			LoadWorstCampaigns(account_id);
 	})
+	topSpendersMeasures();
 	
 	// $("#yesterdayCombo").change(function(){
 			// startDate = $("#yesterdayCombo option:selected").val();
@@ -276,7 +370,7 @@ function changeCampaignPerforamceCombo(){
 	
 	function ChangeStatus(){
 	
-	// $('span.timevalue').empty();
+	  $('span.timevalue').empty();
 			 $('.equal').empty();
 			// $('.equal').show();
 			var yesterday = $("<select id='yesterdayCombo'><option value = '1'>Previous Day</option><option value ='2'>7 days ago</option></select>");
@@ -287,29 +381,41 @@ function changeCampaignPerforamceCombo(){
 			
 				
 				if(selectValue == 1){
-				
+				  $('span.timevalue').empty();
 					 $(".equal").append(yesterday);
-					
+					$('span.timevalue').append("Yesterday");
 				}
 				if(selectValue == 2){
-				
+				  $('span.timevalue').empty();
 						$(".equal").append("Previous 7 days");
-				}
+						$('span.timevalue').append("Last 7 days");
+				}	
 			
 				if(selectValue == 3){
+				 $('span.timevalue').empty();
 						$(".equal").append("Previous 30 days");
+						$('span.timevalue').append("Last 30 days");
 				}
 				if(selectValue == 4){
+				$('span.timevalue').empty();
 						$(".equal").append("Last Month");
+						$('span.timevalue').append("This Month");
 				}
 			
 				if(selectValue == 5){
+				$('span.timevalue').empty();
+				$('span.timevalue').append("Last Month");
 						$(".equal").append("Previous Month");
 				}
 				if(selectValue == 6){
+				$('span.timevalue').empty();
+				$('span.timevalue').append("This Week");
 						$(".equal").append("Last Week");
+						
 				}
 				if(selectValue == 7){
+				$('span.timevalue').empty();
+				$('span.timevalue').append("Last Week");
 						$(".equal").append("Previous Week");
 				}
 	}
@@ -324,9 +430,26 @@ function changeCampaignPerforamceCombo(){
 			})
 	
 	$("#trendcahnges #yesterdayCombo").change(function(){
-		LoadWorstCampaigns();
+	startDate = $("#trendcahnges #yesterdayCombo option:selected").val();
+	
+		LoadWorstCampaigns(startDate);
 	
 	})
+	
+	$("#atten #yesterdayCombo").change(function(){
+	startDate = $("#atten #yesterdayCombo option:selected").val();
+	
+		LoadTopCampaigns(startDate);
+	
+	})
+	$("#TopSpenders #yesterdayCombo").change(function(){
+		startDate = $("#TopSpenders #yesterdayCombo option:selected").val();
+		console.log("changed");
+	
+		topSpenders(startDate);
+	
+	})
+	
 		}
 	function fluncuatingMeasure(){
 		$("#flcamp").change(function(){
@@ -335,7 +458,14 @@ function changeCampaignPerforamceCombo(){
 		})
 	}
 	
+	function topSpendersMeasures(){
+	$("#TopSpendCombo").change(function(){
+	 
+	topSpenders();
 	
+	})
+	
+	}
 	function graphcombo() {
 		$("#GraphCombo").change(function(){
 			 measure =  $("#GraphCombo option:selected").val();
@@ -343,16 +473,20 @@ function changeCampaignPerforamceCombo(){
 			LoadGraph(account_id,startDate,endDate,measure,measureText);
 			
 			})
+			
+			
 			}
+			
     function LoadGraph(account_id,startDate,endDate,measure,measureText){
-	console.log(account_id);
-				 console.log('http://testing/Dashboard/php/amcolumn_data.php?account_id='+account_id+'&endDate='+endDate+'&measure='+measure+'&startdate='+startDate+'');
-				 // console.log("http://testing/Dashboard/php/colsettings.php?measure="+measureText+"&endDate="+endDate+"&startDate="+startDate+"");
+		startDate = $("#barPanel #yesterdayCombo").val(); 
+	// console.log(account_id);
+				 // console.log('http://testing/Dashboard/php/amcolumn_data.php?account_id='+account_id+'&endDate='+endDate+'&measure='+measure+'&startdate='+startDate+'&global='+globalMeasure+'');
+			 //console.log("http://testing/Dashboard/php/colsettings.php?measure="+measureText+"&endDate="+endDate+"&startDate="+startDate+"");
                var so = new SWFObject("charts/amcolumn/amcolumn.swf", "amcolumn", "100%", "300", "8", "#FFFFFF");
                so.addVariable("path", "charts/amcolumn/");
                // so.addVariable("settings_file", encodeURIComponent("amcolumn/amcolumn_settings.xml"));        // you can set two or more different settings files here (separated by commas)
                so.addVariable("settings_file", encodeURIComponent("php/colsettings.php?measure="+measureText+"&endDate="+endDate+"&startDate="+startDate+""));                          
-			 so.addVariable("data_file", encodeURIComponent("php/amcolumn_data.php?account_id="+account_id+"&endDate="+endDate+"&measure="+measure+"&startdate="+startDate+""));
+			 so.addVariable("data_file", encodeURIComponent("php/amcolumn_data.php?account_id="+account_id+"&endDate="+endDate+"&measure="+measure+"&startdate="+startDate+"&global="+globalMeasure+""));
 			  // so.addVariable("data_file", encodeURIComponent("php/amcolumn_data.php?startDate="+startdate+"&endDate="+endDate+"&measure="+measure+""));
             //       so.addVariable("data_file", encodeURIComponent("amcolumn/coldata.php?startDate="+startdate+"&endDate="+endDate+""));                  
  // so.addVariable("settings_file", encodeURIComponent("amcolumn/colsettings.php?startDate="+startdate+"&startDateName="+startTimeFrame+"&endDate="+endDate+"&endDateName="+endTimeFrame+"&measure="+measure+""));     			
@@ -383,25 +517,36 @@ function changeCampaignPerforamceCombo(){
         so.write("map1");
 
 		}
-	function LoadTopCampaigns(account_id){
+	function LoadTopCampaigns(startDate){
+	$("#table2,#table1").hide();
 	$(".loader1").remove();
 	$(".error").hide();
+	$('tr.topcpa').remove();
+	// startDate = $("#trendcahnges #yesterdayCombo option:selected").val();
+	//console.log(startDate);
 			measure = $("#TopCombo option:selected").val();
 			endDate = $("#combo option:selected").val();
+			
 			$("#table2,#table1").hide();
 			 $("#innertables").append('<div class="loader1"><img src="images/loading_bar7.gif"></img></div>');
-			$('tr.topcpa').remove();
-		
+			
+		startDate = $("#atten #yesterdayCombo option:selected").val();
 		
 			$.ajax({
 	
 		
 		type: "GET",
-		url: "php/campaignPerformance.php?endDate="+endDate+"&startdate=1&measure="+measure+"&orderby=DESC",
+		url: "php/campaignPerformance.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=DESC&global="+globalMeasure+"",
 		dataType: "xml",
 		error: function (xml) {
-		$(".loader1").hide();
-		$(".error").show();
+		
+				$(".loader1").hide();
+				$(".error").show();
+				$("#table2,#table1").hide();
+			if (xml.status == 500){
+		
+			$(".error h4").html('Data failed to load');
+			}
 			
 			},
 		success: function(xml) {
@@ -411,10 +556,10 @@ function changeCampaignPerforamceCombo(){
 				var name = $(this).find('name').text();
 				var cpa = $(this).find('value').text();
 				var diff = $(this).find('diff').text();
-			
+			var fullname = $(this).find('fullname').text();
 			
 				
-					$('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class="last"><span class="con"><span class="precent">'+diff+'</span></span></td></tr>').appendTo('#top');
+					$('<tr class="topcpa"><td class="name" title="'+fullname+'">'+name+'</td><td class="middle">'+cpa+'</td><td class="last"><span class="con"><span class="precent">'+diff+'</span></span></td></tr>').appendTo('#top');
 				// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp('+number+') </td></tr>').appendTo('#upward');
 		 // $('<tr class="worstcpa"><td>'+name+'</td><td>'+percent+'%</td><td>('+number+')</td></tr>').appendTo("#upward");
 				
@@ -422,10 +567,14 @@ function changeCampaignPerforamceCombo(){
 				$("span.precent:contains(-)").css('color','red').parent("td.last").css('color','red');
 			
 				$("span.precent").not(":contains(-)").css('color','green').parent("td.last").css('color','green');
-				
-			
+				$("#top .topcpa .name").attr("'title','tesy'");
+	
+
+	
 			});
-		
+				
+		$("div.loader1").fadeOut(400);
+		$("#table2,#table1").show();
 		}
 	});
 		
@@ -433,12 +582,17 @@ function changeCampaignPerforamceCombo(){
 	
 	
 		type: "GET",
-		url: "php/campaignPerformance.php?endDate="+endDate+"&startdate=1&measure="+measure+"&orderby=ASC",
+		url: "php/campaignPerformance.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=ASC&global="+globalMeasure+"",
 		dataType: "xml",
 		error: function (xml) {
-		$(".loader2").hide();
-		$(".error").show();
-			
+			$(".loader1").hide();
+			$(".error").show();
+			$("#table2,#table1").hide();
+					if (xml.status == 500){
+		
+			$(".error h4").html('Data failed to load');
+			}
+
 			},
 		success: function(xml) {
 				
@@ -446,10 +600,11 @@ function changeCampaignPerforamceCombo(){
 				var name = $(this).find('name').text();
 				var cpa = $(this).find('value').text();
 				var diff = $(this).find('diff').text();
-				
+				var fullname = $(this).find('fullname').text();
 			
 				
-					$('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class="last"><span class="con"><span class="precent">'+diff+'</span></span></td></tr>').appendTo('#Worse');
+					$('<tr class="topcpa"><td title="'+fullname+'">'+name+'</td><td class="middle">'+cpa+'</td><td class="last"><span class="con"><span class="precent">'+diff+'</span></span></td></tr>').appendTo('#Worse');
+					// $('<div class="htmltooltip">RSS stands for Really Simple Syndication, and is a type of XML file format.</div>').appendTo("#table1");
 				// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp('+number+') </td></tr>').appendTo('#upward');
 		 // $('<tr class="worstcpa"><td>'+name+'</td><td>'+percent+'%</td><td>('+number+')</td></tr>').appendTo("#upward");
 				
@@ -460,7 +615,7 @@ function changeCampaignPerforamceCombo(){
 				
 			
 			});
-					$("div.loader1").fadeOut(100);
+					$("div.loader1").fadeOut(400);
 					$("#table2,#table1").show();
 		}
 
@@ -468,11 +623,11 @@ function changeCampaignPerforamceCombo(){
 		
 	}
 
-	function LoadWorstCampaigns(account_id){
+	function LoadWorstCampaigns(){
 	$(".error1").hide();
 
-	$(".loader1").remove();
-		startDate = $("#barPanel #yesterdayCombo option:selected").val();
+	// $(".loader1").remove();
+		startDate = $("#trendcahnges #yesterdayCombo option:selected").val();
 		measure = $("#flcamp option:selected").val();
 		endDate = $("#combo option:selected").val();
 			$("#table3,#table4").hide();
@@ -481,15 +636,17 @@ function changeCampaignPerforamceCombo(){
 		$('tr.worstcpa').remove();
 		$.ajax({
 			type: "GET",
-			url: "php/worsecampaign.php?endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=ASC",
+			url: "php/worsecampaign.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=ASC&global="+globalMeasure+"",
 			dataType: "xml",
 			error: function (xml) {
 		
-		$(".loader2").remove();
-			if(xml.length == 0) {
-			$("#innertables2").append("<div class='error1'>There were a problem loading the data2</div>");
+		$(".loader1").remove();
+			$(".error1").show();
+			$("#table3,#table4").hide();
+			if (xml.status == 500){
+		
+			$(".error1 h4").html('Data failed to load');
 			}
-			
 			
 			},
 		
@@ -500,9 +657,11 @@ function changeCampaignPerforamceCombo(){
 					var diff = $(this).find('diff').text();
 					var number = $(this).find('diff_number').text();
 						var	percent = $(this).find('percent').text();
+					var fullname = $(this).find('fullname').text();
+					
 					// $('<tr class="worstcpa"><td>'+name+'</td><td class="color">'+cpa+'&nbsp &nbsp(<span class="precent">'+diff+'</span>%)</td></tr>').appendTo('#Worse');
 					// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class ="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#Worse');
-						$('<tr class="worstcpa"><td>'+name+'</td><td>'+diff+'</td><td>'+cpa+'</td></tr>').appendTo('#downward');
+						$('<tr class="worstcpa"><td title="'+fullname+'">'+name+'</td><td class="middle">'+diff+'</td><td>'+cpa+'</td></tr>').appendTo('#downward');
 		 	
 				$("span.precent:contains(-)").css('color','red').parent(".con").css('color','red');
 			
@@ -518,18 +677,27 @@ function changeCampaignPerforamceCombo(){
 
 	
 				});
+			
+			},
+			complete:function(xml) {
+				$("div.loader1").fadeOut(400);
+				
 			}
 		});
 		
 $.ajax({
 			type: "GET",
-			url: "php/worsecampaign.php?endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=DESC",
+			url: "php/worsecampaign.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=DESC&global="+globalMeasure+"",
 			dataType: "xml",
 			error: function (xml) {
 		
 		$(".loader1").remove();
 			$(".error1").show();
-			
+			$("#table3,#table4").hide();
+						if (xml.status == 500){
+		
+			$(".error1 h4").html('Data failed to load');
+			}
 			
 			},
 			success: function(xml) {
@@ -539,9 +707,10 @@ $.ajax({
 					var diff = $(this).find('diff').text();
 					var number = $(this).find('diff_number').text();
 						var	percent = $(this).find('percent').text();
+						var fullname = $(this).find('fullname').text();
 					// $('<tr class="worstcpa"><td>'+name+'</td><td class="color">'+cpa+'&nbsp &nbsp(<span class="precent">'+diff+'</span>%)</td></tr>').appendTo('#Worse');
 					// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class ="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#Worse');
-						$('<tr class="worstcpa"><td>'+name+'</td><td>'+diff+'</td><td>'+cpa+'</td></tr>').appendTo('#upward');
+						$('<tr class="worstcpa"><td class="name" title="'+fullname+'">'+name+'</td><td class="middle">'+diff+'</td><td>'+cpa+'</td></tr>').appendTo('#upward');
 		 	
 				$("span.precent:contains(-)").css('color','red').parent(".con").css('color','red');
 			
@@ -555,12 +724,11 @@ $.ajax({
 
 					})
 
-	
-					
 				});
-				$("div.loader1").hide();
-				$("#table3,#table4").show();
+						$("#table3,#table4").show();
+					
 			}
+			
 				
 			
 			
@@ -569,7 +737,92 @@ $.ajax({
 		
 		
 		}
+	function topSpenders(){
+		startDate = $("#TopSpenders #yesterdayCombo option:selected").val();
+		measure = $("#TopSpendCombo option:selected").val();
+		endDate = $("#combo option:selected").val();
+		$("#table5").hide();
+		$('.error3').hide();
+			 $("#innertables3").append('<div class="loader3"><img src="images/loading_bar7.gif"></img></div>');
+	$('tr.topspend').remove();
+	//console.log(startDate);
+		$.ajax({
+			type: "GET",
+			url: "php/topSpenders.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=DESC",
+			dataType: "xml",
+			 error: function (xml) {
+	
+		
+		
+		$(".loader3").remove();
+			$(".error3").show();
+			$("#table5").hide();
+					
+					 if (xml.status == 500) {
+					$(".error3 h4").html('Data failed to load');
+					}
+	
+		
+		
+		
+			//console.log(xml.status);
+			},
+		
+			success: function(xml) {
+			
+				$(xml).find('campaign').each(function(){
+					var name = $(this).find('name').text();
+					var cpa = $(this).find('cpa').text();
+					var cost = $(this).find('cost').text();
+					var roi = $(this).find('roi').text();
+					var acq = $(this).find('acq').text();
+					var number = $(this).find('diff_number').text();
+					var fullname = $(this).find('fullname').text();
+						
+					var fullname = $(this).find('fullname').text();
+				
+					// $('<tr class="worstcpa"><td>'+name+'</td><td class="color">'+cpa+'&nbsp &nbsp(<span class="precent">'+diff+'</span>%)</td></tr>').appendTo('#Worse');
+					// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class ="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#Worse');
+						$('<tr class="topspend"><td title="'+fullname+'">'+name+'</td><td class="middle">'+cost+'</td><td>'+cpa+'</td><td>'+acq+'</td><td class="roi">'+roi+'</td></td></tr>').appendTo('#spending');
+		 	
+			
+		
+				$("span.precent:contains(-)").css('color','red').parent(".con").css('color','red');
+			
+				$("span.precent").not(":contains(-)").css('color','green').parent(".con").css('color','green');
+	  					 var title = "";
+					 $('#TopSpendCombo').change(function(){
+						 title = $('#TopSpendCombo option:selected').text();
 
+					 $('th.title').text(title);
+						
+
+					})
+
+	$("#table5").show();
+	$('.error3').hide();
+				});
+			
+			
+			},
+			complete:function(xml) {
+				$("div.loader3").fadeOut(400);
+				$('.roi').each(function(){
+				var text =  $(this).text();
+				var num = parseFloat(text);
+
+				if (num >= 130){
+				$(this).css('color','green');
+					}
+				if(num <= 70){
+				$(this).css('color','red');
+				}	
+					
+				})
+				
+			}
+		});
+	}
 	function getMainTime(){
 	
 		var time = 	$("#combo option:selected").val();
@@ -643,12 +896,13 @@ $.ajax({
 			}
 
 		}
+		<?php /*
 	function LoadMeasures(){
-			$('#GaugeCombo,#GraphCombo,#MapCombo,#TopCombo').empty();
+			$('#GaugeCombo,#GraphCombo,#MapCombo,#TopCombo,#TopSpendCombo').empty();
 		
 		$.ajax({
 			type: "GET",
-			url: "http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Measures?AccountID=106",
+			url: "http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Measures?AccountID=''",
 
 		
 			success: function(xml) {
@@ -658,7 +912,7 @@ $.ajax({
 					var value = $(this).find('MeasureID').text();
 				
 					
-					$('<option value="'+value+'">'+name+'</option>').appendTo('#TopCombo,#GraphCombo,#MapCombo,#GaugeCombo');
+					$('<option value="'+value+'">'+name+'</option>').appendTo('#TopCombo,#GraphCombo,#MapCombo,#GaugeCombo,#TopSpendCombo');
 				
 					
 					
@@ -666,7 +920,7 @@ $.ajax({
 			}
 		});
 		
-		}
+		}*/?>
 		
 	</script>
 
