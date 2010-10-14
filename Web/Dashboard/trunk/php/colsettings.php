@@ -5,8 +5,7 @@
 <?php $measure = $_GET['measure'];?>
 
 <?php 
-
-		switch ($startdateName){
+switch ($startdateName){
 			case 1:
 			$startdate  =  "Previous Day";
 			break;
@@ -14,7 +13,7 @@
 			$startdate  =  "7 days ago";
 			break;
 			}
-	switch ($endDate){
+		switch ($endDate){
 		case 1: 
 		$startDateName = $startdate;
 		$endDateName = "Yesterday";
@@ -32,12 +31,12 @@
 		$endDateName = "This Month";
 	break;
 	case 5: 
-		$startDateName = "Last Month";
-		$endDateName = "Previous Month";
+		$startDateName = "Previous Month";
+		$endDateName = "Last Month";
 		break;
 		case 6: 
-		$startDateName = "This Week";
-		$endDateName = "Last Week";
+		$startDateName = "Last Week";
+		$endDateName = "This Week";
 		break;
 		case 7: 
 		$startDateName = "Previous Week";
@@ -82,17 +81,26 @@
       <color>E7E7E7</color>
     </category>
     <value>
+		
+      <strict_min_max>0</strict_min_max>
+      <skip_first>0</skip_first>
       <width>1</width>
-      <color>E7E7E7</color>
+	      <color>E7E7E7</color>
     </value>
   </axes>
    <values>
+  <value>
+      <min>0</min>
+      <strict_min_max>1</strict_min_max>
+      <skip_first>0</skip_first>
+    </value>
+ 
     <category>
+	 <letter number="1000">K</letter>
       <enabled>1</enabled>
     </category>
-    <value>
-      <min>0</min>
-    </value>
+	
+	
   </values>
   <balloon>
    
@@ -104,8 +112,9 @@
     <color>90B63D</color>
     <alpha>100</alpha>
   </error_messages>
+  
   <column>
-    <width>85</width>
+    <width>50</width>
     <balloon_text>{title}: {value} <?php echo $measure;?></balloon_text>
     <grow_time>3</grow_time>
     <grow_effect>regular</grow_effect>
@@ -114,17 +123,16 @@
     <width>0</width>
   </line>
   <graphs>
-<graph gid="0">
 
-</graph>
 <graph gid="0">
 <axis>right</axis>
-<title><?php echo $startDateName ;?></title>
+<title><?php echo $endDateName ;?></title>
 <color>8D8D8D</color>
 </graph>
 <graph gid="1">
 <axis>right</axis>
-<title><?php echo $endDateName;?></title>
+<title><?php echo $startDateName;?></title>
+
 <color>90B63D</color>
 </graph>
 
