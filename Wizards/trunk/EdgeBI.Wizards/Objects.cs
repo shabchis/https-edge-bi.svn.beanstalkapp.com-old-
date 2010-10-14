@@ -52,6 +52,14 @@ namespace EdgeBI.Wizards
 		public Dictionary<string, object> CollectedValues;
 	}
 
+	public struct ProgressState
+	{
+		public float OverAllProgess { get; set; }
+		public Dictionary<string,float> CurrentRuningStepsState { get; set; }
+		
+
+	}
+
 	/// <summary>
 	/// Result of specific request or respond
 	/// </summary>
