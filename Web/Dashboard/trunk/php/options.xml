@@ -1,4 +1,4 @@
-<ArrayOfReturnData>
+<ArrayOfReturnData xmlns="http://schemas.datacontract.org/2004/07/Dwh.Data.Service" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
 	<ReturnData>
 		<ID>4000022</ID>
 		<Name>GO. Toolbar---US</Name>

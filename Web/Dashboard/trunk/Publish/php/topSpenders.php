@@ -8,8 +8,8 @@
 	include ('timeParse.php');
 	
 
-$url ='http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID=8&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=10&dataSort=value1&dataSortDir=DESC&functionDisplayMeasures='.$measureId.'&displayMeasures=20,'.$measureId.',19';
-// $url ='https://console.edge-bi.com/Seperia/DataServices/service.svc/Data?accountID='.$account_id.'&measureID=8&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=10&dataSort=value1&dataSortDir=DESC&functionDisplayMeasures='.$measureId.'&displayMeasures=20,'.$measureId.',19';
+// $url ='http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID=8&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=10&dataSort=value1&dataSortDir=DESC&functionDisplayMeasures='.$measureId.'&displayMeasures=20,'.$measureId.',19';
+$url ='https://console.edge-bi.com/Seperia/DataServices/service.svc/Data?accountID='.$account_id.'&measureID=8&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=10&dataSort=value1&dataSortDir=DESC&functionDisplayMeasures='.$measureId.'&displayMeasures=20,'.$measureId.',19';
  
 
  // echo '<url>'.($url).'</url>' ;
