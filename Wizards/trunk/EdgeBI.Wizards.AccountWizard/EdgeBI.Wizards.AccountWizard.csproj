@@ -56,7 +56,6 @@
     <Compile Include="CreateRoleStepCollector.cs" />
     <Compile Include="CreateRoleStepExecutor.cs" />
     <Compile Include="CubeCreation\BookCreation.cs" />
-    <Compile Include="CubeCreation\CreatingUsers.cs" />
     <Compile Include="CubeCreation\CubeCreation.cs" />
     <Compile Include="CubeCreation\CubeHandler.cs" />
     <Compile Include="CubeCreation\RoleCreation.cs" />

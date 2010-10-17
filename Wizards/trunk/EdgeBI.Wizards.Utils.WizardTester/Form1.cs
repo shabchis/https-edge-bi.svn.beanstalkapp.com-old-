@@ -31,15 +31,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			List<KeyVal> list = new List<KeyVal>();
-			KeyVal keyval = new KeyVal() { Key = "UserName", Value = "AlonForTest" };
-			list.Add(keyval);
-			keyval = new KeyVal() { Key = "Password", Value = "Narnia2@" };
-			list.Add(keyval);
-			keyval = new KeyVal() { Key = "FullName", Value = "Alon Yaari" };
-			list.Add(keyval);
-			gvKeyValue.DataSource = list;
-			gvKeyValue.Refresh();
+			
 
 		}
 
@@ -370,6 +362,19 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 						keyval = new KeyVal() { Key = "RoleID", Value = "Narnia2@" };
 						list.Add(keyval);
 						keyval = new KeyVal() { Key = "RoleMemberName", Value = "Alon Yaari" };
+						list.Add(keyval);
+						gvKeyValue.DataSource = list;
+						gvKeyValue.Refresh();
+						break;
+					}
+				case "ActiveDirectoryStepCollector":
+					{
+						List<KeyVal> list = new List<KeyVal>();
+						KeyVal keyval = new KeyVal() { Key = "UserName", Value = "AlonForTest" };
+						list.Add(keyval);
+						keyval = new KeyVal() { Key = "Password", Value = "Narnia2@" };
+						list.Add(keyval);
+						keyval = new KeyVal() { Key = "FullName", Value = "Alon Yaari" };
 						list.Add(keyval);
 						gvKeyValue.DataSource = list;
 						gvKeyValue.Refresh();

@@ -407,7 +407,7 @@ namespace EdgeBI.Wizards
 
 		void instance_ProgressReported(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			
 		}
 
 		void instance_ChildServiceRequested(object sender, ServiceRequestedEventArgs e)
@@ -436,7 +436,7 @@ namespace EdgeBI.Wizards
 			}
 			if (e.RequestedService.ParentInstance.Configuration.Options["WizardRole"] == "ExecutorContainer")
 			{
-				int sessionID = int.Parse(e.RequestedService.ParentInstance.Configuration.Options["SessionID"]);
+				int sessionID = int.Parse(e.RequestedService.ParentInstance.ParentInstance.Configuration.Options["SessionID"]);
 				lock (ExecuterSteps)
 				{
 					if (ExecuterSteps.ContainsKey(sessionID))
