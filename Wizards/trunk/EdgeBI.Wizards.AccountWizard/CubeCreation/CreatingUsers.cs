@@ -5,6 +5,7 @@ using System.Text;
 using System.DirectoryServices;
 using System.Configuration;
 using System.Reflection;
+using Easynet.Edge.Core.Configuration;
 
 
 namespace EdgeBI.Wizards.AccountWizard.CubeCreation
@@ -26,8 +27,10 @@ namespace EdgeBI.Wizards.AccountWizard.CubeCreation
         /// <param name="strPwd"></param>
         /// <param name="strFullName"></param>
         /// <param name="AccountActive"></param>
-        public void AddNew(string strLogin, string strPwd, string strFullName, bool AccountActive)
+        public void AddNewActiveDirectoryUser(string strLogin, string strPwd, string strFullName, bool AccountActive)
         {
+
+
             DirectoryEntry obDirEntry = null;
            // obDirEntry = new DirectoryEntry(ConfigurationSettings.AppSettings["ActiveDirectoryPath"].ToString(), ConfigurationSettings.AppSettings["ActiveDirectoryLoginUserName"].ToString(), ConfigurationSettings.AppSettings["ActiveDirectoryLoginPassword"].ToString());//("LDAP://79.125.11.216/CN=Users,dc=edge,dc=bi","biadmin","Narnia2@");
 			obDirEntry = new DirectoryEntry("LDAP://79.125.11.216/CN=Users,dc=edge,dc=bi", "biadmin", "Narnia2@");
@@ -57,14 +60,14 @@ namespace EdgeBI.Wizards.AccountWizard.CubeCreation
 			
                 obUser.CommitChanges();
                 //UF_DONT_EXPIRE_PASSWD 0x10000
-                int exp = (int)obUser.Properties["userAccountControl"].Value;
-                obUser.Properties["userAccountControl"].Value = exp | 0x10000; //what is this?
+				UserAccountControlFlags exp = (UserAccountControlFlags)obUser.Properties["userAccountControl"].Value;
+				obUser.Properties["userAccountControl"].Value = exp | UserAccountControlFlags.UF_DONT_EXPIRE_PASSWD; //what is this?
                 obUser.CommitChanges();
                 if (AccountActive)
                 {
                     //UF_ACCOUNTDISABLE 0x0002
-                    int val = (int)obUser.Properties["userAccountControl"].Value;
-					obUser.Properties["userAccountControl"].Value = val & ~0x0002;  //what is this?
+					UserAccountControlFlags val = (UserAccountControlFlags)obUser.Properties["userAccountControl"].Value;
+					obUser.Properties["userAccountControl"].Value = val & ~UserAccountControlFlags.UF_ACCOUNTDISABLE;  //what is this?
                     obUser.CommitChanges();
                 }
 				obUser.Close();
@@ -73,4 +76,11 @@ namespace EdgeBI.Wizards.AccountWizard.CubeCreation
 			obDirEntry.Dispose();
         }
      }
+
+	[Flags]
+	public enum UserAccountControlFlags
+	{
+		UF_DONT_EXPIRE_PASSWD	= 0x10000,
+		UF_ACCOUNTDISABLE		= 0x00002
+	}
 }

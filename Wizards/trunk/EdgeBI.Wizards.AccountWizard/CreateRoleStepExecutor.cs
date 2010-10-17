@@ -9,6 +9,7 @@ using Microsoft.AnalysisServices;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections;
+using Easynet.Edge.Core.Data;
 
 
 namespace EdgeBI.Wizards.AccountWizard
@@ -80,6 +81,8 @@ namespace EdgeBI.Wizards.AccountWizard
 		}
 		private void FillDB(string tableName, string listName, Dictionary<string, string> measures, params string[] values)
 		{
+			DataManager.ConnectionString = "";
+
 			//TODO BETTER WAY TO WRITE THE QUERIES + ADD PARAMETERS
 			using (SqlConnection sqlConnection = new SqlConnection())//TODO WHERE DO I take the connection string from?
 			{
