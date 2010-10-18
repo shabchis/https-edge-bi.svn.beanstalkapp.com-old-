@@ -80,19 +80,33 @@ namespace Easynet.Edge.UI.WebPages.Converters
                    )
                    ";
 
-
-
                 FillAccountNames2DataSet();
                 if (accountNamesDS.Tables.Count == 0)
                 {
                     MyLogger.Instance.Write("0 rows for key: " + key + " ,accoutnSettingKey:" + accoutnSettingKey);
-                    return errorAccountString;
+                    //check in acccount table in accountSettings field for bo_publisher_name
+
+                    _sqlCommand = @"select  [easynet_OLTP].[dbo].[User_GUI_Account].[AccountSettings], [easynet_OLTP].[dbo].[User_GUI_Account].[Account_Name] 
+                  FROM [easynet_OLTP].[dbo].[User_GUI_Account])";
+
+
+
+                    FillAccountNames2DataSet();
+                    if (accountNamesDS.Tables.Count == 0 || accountNamesDS.Tables.Count > 1)
+                    {
+                        MyLogger.Instance.Write("0 rows for key: " + key + " ,accoutnSettingKey:" + accoutnSettingKey);
+
+                        return errorAccountString;
+                    }
+                    else
+                        return accountNamesDS.Tables[0].Rows[0][1].ToString();
                 }
                 else
                     if (accountNamesDS.Tables.Count > 1)
                     { //more than 2 rows {
                         MyLogger.Instance.Write("2 rows");
-                        return "";
+                        //in case of 2 rows or more we'll return the first one that found.
+                        return accountNamesDS.Tables[0].Rows[0][0].ToString();
                     }
                     else
                     {
