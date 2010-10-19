@@ -396,7 +396,7 @@ namespace Easynet.Edge.Core.Data
 		/// Example: <c>SELECT COUNT(*) + ?MyParam:Integer FROM MyTable WHERE LastName = ?MySecondParam:NVarChar</c>
 		/// </para>
 		/// </remarks>
-		private static void CreateParameters(SqlCommand command)
+		public static void CreateParameters(SqlCommand command)
 		{
 			MatchCollection placeHolders = _paramFinder.Matches(command.CommandText);
 			string commandText = command.CommandText;
