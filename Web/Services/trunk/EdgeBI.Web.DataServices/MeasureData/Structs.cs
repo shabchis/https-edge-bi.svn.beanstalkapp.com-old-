@@ -123,15 +123,9 @@ namespace EdgeBI.Web.DataServices
 	public struct MeasureSort
 	{
 		public int MeasureIndex;
+		public int RangeIndex;
 		public DiffType DiffType;
 		public SortDir SortDir;
-
-		public MeasureSort(int index, DiffType diff, SortDir dir)
-		{
-			MeasureIndex = index;
-			DiffType = diff;
-			SortDir = dir;
-		}
 		
 		#region Converter
 		class Converter:TypeConverter
@@ -178,10 +172,17 @@ namespace EdgeBI.Web.DataServices
 		#endregion
 	}
 
-	public enum SortType
+	public struct MeasureDiff
 	{
-		DataSort,
-		ViewSort
+		public int MeasureIndex;
+		public DiffType DiffType;
+	}
+
+	public struct MeasureFormat
+	{
+		public int MeasureIndex;
+		public bool FormatValue;
+		public DiffType FormatDiffs;
 	}
 
 	public enum SortDir
@@ -200,8 +201,8 @@ namespace EdgeBI.Web.DataServices
 	public enum DiffType
 	{
 		None,
-		Relative,
-		Absolute,
+		DiffAbs,
+		DiffRel,
 		Both
 	}
 

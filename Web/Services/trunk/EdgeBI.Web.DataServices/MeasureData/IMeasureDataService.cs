@@ -20,27 +20,28 @@ namespace EdgeBI.Web.DataServices
 		[OperationContract]
 		List<ReturnData> GetData
 		(
-			int accountID,
+			int account,
 			DataGrouping grouping,
 			int top,
 			MeasureRef[] measures,
 			DayCodeRange[] ranges,
-			DiffType diff,
+			MeasureDiff[] diff,
 			MeasureSort[] dataSort,
 			MeasureSort[] viewSort,
-			bool format
+			MeasureFormat[] format
 		);
 
 		/* EXAMPLE:
-		 * http://../data?accountID=95&
+		 * http://../data?account=95&
 		 *		grouping=campaign&
 		 *		top=10&
-		 *		ranges=20100101-20100131(main),20091201-20091231&
+		 *		ranges=20100101-20100131,20091201-20091231&
 		 *		measures=17(9,2,3),T9,3,18(3)&
-		 *		diff=both&
-		 *		datasort=m1(absolute,desc),m2(relative,asc)&
+		 *		diff=m1(both),m2(diffrel),m3(none),m4(none)
+		 *		filter=m1.range1.diffabs > 0 and m2.range2.value is not null
+		 *		datasort=m1.range1.diffabs(desc),m2.range1.diffrel(asc)&
 		 *		viewsort=m3(asc),m4(desc)
-		 *		format=true
+		 *		format=m1(true,both),m2(false,diffabs)
 		 
 		 
 		 ID		Name		M1.Range1.Value		M1.Range1.DiffAbs		M1.Range1.DiffRel		M1.Range2.Value
