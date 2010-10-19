@@ -92,6 +92,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\Core\Core.csproj">
+      <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EdgeBI.Wizards\EdgeBI.Wizards.csproj">
       <Project>{8485D1C5-BFFF-4A48-AD8E-224CBA161265}</Project>
       <Name>EdgeBI.Wizards</Name>

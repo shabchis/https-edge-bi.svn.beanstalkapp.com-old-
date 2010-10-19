@@ -10,10 +10,12 @@ using System.Net;
 using System.Xml;
 using System.IO;
 using System.Text.RegularExpressions;
+using Easynet.Edge.Core.Configuration;
 using System.Runtime.Serialization;
 using EdgeBI.Wizards;
 
 using System.DirectoryServices;
+using Microsoft.AnalysisServices;
 namespace EdgeBI.Wizards.Utils.WizardTester
 {
 	public partial class frmTestWizard : Form
@@ -357,11 +359,11 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 				case "CreateRoleStepCollector":
 					{
 						List<KeyVal> list = new List<KeyVal>();
-						KeyVal keyval = new KeyVal() { Key = "RoleName", Value = "AlonForTest" };
+						KeyVal keyval = new KeyVal() { Key = "AccountSettings.RoleName", Value = "AlonForTestRole" };
 						list.Add(keyval);
-						keyval = new KeyVal() { Key = "RoleID", Value = "Narnia2@" };
+						keyval = new KeyVal() { Key = "AccountSettings.RoleID", Value = "AlonForTestRoleID" };
 						list.Add(keyval);
-						keyval = new KeyVal() { Key = "RoleMemberName", Value = "Alon Yaari" };
+						keyval = new KeyVal() { Key = "AccountSettings.RoleMemberName", Value = @"SEPERIA\alonya" };
 						list.Add(keyval);
 						gvKeyValue.DataSource = list;
 						gvKeyValue.Refresh();
@@ -370,18 +372,95 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 				case "ActiveDirectoryStepCollector":
 					{
 						List<KeyVal> list = new List<KeyVal>();
-						KeyVal keyval = new KeyVal() { Key = "UserName", Value = "AlonForTest" };
+						KeyVal keyval = new KeyVal() { Key = "ActiveDirectory.UserName", Value = "AlonForTest" };
 						list.Add(keyval);
-						keyval = new KeyVal() { Key = "Password", Value = "Narnia2@" };
+						keyval = new KeyVal() { Key = "ActiveDirectory.Password", Value = "Narnia2@" };
 						list.Add(keyval);
-						keyval = new KeyVal() { Key = "FullName", Value = "Alon Yaari" };
+						keyval = new KeyVal() { Key = "ActiveDirectory.FullName", Value = "Alon Yaari" };
 						list.Add(keyval);
 						gvKeyValue.DataSource = list;
 						gvKeyValue.Refresh();
 						break;
 					}
+				case "CreateNewCubeCollector":
+					{
+						List<KeyVal> list = new List<KeyVal>();
+						KeyVal keyval;
+						for (int i = 1; i < 33; i++)
+						{
+							keyval = new KeyVal() { Key = string.Format("AccountSettings.Client Specific{0}", i), Value = string.Format("newname{0}", i) };
+							list.Add(keyval);
+
+						}
+						keyval = new KeyVal() { Key = "AccountSettings.New Active Users",Value= "replaced act us" };
+						list.Add(keyval);
+						keyval = new KeyVal() { Key = "AccountSettings.New Users", Value = "replaced ne us" };
+						list.Add(keyval);
+						keyval = new KeyVal() { Key = "AccountSettings.Scope_ID", Value = "6" };
+						list.Add(keyval);
+						gvKeyValue.DataSource = list;
+						gvKeyValue.Refresh();
+						
+						break;
+					}
 			}
 
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			using (Server analysisServer = new Server())
+			{
+
+
+				analysisServer.Connect("DataSource=qa");
+				
+				//Get the database
+				Database analysisDatabase = analysisServer.Databases.GetByName("easynet_UDM");
+
+				//Create new cube
+					
+					//Get template cube
+
+				Cube existingCube = analysisDatabase.Cubes["BOPPCCube1"];
+
+				
+				
+				Cube newCube = existingCube.Clone();
+				//change cube name and id
+				newCube.Name = "BO123"; //BO ++++
+				// Update scope id
+				newCube.ID = "222";
+				foreach (MeasureGroup measureGroup in newCube.MeasureGroups)
+				{
+					foreach (Partition partition in measureGroup.Partitions)
+					{
+						QueryBinding queryBinding = partition.Source as QueryBinding;
+						
+						
+					}
+					
+				}
+				foreach (MdxScript script in newCube.MdxScripts)
+				{
+					foreach (Command command in script.Commands)
+					{
+						command.Text.Replace("new user", "changed new user");
+						
+					}
+
+					
+				}
+
+				analysisDatabase.Cubes.Add(newCube);
+				
+
+
+
+
+
+
+			}
 		}
 
 

@@ -20,13 +20,13 @@ namespace EdgeBI.Wizards.AccountWizard
 			
 			Log.Write("Getting collected data from suitable collector", LogMessageType.Information);
 
-			Dictionary<string, object> collectedData = this.GetStepCollectedData(Instance.Configuration.Options["CollectorStep"]);
+			Dictionary<string, object> collectedData = this.GetStepCollectedData(Instance.Configuration.Options["ActiveDirectoryStepCollector"]);
 			this.ReportProgress(0.5f);
 			
 			Log.Write("Creating user in active directory", LogMessageType.Information);
 			try
 			{
-				AddNewActiveDirectoryUser(collectedData["UserName"].ToString(), collectedData["Password"].ToString(), collectedData["FullName"].ToString(), true);
+				AddNewActiveDirectoryUser(collectedData["ActiveDirectory.UserName"].ToString(), collectedData["ActiveDirectory.Password"].ToString(), collectedData["ActiveDirectory.FullName"].ToString(), true);
 				this.ReportProgress((float)0.5);
 			}
 			catch (Exception ex)

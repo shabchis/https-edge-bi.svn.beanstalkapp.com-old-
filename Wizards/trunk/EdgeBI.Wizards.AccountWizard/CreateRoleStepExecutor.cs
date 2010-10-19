@@ -5,6 +5,7 @@ using System.Text;
 using Easynet.Edge.Core.Utilities;
 using Easynet.Edge.Core.Services;
 using EdgeBI.Wizards.AccountWizard.CubeCreation;
+using Easynet.Edge.Core.Configuration;
 using Microsoft.AnalysisServices;
 using System.Data;
 using System.Data.SqlClient;
@@ -19,148 +20,89 @@ namespace EdgeBI.Wizards.AccountWizard
 
 		protected override Easynet.Edge.Core.Services.ServiceOutcome DoWork()
 		{
-			//TODO: Update progress;
+			
 			Log.Write("Getting collected data from suitable collector", LogMessageType.Information);
 
 			Dictionary<string, object> collectedData = this.GetStepCollectedData(Instance.Configuration.Options["CollectorStep"]);
+			this.ReportProgress(0.1f);
+			Log.Write("Creating role on analysis server", LogMessageType.Information);
+			CreateRole(collectedData);
+			this.ReportProgress(0.7f);
+			Log.Write("Role Created", LogMessageType.Information);
 
+			Log.Write("Update OLTP datbase", LogMessageType.Information);
+			UpdateOltpDataBASE(collectedData);
+			this.ReportProgress(0.9f);
 
-			RoleCreation roleCreation = new RoleCreation();
-			Database database = null;
-			bool roleCreated = false;
-
-			try
-			{
-				Log.Write("Connect To AnalysisServices Database", LogMessageType.Information);
-				database = ConnectToAnalysisServicesDatabase(); //TODO: should it be here?
-
-
-			}
-			catch (Exception)
-			{
-
-				throw;
-			}
-
-			try
-			{
-				Log.Write("Creating New Role", LogMessageType.Information);
-				roleCreated = roleCreation.RoleUpdate(database, collectedData["RoleName"].ToString(), collectedData["RoleID"].ToString(), collectedData["RoleMemberName"].ToString());
-
-
-
-			}
-			catch (Exception)
-			{
-				//TODO: EXCEPTIONS?
-				throw;
-			}
-			if (!roleCreated)
-			{
-				//TODO: DO SOMTHING IN LIRAN CODE IT'S JUST RETURN
-
-
-			}
-			try
-			{
-				
-				string scopName=string.Empty; //TODO: WHERE IS IT TAKING FROM
-				FillDB("User_Gui_AccountSettings", null, null, "Scope Name", scopName, "Role Name", collectedData["RoleName"].ToString(), "Role ID", collectedData["RoleID"].ToString(), "Role Member Name", collectedData["RoleMemberName"].ToString());
-			}
-			catch (Exception ex)
-			{
-				//MessageBox.Show("Fill User_Gui_AccountSettings table in db error: " + ex.ToString());
-				throw ex; //TODO: EXCEPTIONS?
-			}
 			return base.DoWork();
 		}
 
-		private Database ConnectToAnalysisServicesDatabase()
+		private void UpdateOltpDataBASE(Dictionary<string, object> collectedData)
 		{
-			throw new NotImplementedException();
-		}
-		private void FillDB(string tableName, string listName, Dictionary<string, string> measures, params string[] values)
-		{
-			DataManager.ConnectionString = "";
 
-			//TODO BETTER WAY TO WRITE THE QUERIES + ADD PARAMETERS
-			using (SqlConnection sqlConnection = new SqlConnection())//TODO WHERE DO I take the connection string from?
+			using (SqlConnection sqlConnection = new SqlConnection(AppSettings.Get(this, "OLTP.Connection.string")))
 			{
-				using (SqlCommand sqlCommand = new SqlCommand()) //TODO sqlcmd.CommandText = "insert into easynet_OLTP.dbo.User_Gui_AccountSettings values('0', '" + textBox16.Text + "', 'Role Name', '" + textBox10.Text + "')";
+				sqlConnection.Open();
+				foreach (KeyValuePair<string, object> input in collectedData)
 				{
-					sqlConnection.Open();
-					sqlCommand.Connection = sqlConnection;
-					sqlCommand.CommandType = CommandType.Text;
-					string scopeID=string.Empty; //TODO WHERE DO I take the scopeID
-					if (tableName.Equals("User_Gui_AccountSettings"))
+					if (input.Key.StartsWith("AccountSettings"))
 					{
-						string command = "insert into easynet_OLTP.dbo.User_Gui_AccountSettings values('" + scopeID + "', 'null', "; //TODO UNDERSTAD WHAT IS IT DO?
-						if (measures != null)
+						using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_Gui_AccountSettings
+																			(ScopeID,AccountID,Name,Value,sys_creation_date)
+																			Values
+																			(@ScopeID:Int,
+																			 @AccountID:NVarchar,
+																			 @Name:NVarchar,
+																			 @Value:NVarchar,
+																			 @sys_creation_date:DateTime)"))
 						{
-							IDictionaryEnumerator ide = measures.GetEnumerator();
-							StringBuilder sb = new StringBuilder();
-							while (ide.MoveNext())
-							{
-								sb.Append(ide.Key + "=");
-								sb.Append(ide.Value + ";");
-							}
-							string[] pairVAlues = { listName, sb.ToString() };
-							command += createCommand(tableName, pairVAlues);
-							sqlCommand.CommandText = command;
+							sqlCommand.Connection = sqlConnection;
+							sqlCommand.Parameters["@ScopeID"].Value = 3861; //TODO: TEMPORARLY WILL COME FROM OTHER COLLECTOR (GENERAL COLLECTOR-ASK DORON)
+							sqlCommand.Parameters["@AccountID"].Value = DBNull.Value; //TODO: CHECK THIS FOR NOW IT'S NULL
+							sqlCommand.Parameters["@Name"].Value = input.Key;
+							sqlCommand.Parameters["@Value"].Value = input.Value; ;
+							sqlCommand.Parameters["@sys_creation_date"].Value = DateTime.Now;
 
 							sqlCommand.ExecuteNonQuery();
-							command = "insert into easynet_OLTP.dbo.User_Gui_AccountSettings values('" + scopeID + "', 'null', ";//TODO UNDERSTAD WHAT IS IT DO?
-						}
-						for (int i = 0; i < values.Length - 1; i += 2)
-						{
-							if (values[i + 1] != null && !values[i + 1].Equals(";"))
-							{
-								string[] pairVAlues = { values[i], values[i + 1] };
-								command += createCommand(tableName, pairVAlues);
-								sqlCommand.CommandText = command;
 
-								sqlCommand.ExecuteNonQuery();
-							}
-							//initilization of query string
-							command = "insert into easynet_OLTP.dbo.User_Gui_AccountSettings values('" + scopeID + "', 'null', ";
-						}
-					}
-					else if (tableName.Equals("User_Gui_General_Settings"))
-					{
-						string command = "insert into easynet_OLTP.dbo.User_Gui_General_Settings values(";
-						for (int i = 0; i < values.Length - 1; i += 2)
-						{
-							if (values[i + 1] != null && !values[i + 1].Equals(";"))
-							{
-								string[] pairVAlues = { values[i], values[i + 1] };
-								command += createCommand(tableName, pairVAlues);
-								sqlCommand.CommandText = command;
-
-								sqlCommand.ExecuteNonQuery();
-							}
-							//initilization of query string
-							command = "insert into easynet_OLTP.dbo.User_Gui_General_Settings values(";
 						}
 					}
 
 				}
-
 			}
-
-
 		}
-		private string createCommand(string tableName, string[] values)
+
+		private void CreateRole(Dictionary<string, object> collectedData)
 		{
-			string command = string.Empty;
-			for (int i = 0; i < values.Length - 1; i++)
+			//Connect To analysisServer
+			using (Server analysisServer = new Server())
 			{
-				command += "'" + values[i] + "', ";
-			}
-			command += "'" + values[values.Length - 1] + "'";
-			command += ", '" + DateTime.Now + "')";
-			return command;
 
+
+				analysisServer.Connect(AppSettings.Get(this, "AnalysisServer.ConnectionString"));
+
+				//Get the database
+				Database analysisDatabase = analysisServer.Databases.GetByName(AppSettings.Get(this, "AnalysisServer.Database"));
+
+				//Create new role
+				Role newRole;
+				try
+				{
+					newRole = analysisDatabase.Roles.Add(collectedData["AccountSettings.RoleName"].ToString(), collectedData["AccountSettings.RoleID"].ToString());
+					newRole.Members.Add(new RoleMember(collectedData["AccountSettings.RoleMemberName"].ToString()));
+					newRole.Update();
+				}
+				catch (Exception ex)
+				{
+					Log.Write("Error when adding a role", ex);
+					throw new Exception("Error when adding a role", ex);
+				}
+
+			}
 		}
+
+
+
 	}
 
 }
