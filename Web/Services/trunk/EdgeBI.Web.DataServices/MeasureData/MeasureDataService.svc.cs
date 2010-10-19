@@ -20,7 +20,7 @@ namespace EdgeBI.Web.DataServices
 			Method = "GET",
 			BodyStyle = WebMessageBodyStyle.Bare,
 			ResponseFormat = WebMessageFormat.Xml,
-			UriTemplate = "measures?accountID={accountID}"
+			UriTemplate = "measures?account={accountID}"
 		)]
 		public List<Measure> GetMeasures(int accountID)
 		{
@@ -81,14 +81,14 @@ namespace EdgeBI.Web.DataServices
 			BodyStyle = WebMessageBodyStyle.Bare,
 			ResponseFormat = WebMessageFormat.Xml,
 			UriTemplate = "data?" +
-				"accountID={accountID}&" +
+				"account={accountID}&" +
 				"grouping={grouping}&" +
 				"top={top}&" + 
 				"measures={measures}&" +
 				"ranges={ranges}&" +
 				"diff={diff}&" +
-				"dataSort={dataSort}&" +
-				"viewSort={viewSort}&" +
+				"datasort={dataSort}&" +
+				"viewsort={viewSort}&" +
 				"format={format}"
 		)]
 		public List<ReturnData> GetData(
@@ -97,10 +97,10 @@ namespace EdgeBI.Web.DataServices
 			int top,
 			MeasureRef[] measures,
 			DayCodeRange[] ranges,
-			DiffType diff,
+			MeasureDiff[] diff,
 			MeasureSort[] dataSort,
 			MeasureSort[] viewSort,
-			bool format
+			MeasureFormat[] format
 			)
 		{
 			// Get measures
