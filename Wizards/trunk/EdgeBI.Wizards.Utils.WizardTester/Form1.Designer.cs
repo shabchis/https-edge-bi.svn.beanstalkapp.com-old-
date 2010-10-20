@@ -42,6 +42,7 @@
 			this.txtStepName = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.button1 = new System.Windows.Forms.Button();
+			this.btnCreateBook = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.gvKeyValue)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -170,11 +171,22 @@
 			this.button1.UseVisualStyleBackColor = true;
 			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
+			// btnCreateBook
+			// 
+			this.btnCreateBook.Location = new System.Drawing.Point(286, 216);
+			this.btnCreateBook.Name = "btnCreateBook";
+			this.btnCreateBook.Size = new System.Drawing.Size(111, 23);
+			this.btnCreateBook.TabIndex = 15;
+			this.btnCreateBook.Text = "Test Create Book";
+			this.btnCreateBook.UseVisualStyleBackColor = true;
+			this.btnCreateBook.Click += new System.EventHandler(this.btnCreateBook_Click);
+			// 
 			// frmTestWizard
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(750, 402);
+			this.Controls.Add(this.btnCreateBook);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.txtStepName);
@@ -212,6 +224,7 @@
 		private System.Windows.Forms.TextBox txtStepName;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button btnCreateBook;
 	}
 }
 
