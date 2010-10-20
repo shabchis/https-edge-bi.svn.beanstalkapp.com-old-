@@ -43,7 +43,7 @@ namespace EdgeBI.Wizards.AccountWizard.CubeCreation
 			//Connect To analysisServer
 			using (Server analysisServer = new Server())
 			{
-
+				Dictionary<string,object> executorData=new Dictionary<string,object>();  //dictionary for save executors data for next steps
 
 				analysisServer.Connect(AppSettings.Get(this, "AnalysisServer.ConnectionString"));
 
@@ -60,6 +60,9 @@ namespace EdgeBI.Wizards.AccountWizard.CubeCreation
 
 				////change cube name and id
 				newBOCube.Name = string.Format("BO{0}", collectedData["AccountSettings.CubeName"].ToString());
+
+
+				executorData.Add("AccountSettings.CubeName", newBOCube.Name);
 				newBOCube.ID = string.Format("BO{0}", collectedData["AccountSettings.CubeID"].ToString());
 
 				//change client specific measures
@@ -112,7 +115,11 @@ namespace EdgeBI.Wizards.AccountWizard.CubeCreation
 						foreach (KeyValuePair<string, object> input in collectedData)
 						{
 							if (input.Key.StartsWith(AccSettClientSpecific, true, null) || input.Key.ToUpper() == AccSettNewUser.ToUpper() || input.Key.ToUpper() == AccSettNewActiveUser.ToUpper())
-								command.Text = Regex.Replace(command.Text, input.Key.Replace("AccountSettings.", string.Empty), input.Value.ToString(), RegexOptions.IgnoreCase);
+							{			//TODO: CHECK THIS AGAIN					
+								//command.Text = Regex.Replace(command.Text, input.Key.Replace("AccountSettings.", string.Empty), input.Value.ToString(), RegexOptions.IgnoreCase);
+								string patern = string.Format(@"\b{0}\b", input.Key.Replace("AccountSettings.", string.Empty));
+								command.Text = Regex.Replace(command.Text, patern, input.Value.ToString(), RegexOptions.IgnoreCase);
+							}
 						}
 
 					}
@@ -206,7 +213,7 @@ namespace EdgeBI.Wizards.AccountWizard.CubeCreation
 					}
 
 
-
+					SaveExecutorData(executorData);
 
 
 				}
@@ -248,6 +255,7 @@ namespace EdgeBI.Wizards.AccountWizard.CubeCreation
 				}
 			}
 		}
+
 
 
 	}
