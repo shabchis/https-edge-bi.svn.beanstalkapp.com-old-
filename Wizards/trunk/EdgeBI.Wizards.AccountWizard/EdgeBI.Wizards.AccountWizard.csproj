@@ -57,9 +57,7 @@
     <Compile Include="CreatePanoramaBookExecutor.cs" />
     <Compile Include="CreateRoleStepCollector.cs" />
     <Compile Include="CreateRoleStepExecutor.cs" />
-    <Compile Include="CubeCreation\BookCreation.cs" />
     <Compile Include="CreateNewCubeExecutor.cs" />
-    <Compile Include="CubeCreation\CubeHandler.cs" />
     <Compile Include="CubeCreation\SSISdefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
