@@ -54,10 +54,11 @@
     <Compile Include="ActiveDirectoryStepCollector.cs" />
     <Compile Include="ActiveDirectoryStepExecutor.cs" />
     <Compile Include="CreateNewCubeCollector.cs" />
+    <Compile Include="CreatePanoramaBookExecutor.cs" />
     <Compile Include="CreateRoleStepCollector.cs" />
     <Compile Include="CreateRoleStepExecutor.cs" />
     <Compile Include="CubeCreation\BookCreation.cs" />
-    <Compile Include="CubeCreation\CreateNewCubeExecutor.cs" />
+    <Compile Include="CreateNewCubeExecutor.cs" />
     <Compile Include="CubeCreation\CubeHandler.cs" />
     <Compile Include="CubeCreation\SSISdefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
