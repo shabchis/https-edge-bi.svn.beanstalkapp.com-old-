@@ -39,6 +39,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\Microsoft.NET\ADOMD.NET\100\Microsoft.AnalysisServices.AdomdClient.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.SqlServer.ManagedDTS\10.0.0.0__89845dcd8080cc91\Microsoft.SqlServer.ManagedDTS.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -53,6 +57,7 @@
   <ItemGroup>
     <Compile Include="ActiveDirectoryStepCollector.cs" />
     <Compile Include="ActiveDirectoryStepExecutor.cs" />
+    <Compile Include="AddToSSISExecutor.cs" />
     <Compile Include="CreateNewCubeCollector.cs" />
     <Compile Include="CreatePanoramaBookExecutor.cs" />
     <Compile Include="CreateRoleStepCollector.cs" />
