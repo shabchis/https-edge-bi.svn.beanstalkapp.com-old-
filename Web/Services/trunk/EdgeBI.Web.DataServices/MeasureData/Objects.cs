@@ -47,6 +47,7 @@ namespace EdgeBI.Web.DataServices
 		public int IsAdTest;
 		public bool IsTarget;
 		public bool IsDashboard;
+        public List<Measure> FunctionMeasures;
 	}
 
 	public class Channel:DataObj
@@ -56,7 +57,19 @@ namespace EdgeBI.Web.DataServices
 		public string ChannelName;
 	}
 
-	public class ReturnData
+	public class ObjData
 	{
+        public Int64 ID;
+        public string Name;
+        public List<ObjValue> Values;
 	}
+
+    public class ObjValue
+    {
+        public string FieldName;
+        public string ValueData;
+    }
+
+
+
 }

@@ -69,7 +69,6 @@ namespace EdgeBI.Web.DataServices
 					while (reader.Read())
 						list.Add(new Channel(reader));
 				}
-
 				return list;
 			}
 		}
@@ -91,7 +90,7 @@ namespace EdgeBI.Web.DataServices
 				"viewsort={viewSort}&" +
 				"format={format}"
 		)]
-		public List<ReturnData> GetData(
+		public List<ObjData> GetData(
 			int accountID,
 			DataGrouping grouping,
 			int top,
@@ -100,13 +99,15 @@ namespace EdgeBI.Web.DataServices
 			MeasureDiff[] diff,
 			MeasureSort[] dataSort,
 			MeasureSort[] viewSort,
-			MeasureFormat[] format
+			MeasureFormat[] format,
+            Mode mode
 			)
 		{
 			// Get measures
 			List<Measure> measuresList = GetMeasures(accountID, true);
 			Dictionary<int, Measure> measuresByID = measuresList.ToDictionary(m => m.MeasureID);
-			return new List<ReturnData>();
+            EdgeBI.Web.DataServices.DataHandler DataHandler = new EdgeBI.Web.DataServices.DataHandler();
+            return DataHandler.GetData(accountID, grouping, top, measures, ranges, diff, dataSort, viewSort, format, measuresByID, mode);
 		}
 	}
 }
