@@ -18,7 +18,7 @@ namespace EdgeBI.Web.DataServices
         List<Channel> GetChannels();
 
 		[OperationContract]
-		List<ReturnData> GetData
+		List<ObjData> GetData
 		(
 			int account,
 			DataGrouping grouping,
@@ -28,7 +28,8 @@ namespace EdgeBI.Web.DataServices
 			MeasureDiff[] diff,
 			MeasureSort[] dataSort,
 			MeasureSort[] viewSort,
-			MeasureFormat[] format
+			MeasureFormat[] format,
+            Mode mode
 		);
 
 		/* EXAMPLE:

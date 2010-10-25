@@ -185,7 +185,13 @@ namespace EdgeBI.Web.DataServices
 		public DiffType FormatDiffs;
 	}
 
-	public enum SortDir
+    public enum Mode
+    {
+        Simple,
+        Advanced
+    }
+
+    public enum SortDir
 	{
 		Asc,
 		Desc
