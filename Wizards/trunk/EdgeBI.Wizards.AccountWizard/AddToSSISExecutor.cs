@@ -80,11 +80,11 @@ namespace EdgeBI.Wizards.AccountWizard
 
 		private void AddToSSIS(Dictionary<string, object> collectedData)
 		{
-			string pkgPath = collectedData["AccountSettings.TemplatePackagePath"].ToString();
+			string pkgPath = AppSettings.Get(this, "SSIS.TemplatePackagePath");
 			Application application = new Application();
 
 			Package package = application.LoadPackage(pkgPath, null);
-			Executable fromTask = package.Executables[collectedData["AccountSettings.AnalysisServicesBOProcessingTask"].ToString()];
+			Executable fromTask = package.Executables[AppSettings.Get(this, "SSIS.BaseTask")];
 			Executable newTask = package.Executables.Add(TaskType);
 			TaskHost tNewTask = (TaskHost)newTask;
 			tNewTask.Properties["ConnectionName"].SetValue(tNewTask, "localhost");
@@ -98,16 +98,16 @@ namespace EdgeBI.Wizards.AccountWizard
 		  "<Type>ProcessFull</Type>" +
 		  "<WriteBackTableCreation>UseExisting</WriteBackTableCreation>" +
 		"</Process>" +
-	"</Batch>", collectedData["AccountSettings.DatabaseID"].ToString(), collectedData["AccountSettings.CubeID"].ToString());
+	"</Batch>", AppSettings.Get(this, "AnalysisServer.Database"), "BO" +collectedData["AccountSettings.CubeName"].ToString());
 			
 			
 			tNewTask.Properties["ProcessingCommands"].SetValue(tNewTask, procCmd);
 
-			tNewTask.Name = collectedData["AccountSettings.TaskName"].ToString();
+			tNewTask.Name ="BO"+ collectedData["AccountSettings.CubeName"].ToString();
 			package.PrecedenceConstraints.Add(fromTask, newTask);
 
-			
-			application.SaveToXml(collectedData["AccountSettings.NewTaskPath"].ToString(),package, null);
+
+			application.SaveToXml(AppSettings.Get(this, "SSIS.SSISNewTaskPath"), package, null);
 			//  app.SaveToDtsServer(p, null, @"D:\SSIS_Projects\test10.dtsx", "localhost"); //ToDo: may be this is better check with amit
            
 			

@@ -47,20 +47,20 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 			txtDatabseName.Text = "From app.config of the service"; //Properties.Settings.Default.AnalysisServerDatabase;
 			txtRoleMemberName.Text = Properties.Settings.Default.RoleMemberName;
 			//txtCubeName.Text = Properties.Settings.Default.CubeNameStartWith;
-			txtCubeTemplateID.Text = Properties.Settings.Default.CubeTemplatesBOTemplate;
+			txtCubeTemplateID.Text = "From app.config of the service"; //Properties.Settings.Default.CubeTemplatesBOTemplate;
 			txtCPA1.Text = Properties.Settings.Default.CPA1;
 			txtCPA2.Text = Properties.Settings.Default.CPA2;
-			txtBookName.Text = Properties.Settings.Default.BookName;
-			txtApplicationFilePathForAddingBook.Text = Properties.Settings.Default.ApplicationsXmlPath;
-			txtPanoramaAdminRefreshFilePath.Text = Properties.Settings.Default.PanoramaExecutionPath;
-			txtCubeAddressInViewFile.Text = Properties.Settings.Default.AnalysisServerConnectionString;
-			txtSSISCubeTemplate.Text = Properties.Settings.Default.DtsxTemplatePath;
-			txtSSISAllCubeTemplate.Text = Properties.Settings.Default.DtsxPath;
-			txtBooksXmlTemplatePath.Text = Properties.Settings.Default.BookTemplatePath;
+			//txtBookName.Text = Properties.Settings.Default.BookName;
+			txtApplicationFilePathForAddingBook.Text = "From app.config of the service";//Properties.Settings.Default.ApplicationsXmlPath;
+			txtPanoramaAdminRefreshFilePath.Text = "From app.config of the service";// Properties.Settings.Default.PanoramaExecutionPath;
+			txtCubeAddressInViewFile.Text = "From app.config of the service"; //Properties.Settings.Default.AnalysisServerConnectionString;
+			txtSSISCubeTemplate.Text = "From app.config of the service"; //Properties.Settings.Default.DtsxTemplatePath;
+			txtSSISAllCubeTemplate.Text = "From app.config of the service";// Properties.Settings.Default.DtsxPath;
+			txtBooksXmlTemplatePath.Text = "From app.config of the service";// Properties.Settings.Default.BookTemplatePath;
 			txtCubeNamePatternToReplace.Text = Properties.Settings.Default.CubeNamePattenToReplace;
 			txtDatabasePatternToReplace.Text = Properties.Settings.Default.DatabaseNamePattenToReplace;
 			txtDatabaseToReplace.Text = Properties.Settings.Default.AnalysisServerDatabase;
-			txtReplaceWithCubeName.Text = Properties.Settings.Default.CubeNameStartWith;
+			//txtReplaceWithCubeName.Text = Properties.Settings.Default.CubeNameStartWith;
 			txtLog.Text += "service started";
 
 
@@ -104,6 +104,8 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 		private void txtScopName_Leave(object sender, EventArgs e)
 		{
 			txtCubeName.Text = txtScopName.Text;
+			txtBookName.Text = txtScopName.Text;
+			txtReplaceWithCubeName.Text = txtScopName.Text;
 
 
 			////txtBackupName.Text += txtScopName.Text;
@@ -120,9 +122,24 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 
 		private void btnStartNewSession_Click(object sender, EventArgs e)
 		{
+			foreach (Control control in this.Controls)
+			{
+				if (control.GetType() == typeof(GroupBox))
+				{
+					control.Enabled = false;
+				}
+			}
+			if (!string.IsNullOrEmpty(txtScopName.Text) && !string.IsNullOrEmpty(txtScopeID.Text))
+			{
+				WizardSession wizardSession = StartWizard("AccountWizard");
+				txtLog.Text = string.Format("Account Wizard Service Started:\nWizard ID is:{0}\nSessionID IS:{1}\nNext step name is:{2}\n--------------------", wizardSession.WizardID, wizardSession.SessionID, wizardSession.CurrentStep.StepName);
+				grpBoxActiveDirectory.Enabled = true;
+			}
+			else
+			{
+				MessageBox.Show("Please fill scopeid and scopename");
+			}
 
-			WizardSession wizardSession = StartWizard("AccountWizard");
-			txtLog.Text = string.Format("Account Wizard Service Started:\nWizard ID is:{0}\nSessionID IS:{1}\nNext step name is:{2}\n--------------------", wizardSession.WizardID, wizardSession.SessionID, wizardSession.CurrentStep.StepName);
 
 
 
@@ -210,6 +227,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 
 									txtLog.Text += string.Format("\n--------------------\nStep Collect Finish\nReady for next step: Step {0}", stepCollectResponse.NextStep.StepName);
 									_nextStepName = stepCollectResponse.NextStep.StepName;
+									grpRole.Enabled = true;
 
 
 									break;
@@ -316,6 +334,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 
 									txtLog.Text += string.Format("\n--------------------\nStep Collect Finish\nReady for next step: Step {0}", stepCollectResponse.NextStep.StepName);
 									_nextStepName = stepCollectResponse.NextStep.StepName;
+									grpCube.Enabled = true;
 
 
 									break;
@@ -374,12 +393,13 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 			stepCollectRequest.StepName = _nextStepName;
 			stepCollectRequest.CollectedValues = new Dictionary<string, object>();
 			Dictionary<string, object> collectedValues = new Dictionary<string, object>();
-			collectedValues.Add("AccountSettings.New Users", cmbReplaceCPA1.SelectedValue);
-			collectedValues.Add("AccountSettings.New Active Users", cmbReplaceCPA2.SelectedValue);
+			collectedValues.Add("AccountSettings.New Users", ((KeyValuePair<string,object>)cmbReplaceCPA1.SelectedItem).Value);
+			collectedValues.Add("AccountSettings.New Active Users", ((KeyValuePair<string, object>)cmbReplaceCPA2.SelectedItem).Value);
 			collectedValues.Add("AccountSettings.Scope_ID", txtScopeID.Text.Trim());
 			collectedValues.Add("AccountSettings.CubeName", txtCubeName.Text.Trim());
 			collectedValues.Add("AccountSettings.CubeID", txtCubeName.Text.Trim());
 			//add the measures to replace
+
 			foreach (KeyValuePair<string, object> measure in _measures)
 			{
 				if (collectedValues.ContainsKey(measure.Key))
@@ -387,14 +407,14 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 				collectedValues.Add(measure.Key, measure.Value);
 			}
 			//add the string values to replace
-			foreach (KeyValuePair<string,object> str in _strings)
+			foreach (KeyValuePair<string, object> str in _strings)
 			{
 				if (collectedValues.ContainsKey(str.Key))
 					collectedValues.Remove(str.Key);
 				collectedValues.Add(str.Key, str.Value);
 
 			}
-			//ToDo: stringvalues + measures
+
 
 
 
@@ -438,6 +458,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 
 									txtLog.Text += string.Format("\n--------------------\nStep Collect Finish\nReady for next step: Step {0}", stepCollectResponse.NextStep.StepName);
 									_nextStepName = stepCollectResponse.NextStep.StepName;
+									grpBook.Enabled = true;
 
 
 									break;
@@ -489,20 +510,36 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 			FrmMeasuresList frmMeasuresList = new FrmMeasuresList(_measures);
 			frmMeasuresList.ShowDialog();
 			_measures = frmMeasuresList.Measures;
+			_measures.Add("0", "0");
+
 
 			cmbReplaceCPA1.Items.Clear();
 			cmbReplaceCPA2.Items.Clear();
-			foreach (KeyValuePair<string, object> measure in _measures)
-			{
-				cmbReplaceCPA1.Items.Add(measure);
-				cmbReplaceCPA2.Items.Add(measure);
-			}
+			cmbReplaceCPA1.DataSource = _measures.ToList();
+			cmbReplaceCPA2.DataSource = _measures.ToList();
+			cmbReplaceCPA1.ValueMember = "Key";
+			cmbReplaceCPA1.DisplayMember = "Value";
+			cmbReplaceCPA2.ValueMember = "Key";
+			cmbReplaceCPA2.DisplayMember = "Value";
+			cmbReplaceCPA1.SelectedValue = "0";
+			cmbReplaceCPA2.SelectedValue = "0";
+			
+			//foreach (KeyValuePair<string, object> measure in _measures)
+			//{
+				
+			//    cmbReplaceCPA1.Items.Add(measure);
+			//    cmbReplaceCPA2.Items.Add(measure);
+			//    cmbReplaceCPA1.ValueMember = measure.Key;
+			//    cmbReplaceCPA1.DisplayMember = measure.Value.ToString();
+			//    cmbReplaceCPA2.ValueMember = measure.Key;
+			//    cmbReplaceCPA2.DisplayMember = measure.Value.ToString();
+			//}
 
 
-			cmbReplaceCPA1.Items.Insert(0, "");
-			cmbReplaceCPA2.Items.Insert(0, "");
-			cmbReplaceCPA1.SelectedItem = cmbReplaceCPA1.Items[0];
-			cmbReplaceCPA2.SelectedItem = cmbReplaceCPA2.Items[0];
+			//cmbReplaceCPA1.Items.Insert(0, " ");
+			//cmbReplaceCPA2.Items.Insert(0, " ");
+			//cmbReplaceCPA1.SelectedItem = cmbReplaceCPA1.Items[0];
+			//cmbReplaceCPA2.SelectedItem = cmbReplaceCPA2.Items[0];
 		}
 
 		private void button8_Click(object sender, EventArgs e)
@@ -520,6 +557,229 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 			_bsvr.ShowDialog();
 			_strings = _bsvr.Strings;
 		}
+
+		private void txtScopeID_Leave(object sender, EventArgs e)
+		{
+
+		}
+
+		private void button3_Click(object sender, EventArgs e)
+		{
+			DialogResult result = System.Windows.Forms.DialogResult.Yes;
+			WebRequest request = HttpWebRequest.Create(string.Format("{0}/collect?sessionID={1}", _baseUri, _sessionID));
+			request.ContentType = "application/xml";
+			request.Method = "POST";
+			request.Timeout = 130000;
+
+			//Collect values
+			StepCollectRequest stepCollectRequest = new StepCollectRequest();
+			stepCollectRequest.StepName = _nextStepName;
+			stepCollectRequest.CollectedValues = new Dictionary<string, object>();
+			Dictionary<string, object> collectedValues = new Dictionary<string, object>();
+
+
+			//add the string values to replace
+			foreach (KeyValuePair<string, object> str in _strings)
+			{
+				if (collectedValues.ContainsKey(str.Key))
+					collectedValues.Remove(str.Key);
+				collectedValues.Add(str.Key, str.Value);
+
+			}
+
+
+
+
+
+
+
+			try
+			{
+				SetBodyForCollectRequest(ref request, stepCollectRequest);
+			}
+			catch (Exception ex)
+			{
+
+				result = MessageBox.Show(ex.Message, string.Empty, MessageBoxButtons.YesNo);
+			}
+			if (result == System.Windows.Forms.DialogResult.Yes)
+			{
+				StepCollectResponse stepCollectResponse;
+				try
+				{
+					try
+					{
+						WebResponse response = request.GetResponse();
+						DataContractSerializer serializer = new DataContractSerializer(typeof(StepCollectResponse));
+						using (XmlReader reader = XmlReader.Create(response.GetResponseStream()))
+						{
+							stepCollectResponse = (StepCollectResponse)serializer.ReadObject(reader, false);
+
+						}
+
+
+						switch (stepCollectResponse.Result)
+						{
+							case StepResult.Next:
+								{
+
+									txtLog.Text += string.Format("\n--------------------\nStep Collect Finish\nReady for next step: Step {0}", stepCollectResponse.NextStep.StepName);
+									_nextStepName = stepCollectResponse.NextStep.StepName;
+									grpSSIS.Enabled = true;
+
+
+									break;
+								}
+							case StepResult.HasErrors:
+								{
+									foreach (KeyValuePair<string, string> error in stepCollectResponse.Errors)
+									{
+										txtLog.Text += string.Format("Errors:key {0} Value{1}\n", error.Key, error.Value);
+									}
+
+
+									break;
+								}
+							case StepResult.Done:
+								{
+									txtLog.Text = "\nFinsish collecting from all steps\nready to get summary or execute:";
+
+									break;
+								}
+						}
+
+
+
+					}
+					catch (WebException ex)
+					{
+
+						using (StreamReader reader = new StreamReader(ex.Response.GetResponseStream()))
+						{
+
+							txtLog.Text += string.Format("ErrorCode:{0}\n ErrorDescription: {1} \nInnerException:{2}", ex.Status.ToString(), reader.ReadToEnd(), ex.InnerException);
+						}
+
+					}
+				}
+				catch (Exception ex)
+				{
+
+					txtLog.Text += ex.Message;
+				}
+
+			}
+		}
+
+		private void btnExecute_Click(object sender, EventArgs e)
+		{
+			foreach (Control control in this.Controls)
+			{
+				if (control.GetType() == typeof(GroupBox))
+				{
+					control.Enabled = false;
+				}
+			}
+		}
+
+		private void button5_Click(object sender, EventArgs e)
+		{
+			//AccountSettings.CubeName
+			DialogResult result = System.Windows.Forms.DialogResult.Yes;
+			WebRequest request = HttpWebRequest.Create(string.Format("{0}/collect?sessionID={1}", _baseUri, _sessionID));
+			request.ContentType = "application/xml";
+			request.Method = "POST";
+			request.Timeout = 130000;
+
+			//Collect values
+			StepCollectRequest stepCollectRequest = new StepCollectRequest();
+			stepCollectRequest.StepName = _nextStepName;
+			stepCollectRequest.CollectedValues = new Dictionary<string, object>();
+			Dictionary<string, object> collectedValues = new Dictionary<string, object>();
+			collectedValues.Add("AccountSettings.CubeName", txtReplaceWithCubeName.Text);
+			
+			stepCollectRequest.CollectedValues = collectedValues;
+
+
+			try
+			{
+				SetBodyForCollectRequest(ref request, stepCollectRequest);
+			}
+			catch (Exception ex)
+			{
+
+				result = MessageBox.Show(ex.Message, string.Empty, MessageBoxButtons.YesNo);
+			}
+			if (result == System.Windows.Forms.DialogResult.Yes)
+			{
+				StepCollectResponse stepCollectResponse;
+				try
+				{
+					try
+					{
+						WebResponse response = request.GetResponse();
+						DataContractSerializer serializer = new DataContractSerializer(typeof(StepCollectResponse));
+						using (XmlReader reader = XmlReader.Create(response.GetResponseStream()))
+						{
+							stepCollectResponse = (StepCollectResponse)serializer.ReadObject(reader, false);
+
+						}
+
+
+						switch (stepCollectResponse.Result)
+						{
+							case StepResult.Next:
+								{
+
+									txtLog.Text += string.Format("\n--------------------\nStep Collect Finish\nReady for next step: Step {0}", stepCollectResponse.NextStep.StepName);
+									_nextStepName = stepCollectResponse.NextStep.StepName;
+									btnExecute.Enabled = true;
+
+
+									break;
+								}
+							case StepResult.HasErrors:
+								{
+									foreach (KeyValuePair<string, string> error in stepCollectResponse.Errors)
+									{
+										txtLog.Text += string.Format("Errors:key {0} Value{1}\n", error.Key, error.Value);
+									}
+
+
+									break;
+								}
+							case StepResult.Done:
+								{
+									txtLog.Text = "\nFinsish collecting from all steps\nready to get summary or execute:";
+
+									break;
+								}
+						}
+
+
+
+					}
+					catch (WebException ex)
+					{
+
+						using (StreamReader reader = new StreamReader(ex.Response.GetResponseStream()))
+						{
+
+							txtLog.Text += string.Format("ErrorCode:{0}\n ErrorDescription: {1} \nInnerException:{2}", ex.Status.ToString(), reader.ReadToEnd(), ex.InnerException);
+						}
+
+					}
+				}
+				catch (Exception ex)
+				{
+
+					txtLog.Text += ex.Message;
+				}
+
+			}
+		}
+
+
 
 
 
