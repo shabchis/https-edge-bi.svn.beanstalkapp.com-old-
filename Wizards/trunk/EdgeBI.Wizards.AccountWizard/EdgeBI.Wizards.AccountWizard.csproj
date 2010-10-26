@@ -57,8 +57,10 @@
   <ItemGroup>
     <Compile Include="ActiveDirectoryStepCollector.cs" />
     <Compile Include="ActiveDirectoryStepExecutor.cs" />
+    <Compile Include="AddToSSISCollector.cs" />
     <Compile Include="AddToSSISExecutor.cs" />
     <Compile Include="CreateNewCubeCollector.cs" />
+    <Compile Include="CreatePanoramaBookCollector.cs" />
     <Compile Include="CreatePanoramaBookExecutor.cs" />
     <Compile Include="CreateRoleStepCollector.cs" />
     <Compile Include="CreateRoleStepExecutor.cs" />

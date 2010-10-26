@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.grpBoxActiveDirectory = new System.Windows.Forms.GroupBox();
 			this.txtFullName = new System.Windows.Forms.TextBox();
 			this.txtPassword = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
@@ -36,7 +36,7 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.txtUserName = new System.Windows.Forms.TextBox();
 			this.btnActiveDirectory = new System.Windows.Forms.Button();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.grpCube = new System.Windows.Forms.GroupBox();
 			this.txtContent = new System.Windows.Forms.TextBox();
 			this.chkContent = new System.Windows.Forms.CheckBox();
 			this.button8 = new System.Windows.Forms.Button();
@@ -58,7 +58,7 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.txtDatabseName = new System.Windows.Forms.TextBox();
 			this.btnCreateNewCube = new System.Windows.Forms.Button();
-			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.grpBook = new System.Windows.Forms.GroupBox();
 			this.button7 = new System.Windows.Forms.Button();
 			this.label20 = new System.Windows.Forms.Label();
 			this.txtCubeAddressInViewFile = new System.Windows.Forms.TextBox();
@@ -75,7 +75,7 @@
 			this.button3 = new System.Windows.Forms.Button();
 			this.txtScopName = new System.Windows.Forms.TextBox();
 			this.label16 = new System.Windows.Forms.Label();
-			this.groupBox4 = new System.Windows.Forms.GroupBox();
+			this.grpSSIS = new System.Windows.Forms.GroupBox();
 			this.txtDatabaseToReplace = new System.Windows.Forms.TextBox();
 			this.label27 = new System.Windows.Forms.Label();
 			this.txtDatabasePatternToReplace = new System.Windows.Forms.TextBox();
@@ -92,7 +92,7 @@
 			this.btnStartNewSession = new System.Windows.Forms.Button();
 			this.label6 = new System.Windows.Forms.Label();
 			this.txtScopeID = new System.Windows.Forms.TextBox();
-			this.groupBox5 = new System.Windows.Forms.GroupBox();
+			this.grpRole = new System.Windows.Forms.GroupBox();
 			this.btnCreateRole = new System.Windows.Forms.Button();
 			this.label23 = new System.Windows.Forms.Label();
 			this.txtRoleMemberName = new System.Windows.Forms.TextBox();
@@ -102,28 +102,30 @@
 			this.txtRoleName = new System.Windows.Forms.TextBox();
 			this.txtLog = new System.Windows.Forms.RichTextBox();
 			this.label29 = new System.Windows.Forms.Label();
-			this.groupBox1.SuspendLayout();
-			this.groupBox2.SuspendLayout();
-			this.groupBox3.SuspendLayout();
-			this.groupBox4.SuspendLayout();
-			this.groupBox5.SuspendLayout();
+			this.btnExecute = new System.Windows.Forms.Button();
+			this.grpBoxActiveDirectory.SuspendLayout();
+			this.grpCube.SuspendLayout();
+			this.grpBook.SuspendLayout();
+			this.grpSSIS.SuspendLayout();
+			this.grpRole.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// groupBox1
+			// grpBoxActiveDirectory
 			// 
-			this.groupBox1.Controls.Add(this.txtFullName);
-			this.groupBox1.Controls.Add(this.txtPassword);
-			this.groupBox1.Controls.Add(this.label3);
-			this.groupBox1.Controls.Add(this.label2);
-			this.groupBox1.Controls.Add(this.label1);
-			this.groupBox1.Controls.Add(this.txtUserName);
-			this.groupBox1.Controls.Add(this.btnActiveDirectory);
-			this.groupBox1.Location = new System.Drawing.Point(24, 50);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(662, 138);
-			this.groupBox1.TabIndex = 0;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "create active directory user";
+			this.grpBoxActiveDirectory.Controls.Add(this.txtFullName);
+			this.grpBoxActiveDirectory.Controls.Add(this.txtPassword);
+			this.grpBoxActiveDirectory.Controls.Add(this.label3);
+			this.grpBoxActiveDirectory.Controls.Add(this.label2);
+			this.grpBoxActiveDirectory.Controls.Add(this.label1);
+			this.grpBoxActiveDirectory.Controls.Add(this.txtUserName);
+			this.grpBoxActiveDirectory.Controls.Add(this.btnActiveDirectory);
+			this.grpBoxActiveDirectory.Enabled = false;
+			this.grpBoxActiveDirectory.Location = new System.Drawing.Point(24, 50);
+			this.grpBoxActiveDirectory.Name = "grpBoxActiveDirectory";
+			this.grpBoxActiveDirectory.Size = new System.Drawing.Size(662, 138);
+			this.grpBoxActiveDirectory.TabIndex = 0;
+			this.grpBoxActiveDirectory.TabStop = false;
+			this.grpBoxActiveDirectory.Text = "create active directory user";
 			// 
 			// txtFullName
 			// 
@@ -183,35 +185,35 @@
 			this.btnActiveDirectory.UseVisualStyleBackColor = true;
 			this.btnActiveDirectory.Click += new System.EventHandler(this.btnActiveDirectory_Click);
 			// 
-			// groupBox2
+			// grpCube
 			// 
-			this.groupBox2.Controls.Add(this.txtContent);
-			this.groupBox2.Controls.Add(this.chkContent);
-			this.groupBox2.Controls.Add(this.button8);
-			this.groupBox2.Controls.Add(this.label25);
-			this.groupBox2.Controls.Add(this.txtCubeTemplateID);
-			this.groupBox2.Controls.Add(this.txtCPA2);
-			this.groupBox2.Controls.Add(this.txtCPA1);
-			this.groupBox2.Controls.Add(this.label19);
-			this.groupBox2.Controls.Add(this.label18);
-			this.groupBox2.Controls.Add(this.cmbReplaceCPA2);
-			this.groupBox2.Controls.Add(this.cmbReplaceCPA1);
-			this.groupBox2.Controls.Add(this.button4);
-			this.groupBox2.Controls.Add(this.label9);
-			this.groupBox2.Controls.Add(this.label8);
-			this.groupBox2.Controls.Add(this.label7);
-			this.groupBox2.Controls.Add(this.txtCubeName);
-			this.groupBox2.Controls.Add(this.label5);
-			this.groupBox2.Controls.Add(this.txtDataSourceName);
-			this.groupBox2.Controls.Add(this.label4);
-			this.groupBox2.Controls.Add(this.txtDatabseName);
-			this.groupBox2.Controls.Add(this.btnCreateNewCube);
-			this.groupBox2.Location = new System.Drawing.Point(24, 325);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(662, 221);
-			this.groupBox2.TabIndex = 1;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "create new cube";
+			this.grpCube.Controls.Add(this.txtContent);
+			this.grpCube.Controls.Add(this.chkContent);
+			this.grpCube.Controls.Add(this.button8);
+			this.grpCube.Controls.Add(this.label25);
+			this.grpCube.Controls.Add(this.txtCubeTemplateID);
+			this.grpCube.Controls.Add(this.txtCPA2);
+			this.grpCube.Controls.Add(this.txtCPA1);
+			this.grpCube.Controls.Add(this.label19);
+			this.grpCube.Controls.Add(this.label18);
+			this.grpCube.Controls.Add(this.cmbReplaceCPA2);
+			this.grpCube.Controls.Add(this.cmbReplaceCPA1);
+			this.grpCube.Controls.Add(this.button4);
+			this.grpCube.Controls.Add(this.label9);
+			this.grpCube.Controls.Add(this.label8);
+			this.grpCube.Controls.Add(this.label7);
+			this.grpCube.Controls.Add(this.txtCubeName);
+			this.grpCube.Controls.Add(this.label5);
+			this.grpCube.Controls.Add(this.txtDataSourceName);
+			this.grpCube.Controls.Add(this.label4);
+			this.grpCube.Controls.Add(this.txtDatabseName);
+			this.grpCube.Controls.Add(this.btnCreateNewCube);
+			this.grpCube.Location = new System.Drawing.Point(24, 325);
+			this.grpCube.Name = "grpCube";
+			this.grpCube.Size = new System.Drawing.Size(662, 221);
+			this.grpCube.TabIndex = 1;
+			this.grpCube.TabStop = false;
+			this.grpCube.Text = "create new cube";
 			// 
 			// txtContent
 			// 
@@ -255,6 +257,7 @@
 			// txtCubeTemplateID
 			// 
 			this.txtCubeTemplateID.AcceptsTab = true;
+			this.txtCubeTemplateID.Enabled = false;
 			this.txtCubeTemplateID.Location = new System.Drawing.Point(250, 100);
 			this.txtCubeTemplateID.Name = "txtCubeTemplateID";
 			this.txtCubeTemplateID.Size = new System.Drawing.Size(242, 20);
@@ -398,28 +401,29 @@
 			this.btnCreateNewCube.UseVisualStyleBackColor = true;
 			this.btnCreateNewCube.Click += new System.EventHandler(this.btnCreateNewCube_Click);
 			// 
-			// groupBox3
+			// grpBook
 			// 
-			this.groupBox3.Controls.Add(this.button7);
-			this.groupBox3.Controls.Add(this.label20);
-			this.groupBox3.Controls.Add(this.txtCubeAddressInViewFile);
-			this.groupBox3.Controls.Add(this.label15);
-			this.groupBox3.Controls.Add(this.txtApplicationFilePathForAddingBook);
-			this.groupBox3.Controls.Add(this.label14);
-			this.groupBox3.Controls.Add(this.txtPanoramaAdminRefreshFilePath);
-			this.groupBox3.Controls.Add(this.label13);
-			this.groupBox3.Controls.Add(this.txtBackupName);
-			this.groupBox3.Controls.Add(this.label12);
-			this.groupBox3.Controls.Add(this.txtBooksXmlTemplatePath);
-			this.groupBox3.Controls.Add(this.label11);
-			this.groupBox3.Controls.Add(this.txtBookName);
-			this.groupBox3.Controls.Add(this.button3);
-			this.groupBox3.Location = new System.Drawing.Point(24, 550);
-			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(662, 204);
-			this.groupBox3.TabIndex = 2;
-			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = "create new book";
+			this.grpBook.Controls.Add(this.button7);
+			this.grpBook.Controls.Add(this.label20);
+			this.grpBook.Controls.Add(this.txtCubeAddressInViewFile);
+			this.grpBook.Controls.Add(this.label15);
+			this.grpBook.Controls.Add(this.txtApplicationFilePathForAddingBook);
+			this.grpBook.Controls.Add(this.label14);
+			this.grpBook.Controls.Add(this.txtPanoramaAdminRefreshFilePath);
+			this.grpBook.Controls.Add(this.label13);
+			this.grpBook.Controls.Add(this.txtBackupName);
+			this.grpBook.Controls.Add(this.label12);
+			this.grpBook.Controls.Add(this.txtBooksXmlTemplatePath);
+			this.grpBook.Controls.Add(this.label11);
+			this.grpBook.Controls.Add(this.txtBookName);
+			this.grpBook.Controls.Add(this.button3);
+			this.grpBook.Enabled = false;
+			this.grpBook.Location = new System.Drawing.Point(24, 550);
+			this.grpBook.Name = "grpBook";
+			this.grpBook.Size = new System.Drawing.Size(662, 204);
+			this.grpBook.TabIndex = 2;
+			this.grpBook.TabStop = false;
+			this.grpBook.Text = "create new book";
 			// 
 			// button7
 			// 
@@ -443,6 +447,7 @@
 			// txtCubeAddressInViewFile
 			// 
 			this.txtCubeAddressInViewFile.AcceptsTab = true;
+			this.txtCubeAddressInViewFile.Enabled = false;
 			this.txtCubeAddressInViewFile.Location = new System.Drawing.Point(250, 146);
 			this.txtCubeAddressInViewFile.Name = "txtCubeAddressInViewFile";
 			this.txtCubeAddressInViewFile.Size = new System.Drawing.Size(379, 20);
@@ -459,6 +464,7 @@
 			// 
 			// txtApplicationFilePathForAddingBook
 			// 
+			this.txtApplicationFilePathForAddingBook.Enabled = false;
 			this.txtApplicationFilePathForAddingBook.Location = new System.Drawing.Point(250, 120);
 			this.txtApplicationFilePathForAddingBook.Name = "txtApplicationFilePathForAddingBook";
 			this.txtApplicationFilePathForAddingBook.Size = new System.Drawing.Size(379, 20);
@@ -475,6 +481,7 @@
 			// 
 			// txtPanoramaAdminRefreshFilePath
 			// 
+			this.txtPanoramaAdminRefreshFilePath.Enabled = false;
 			this.txtPanoramaAdminRefreshFilePath.Location = new System.Drawing.Point(250, 94);
 			this.txtPanoramaAdminRefreshFilePath.Name = "txtPanoramaAdminRefreshFilePath";
 			this.txtPanoramaAdminRefreshFilePath.Size = new System.Drawing.Size(379, 20);
@@ -508,6 +515,7 @@
 			// 
 			// txtBooksXmlTemplatePath
 			// 
+			this.txtBooksXmlTemplatePath.Enabled = false;
 			this.txtBooksXmlTemplatePath.Location = new System.Drawing.Point(250, 42);
 			this.txtBooksXmlTemplatePath.Name = "txtBooksXmlTemplatePath";
 			this.txtBooksXmlTemplatePath.Size = new System.Drawing.Size(379, 20);
@@ -524,6 +532,7 @@
 			// 
 			// txtBookName
 			// 
+			this.txtBookName.Enabled = false;
 			this.txtBookName.Location = new System.Drawing.Point(250, 16);
 			this.txtBookName.Name = "txtBookName";
 			this.txtBookName.Size = new System.Drawing.Size(379, 20);
@@ -537,6 +546,7 @@
 			this.button3.TabIndex = 21;
 			this.button3.Text = "Create";
 			this.button3.UseVisualStyleBackColor = true;
+			this.button3.Click += new System.EventHandler(this.button3_Click);
 			// 
 			// txtScopName
 			// 
@@ -555,27 +565,28 @@
 			this.label16.TabIndex = 4;
 			this.label16.Text = "Scope Name";
 			// 
-			// groupBox4
+			// grpSSIS
 			// 
-			this.groupBox4.Controls.Add(this.txtDatabaseToReplace);
-			this.groupBox4.Controls.Add(this.label27);
-			this.groupBox4.Controls.Add(this.txtDatabasePatternToReplace);
-			this.groupBox4.Controls.Add(this.label28);
-			this.groupBox4.Controls.Add(this.txtReplaceWithCubeName);
-			this.groupBox4.Controls.Add(this.label26);
-			this.groupBox4.Controls.Add(this.txtCubeNamePatternToReplace);
-			this.groupBox4.Controls.Add(this.label24);
-			this.groupBox4.Controls.Add(this.txtSSISAllCubeTemplate);
-			this.groupBox4.Controls.Add(this.label17);
-			this.groupBox4.Controls.Add(this.txtSSISCubeTemplate);
-			this.groupBox4.Controls.Add(this.label21);
-			this.groupBox4.Controls.Add(this.button5);
-			this.groupBox4.Location = new System.Drawing.Point(24, 758);
-			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Size = new System.Drawing.Size(662, 159);
-			this.groupBox4.TabIndex = 31;
-			this.groupBox4.TabStop = false;
-			this.groupBox4.Text = "ssis update";
+			this.grpSSIS.Controls.Add(this.txtDatabaseToReplace);
+			this.grpSSIS.Controls.Add(this.label27);
+			this.grpSSIS.Controls.Add(this.txtDatabasePatternToReplace);
+			this.grpSSIS.Controls.Add(this.label28);
+			this.grpSSIS.Controls.Add(this.txtReplaceWithCubeName);
+			this.grpSSIS.Controls.Add(this.label26);
+			this.grpSSIS.Controls.Add(this.txtCubeNamePatternToReplace);
+			this.grpSSIS.Controls.Add(this.label24);
+			this.grpSSIS.Controls.Add(this.txtSSISAllCubeTemplate);
+			this.grpSSIS.Controls.Add(this.label17);
+			this.grpSSIS.Controls.Add(this.txtSSISCubeTemplate);
+			this.grpSSIS.Controls.Add(this.label21);
+			this.grpSSIS.Controls.Add(this.button5);
+			this.grpSSIS.Enabled = false;
+			this.grpSSIS.Location = new System.Drawing.Point(24, 758);
+			this.grpSSIS.Name = "grpSSIS";
+			this.grpSSIS.Size = new System.Drawing.Size(662, 159);
+			this.grpSSIS.TabIndex = 31;
+			this.grpSSIS.TabStop = false;
+			this.grpSSIS.Text = "ssis update";
 			// 
 			// txtDatabaseToReplace
 			// 
@@ -616,7 +627,6 @@
 			this.txtReplaceWithCubeName.Name = "txtReplaceWithCubeName";
 			this.txtReplaceWithCubeName.Size = new System.Drawing.Size(100, 20);
 			this.txtReplaceWithCubeName.TabIndex = 37;
-			this.txtReplaceWithCubeName.Text = "BO";
 			// 
 			// label26
 			// 
@@ -645,6 +655,7 @@
 			// 
 			// txtSSISAllCubeTemplate
 			// 
+			this.txtSSISAllCubeTemplate.Enabled = false;
 			this.txtSSISAllCubeTemplate.Location = new System.Drawing.Point(250, 39);
 			this.txtSSISAllCubeTemplate.Name = "txtSSISAllCubeTemplate";
 			this.txtSSISAllCubeTemplate.Size = new System.Drawing.Size(379, 20);
@@ -661,6 +672,7 @@
 			// 
 			// txtSSISCubeTemplate
 			// 
+			this.txtSSISCubeTemplate.Enabled = false;
 			this.txtSSISCubeTemplate.Location = new System.Drawing.Point(250, 13);
 			this.txtSSISCubeTemplate.Name = "txtSSISCubeTemplate";
 			this.txtSSISCubeTemplate.Size = new System.Drawing.Size(379, 20);
@@ -683,6 +695,7 @@
 			this.button5.TabIndex = 21;
 			this.button5.Text = "Create";
 			this.button5.UseVisualStyleBackColor = true;
+			this.button5.Click += new System.EventHandler(this.button5_Click);
 			// 
 			// btnStartNewSession
 			// 
@@ -709,22 +722,24 @@
 			this.txtScopeID.Name = "txtScopeID";
 			this.txtScopeID.Size = new System.Drawing.Size(125, 20);
 			this.txtScopeID.TabIndex = 32;
+			this.txtScopeID.Leave += new System.EventHandler(this.txtScopeID_Leave);
 			// 
-			// groupBox5
+			// grpRole
 			// 
-			this.groupBox5.Controls.Add(this.btnCreateRole);
-			this.groupBox5.Controls.Add(this.label23);
-			this.groupBox5.Controls.Add(this.txtRoleMemberName);
-			this.groupBox5.Controls.Add(this.label22);
-			this.groupBox5.Controls.Add(this.txtRoleID);
-			this.groupBox5.Controls.Add(this.label10);
-			this.groupBox5.Controls.Add(this.txtRoleName);
-			this.groupBox5.Location = new System.Drawing.Point(24, 195);
-			this.groupBox5.Name = "groupBox5";
-			this.groupBox5.Size = new System.Drawing.Size(662, 125);
-			this.groupBox5.TabIndex = 7;
-			this.groupBox5.TabStop = false;
-			this.groupBox5.Text = "create new role";
+			this.grpRole.Controls.Add(this.btnCreateRole);
+			this.grpRole.Controls.Add(this.label23);
+			this.grpRole.Controls.Add(this.txtRoleMemberName);
+			this.grpRole.Controls.Add(this.label22);
+			this.grpRole.Controls.Add(this.txtRoleID);
+			this.grpRole.Controls.Add(this.label10);
+			this.grpRole.Controls.Add(this.txtRoleName);
+			this.grpRole.Enabled = false;
+			this.grpRole.Location = new System.Drawing.Point(24, 195);
+			this.grpRole.Name = "grpRole";
+			this.grpRole.Size = new System.Drawing.Size(662, 125);
+			this.grpRole.TabIndex = 7;
+			this.grpRole.TabStop = false;
+			this.grpRole.Text = "create new role";
 			// 
 			// btnCreateRole
 			// 
@@ -788,6 +803,7 @@
 			// 
 			// txtLog
 			// 
+			this.txtLog.Enabled = false;
 			this.txtLog.Location = new System.Drawing.Point(692, 83);
 			this.txtLog.Name = "txtLog";
 			this.txtLog.Size = new System.Drawing.Size(209, 828);
@@ -803,37 +819,48 @@
 			this.label29.TabIndex = 35;
 			this.label29.Text = "Log:";
 			// 
+			// btnExecute
+			// 
+			this.btnExecute.Location = new System.Drawing.Point(47, 924);
+			this.btnExecute.Name = "btnExecute";
+			this.btnExecute.Size = new System.Drawing.Size(75, 23);
+			this.btnExecute.TabIndex = 36;
+			this.btnExecute.Text = "Execute";
+			this.btnExecute.UseVisualStyleBackColor = true;
+			this.btnExecute.Click += new System.EventHandler(this.btnExecute_Click);
+			// 
 			// frmWizardTester
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(913, 923);
+			this.ClientSize = new System.Drawing.Size(913, 962);
+			this.Controls.Add(this.btnExecute);
 			this.Controls.Add(this.label29);
 			this.Controls.Add(this.txtLog);
-			this.Controls.Add(this.groupBox5);
+			this.Controls.Add(this.grpRole);
 			this.Controls.Add(this.label6);
 			this.Controls.Add(this.txtScopeID);
 			this.Controls.Add(this.btnStartNewSession);
-			this.Controls.Add(this.groupBox4);
+			this.Controls.Add(this.grpSSIS);
 			this.Controls.Add(this.label16);
 			this.Controls.Add(this.txtScopName);
-			this.Controls.Add(this.groupBox3);
-			this.Controls.Add(this.groupBox2);
-			this.Controls.Add(this.groupBox1);
+			this.Controls.Add(this.grpBook);
+			this.Controls.Add(this.grpCube);
+			this.Controls.Add(this.grpBoxActiveDirectory);
 			this.Name = "frmWizardTester";
 			this.Text = "Add Scope BI V. 1.0";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmWizardTester_FormClosing);
 			this.Load += new System.EventHandler(this.frmWizardTester_Load);
-			this.groupBox1.ResumeLayout(false);
-			this.groupBox1.PerformLayout();
-			this.groupBox2.ResumeLayout(false);
-			this.groupBox2.PerformLayout();
-			this.groupBox3.ResumeLayout(false);
-			this.groupBox3.PerformLayout();
-			this.groupBox4.ResumeLayout(false);
-			this.groupBox4.PerformLayout();
-			this.groupBox5.ResumeLayout(false);
-			this.groupBox5.PerformLayout();
+			this.grpBoxActiveDirectory.ResumeLayout(false);
+			this.grpBoxActiveDirectory.PerformLayout();
+			this.grpCube.ResumeLayout(false);
+			this.grpCube.PerformLayout();
+			this.grpBook.ResumeLayout(false);
+			this.grpBook.PerformLayout();
+			this.grpSSIS.ResumeLayout(false);
+			this.grpSSIS.PerformLayout();
+			this.grpRole.ResumeLayout(false);
+			this.grpRole.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -841,9 +868,9 @@
 
 		#endregion
 
-		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.GroupBox grpBoxActiveDirectory;
 		private System.Windows.Forms.Button btnActiveDirectory;
-		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.GroupBox grpCube;
 		private System.Windows.Forms.Button btnCreateNewCube;
 		private System.Windows.Forms.TextBox txtFullName;
 		private System.Windows.Forms.TextBox txtPassword;
@@ -859,7 +886,7 @@
 		private System.Windows.Forms.TextBox txtCubeName;
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.Label label8;
-		private System.Windows.Forms.GroupBox groupBox3;
+		private System.Windows.Forms.GroupBox grpBook;
 		private System.Windows.Forms.Label label11;
 		private System.Windows.Forms.TextBox txtBookName;
 		private System.Windows.Forms.Button button3;
@@ -876,7 +903,7 @@
 		private System.Windows.Forms.Label label16;
 		private System.Windows.Forms.ComboBox cmbReplaceCPA2;
 		private System.Windows.Forms.ComboBox cmbReplaceCPA1;
-		private System.Windows.Forms.GroupBox groupBox4;
+		private System.Windows.Forms.GroupBox grpSSIS;
 		private System.Windows.Forms.Label label21;
 		private System.Windows.Forms.Button button5;
 		private System.Windows.Forms.TextBox txtSSISCubeTemplate;
@@ -905,7 +932,7 @@
 		private System.Windows.Forms.Label label28;
 		private System.Windows.Forms.TextBox txtContent;
 		private System.Windows.Forms.CheckBox chkContent;
-		private System.Windows.Forms.GroupBox groupBox5;
+		private System.Windows.Forms.GroupBox grpRole;
 		private System.Windows.Forms.Label label23;
 		private System.Windows.Forms.TextBox txtRoleMemberName;
 		private System.Windows.Forms.Label label22;
@@ -915,5 +942,6 @@
 		private System.Windows.Forms.Button btnCreateRole;
 		private System.Windows.Forms.RichTextBox txtLog;
 		private System.Windows.Forms.Label label29;
+		private System.Windows.Forms.Button btnExecute;
 	}
 }
