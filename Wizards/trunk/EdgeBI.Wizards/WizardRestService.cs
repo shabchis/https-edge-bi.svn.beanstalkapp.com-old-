@@ -10,6 +10,7 @@ using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
 using System.ServiceModel.Description;
 using System.Net;
+using System.Diagnostics;
 
 
 namespace EdgeBI.Wizards
@@ -36,6 +37,7 @@ namespace EdgeBI.Wizards
 		[WebInvoke(Method = "GET", UriTemplate = "start?wizardName={WizardName}")]
 		public WizardSession Start(string WizardName)
 		{
+			//Debugger.Launch();
 
 			//load the service from configuration file 
 			//CHANGED 1 (Service is taken from app.config- what to do if service not found?)
@@ -112,6 +114,17 @@ namespace EdgeBI.Wizards
 
 
 		}
+		/// <summary>
+		/// Get the execution state
+		/// </summary>
+		/// <param name="sessionID"></param>
+		/// <returns></returns>
+		[WebInvoke(Method = "GET", UriTemplate = "GetExecutorState?sessionID={sessionID}")]
+		public ServiceOutcome GetExecutorState(int sessionID)
+		{
+			return MainExecuters[sessionID].Outcome;
+
+		}
 
 		
 
@@ -153,6 +166,10 @@ namespace EdgeBI.Wizards
 
 						//get next step detalis or if it   finished/
 						ServiceInstance currentInstance = StepInstances[sessionID];
+						
+						// This will cause the collector service to end successfully
+						currentInstance.Continue();
+
 						ServiceInstance parentInstance = currentInstance.ParentInstance;
 						ExecutionStepElement currentInstacnceElement = parentInstance.Configuration.ExecutionSteps[currentInstance.Configuration.Name];
 
@@ -220,6 +237,7 @@ namespace EdgeBI.Wizards
 			}
 			catch (Exception ex)
 			{
+				Log.Write("Service not Started yet: ", ex);
 				throw new WebFaultException<string>("Service not Started yet: " + ex.Message, HttpStatusCode.ServiceUnavailable);
 
 			}

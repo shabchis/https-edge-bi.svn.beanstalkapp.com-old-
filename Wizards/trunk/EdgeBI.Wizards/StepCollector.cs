@@ -120,8 +120,10 @@ namespace EdgeBI.Wizards
 					};
 				}
 
-				Thread t = new Thread(new ThreadStart(this.Run));
-				t.Start();
+				// Bad idea to do this here. Moved to WizardRestService.Collect
+				//Thread t = new Thread(new ThreadStart(this.Run));
+				//t.Start();
+				
 				if (Instance.Configuration.Options["LastStep"] == "true")
 				{
 					return new StepCollectResponse() { Errors = null, NextStep = new StepConfiguration() { MetaData = null, StepName = Instance.Configuration.Name }, Result = StepResult.Done };
@@ -142,9 +144,6 @@ namespace EdgeBI.Wizards
 		{
 			string sessionID = WizardSession.SessionID.ToString();
 			StepCollectorHost = new ServiceHost(this, new Uri(String.Format("net.tcp://localhost:3636/wizard/step/{0}", sessionID)));
-
-
-
 
 			StepCollectorHost.Open();
 
