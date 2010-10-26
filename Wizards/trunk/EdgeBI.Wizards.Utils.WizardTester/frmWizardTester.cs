@@ -33,10 +33,13 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 		public frmWizardTester()
 		{
 			InitializeComponent();
+
+			#if RELEASE
 			edgeHostService = new Process();
 			edgeHostService.StartInfo.FileName = Properties.Settings.Default.ServiceHostPath;
 			edgeHostService.StartInfo.Arguments = "/WizardService";
 			edgeHostService.Start();
+			#endif
 		}
 
 		private void frmWizardTester_Load(object sender, EventArgs e)
@@ -61,7 +64,9 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 			txtDatabasePatternToReplace.Text = Properties.Settings.Default.DatabaseNamePattenToReplace;
 			txtDatabaseToReplace.Text = Properties.Settings.Default.AnalysisServerDatabase;
 			//txtReplaceWithCubeName.Text = Properties.Settings.Default.CubeNameStartWith;
+
 			txtLog.Text += "service started";
+			txtLog.Text += "------------------------------";
 
 
 
@@ -79,17 +84,19 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 			if (e.StateAfter == ServiceState.Ready)
 			{
 				txtLog.Text += string.Format("Starting {0}\n", instance.Configuration.Name);
-
+				txtLog.Text += "------------------------------";
 				try
 				{
 					instance.Start();
 				}
 				catch (Exception ex)
 				{
+					txtLog.Text += "------------------------------";
 					txtLog.Text += string.Format("Could not start {0}: {1} ({2})",
 						instance.Configuration.Name,
 						ex.Message,
 						ex.GetType().FullName);
+					txtLog.Text += "------------------------------";
 					txtLog.Text += string.Format("See the event log for further details.");
 
 					Log.Write(String.Format("Could not start {0}.", instance.Configuration.Name), ex);
@@ -97,6 +104,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 			}
 			else if (e.StateAfter == ServiceState.Ended)
 			{
+				txtLog.Text += "------------------------------";
 				txtLog.Text += string.Format("{0} has ended.", instance.Configuration.Name);
 			}
 		}
@@ -108,16 +116,22 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 			txtReplaceWithCubeName.Text = txtScopName.Text;
 
 
-			////txtBackupName.Text += txtScopName.Text;
-			//int index = 0;
-			//index = txtBooksXmlTemplatePath.Text.LastIndexOf("\\");
-			//txtBackupName.Text = txtBooksXmlTemplatePath.Text.Substring(0, index) + "\\BO" + txtScopName.Text;
+		
 
 		}
 
 		private void frmWizardTester_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			edgeHostService.Kill();
+			try
+			{
+				edgeHostService.Kill();
+			}
+			catch (Exception)
+			{
+				
+				
+			}
+			
 		}
 
 		private void btnStartNewSession_Click(object sender, EventArgs e)
@@ -132,6 +146,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 			if (!string.IsNullOrEmpty(txtScopName.Text) && !string.IsNullOrEmpty(txtScopeID.Text))
 			{
 				WizardSession wizardSession = StartWizard("AccountWizard");
+				
 				txtLog.Text = string.Format("Account Wizard Service Started:\nWizard ID is:{0}\nSessionID IS:{1}\nNext step name is:{2}\n--------------------", wizardSession.WizardID, wizardSession.SessionID, wizardSession.CurrentStep.StepName);
 				grpBoxActiveDirectory.Enabled = true;
 			}
@@ -680,6 +695,25 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 					control.Enabled = false;
 				}
 			}
+			try
+			{
+				WebRequest request = HttpWebRequest.Create(string.Format("{0}/execute?sessionID={1}", _baseUri, _sessionID));
+				request.Method = "POST";
+				request.ContentType = "application/xml";
+				request.ContentLength = 0;
+				WebResponse response = request.GetResponse();
+				txtLog.Text += "------------------------------";
+				txtLog.Text+= "EXECUTION FINISHED SUCCESSFULY";
+			}
+			catch (Exception ex)
+			{
+				txtLog.Text += "------------------------------";
+				txtLog.Text+=ex.Message;
+			}
+			finally
+			{
+				
+			}
 		}
 
 		private void button5_Click(object sender, EventArgs e)
@@ -742,6 +776,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 								{
 									foreach (KeyValuePair<string, string> error in stepCollectResponse.Errors)
 									{
+										txtLog.Text += "------------------------------";
 										txtLog.Text += string.Format("Errors:key {0} Value{1}\n", error.Key, error.Value);
 									}
 
@@ -750,7 +785,8 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 								}
 							case StepResult.Done:
 								{
-									txtLog.Text = "\nFinsish collecting from all steps\nready to get summary or execute:";
+									txtLog.Text += "------------------------------";
+									txtLog.Text += "\nFinsish collecting from all steps\nready to get summary or execute:";
 
 									break;
 								}
@@ -764,7 +800,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 
 						using (StreamReader reader = new StreamReader(ex.Response.GetResponseStream()))
 						{
-
+							txtLog.Text += "------------------------------";
 							txtLog.Text += string.Format("ErrorCode:{0}\n ErrorDescription: {1} \nInnerException:{2}", ex.Status.ToString(), reader.ReadToEnd(), ex.InnerException);
 						}
 
@@ -772,7 +808,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 				}
 				catch (Exception ex)
 				{
-
+					txtLog.Text += "------------------------------";
 					txtLog.Text += ex.Message;
 				}
 
