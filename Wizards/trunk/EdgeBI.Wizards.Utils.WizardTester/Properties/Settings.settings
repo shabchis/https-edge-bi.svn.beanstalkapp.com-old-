@@ -1,9 +1,57 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WFTestWizard.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EdgeBI.Wizards.Utils.WizardTester.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ActiveDirectoryStepFileName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">User.xml</Value>
+    <Setting Name="AnalysisServerConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DataSource=qa</Value>
+    </Setting>
+    <Setting Name="AnalysisServerDatabase" Type="System.String" Scope="User">
+      <Value Profile="(Default)">easynet_UDM</Value>
+    </Setting>
+    <Setting Name="RoleMemberName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SEPERIA\liran</Value>
+    </Setting>
+    <Setting Name="CubeNameStartWith" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BO</Value>
+    </Setting>
+    <Setting Name="CubeTemplatesBOTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BOTemplate3</Value>
+    </Setting>
+    <Setting Name="CPA1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Regs</Value>
+    </Setting>
+    <Setting Name="CPA2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Actives</Value>
+    </Setting>
+    <Setting Name="BookName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BO New Activations1</Value>
+    </Setting>
+    <Setting Name="BookTemplatePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\\gidi-pc\d$\Program Files\Panorama\E-BI\books\BO PPC VS BCK</Value>
+    </Setting>
+    <Setting Name="BackUpName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PanoramaExecutionPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\\gidi-pc\d$\Program Files\Panorama\E-BI\Panorama.msc</Value>
+    </Setting>
+    <Setting Name="ApplicationsXmlPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\\gidi-pc\d$\Program Files\Panorama\E-BI\Applications.xml</Value>
+    </Setting>
+    <Setting Name="DtsxTemplatePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\\hal\d$\ssis_projects\Pkg_3000_Process_BOPPC_Cubes-Template.dtsx</Value>
+    </Setting>
+    <Setting Name="DtsxPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\\hal\d$\ssis_projects\Pkg_3000_Process_BOPPC_Cubes.dtsx</Value>
+    </Setting>
+    <Setting Name="CubeNamePattenToReplace" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BOPPCCube888</Value>
+    </Setting>
+    <Setting Name="DatabaseNamePattenToReplace" Type="System.String" Scope="User">
+      <Value Profile="(Default)">easynet_UDM</Value>
+    </Setting>
+    <Setting Name="ServiceHostPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Codebase-2010\Applications\EdgeServiceHost\bin\Debug\EdgeServiceHost.exe</Value>
     </Setting>
   </Settings>
 </SettingsFile>

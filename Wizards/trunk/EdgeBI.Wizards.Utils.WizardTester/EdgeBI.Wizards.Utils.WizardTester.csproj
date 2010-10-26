@@ -40,6 +40,7 @@
       <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.AnalysisServices\10.0.0.0__89845dcd8080cc91\Microsoft.AnalysisServices.DLL</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Runtime.Serialization" />
@@ -54,16 +55,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BookStringValuesReplace.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BookStringValuesReplace.Designer.cs">
+      <DependentUpon>BookStringValuesReplace.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmWizardTester.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmWizardTester.Designer.cs">
+      <DependentUpon>frmWizardTester.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MeasuresList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MeasuresList.Designer.cs">
+      <DependentUpon>MeasuresList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="BookStringValuesReplace.resx">
+      <DependentUpon>BookStringValuesReplace.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmWizardTester.resx">
+      <DependentUpon>frmWizardTester.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MeasuresList.resx">
+      <DependentUpon>MeasuresList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -92,6 +120,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Applications\EdgeServiceHost\EdgeServiceHost.csproj">
+      <Project>{C1D17284-15C6-4CEC-AF35-D84CC8D5CCA0}</Project>
+      <Name>EdgeServiceHost</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\Core\Core.csproj">
       <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
       <Name>Core</Name>
@@ -102,11 +134,4 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

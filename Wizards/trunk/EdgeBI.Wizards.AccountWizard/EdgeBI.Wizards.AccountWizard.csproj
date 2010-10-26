@@ -63,7 +63,6 @@
     <Compile Include="CreateRoleStepCollector.cs" />
     <Compile Include="CreateRoleStepExecutor.cs" />
     <Compile Include="CreateNewCubeExecutor.cs" />
-    <Compile Include="CubeCreation\SSISdefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
