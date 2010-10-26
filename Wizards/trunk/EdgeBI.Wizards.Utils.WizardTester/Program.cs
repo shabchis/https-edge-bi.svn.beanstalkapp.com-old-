@@ -15,7 +15,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new frmTestWizard());
+			Application.Run(new frmWizardTester());
 		}
 	}
 }
