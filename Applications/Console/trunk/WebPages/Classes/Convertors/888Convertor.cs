@@ -124,14 +124,15 @@ namespace Easynet.Edge.UI.WebPages.Converters
                                     string publisherName = (string)accountNamesDS.Tables[0].Rows[i][0];
                                     SettingsCollection sc = new SettingsCollection(publisherName);
                                     string accntName = sc["bo_publisher_name"];
+                                    string[] accntNameList = accntName.ToLower().Split("||".ToCharArray());
+                                    if(accntNameList.Contains<string>(publisherNameValue.ToLower()))
+                                        return (string)accountNamesDS.Tables[0].Rows[i]["Account_Name"];
                                     //int index1 = publisherName.IndexOf("bo_publisher_name") + "bo_publisher_name".Length;
                                     //index1 = publisherName.IndexOf(":", index1);
                                     //int index2 = publisherName.IndexOf(";", index1);
                                     //string accntName = publisherName.Substring(index1 + 1, index2 - index1);
-                                    if (accntName.ToLower().Equals(publisherNameValue.ToLower()))
-                                        return (string)accountNamesDS.Tables[0].Rows[i]["Account_Name"];
-                                    else
-                                        return errorAccountString;
+                                    //if (accntName.ToLower().Equals(publisherNameValue.ToLower()))
+                                    //    return (string)accountNamesDS.Tables[0].Rows[i]["Account_Name"];
                                 }
                             }
                         }
