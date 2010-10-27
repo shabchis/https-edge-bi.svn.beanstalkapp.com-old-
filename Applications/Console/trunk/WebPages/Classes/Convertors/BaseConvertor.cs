@@ -350,7 +350,7 @@ namespace Easynet.Edge.UI.WebPages.Converters
                           }
                           catch (Exception ex)
                           {
-
+                              string message = ex.ToString();
                           }
                           finally
                           {

@@ -15,6 +15,9 @@ using System.Data.OleDb;
 using System.Text;
 using System.Diagnostics;
 using Easynet.Edge.UI.WebPages.Classes.Convertors;
+using Easynet.Edge.Core;
+
+
  
  
  
@@ -49,7 +52,7 @@ namespace Easynet.Edge.UI.WebPages.Converters
 
 
 
-        protected  string FindAccountName(string key, string accoutnSettingKey)
+        protected  string FindAccountName(string key, string accoutnSettingKey, string publisherNameValue)
         {
             try
             {
@@ -86,27 +89,13 @@ namespace Easynet.Edge.UI.WebPages.Converters
                     MyLogger.Instance.Write("0 rows for key: " + key + " ,accoutnSettingKey:" + accoutnSettingKey);
                     //check in acccount table in accountSettings field for bo_publisher_name
 
-                    _sqlCommand = @"select  [easynet_OLTP].[dbo].[User_GUI_Account].[AccountSettings], [easynet_OLTP].[dbo].[User_GUI_Account].[Account_Name] 
-                  FROM [easynet_OLTP].[dbo].[User_GUI_Account])";
-
-
-
-                    FillAccountNames2DataSet();
-                    if (accountNamesDS.Tables.Count == 0 || accountNamesDS.Tables.Count > 1)
-                    {
-                        MyLogger.Instance.Write("0 rows for key: " + key + " ,accoutnSettingKey:" + accoutnSettingKey);
-
-                        return errorAccountString;
-                    }
-                    else
-                        return accountNamesDS.Tables[0].Rows[0][1].ToString();
+                  
                 }
                 else
                     if (accountNamesDS.Tables.Count > 1)
                     { //more than 2 rows {
                         MyLogger.Instance.Write("2 rows");
-                        //in case of 2 rows or more we'll return the first one that found.
-                        return accountNamesDS.Tables[0].Rows[0][0].ToString();
+                        return "";
                     }
                     else
                     {
@@ -114,6 +103,37 @@ namespace Easynet.Edge.UI.WebPages.Converters
                         {
                             MyLogger.Instance.Write("1 row: " + accountNamesDS.Tables[0].Rows[0][0].ToString());
                             return accountNamesDS.Tables[0].Rows[0][0].ToString();
+                        }
+                        else if (accountNamesDS.Tables[0].Rows.Count > 1)
+                        {
+                            //in case of 2 rows or more we'll return the first one that found.
+                            return accountNamesDS.Tables[0].Rows[0][0].ToString();
+                        }
+                        else //number of rows = 0
+                        {
+                            _sqlCommand = @"select  [easynet_OLTP].[dbo].[User_GUI_Account].[AccountSettings], [easynet_OLTP].[dbo].[User_GUI_Account].[Account_Name] 
+                                            FROM [easynet_OLTP].[dbo].[User_GUI_Account]";
+
+                            
+
+                            FillAccountNames2DataSet();
+                            for (int i = 0; i < accountNamesDS.Tables[0].Rows.Count; i++)
+                            {
+                                if (accountNamesDS.Tables[0].Rows[i][0].ToString().Contains("bo_publisher_name"))
+                                {
+                                    string publisherName = (string)accountNamesDS.Tables[0].Rows[i][0];
+                                    SettingsCollection sc = new SettingsCollection(publisherName);
+                                    string accntName = sc["bo_publisher_name"];
+                                    //int index1 = publisherName.IndexOf("bo_publisher_name") + "bo_publisher_name".Length;
+                                    //index1 = publisherName.IndexOf(":", index1);
+                                    //int index2 = publisherName.IndexOf(";", index1);
+                                    //string accntName = publisherName.Substring(index1 + 1, index2 - index1);
+                                    if (accntName.ToLower().Equals(publisherNameValue.ToLower()))
+                                        return (string)accountNamesDS.Tables[0].Rows[i]["Account_Name"];
+                                    else
+                                        return errorAccountString;
+                                }
+                            }
                         }
                     }
                 return errorAccountString;
@@ -343,7 +363,7 @@ namespace Easynet.Edge.UI.WebPages.Converters
                                 //if (columnsCounter == 1) //account = serial
                                 //{
                                 //  rowString += "\t" + dt.Rows[rowsCounter][columnsCounter].ToString();
-                                string accoutnName = FindAccountName(dt.Rows[rowsCounter][columnsCounter].ToString(), " ");
+                                string accoutnName = FindAccountName(dt.Rows[rowsCounter][columnsCounter].ToString(), " ", (string)dt.Rows[rowsCounter]["Publisher Name"]);
                                 rowString += "\t" + accoutnName; //adding accountName
                                 rowString += "\t" + dt.Rows[rowsCounter][columnsCounter].ToString();//adding the current culomn in table
                                 //}
