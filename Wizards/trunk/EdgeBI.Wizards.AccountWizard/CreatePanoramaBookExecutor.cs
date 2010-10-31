@@ -44,7 +44,7 @@ namespace EdgeBI.Wizards.AccountWizard
 			DirectoryInfo targetDirectory = new DirectoryInfo(Path.Combine(AppSettings.Get(this, "Folder.PanoramaBooks"), lastExecutorStepData["AccountSettings.CubeName"].ToString()));  //target path
 
 			// Check if the target directory exists, if not, create it.
-			if (Directory.Exists(targetDirectory.FullName))
+			if (!Directory.Exists(targetDirectory.FullName))
 			{
 				try
 				{
@@ -98,7 +98,16 @@ namespace EdgeBI.Wizards.AccountWizard
 			System.Diagnostics.Process Proc = new System.Diagnostics.Process();
 			Proc.StartInfo.FileName = AppSettings.Get(this, "Folder.File.PanoramaMsc");
 			Proc.Start();
-			Proc.Kill();
+
+            try
+            {
+                Proc.Kill();
+            }
+            catch (Exception)
+            {
+                
+                
+            }
 
 
 
@@ -134,37 +143,61 @@ namespace EdgeBI.Wizards.AccountWizard
 
 					//CubeDb
 					pattern = @"\beasynet_UDM\b";
-					fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AnalysisServer.Database"].ToString(), RegexOptions.IgnoreCase);
+					fileString = Regex.Replace(fileString, pattern, AppSettings.Get(this,"AnalysisServer.Database"), RegexOptions.IgnoreCase);
 					
 					//Replace client specific measures +new active users+new users
 
 					foreach (KeyValuePair<string,object> input in lastExecutorStepData)
 					{
-						if (input.Key.StartsWith(AccSettClientSpecific, true, null) || 
-							input.Key.ToUpper() == AccSettNewUser.ToUpper() ||
-							input.Key.ToUpper() == AccSettNewActiveUser.ToUpper())
+						if (input.Key.StartsWith(AccSettClientSpecific, true, null))
 						{
-							string patern = string.Format(@"\b{0}\b", input.Key.Replace("AccountSettings.", string.Empty));
+							string patern = string.Format(@"\b{0}\b","BO " + input.Key.Replace("AccountSettings.", string.Empty));
 							fileString = Regex.Replace(fileString, patern, input.Value.ToString(), RegexOptions.IgnoreCase);
 							
 						}
+                        else if (input.Key.StartsWith("AccountSettings.StringReplacment."))
+                        {
+                            string patern = string.Format(@"\b{0}\b", input.Key.Replace("AccountSettings.StringReplacment.", string.Empty));
+                            fileString = Regex.Replace(fileString, patern, input.Value.ToString(), RegexOptions.IgnoreCase);
+
+                        }
 
 						
 					}
 					// replace new active users
-					pattern="\b% of activations\b";
-					fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
+                    if (lastExecutorStepData.ContainsKey("AccountSettings.New Active Users"))
+                    {
+                        if (lastExecutorStepData["AccountSettings.New Active Users"].ToString() != " ")
+                        {
+                            pattern = "\b% of activations\b";
+                            fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
 
+
+                            pattern = "\bBO new activations\b";
+                            fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
+
+                            pattern = "\bTarget activations\b";
+                            fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
+
+
+                            pattern = "\bActives\b";
+                            fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
+
+                        } 
+                    }
 					
-					pattern = "\bBO new activations\b";
-					fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
-
-					pattern = "\bTarget activations\b";
-					fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
-				
 					//replace new users
-					pattern = "\bBO New users\b";
-					fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Users"].ToString(), RegexOptions.IgnoreCase);
+                    if (lastExecutorStepData.ContainsKey("AccountSettings.New Active Users"))
+                    {
+                        if (lastExecutorStepData["AccountSettings.New Active Users"].ToString() != " ")
+                        {
+                            pattern = "\bBO New users\b";
+                            fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Users"].ToString(), RegexOptions.IgnoreCase);
+
+                            pattern = "\bRegs\b";
+                            fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Users"].ToString(), RegexOptions.IgnoreCase);
+                        } 
+                    }
 
 					using (StreamWriter writer=new StreamWriter(file.FullName,false))
 					{

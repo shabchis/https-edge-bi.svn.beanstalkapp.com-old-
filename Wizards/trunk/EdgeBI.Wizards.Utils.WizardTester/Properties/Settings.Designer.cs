@@ -49,18 +49,6 @@ namespace EdgeBI.Wizards.Utils.WizardTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SEPERIA\\liran")]
-        public string RoleMemberName {
-            get {
-                return ((string)(this["RoleMemberName"]));
-            }
-            set {
-                this["RoleMemberName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("BO")]
         public string CubeNameStartWith {
             get {
@@ -224,6 +212,30 @@ namespace EdgeBI.Wizards.Utils.WizardTester.Properties {
             }
             set {
                 this["ServiceHostPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Edge\\BIadmin")]
+        public string RoleMemberName {
+            get {
+                return ((string)(this["RoleMemberName"]));
+            }
+            set {
+                this["RoleMemberName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Signups,Leads,Purchase,Conversions")]
+        public string CombosValues {
+            get {
+                return ((string)(this["CombosValues"]));
+            }
+            set {
+                this["CombosValues"] = value;
             }
         }
     }

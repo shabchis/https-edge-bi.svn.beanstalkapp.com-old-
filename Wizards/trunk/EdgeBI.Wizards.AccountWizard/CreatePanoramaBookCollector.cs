@@ -16,7 +16,7 @@ namespace EdgeBI.Wizards.AccountWizard
 		{
 
 			base.OnInit();
-			this.StepName = Instance.Configuration.Name;
+            this.StepName = /*Instance.Configuration.Options["StepNum"] + */ Instance.Configuration.Name;
 		}
 		protected override void Prepare()
 		{

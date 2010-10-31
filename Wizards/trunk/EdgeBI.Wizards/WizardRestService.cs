@@ -257,7 +257,8 @@ namespace EdgeBI.Wizards
 			{
 				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT StepName,Value 
 																		FROM Wizards_Data_Per_WizardID_SessionID_Step_And_Field
-																		WHERE SessionID=@SessionID:Int AND Field=N'StepDescription'"))
+																		WHERE SessionID=@SessionID:Int AND Field=N'StepDescription'
+                                                                        ORDER BY StepIndex"))
 				{
 					sqlCommand.Parameters["@SessionID"].Value = sessionID;
 					using (SqlDataReader reader = sqlCommand.ExecuteReader())

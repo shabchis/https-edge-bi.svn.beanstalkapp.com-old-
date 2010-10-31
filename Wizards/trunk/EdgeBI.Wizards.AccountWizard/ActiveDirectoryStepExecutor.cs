@@ -5,7 +5,7 @@ using System.Text;
 using Easynet.Edge.Core.Utilities;
 using Easynet.Edge.Core.Configuration;
 using Easynet.Edge.Core.Services;
-using EdgeBI.Wizards.AccountWizard.CubeCreation;
+using EdgeBI.Wizards.AccountWizard;
 using System.DirectoryServices;
 
 

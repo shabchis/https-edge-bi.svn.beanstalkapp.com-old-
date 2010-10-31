@@ -8,9 +8,6 @@
     <Setting Name="AnalysisServerDatabase" Type="System.String" Scope="User">
       <Value Profile="(Default)">easynet_UDM</Value>
     </Setting>
-    <Setting Name="RoleMemberName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SEPERIA\liran</Value>
-    </Setting>
     <Setting Name="CubeNameStartWith" Type="System.String" Scope="User">
       <Value Profile="(Default)">BO</Value>
     </Setting>
@@ -52,6 +49,12 @@
     </Setting>
     <Setting Name="ServiceHostPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Codebase-2010\Applications\EdgeServiceHost\bin\Debug\EdgeServiceHost.exe</Value>
+    </Setting>
+    <Setting Name="RoleMemberName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Edge\BIadmin</Value>
+    </Setting>
+    <Setting Name="CombosValues" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Signups,Leads,Purchase,Conversions</Value>
     </Setting>
   </Settings>
 </SettingsFile>
