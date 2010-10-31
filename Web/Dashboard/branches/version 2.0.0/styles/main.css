@@ -1,0 +1,364 @@
+/************************************
+            By Dan Harper
+        http://www.danharper.me
+
+           For NETTUTS.com
+
+     Check out http://vivawp.com
+************************************/
+
+body {
+font-size: 75%;
+color: #8d8d8d;
+background: #ffffff;
+font-family: "verdana","Helvetica Neue", Helvetica, Arial, sans-serif;
+line-height: 1.6em;
+margin: 10px;
+}
+
+table {
+border-spacing: 0px;
+border-collapse: collapse;
+}
+
+#layout{
+overflow: auto;
+width: 100%;
+min-width:800px;
+display: table;
+table-layout:fixed;
+border-spacing: 10px;
+}
+
+.layoutRow{
+display: table-row;
+}
+
+/* .layoutCell{
+
+} */
+
+.widget {
+background: #FFFFFF;
+display: table-cell;
+border-left:1px solid #dedbd1;
+border-bottom:1px solid #dedbd1;
+border-right:1px solid #dedbd1;
+}
+
+.widget a {
+color: #222;
+text-decoration: none;
+}
+
+.widget a:hover {
+color: #009;
+text-decoration: underline;
+}
+
+.header{
+ position:relative;
+ background-color:#BCBEBD;
+ padding:5px;
+ -moz-border-radius:5px 5px 0 0 ;
+ -webkit-border-radius:5px 5px 0 0 ;
+ margin-left: -1px;
+ margin-right: -1px;
+}
+.header h3{
+font-size:12px;
+color:black;
+margin: 0;
+}
+
+.content{
+overflow: auto;
+}
+
+.clear{
+clear:both;
+}
+
+/* ==================== */
+/*   Tables  */
+.factTableWrapper{
+text-align: center;
+white-space: nowrap;
+}
+
+.factTable{
+display: inline-block;
+border:1px solid #DEDBD1;
+font-size: 10px;
+margin: 10px;
+padding: 1px 2px 1px 1px;
+}
+
+.campaign{
+max-width:200px;
+}
+
+.factTable h3{
+text-align:center;
+margin: 0 0 2px 0;
+font-weight:normal;
+color:white;
+font-size:12px;
+background-color:#8D8D8D;
+}
+
+.factTable th {
+text-align: center;
+border: 1px solid #dedbd1;
+background: #E3E3E3;
+color: #000;
+font-weight: normal;
+}
+
+.factTable td {
+border-top: 1px solid #dedbd1;
+padding: 1px 5px;
+color: #000;
+text-align: left;
+}
+.worstcpa td.middle{
+text-align:right;
+
+}
+.topcpa td.middle{
+text-align:right;
+
+}
+/* ==================== */
+
+#barPanel{
+/* float:left;
+margin:6px 10px 10px 0;
+max-width:700px;
+min-width:350px; 
+position:relative;
+width:45%;
+height:380px;
+ */   
+}
+#weekagograph{
+z-index: -100;
+}
+
+#atten{
+/* float:left;
+max-width:650px;
+min-width:309px;
+position: relative;
+width:52%;
+margin-top:6px;
+margin-bottom:10px; */
+}
+
+
+#oper{
+/* float:left;
+margin-left:0px;
+margin-right:10px;
+margin-bottom:35px;
+min-width:440px;
+max-width:700px;
+position: relative;
+ */
+}
+
+#maps{
+	background-color: #e8f6f7;
+ */   
+}
+#map1{
+
+}
+#trendcahnges{
+/* float: left;
+margin-top:5px;
+margin-left:0px;
+margin-right:0px;
+margin-bottom:35px;
+min-width:350px;
+ */}
+
+#topspenders{
+/* 
+float: left; */
+}
+
+.timeframe{
+margin-top: 10px;
+margin-bottom: 10px;
+z-index: 1000;'
+}
+
+#inner{
+width:100%;
+}
+.loader2,.loader1,.error3,.error1,.error{
+position:relative;
+z-index:1000px;
+height:44px;
+width:80%;
+margin:auto;
+height:100px;
+}
+.error3 h4,.error1 h4,.error h4{
+color:white;
+background-color:#90B63D;
+vertical-align:center;
+margin-top:24%;
+text-align:center;
+font-weight:normal;
+line-height:30px;
+height:30px;
+width:100%;
+padding:5px;
+
+}
+	
+	.red{
+	color:red;
+	}
+	
+	.green{
+	color:green;
+	}
+#timeline {
+width:976px;
+    
+}
+
+#title{
+background-color:white;
+
+width:990px;
+-moz-border-radius:2px;
+overflow:hidden;
+margin:0  auto 15px auto ;
+ padding-top:5px;
+ padding-bottom:5px;
+
+
+}
+
+#title ul{
+float:left;
+
+}
+
+#title li{
+float:left;
+display:inline;
+padding-right:10px;
+color:black;
+font-weight:bold;
+margin-left:10px;
+}
+
+
+
+
+
+
+
+#last{
+padding-left:0px;
+}
+
+#lastc{
+
+    padding-right:169px;
+}
+
+#lastg{
+
+    padding-right:160px;
+}
+
+#dropdown{
+    margin-bottom:10px;
+	margin-right: 10px;
+	float:right;
+
+}
+#combo{
+ background-color: #E3E3E3;
+ color:#90B63D;
+ font-weight: bolder;
+ -moz-border-radius:5px;
+ -webkit-border-radius:5px;
+ border: 3px #BBBDBC solid;
+ outline: none;
+float:right;
+ padding: 5px;
+ width:255px;
+ 
+}
+#combo option{
+color: black;
+font-weight: bold;
+margin-left: 5px;
+
+}
+
+#gaugeCombo,#TopSpendCombo,#TopCombo,#GaugeCombo,#MapCombo,#GraphCombo,#flcamp{
+position:absolute;
+right:5px;
+top:5px;
+background:#D1D1D1;
+border: 0px;
+outline: none;
+
+}
+#gaugeCombo option,#TopSpendCombo option,#TopCombo option ,#GaugeCombo option,#MapCombo option,#GraphCombo option{
+margin-right: 10px;
+
+}
+
+.timevalue{
+color: #8D8D8D;
+margin-left:5px;
+font-weight: normal;
+}
+
+
+ul.sub{
+display: none;
+z-index: 1000;
+float: none;
+list-style:none;
+position:absolute;
+}
+
+#trendcahnges h3 {
+	
+	/* font-size:12px; */
+}
+.equal{
+display:inline;
+}
+
+select span.dates{
+
+color:red;
+
+}
+
+div.htmltooltip{
+position: absolute; /*leave this and next 3 values alone*/
+z-index: 1000;
+left: -1000px;
+top: -1000px;
+background: #272727;
+border: 10px solid black;
+color: white;
+padding: 3px;
+width: 250px; /*width of tooltip*/
+}
+.spendcost,.spendcpa{
+padding-left:10px;
+padding-right:10px;
+}
