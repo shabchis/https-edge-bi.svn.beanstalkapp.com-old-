@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using EdgeBI.Wizards.AccountWizard.CubeCreation;
+using EdgeBI.Wizards.AccountWizard;
 
 namespace EdgeBI.Wizards.AccountWizard
 {
@@ -38,7 +38,7 @@ namespace EdgeBI.Wizards.AccountWizard
 		protected override void OnInit()
 		{
 			base.OnInit();
-			this.StepName = Instance.Configuration.Name; 
+            this.StepName = /*Instance.Configuration.Options["StepNum"] + */Instance.Configuration.Name; 
 		}
 		protected override void Prepare()
 		{

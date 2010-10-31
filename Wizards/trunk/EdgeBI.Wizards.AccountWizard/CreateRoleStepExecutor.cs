@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Easynet.Edge.Core.Utilities;
 using Easynet.Edge.Core.Services;
-using EdgeBI.Wizards.AccountWizard.CubeCreation;
+using EdgeBI.Wizards.AccountWizard;
 using Easynet.Edge.Core.Configuration;
 using Microsoft.AnalysisServices;
 using System.Data;
@@ -30,14 +30,14 @@ namespace EdgeBI.Wizards.AccountWizard
 			this.ReportProgress(0.7f);
 			Log.Write("Role Created", LogMessageType.Information);
 
-			Log.Write("Update OLTP datbase", LogMessageType.Information);
-			UpdateOltpDataBASE(collectedData);
+			Log.Write("Update OLTP database", LogMessageType.Information);
+			UpdateOltpDataBase(collectedData);
 			this.ReportProgress(0.9f);
 
 			return base.DoWork();
 		}
 
-		private void UpdateOltpDataBASE(Dictionary<string, object> collectedData)
+		private void UpdateOltpDataBase(Dictionary<string, object> collectedData)
 		{
 
 			using (SqlConnection sqlConnection = new SqlConnection(AppSettings.Get(this, "OLTP.Connection.string")))
@@ -79,7 +79,16 @@ namespace EdgeBI.Wizards.AccountWizard
 			{
 
 
-				analysisServer.Connect(AppSettings.Get(this, "AnalysisServer.ConnectionString"));
+                try
+                {
+                    
+                    analysisServer.Connect(AppSettings.Get(this, "AnalysisServer.ConnectionString"));
+                }
+                catch (Exception ex)
+                {
+                    Log.Write("Unable to connect analysisServer", ex);
+                    throw;
+                }
 
 				//Get the database
 				Database analysisDatabase = analysisServer.Databases.GetByName(AppSettings.Get(this, "AnalysisServer.Database"));

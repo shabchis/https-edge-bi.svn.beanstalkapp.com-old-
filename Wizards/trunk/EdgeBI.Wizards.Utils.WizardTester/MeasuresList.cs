@@ -24,7 +24,10 @@ namespace EdgeBI.Wizards.Utils.WizardTester
                 while (ide.MoveNext())
                 {
 					Match match = Regex.Match(ide.Key.ToString(),@"\d");
+                    if (!string.IsNullOrEmpty(match.ToString()) && match.ToString()!="0")
+                    {
                     this.Controls[string.Format("textbox{0}", match.ToString())].Text = ide.Value.ToString();
+                    }
                     counter++;
                 }
             }

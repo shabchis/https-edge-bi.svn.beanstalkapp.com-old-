@@ -98,7 +98,7 @@ namespace EdgeBI.Wizards.AccountWizard
 		  "<Type>ProcessFull</Type>" +
 		  "<WriteBackTableCreation>UseExisting</WriteBackTableCreation>" +
 		"</Process>" +
-	"</Batch>", AppSettings.Get(this, "AnalysisServer.Database"), "BO" +collectedData["AccountSettings.CubeName"].ToString());
+	"</Batch>", AppSettings.Get(this, "AnalysisServer.Database.ID"), "BO" +collectedData["AccountSettings.CubeName"].ToString());
 			
 			
 			tNewTask.Properties["ProcessingCommands"].SetValue(tNewTask, procCmd);
@@ -107,7 +107,7 @@ namespace EdgeBI.Wizards.AccountWizard
 			package.PrecedenceConstraints.Add(fromTask, newTask);
 
 
-			application.SaveToXml(AppSettings.Get(this, "SSIS.SSISNewTaskPath"), package, null);
+			application.SaveToXml(Path.Combine(AppSettings.Get(this, "SSIS.SSISNewTaskPath"),collectedData["AccountSettings.CubeName"].ToString()+".dtsx"), package, null);
 			//  app.SaveToDtsServer(p, null, @"D:\SSIS_Projects\test10.dtsx", "localhost"); //ToDo: may be this is better check with amit
            
 			
