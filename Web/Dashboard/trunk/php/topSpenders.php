@@ -8,11 +8,12 @@
 	include ('timeParse.php');
 	
 
-$url ='http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID=8&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=10&dataSort=value1&dataSortDir=DESC&functionDisplayMeasures='.$measureId.'&displayMeasures=20,'.$measureId.',19';
+$url ='http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID=8&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=5&dataSort=value1&dataSortDir=DESC&functionDisplayMeasures='.$measureId.'&displayMeasures=20,'.$measureId.',19';
+ $totalurl ='http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID=8&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=account&top=5&dataSort=value1&dataSortDir=DESC&functionDisplayMeasures='.$measureId.'&displayMeasures=20,'.$measureId.',19';
 // $url ='https://console.edge-bi.com/Seperia/DataServices/service.svc/Data?accountID='.$account_id.'&measureID=8&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=10&dataSort=value1&dataSortDir=DESC&functionDisplayMeasures='.$measureId.'&displayMeasures=20,'.$measureId.',19';
  
 
- // echo '<url>'.($url).'</url>' ;
+ // echo $totalurl;
 
    if(!$xml=simplexml_load_file($url)){
     // trigger_error('Error reading XML file', E_USER_ERROR);
@@ -27,6 +28,19 @@ $url ='http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&
  echo '</xml>';
 break;
 }
+
+$totalstr = file_get_contents($totalurl);
+
+$totalaxml =new SimpleXMLElement($totalstr);
+	
+	$namespaces = $totalaxml ->getNamespaces();
+	$totalaxml ->registerXPathNamespace('a', $namespaces['']); 
+	
+	
+	$total = $totalaxml->xpath('//a:ReturnData//a:clsvalue[a:FieldName="VALUE1"]/a:ValueData');  
+	$totalcpa =  $totalaxml->xpath('//a:ReturnData//a:clsvalue[a:FieldName="DISPLAYMEASURE1"]/a:ValueData');  
+	$totalacq = $totalaxml->xpath('//a:ReturnData//a:clsvalue[a:FieldName="DISPLAYMEASURE2"]/a:ValueData');  
+	$totalroi = $totalaxml->xpath('//a:ReturnData//a:clsvalue[a:FieldName="DISPLAYMEASURE3"]/a:ValueData');  
  // elseif (strlen($xml->children()<=1){
 
 
@@ -34,7 +48,7 @@ break;
  // echo '<text>success</text>';
  // break;
 // }
-	else {
+
  echo '<campaigns>';
 
 
@@ -105,10 +119,17 @@ foreach($xml as  $value){
 	echo '</campaign>';
 }
 
-
+if(strlen($totalroi[0]) > 0){
+			$totalroi[0] =$totalroi[0]."%";
+		}
+	echo '<total>'.$total[0].'</total>';
+	echo'<totalcpa>'.$totalcpa[0].'</totalcpa>';
+	echo'<totalacq>'.$totalacq[0].'</totalacq>';	
+	echo'<totalroi>'.$totalroi[0].'</totalroi>';
+	
 	
 	echo	'</campaigns>';
 	
-}
+
 
 		?>
