@@ -115,7 +115,7 @@ switch ($startdateName){
   <column>
     <width>50</width>
     <balloon_text>
-	<![CDATA[{title}: <?php echo $measure;?> = {value}, CPA = {description}]]>
+	<![CDATA[{title}: <?php echo $measure;?> = {value}, CPA / ROI = {description}]]>
 	
 	</balloon_text>
     <grow_time>3</grow_time>

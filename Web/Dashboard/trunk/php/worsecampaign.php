@@ -1,10 +1,9 @@
 <?php  header("Content-Type:text/xml"); 
- $startdate = $_GET['startdate']; 
+	$startdate = $_GET['startdate']; 
 	$measureId = $_GET['measure'];
 	$endDate = $_GET['endDate'];
 	$orderby = $_GET['orderby'];
 	$account_id = $_GET['account_id'];
-	
 	$global = $_GET['global'];
 	
 $before = array('(',')');
@@ -12,8 +11,9 @@ $before = array('(',')');
 ?>
 
 <?php
- // $url = 'http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=10&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
- $url = 'https://console.edge-bi.com/Seperia/DataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=10&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
+ $url = 'http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=5&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
+ $totalurl = 'http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=account&top=5&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
+ // $url = 'https://console.edge-bi.com/Seperia/DataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=10&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
 
  // echo $url;
     if(!$xml=simplexml_load_file($url)){
@@ -30,7 +30,16 @@ $before = array('(',')');
 		// echo '<error>No data found for the selection criteria.</error>';
 	  // echo '<address>'.$url.'</address>';
 	// }
-	else{
+$totalstr = file_get_contents($totalurl);
+
+$totalaxml =new SimpleXMLElement($totalstr);
+	
+	$namespaces = $totalaxml ->getNamespaces();
+	$totalaxml ->registerXPathNamespace('a', $namespaces['']); 
+	
+	
+	$total = $totalaxml->xpath('//a:ReturnData//a:clsvalue[a:FieldName="VALUE1"]/a:ValueData');  
+	$totaldiff =  $totalaxml->xpath('//a:ReturnData//a:clsvalue[a:FieldName="Diff2"]/a:ValueData');  
 	
 	echo '<campaigns> ';
 	
@@ -41,7 +50,7 @@ $diff = $value->Value->clsvalue[2]->ValueData;
 $name = $value->Name;
 $fullname = $value->Name;
 if(strlen($diff) >= 0){
-$diff = $value->Value->clsvalue[2]->ValueData ;
+$diff = $value->Value->clsvalue[2]->ValueData;
 }
 else {
 	$diff = "";
@@ -64,8 +73,13 @@ $name = $name = $value->Name;
 	echo '<diff>'.$diff.'</diff>';
 	echo '</campaign>';
 }
-echo '</campaigns>';
+if(strlen($totaldiff[0]) > 0){
+	$totaldiff[0] = "(".$totaldiff[0].")";
 }
+	echo '<total>'.$total[0].'</total>';
+		echo'<totaldiff>'.$totaldiff[0].'</totaldiff>';
+echo '</campaigns>';
+
 	?>
 
 
