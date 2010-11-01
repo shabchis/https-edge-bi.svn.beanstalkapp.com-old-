@@ -139,9 +139,9 @@ namespace EdgeBI.Web.DataServices
             switch (DataGrouping)
             {
                 case DataGrouping.Account:
-                    Selectfields = " a.Account_ID, b.Account_Name,";
-                    Join = "Dwh_Dim_Account_Domains b with (nolock) ON a.Account_ID = b.Account_ID";
-                    GroupBy = "a.Account_ID,b.Account_Name";
+                    Selectfields = " a.Account_ID, b.Account,";
+                    Join = "Dwh_Dim_Accounts b with (nolock) ON a.Account_ID = b.Account_ID";
+                    GroupBy = "a.Account_ID,b.Account";
                     AdditionalWhere = " a.Account_ID in (" + IdsList + ") ";
                     AdditionalWhere2 = "";
                     break;
@@ -238,58 +238,89 @@ namespace EdgeBI.Web.DataServices
             return TargetMeasureID;
         }
 
+        private MeasureDiff GetMeasureDiff(string key, MeasureDiff[] diff)
+        {
+            foreach (MeasureDiff mdiff in diff)
+            {
+                if (key == Convert.ToString("M." + mdiff.MeasureIndex.ToString()) || mdiff.MeasureIndex == 0)
+                    return mdiff;
+            }
+            return new MeasureDiff();
+        }
+        
         private List<ObjData> DiffCalculation(List<ObjData> data, MeasureDiff[] diff)
         {
             List<ObjData> returndata = new List<ObjData>();
 
             foreach (ObjData Entity in data)
             {
-                ArrayList EntityValues = new ArrayList();
-                int i = 0, j = 0;
+                Dictionary<string, ArrayList> EntityValues = new Dictionary<string, ArrayList>(); ;
                 if (Entity.Values.Count > 1)
                 {
+                    string mIdnew,mIdprev;
+                    ArrayList mValues = new ArrayList();
                     foreach (ObjValue lvalue in Entity.Values)
                     {
-                        if (lvalue.FieldName.Contains("VALUE"))
+                        mIdprev = mIdnew;
+                        mIdnew = lvalue.FieldName.Substring(0,lvalue.FieldName.IndexOf("."));
+                        if(mIdnew == mIdprev || mValues.Count==0)
+                            mValues.Add(lvalue.ValueData);
+                        else
                         {
-                            EntityValues.Add(lvalue.ValueData);
-                            i++;
+                            EntityValues.Add(mIdnew,mValues);
+                            mValues.Clear();
                         }
-                    }
-                    while (j + 1 < i)
+                      }
+                    foreach(string key in EntityValues.Keys)
                     {
-                        clsvalue _retvalue = new clsvalue();
-                        _retvalue.FieldName = "Diff" + Convert.ToString(j + 2);
-                        double value1, value2;
-                        value1 = Convert.ToDouble(EntityValues[j]);
-                        value2 = Convert.ToDouble(EntityValues[j + 1]);
-                        if (value2 != 0)
+                        mValues = EntityValues[key];
+                        for(int i; i<EntityValues.Count;i++)
                         {
-                            switch (ediffType)
+                            double value1, value2;
+                            value1 = Convert.ToDouble(mValues[i]);
+                            value2 = Convert.ToDouble(mValues[i + 1]);
+                            ObjValue value = new ObjValue();
+                            if (value2 != 0)
                             {
-                                case diffType.abs:
-                                    _retvalue.ValueData = Convert.ToString(value1 - value2);
-                                    break;
-                                case diffType.rel:
-                                    _retvalue.ValueData = Convert.ToString(((value1 - value2) / Math.Abs(value2)) * 100);
-                                    break;
-                                default:
-                                    _retvalue.ValueData = Convert.ToString(value1 - value2);
-                                    break;
+                               MeasureDiff  mDiff = GetMeasureDiff(key,diff);
+                               DiffType difftype = mDiff.DiffType ;
+                               if (mDiff.MeasureIndex > -1)
+                               {
+                                   switch(difftype)
+                                   {
+                                       case DiffType.Both:
+                                           value.FieldName = key + "DiffAbs" + i;
+                                           value.ValueData = Convert.ToString(value1 - value2); 
+                                           Entity.Values.Add(value);
+                                           value.FieldName = key + "DiffRel" + i;
+                                           value.ValueData = Convert.ToString(((value1 - value2) / Math.Abs(value2)) * 100); 
+                                           break;
+                                       case DiffType.DiffAbs:
+                                           value.FieldName = key + "DiffAbs" + i;
+                                           value.ValueData = Convert.ToString(value1 - value2); 
+                                           break;
+                                       case DiffType.DiffRel:
+                                           value.FieldName = key + "DiffRel" + i;
+                                           value.ValueData = Convert.ToString(((value1 - value2) / Math.Abs(value2)) * 100); 
+                                           break;
+                                   }
+                                   Entity.Values.Add(value);
+                               }
+                            }
+                            else
+                            {
 
                             }
                         }
-                        else
-                            _retvalue.ValueData = null;
-
-                        Entity.Value.Add(_retvalue);
-                        j++;
                     }
                 }
             }
-            return AllReturnData;
+            return data;
         }
 
-    }
 
+
+
+
+    }
 }
