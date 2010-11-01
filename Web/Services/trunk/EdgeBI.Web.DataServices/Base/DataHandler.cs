@@ -53,14 +53,17 @@ namespace EdgeBI.Web.DataServices
                     GetData(Sql,out Data);
                 RangeIndex++;
             }
-            if (diff.Length > 0) Data = DiffCalculation(Data, diff);
-            return null;
+            if (diff.Length > 0) Data = GetDiffCalculation(Data, diff);
+            if (viewSort.Length > 0) Data = GetSortData(Data, viewSort);
+            //format
+            return Data;
         }
         private void GetData(string sql, out List<ObjData> data)
         {
             string ids = null;
             GetData(out ids, sql,out data);
         }
+        
         private void GetData(out string idslist, string sql, out List<ObjData> data)
         {
             string ids = null;
@@ -98,6 +101,67 @@ namespace EdgeBI.Web.DataServices
             
         }
 
+        private List<ObjData> GetSortData(List<ObjData> Data, MeasureSort[] viewSort)
+        {
+            foreach (MeasureSort msort in viewSort)
+            {
+                string sortBy = "M." + msort.MeasureIndex +  (msort.RangeIndex == 0 || msort.DiffType != DiffType.None  ? "Diff" + msort.DiffType.ToString(): "R." + msort.RangeIndex);
+                Dictionary<Int64, double> dic = new Dictionary<Int64, double>();
+                foreach (ObjData Entity in Data)
+                {
+                    foreach (ObjValue lvalue in Entity.Values)
+                    {
+                        if (lvalue.FieldName.ToLower().Contains(sortBy))
+                        {
+                            dic.Add(Entity.ID, Convert.ToDouble(lvalue.ValueData));
+                        }
+                    }
+                    List<KeyValuePair<Int64, double>> myList = new List<KeyValuePair<Int64, double>>(dic);
+                                myList.Sort(
+                                    delegate(KeyValuePair<Int64, double> firstPair,
+                                    KeyValuePair<Int64, double> nextPair)
+                                    {
+                                        return firstPair.Value.CompareTo(nextPair.Value);
+                                    }
+                                 );
+                                List<ObjData> SortedReturnData = new List<ObjData>();
+
+                    switch (msort.SortDir)
+                    {
+                        case SortDir.Asc:
+                            for (int i = 0; i < myList.Count; i++)
+                            {
+                                SortedReturnData.Add(GetDataObject(Data, myList[i].Key));
+                            }
+                            break;
+                        case SortDir.Desc:
+                            for (int i = myList.Count - 1; i >= 0; i--)
+                            {
+                                SortedReturnData.Add(GetDataObject(Data, myList[i].Key));
+                            }
+                            break;
+                    }
+
+                    return SortedReturnData;
+                }
+            }
+        }
+
+        private ReturnData GetDataObject(List<ObjData> AllReturnData, Int64 Key)
+        {
+            ObjData RetEntity = new ObjData();
+            foreach (ObjData Entity in AllReturnData)
+            {
+                if (Entity.ID == Key)
+                {
+                    RetEntity = Entity;
+                    break;
+                }
+
+            }
+            return RetEntity;
+        }
+
         private void GetFieldsSQL(Measure measure, int measureIndex, int RangeIndex,out string  AggregateFunction,out string  HavingString)
         {
             AggregateFunction = BuildAggregateFunction(measure) + " AS M" + measureIndex + ".R" + RangeIndex + ".Value";
@@ -105,7 +169,6 @@ namespace EdgeBI.Web.DataServices
             AggregateFunction = AggregateFunction + " AS M" + measureIndex + ".R" + RangeIndex + ".Value";
 
         }
-
 
         private string GetSQL(string Sql, string HavingString, int AccountID, DayCodeRange DaysCode, DataGrouping DataGrouping, MeasureSort[] DataSort, int Top, string IdsList,Mode mode)
         {
@@ -248,7 +311,7 @@ namespace EdgeBI.Web.DataServices
             return new MeasureDiff();
         }
         
-        private List<ObjData> DiffCalculation(List<ObjData> data, MeasureDiff[] diff)
+        private List<ObjData> GetDiffCalculation(List<ObjData> data, MeasureDiff[] diff)
         {
             List<ObjData> returndata = new List<ObjData>();
 
