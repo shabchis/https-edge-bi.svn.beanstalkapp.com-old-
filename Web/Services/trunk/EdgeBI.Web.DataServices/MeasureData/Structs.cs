@@ -12,13 +12,11 @@ namespace EdgeBI.Web.DataServices
 	{
 		public readonly int From;
 		public readonly int To;
-		public bool IsMainRange;
 
 		public DayCodeRange(int from, int to):this()
 		{
 			From = from;
 			To = to;
-			IsMainRange = false;
 		}
 
 		#region Converter
@@ -36,19 +34,11 @@ namespace EdgeBI.Web.DataServices
 			public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
 			{
 				string raw = value as string;
-				
-				bool isMain = false;
-				if (raw.ToLower().Contains("(main)"))
-				{
-					isMain = true;
-					raw = raw.Replace("(main)", string.Empty);
-				}
 
 				try
 				{
 					string[] dayCodes = raw.Split(new char[] { '-' }, 2);
 					DayCodeRange range = new DayCodeRange(Int32.Parse(dayCodes[0]), Int32.Parse(dayCodes[1]));
-					range.IsMainRange = isMain;
 					return range;
 				}
 				catch (Exception ex)
@@ -144,22 +134,27 @@ namespace EdgeBI.Web.DataServices
 				string raw = value as string;
 				try
 				{
-					string[] parts = raw.Split(new char[]{'('},2);
-					MeasureSort msort = new MeasureSort(Int32.Parse(parts[0].Trim().Substring(1)), DiffType.None, SortDir.Desc);
+					MeasureSort msort = new MeasureSort();
 
-					if (parts.Length > 1)
+					// Segments
+					string[] parts = raw.Split(new char[]{'.'},3);
+					if (parts[0].ToLower()[0] == 'm')
+						msort.MeasureIndex = Int32.Parse(parts[0].Substring(1));
+					if (parts[1].ToLower()[0] == 'r')
+						msort.RangeIndex = Int32.Parse(parts[0].Substring(1));
+					if (parts.Length > 2)
 					{
-						string[] parameters = parts[1].Substring(0, parts[1].Length - 1).Split(',');
-						string[] diffNames = Enum.GetNames(typeof(DiffType));
-						string[] dirNames = Enum.GetNames(typeof(SortDir));
-						for (int i = 0; i < parameters.Length; i++)
-						{
-							if (diffNames.Contains(parameters[i], StringComparer.InvariantCultureIgnoreCase))
-								msort.DiffType = (DiffType) Enum.Parse(typeof(DiffType), parameters[i], true);
-							else if (dirNames.Contains(parameters[i], StringComparer.InvariantCultureIgnoreCase))
-								msort.SortDir = (SortDir)Enum.Parse(typeof(SortDir), parameters[i], true);
-						}
+						string diffRaw = parts[2].Split(new char[] { '(' }, 2)[0];
+						msort.DiffType = diffRaw.ToLower() == "value" ?
+							DiffType.None :
+							(DiffType)Enum.Parse(typeof(DiffType), diffRaw, true);
 					}
+					else
+						msort.DiffType = DiffType.None;
+
+					// Direction
+					parts = raw.Split(new char[] { '(' }, 2);
+					msort.SortDir = (SortDir)Enum.Parse(typeof(SortDir), parts[1].Substring(0, parts[1].Length - 1), true);
 
 					return msort;
 				}
@@ -172,17 +167,101 @@ namespace EdgeBI.Web.DataServices
 		#endregion
 	}
 
+	[TypeConverter(typeof(MeasureDiff.Converter))]
 	public struct MeasureDiff
 	{
 		public int MeasureIndex;
 		public DiffType DiffType;
+		
+		#region Converter
+		class Converter : TypeConverter
+		{
+			public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+			{
+				return sourceType == typeof(string);
+			}
+			public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+			{
+				return destinationType == typeof(string);
+			}
+
+			public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+			{
+				string raw = value as string;
+				try
+				{
+					MeasureDiff mdiff = new MeasureDiff();
+
+					// Segments
+					string[] parts = raw.Split(new char[] { '(' }, 2);
+					if (parts[0].ToLower()[0] == 'm')
+						mdiff.MeasureIndex = Int32.Parse(parts[0].Substring(1));
+					else if (parts[0].ToLower() == "all")
+						mdiff.MeasureIndex = -1;
+					else
+						throw new FormatException("Measure index (e.g. 'm1' or 'all') is missing.");
+
+					mdiff.DiffType = (DiffType)Enum.Parse(typeof(DiffType), parts[1].Substring(0, parts[1].Length - 1), true);
+
+					return mdiff;
+				}
+				catch (Exception ex)
+				{
+					throw new Exception("Invalid measure diff: " + raw, ex);
+				}
+			}
+		}
+		#endregion
 	}
 
+	[TypeConverter(typeof(MeasureFormat.Converter))]
 	public struct MeasureFormat
 	{
 		public int MeasureIndex;
-		public bool FormatValue;
-		public DiffType FormatDiffs;
+		public bool ValueFormatting;
+		public DiffType DiffFormatting;
+
+		#region Converter
+		class Converter : TypeConverter
+		{
+			public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+			{
+				return sourceType == typeof(string);
+			}
+			public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+			{
+				return destinationType == typeof(string);
+			}
+
+			public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+			{
+				string raw = value as string;
+				try
+				{
+					MeasureFormat mformat = new MeasureFormat();
+
+					// Segments
+					string[] parts = raw.Split(new char[] { '(' }, 2);
+					if (parts[0].ToLower()[0] == 'm')
+						mformat.MeasureIndex = Int32.Parse(parts[0].Substring(1));
+					else if (parts[0].ToLower() == "all")
+						mformat.MeasureIndex = -1;
+					else
+						throw new FormatException("Measure index (e.g. 'm1' or 'all') is missing.");
+
+					string[] parameters = parts[1].Substring(0, parts[1].Length - 1).Split(new char[] { ',' }, 2);
+					mformat.ValueFormatting = Boolean.Parse(parameters[0]);
+					mformat.DiffFormatting = (DiffType)Enum.Parse(typeof(DiffType), parameters[1], true);
+
+					return mformat;
+				}
+				catch (Exception ex)
+				{
+					throw new Exception("Invalid measure format: " + raw, ex);
+				}
+			}
+		}
+		#endregion
 	}
 
     public enum Mode
