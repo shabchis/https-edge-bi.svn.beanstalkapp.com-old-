@@ -54,7 +54,7 @@ namespace Easynet.Edge.UI.Server
 		Measure[] Measure_Get(int accountID);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
-		DataTable CampaignTargets_Get(int accountID);
+		DataTable CampaignTargets_Get(int accountID, long? campaignGK);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
 		void CampaignTargets_Save(int accountID, DataTable table);
@@ -73,6 +73,9 @@ namespace Easynet.Edge.UI.Server
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
 		Oltp.AccountDataTable Account_Save(Oltp.AccountDataTable accountTable);
+
+		[OperationContract(IsInitiating = false)] [NetDataContract]
+		Oltp.AccountDataTable Account_GetByPermission(string permissionType);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
 		Oltp.RelatedAccountDataTable RelatedAccount_Get(int accountID);
@@ -202,6 +205,9 @@ namespace Easynet.Edge.UI.Server
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
 		Oltp.AccountPermissionDataTable AccountPermission_Save(Oltp.AccountPermissionDataTable permissionTable);
+
+		[OperationContract(IsInitiating = false)] [NetDataContract]
+		void AccountPermission_Copy(int sourceAccountID, int[] targetAccountID);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
 		int AccountPermission_RemovePermissions(int accountID, int targetID, bool isGroup);

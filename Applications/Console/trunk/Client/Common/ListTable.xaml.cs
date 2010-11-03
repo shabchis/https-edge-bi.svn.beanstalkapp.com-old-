@@ -554,8 +554,8 @@ namespace Easynet.Edge.UI.Client
 			// Calculate
 			//ScrollViewer scroll = (ScrollViewer) VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(_listView, 0), 0);
 			//ItemsPresenter iPresenter = scroll.Content as ItemsPresenter;
-			ItemsPresenter iPresenter = Visual.GetDescendant<ItemsPresenter>(_listView);
-			ScrollBar scrollBar = Visual.GetDescendant<ScrollBar>(_listView);
+			ItemsPresenter iPresenter = VisualTree.GetChild<ItemsPresenter>(_listView);
+			ScrollBar scrollBar = VisualTree.GetChild<ScrollBar>(_listView);
 
 			double newWidth = (iPresenter.ActualWidth - scrollBar.Width - specifiedWidth - 20) / columns.Count;
 
@@ -624,7 +624,7 @@ namespace Easynet.Edge.UI.Client
 	{
 		public override Style SelectStyle(object item, DependencyObject container)
 		{
-			ListTable tbl = Visual.GetRoot<ListTable>(container);
+			ListTable tbl = VisualTree.GetParent<ListTable>(container);
 
 			// buggy
 			//int index = tbl.ListView.ItemContainerGenerator.IndexFromContainer(container);

@@ -143,7 +143,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				row
 			);
 
-			TabControl tabs = Visual.GetDescendant<TabControl>(Segment_dialog);
+			TabControl tabs = VisualTree.GetChild<TabControl>(Segment_dialog);
 			TabItem tabItem = (TabItem) tabs.ItemContainerGenerator.ContainerFromIndex(tabs.SelectedIndex);
 			if (tabItem != null)
 				tabItem.RaiseEvent(new RoutedEventArgs(TabItem.GotFocusEvent, tabItem));
@@ -372,7 +372,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				return;
 
 			source.Visibility = Visibility.Collapsed;
-			TextBox target = Visual.GetDescendant<TextBox>(source.Parent);
+			TextBox target = VisualTree.GetChild<TextBox>(source.Parent);
 			target.Visibility = Visibility.Visible;
 			target.Focus();
 
@@ -383,7 +383,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		{
 			TextBox source = sender as TextBox;
 			(source as TextBox).Visibility = Visibility.Collapsed;
-			TextBlock target = Visual.GetDescendant<TextBlock>(source.Parent);
+			TextBlock target = VisualTree.GetChild<TextBlock>(source.Parent);
 			target.Visibility = Visibility.Visible;
 
 			(source.DataContext as IPropertyChangeNotifier).OnAllPropertiesChanged();

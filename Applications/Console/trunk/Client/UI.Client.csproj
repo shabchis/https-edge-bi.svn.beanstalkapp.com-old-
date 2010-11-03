@@ -37,7 +37,7 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <PublishUrl>Publish\demo.edge-bi.com\</PublishUrl>
+    <PublishUrl>Publish\seperia.edge-bi.com\</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -47,15 +47,16 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://demo.edge-bi.com/</InstallUrl>
+    <InstallUrl>https://console.edge-bi.com/seperia/</InstallUrl>
+    <SupportUrl>https://console.edge-bi.com/seperia/install.html</SupportUrl>
     <TargetCulture>en</TargetCulture>
-    <ProductName>Edge.BI Management Console [debug]</ProductName>
+    <ProductName>Edge.BI Management Console [Seperia]</ProductName>
     <PublisherName>Edge.BI</PublisherName>
     <WebPage>install.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <TrustUrlParameters>true</TrustUrlParameters>
-    <ApplicationRevision>97</ApplicationRevision>
-    <ApplicationVersion>2.5.1.97</ApplicationVersion>
+    <ApplicationRevision>137</ApplicationRevision>
+    <ApplicationVersion>2.5.0.137</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>

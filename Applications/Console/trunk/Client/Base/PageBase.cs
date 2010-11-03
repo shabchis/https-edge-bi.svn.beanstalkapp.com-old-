@@ -369,7 +369,7 @@ namespace Easynet.Edge.UI.Client
 			get
 			{
 				if (_main == null)
-					_main = Visual.GetDescendant<MainWindow>(App.Current.Windows[0]);
+					_main = VisualTree.GetChild<MainWindow>(App.Current.Windows[0]);
 
 				return _main;
 			}
