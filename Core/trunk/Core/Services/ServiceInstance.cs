@@ -519,6 +519,20 @@ namespace Easynet.Edge.Core.Services
 		/// <summary>
 		/// 
 		/// </summary>
+		public void Continue()
+		{
+			ThrowIfServiceUnavailable();
+
+			// EXCEPTION:
+			if (State != ServiceState.Waiting)
+				throw new InvalidOperationException("Service can only be continued when State is Waiting.");
+
+			_commChannel.Engine.Run();
+		}
+	
+		/// <summary>
+		/// 
+		/// </summary>
 		public void Abort()
 		{
 			ThrowIfServiceUnavailable();
