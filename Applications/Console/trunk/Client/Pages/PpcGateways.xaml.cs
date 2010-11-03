@@ -154,14 +154,14 @@ namespace Easynet.Edge.UI.Client.Pages
 				};
 				foreach (StackPanel segment in batchSegments)
 				{
-					Visual.GetDescendant<ComboBox>(segment).ItemsSource = null;
-					Visual.GetDescendant<Label>(segment).Content = null;
+					VisualTree.GetChild<ComboBox>(segment).ItemsSource = null;
+					VisualTree.GetChild<Label>(segment).Content = null;
 					segment.Visibility = Visibility.Collapsed;
 				}
 				foreach (StackPanel segment in filterSegments)
 				{
-					Visual.GetDescendant<ComboBox>(segment).ItemsSource = null;
-					Visual.GetDescendant<Label>(segment).Content = null;
+					VisualTree.GetChild<ComboBox>(segment).ItemsSource = null;
+					VisualTree.GetChild<Label>(segment).Content = null;
 					segment.Visibility = Visibility.Collapsed;
 				}
 
@@ -209,10 +209,10 @@ namespace Easynet.Edge.UI.Client.Pages
 						filterSegmentValues.Rows.InsertAt(anyValueRow, 0);
 						filterSegmentValues.AcceptChanges();
 
-						StackPanel filter = Visual.GetDescendant<StackPanel>(_pageControls, String.Format("_segment{0}Filter", segment.SegmentNumber));
+						StackPanel filter = VisualTree.GetChild<StackPanel>(_pageControls, String.Format("_segment{0}Filter", segment.SegmentNumber));
 						filter.Visibility = Visibility.Visible;
-						Visual.GetDescendant<Label>(filter).Content = segment.Name;
-						ComboBox picker = Visual.GetDescendant<ComboBox>(filter);
+						VisualTree.GetChild<Label>(filter).Content = segment.Name;
+						ComboBox picker = VisualTree.GetChild<ComboBox>(filter);
 						picker.ItemsSource = filterSegmentValues;
 						picker.UpdateLayout();
 						picker.SelectedIndex = 0;
@@ -229,8 +229,8 @@ namespace Easynet.Edge.UI.Client.Pages
 
 						StackPanel batchSegment = batchSegments[segment.SegmentNumber - 1];
 						batchSegment.Visibility = Visibility.Visible;
-						Visual.GetDescendant<Label>(batchSegment).Content = segment.Name;
-						ComboBox batchPicker = Visual.GetDescendant<ComboBox>(batchSegment);
+						VisualTree.GetChild<Label>(batchSegment).Content = segment.Name;
+						ComboBox batchPicker = VisualTree.GetChild<ComboBox>(batchSegment);
 						batchPicker.ItemsSource = batchSegmentValues;
 						batchPicker.UpdateLayout();
 						batchPicker.SelectedIndex = 0;
@@ -429,7 +429,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			// Retrieve the gateway "applied to" data
 			if (_gatewayAppliedTo == null)
-				_gatewayAppliedTo = Visual.GetDescendant<StackPanel>(Gateway_dialog, "_gatewayAppliedTo");
+				_gatewayAppliedTo = VisualTree.GetChild<StackPanel>(Gateway_dialog, "_gatewayAppliedTo");
 		}
 
 		/// <summary>
@@ -455,8 +455,8 @@ namespace Easynet.Edge.UI.Client.Pages
 				_input_gatewayPage.SelectedValue = rs[0];
 
 			// Update the segments tab if it is selected
-			TabControl tabs = Visual.GetDescendant<TabControl>(Gateway_dialog);
-			TabItem tabSegments = Visual.GetDescendant<TabItem>(tabs, "_tabSegments");
+			TabControl tabs = VisualTree.GetChild<TabControl>(Gateway_dialog);
+			TabItem tabSegments = VisualTree.GetChild<TabItem>(tabs, "_tabSegments");
 			if (tabSegments.IsSelected)
 				GatewaySegments_GotFocus(tabSegments, new RoutedEventArgs());
 
@@ -471,7 +471,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			// Retrieve and bind the gateway "applied to" data
 			if (_gatewayAppliedTo == null)
-				_gatewayAppliedTo = Visual.GetDescendant<StackPanel>(Gateway_dialog, "_gatewayAppliedTo");
+				_gatewayAppliedTo = VisualTree.GetChild<StackPanel>(Gateway_dialog, "_gatewayAppliedTo");
 			_gatewayAppliedTo.DataContext = new GatewayReferenceData(row);
 
 			// When opening, select it only if no more than one is already selected
@@ -629,7 +629,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void Gateway_dialog_Loaded(object sender, RoutedEventArgs e)
 		{
-			_input_originalID = Visual.GetDescendant<TextBox>(Gateway_dialog, "_input_originalID");
+			_input_originalID = VisualTree.GetChild<TextBox>(Gateway_dialog, "_input_originalID");
 		}
 
 		private void _gatewayChannelPicker_Loaded(object sender, RoutedEventArgs e)
@@ -648,11 +648,11 @@ namespace Easynet.Edge.UI.Client.Pages
 				if ((pair.Key.AssociationFlags & SegmentAssociationFlags.Gateyway) == 0)
 					continue;
 
-				StackPanel segmentPanel = Visual.GetDescendant<StackPanel>(Gateway_dialog, "_segment" + pair.Key.SegmentNumber.ToString());
+				StackPanel segmentPanel = VisualTree.GetChild<StackPanel>(Gateway_dialog, "_segment" + pair.Key.SegmentNumber.ToString());
 				segmentPanel.Visibility = Visibility.Visible;
 
-				Visual.GetDescendant<Label>(segmentPanel).Content = pair.Key.Name;
-				Visual.GetDescendant<ComboBox>(segmentPanel).ItemsSource = pair.Value.Rows;
+				VisualTree.GetChild<Label>(segmentPanel).Content = pair.Key.Name;
+				VisualTree.GetChild<ComboBox>(segmentPanel).ItemsSource = pair.Value.Rows;
 			}
 
 			_tabSegmentsInitialized = true;
@@ -664,11 +664,11 @@ namespace Easynet.Edge.UI.Client.Pages
 				return;
 
 			_batchChannelPicker.SelectedIndex = 0;
-			Visual.GetDescendant<ComboBox>(_batchSegment1).SelectedIndex = 0;
-			Visual.GetDescendant<ComboBox>(_batchSegment2).SelectedIndex = 0;
-			Visual.GetDescendant<ComboBox>(_batchSegment3).SelectedIndex = 0;
-			Visual.GetDescendant<ComboBox>(_batchSegment4).SelectedIndex = 0;
-			Visual.GetDescendant<ComboBox>(_batchSegment5).SelectedIndex = 0;
+			VisualTree.GetChild<ComboBox>(_batchSegment1).SelectedIndex = 0;
+			VisualTree.GetChild<ComboBox>(_batchSegment2).SelectedIndex = 0;
+			VisualTree.GetChild<ComboBox>(_batchSegment3).SelectedIndex = 0;
+			VisualTree.GetChild<ComboBox>(_batchSegment4).SelectedIndex = 0;
+			VisualTree.GetChild<ComboBox>(_batchSegment5).SelectedIndex = 0;
 			_batchRangeText.SelectAll();
 			_batchRangeText.Focus();
 
@@ -740,11 +740,11 @@ namespace Easynet.Edge.UI.Client.Pages
 						page == null ? null : new Nullable<long>(page.GK),
 						new int?[]
 						{
-							GetSegmentValue(_batchSegment1, Visual.GetDescendant<ComboBox>(_batchSegment1)),
-							GetSegmentValue(_batchSegment2, Visual.GetDescendant<ComboBox>(_batchSegment2)),
-							GetSegmentValue(_batchSegment3, Visual.GetDescendant<ComboBox>(_batchSegment3)),
-							GetSegmentValue(_batchSegment4, Visual.GetDescendant<ComboBox>(_batchSegment4)),
-							GetSegmentValue(_batchSegment5, Visual.GetDescendant<ComboBox>(_batchSegment5))
+							GetSegmentValue(_batchSegment1, VisualTree.GetChild<ComboBox>(_batchSegment1)),
+							GetSegmentValue(_batchSegment2, VisualTree.GetChild<ComboBox>(_batchSegment2)),
+							GetSegmentValue(_batchSegment3, VisualTree.GetChild<ComboBox>(_batchSegment3)),
+							GetSegmentValue(_batchSegment4, VisualTree.GetChild<ComboBox>(_batchSegment4)),
+							GetSegmentValue(_batchSegment5, VisualTree.GetChild<ComboBox>(_batchSegment5))
 						}
 					);
 
@@ -788,7 +788,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			for (int i = 0; i < Window.AvailableAccounts.Count; i++)
 			{
 				ListBoxItem item = (ListBoxItem) _gatewayReserve_crossCheckAccounts.ItemContainerGenerator.ContainerFromIndex(i);
-				if (Visual.GetDescendant<CheckBox>(item).IsChecked == true)
+				if (VisualTree.GetChild<CheckBox>(item).IsChecked == true)
 					otherAccounts.Add(Window.AvailableAccounts[i].ID);
 			}
 
@@ -911,7 +911,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			for (int i = 0; i < Window.AvailableAccounts.Count; i++)
 			{
 				ListBoxItem item = (ListBoxItem) _gatewayReserve_crossCheckAccounts.ItemContainerGenerator.ContainerFromIndex(i);
-				Visual.GetDescendant<CheckBox>(item).IsChecked = ids != null && ids.Contains<string>(Window.AvailableAccounts[i].ID.ToString());
+				VisualTree.GetChild<CheckBox>(item).IsChecked = ids != null && ids.Contains<string>(Window.AvailableAccounts[i].ID.ToString());
 			}
 		}
 

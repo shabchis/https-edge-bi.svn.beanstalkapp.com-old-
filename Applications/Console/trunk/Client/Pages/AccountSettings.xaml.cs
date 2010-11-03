@@ -219,7 +219,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			foreach (Oltp.AccountRow account in Window.OtherAccounts)
 			{
-				Visual.GetDescendant<CheckBox>(_relatedAccounts.ItemContainerGenerator.ContainerFromItem(account)).IsChecked = 
+				VisualTree.GetChild<CheckBox>(_relatedAccounts.ItemContainerGenerator.ContainerFromItem(account)).IsChecked = 
 					_relatedAccountsTable.FindByAccountIDRelatedAccountID(accountID, account.ID) != null;
 			}
 		}

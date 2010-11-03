@@ -192,7 +192,7 @@ namespace Easynet.Edge.UI.Client
 		/// <summary>
 		/// Gets or sets the currently selected account
 		/// </summary>
-		protected Oltp.UserRow CurrentUser
+		public Oltp.UserRow CurrentUser
 		{
 			get { return (Oltp.UserRow) GetValue(CurrentUserProperty); }
 			set { SetValue(CurrentUserProperty, value); }
@@ -262,7 +262,7 @@ namespace Easynet.Edge.UI.Client
 			get
 			{
 				if (_main == null)
-					_main = Visual.GetDescendant<MainWindow>(App.Current.Windows[0]);
+					_main = VisualTree.GetChild<MainWindow>(App.Current.Windows[0]);
 
 				return _main;
 			}

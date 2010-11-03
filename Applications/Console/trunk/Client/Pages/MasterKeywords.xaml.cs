@@ -175,7 +175,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				row
 			);
 
-			TabControl tabs = Visual.GetDescendant<TabControl>(Keyword_dialog);
+			TabControl tabs = VisualTree.GetChild<TabControl>(Keyword_dialog);
 			if (tabs.SelectedIndex == 1)
 			{
 				AssociationsTabItem_GotFocus(null, null);
@@ -199,7 +199,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			// Show 
 			if (_assoc_Campaigns == null)
-				_assoc_Campaigns = Visual.GetDescendant<ItemsControl>(Keyword_dialog, "_assoc_Campaigns");
+				_assoc_Campaigns = VisualTree.GetChild<ItemsControl>(Keyword_dialog, "_assoc_Campaigns");
 
 			if (_assoc_Campaigns.ItemsSource != null)
 				return;
@@ -251,7 +251,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			// Validate keyword field
 			if (_keywordValueField.Text.Trim().Length < 1)
 			{
-				Visual.GetDescendant<TabControl>(Keyword_dialog).SelectedIndex = 0;
+				VisualTree.GetChild<TabControl>(Keyword_dialog).SelectedIndex = 0;
 				_keywordValueField.Focus();
 
 				MessageBoxError("Please enter a valid keyword", null);
@@ -339,7 +339,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void Keyword_dialog_Loaded(object sender, RoutedEventArgs e)
 		{
-			_keywordValueField = Visual.GetDescendant<TextBox>(Keyword_dialog, "_keywordValue");
+			_keywordValueField = VisualTree.GetChild<TextBox>(Keyword_dialog, "_keywordValue");
 		}
 
 		/// <summary>
@@ -423,7 +423,7 @@ namespace Easynet.Edge.UI.Client.MasterKeywordsLocal
 			if (item == null)
 				return;
 
-			Button nameButton = Visual.GetDescendant<Button>(item, "_itemName");
+			Button nameButton = VisualTree.GetChild<Button>(item, "_itemName");
 			if (nameButton == null)
 				return;
 

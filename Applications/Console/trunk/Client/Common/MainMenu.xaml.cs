@@ -291,7 +291,7 @@ namespace Easynet.Edge.UI.Client
 				XmlElement section = (XmlElement) _menuSections.Items[s];
                 ListBoxItem sectionListItem = (ListBoxItem)_menuSections.ItemContainerGenerator.ContainerFromIndex(s);                
 				XmlNodeList sectionPages = section.GetElementsByTagName("Page");
-				ListBox pagesListBox = Visual.GetDescendant<ListBox>(sectionListItem);
+				ListBox pagesListBox = VisualTree.GetChild<ListBox>(sectionListItem);
 
 				bool isSectionEnabled = false;
                 for (int p = 0; p < sectionPages.Count; p++)

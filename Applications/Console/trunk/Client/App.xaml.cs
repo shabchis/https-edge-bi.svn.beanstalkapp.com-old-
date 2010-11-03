@@ -33,7 +33,7 @@ namespace Easynet.Edge.UI.Client
 			get
 			{
 				if (!InDesignMode)
-					return Visual.GetDescendant<MainWindow>(Current.Windows[0]).CurrentPage;
+					return VisualTree.GetChild<MainWindow>(Current.Windows[0]).CurrentPage;
 				else
 					return null;
 			}

@@ -35,10 +35,6 @@ namespace Easynet.Edge.UI.Client.Pages
 
 		private ObservableCollection<DataRow> _items;
 		Oltp.CampaignDataTable _campaigns;
-		//Oltp.CampaignTargetDataTable _campaignTargets;
-		//ComboBox _monthCodeSelector;
-		//ComboBox _yearCodeSelector;
-		//StackPanel _targetValueFields;
 		ListTable _adgroupKeywords;
 		ListTable _adgroupCreatives;
 		public Oltp.ChannelDataTable _channelTable;
@@ -50,18 +46,18 @@ namespace Easynet.Edge.UI.Client.Pages
 		Oltp.AdgroupCreativeDataTable _adgroupCreativeTable;
 		AutocompleteCombo _adgroupKeywordPicker;
 		AutocompleteCombo _adgroupCreativePicker;
-		//Oltp.PageDataTable _dropDownPages;
-		//Oltp.AdunitDataTable _dropDownAdunits;
 		Oltp.PageDataTable _pagesTable;
 		Oltp.SegmentDataTable _segmentTable;
 		Dictionary<Oltp.SegmentRow, Oltp.SegmentValueDataTable> _segmentValueTables;
 		bool _campaignTabSegmentsInitialized = false;
 		bool _adgroupTabSegmentsInitialized = false;
 		Dictionary<long, List<ComboBox>> _adgroupCreativeSegmentCombos;
+		ItemsControl _campaignTargetsControl;
 		
 		TargetsTable _targetData;
 		List<GridViewColumn> _targetColumns;
 		bool _targetsEnabled = false;
+		//bool _targetsAttached = false; // decided to attach every time
 		Measure[] _measures;
 
 		string _filter;
@@ -197,6 +193,9 @@ namespace Easynet.Edge.UI.Client.Pages
 				null :
 				_filter.Contains('*') ?
 					_filter.Replace('*', '%') : _filter + '%';
+			
+			// Mark targets as detached so when showing targets again, they will be reattached to their parent campaigns
+			//_targetsAttached = false; // not needed anymore, they're reattached every time
 
 			Window.AsyncOperation(delegate()
 			{
@@ -248,7 +247,7 @@ namespace Easynet.Edge.UI.Client.Pages
 					for (int i = 0; i < _listTable.ListView.Items.Count; i++)
 					{
 						DependencyObject item = _listTable.ListView.ItemContainerGenerator.ContainerFromIndex(i);
-						expandButtons.Add(Visual.GetDescendant<ToggleButton>(item));
+						expandButtons.Add(VisualTree.GetChild<ToggleButton>(item));
 					}
 					foreach (ToggleButton button in expandButtons)
 						button.IsChecked = true;
@@ -316,6 +315,9 @@ namespace Easynet.Edge.UI.Client.Pages
 						_segmentValueTables.Add(segment, values);
 					}
 
+					// Get all measures
+					_measures = proxy.Service.Measure_Get(value.ID);
+
 					// TOP 1000 because we want all the pages
 					_pagesTable = proxy.Service.Page_Get(value.ID, null, true, 1000);
 					Oltp.PageRow noneRow = _pagesTable.NewPageRow();
@@ -336,15 +338,16 @@ namespace Easynet.Edge.UI.Client.Pages
 						view.Columns.Remove(column);
 				}
 				_targetData = null;
-				_measures = null;
 				_targetColumns = null;
-
-				if (_targetsEnabled)
-					Targets_BuildDisplay(value.ID);
 
 				//..............................
 				// Campaigns
-				GetCampaigns(null);
+				GetCampaigns(delegate()
+				{
+					if (_targetsEnabled)
+						Targets_BuildDisplay(value.ID);
+				});
+				
 			});
 		}
 
@@ -475,8 +478,8 @@ namespace Easynet.Edge.UI.Client.Pages
 
 		void Targets_Toggle(object sender, RoutedEventArgs e)
 		{
-			const string showText = "Show targets";
-			const string hideText = "Hide targets";
+			const string showText = "Open targets";
+			const string hideText = "Cancel";
 
 			// Confirm save changes
 			if (_targetsEnabled)
@@ -498,7 +501,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			//const double c_columnWidth = 70d;
 			const double c_textboxWidth = 50d;
 
-			if (_targetsEnabled && _targetData == null)
+			if (_targetsEnabled) //&& _targetData == null) // decided to rebuild this each time
 			{
 				// Clear target columns
 				GridView view = (GridView) _listTable.ListView.View;
@@ -506,25 +509,21 @@ namespace Easynet.Edge.UI.Client.Pages
 
 				Window.AsyncOperation(delegate()
 				{
-					// Get stuff from server
+					// Get targets from server - all targets for all campaigns
 					using (OltpProxy proxy = new OltpProxy())
 					{
-						_measures = proxy.Service.Measure_Get(accountID);
-						_targetData = new TargetsTable(proxy.Service.CampaignTargets_Get(accountID));
+						_targetData = new TargetsTable(proxy.Service.CampaignTargets_Get(accountID, null));
 					}
 				},
 				delegate()
 				{
 					// Apply measures to batch dialog
-					Visual.GetDescendant<ItemsControl>(BatchTargets_dialog).ItemsSource = _measures;
+					VisualTree.GetChild<ItemsControl>(BatchTargets_dialog).ItemsSource = _measures;
 
 					foreach (Measure measure in _measures)
 					{
 						GridViewColumn column = new GridViewColumn();
 						column.Header = measure.DisplayName;
-						//column.Width = _targetsEnabled ? c_columnWidth : 0;
-						if (!_targetsEnabled)
-							column.Width = 0;
 
 						// Bind the value to the corresponding measure inside the row.Targets dictionary
 						NumberBinding numberBinding = new NumberBinding();
@@ -566,70 +565,81 @@ namespace Easynet.Edge.UI.Client.Pages
 					view.Columns.Add(switchLevelColumn);
 					*/
 
-					if (_items != null)
-					{
-						Oltp.CampaignRow campaign = null;
-						List<Oltp.AdgroupRow> adgroups = new List<Oltp.AdgroupRow>();
-
-						// Iterate the items list - adgroups are always placed after their parent campaign,
-						// so this is taken into consideration when deciding whether the targets are currently
-						// applied to the campaign or to the child adgroups
-						foreach (DataRow r in _items)
-						{
-							if (r is Oltp.CampaignRow)
-							{
-								adgroups.Clear();
-
-								campaign = r as Oltp.CampaignRow;
-								campaign.Targets = _targetData.GetCampaignTargets(campaign.GK);
-							}
-							else if (r is Oltp.AdgroupRow)
-							{
-								Oltp.AdgroupRow adgroup = r as Oltp.AdgroupRow;
-								adgroup.Targets = _targetData.GetAdgroupTargets(Convert.ToInt32(adgroup.CampaignGK), adgroup.GK);
-
-								// If the campaign is active but empty while the adgroup is not empty!
-								if (campaign.Targets.IsActive && campaign.Targets.IsEmpty && !adgroup.Targets.IsEmpty)
-								{
-									campaign.Targets.IsActive = false;
-									adgroup.Targets.IsActive = true;
-
-									foreach (Oltp.AdgroupRow a in adgroups)
-										a.Targets.IsActive = true;
-								}
-								else
-								{
-									// The adgroup is active it the campaign is not, and vice versa
-									adgroup.Targets.IsActive = !campaign.Targets.IsActive;
-
-									// Keep the adgroup in a list in case we might have to change its state later in the iteration
-									if (campaign.Targets.IsActive && campaign.Targets.IsEmpty)
-										adgroups.Add(adgroup);
-								}
-
-							}
-						}
-					}
-
 					_listTable.UpdateLayout();
-					_listTable.UpdateColumnWidths();
+					Targets_AttachToItems();
+					Targets_UpdateLayout();
 				});
 			}
 			else
 			{
-				// Refresh columns for correct widths
-				foreach (GridViewColumn col in _targetColumns)
+				if (_targetsEnabled)// && !_targetsAttached) //decided to attach every time
+					Targets_AttachToItems();
+
+				Targets_UpdateLayout();
+			}
+		}
+
+		private void Targets_AttachToItems()
+		{
+			Oltp.CampaignRow campaign = null;
+			List<Oltp.AdgroupRow> adgroups = new List<Oltp.AdgroupRow>();
+
+			// Iterate the items list - adgroups are always placed after their parent campaign,
+			// so this is taken into consideration when deciding whether the targets are currently
+			// applied to the campaign or to the child adgroups
+			foreach (DataRow r in _items)
+			{
+				if (r is Oltp.CampaignRow)
 				{
-					if (_targetsEnabled)
+					adgroups.Clear();
+
+					campaign = r as Oltp.CampaignRow;
+					campaign.Targets = _targetData.GetCampaignTargets(campaign.GK);
+				}
+				else if (r is Oltp.AdgroupRow)
+				{
+					Oltp.AdgroupRow adgroup = r as Oltp.AdgroupRow;
+					adgroup.Targets = _targetData.GetAdgroupTargets(Convert.ToInt32(adgroup.CampaignGK), adgroup.GK);
+
+					// If the campaign is active but empty while the adgroup is not empty!
+					if (campaign.Targets.IsActive && campaign.Targets.IsEmpty && !adgroup.Targets.IsEmpty)
 					{
-						col.ClearValue(GridViewColumn.WidthProperty);
+						campaign.Targets.IsActive = false;
+						adgroup.Targets.IsActive = true;
+
+						foreach (Oltp.AdgroupRow a in adgroups)
+							a.Targets.IsActive = true;
 					}
 					else
-						col.Width = 0;
+					{
+						// The adgroup is active it the campaign is not, and vice versa
+						adgroup.Targets.IsActive = !campaign.Targets.IsActive;
+
+						// Keep the adgroup in a list in case we might have to change its state later in the iteration
+						if (campaign.Targets.IsActive && campaign.Targets.IsEmpty)
+							adgroups.Add(adgroup);
+					}
+
 				}
-				_listTable.UpdateLayout();
-				_listTable.UpdateColumnWidths();
 			}
+
+			//_targetsAttached = true; // not necessary anymore
+		}
+
+		private void Targets_UpdateLayout()
+		{
+			// Refresh columns for correct widths
+			foreach (GridViewColumn col in _targetColumns)
+			{
+				if (_targetsEnabled)
+				{
+					col.ClearValue(GridViewColumn.WidthProperty);
+				}
+				else
+					col.Width = 0;
+			}
+			_listTable.UpdateLayout();
+			_listTable.UpdateColumnWidths();
 		}
 
 		void Targets_SaveClick(object sender, RoutedEventArgs e)
@@ -644,8 +654,13 @@ namespace Easynet.Edge.UI.Client.Pages
 
 		bool Targets_Save(bool showConfirmation)
 		{
-			DataTable changes = _targetData.InnerTable.GetChanges();
-			if (_targetData == null || changes == null)
+			return Targets_Save(showConfirmation, _targetData.InnerTable);
+		}
+
+		bool Targets_Save(bool showConfirmation, DataTable targetData)
+		{
+			DataTable changes = targetData.GetChanges();
+			if (changes == null)
 			{
 				if (!showConfirmation)
 					MessageBox.Show("No changes have been made.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -661,21 +676,19 @@ namespace Easynet.Edge.UI.Client.Pages
 			if (result == MessageBoxResult.Cancel)
 				return false;
 
+			Oltp.AccountRow account = Window.CurrentAccount;
 			if (result == MessageBoxResult.Yes)
 			{
 				try
 				{
 					using (OltpProxy proxy = new OltpProxy())
 					{
-						proxy.Service.CampaignTargets_Save(Window.CurrentAccount.ID, changes);
+						proxy.Service.CampaignTargets_Save(account.ID, changes);
 					}
-					_targetData.InnerTable.AcceptChanges();
+					targetData.AcceptChanges();
 
-					// If no confirmation was shown, show a summary
-					if (!showConfirmation)
-					{
+					if (showConfirmation)
 						MessageBox.Show("Targets saved successfully.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-					}
 				}
 				catch (Exception ex)
 				{
@@ -686,19 +699,22 @@ namespace Easynet.Edge.UI.Client.Pages
 			}
 			else
 			{
-				_targetData.InnerTable.RejectChanges();
+				targetData.RejectChanges();
 
 				// Call OnAllPropertiesChanged to force a refresh of the view
-				foreach (DataRow row in _items)
+				if (_targetsEnabled && targetData == _targetData.InnerTable)
 				{
-					TargetsRow targets = null;
-					if (row is Oltp.CampaignRow)
-						targets = (row as Oltp.CampaignRow).Targets;
-					else if (row is Oltp.AdgroupRow)
-						targets = (row as Oltp.AdgroupRow).Targets;
+					foreach (DataRow row in _items)
+					{
+						TargetsRow targets = null;
+						if (row is Oltp.CampaignRow)
+							targets = (row as Oltp.CampaignRow).Targets;
+						else if (row is Oltp.AdgroupRow)
+							targets = (row as Oltp.AdgroupRow).Targets;
 
-					if (targets != null)
-						targets.OnAllPropertiesChanged();
+						if (targets != null)
+							targets.OnAllPropertiesChanged();
+					}
 				}
 			}
 
@@ -747,7 +763,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			TextBlock source = sender as TextBlock;
 			source.Visibility = Visibility.Collapsed;
-			TextBox target = Visual.GetDescendant<TextBox>(source.Parent);
+			TextBox target = VisualTree.GetChild<TextBox>(source.Parent);
 			target.Visibility = Visibility.Visible;
 			target.Focus();
 
@@ -758,7 +774,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		{
 			TextBox source = sender as TextBox;
 			(source as TextBox).Visibility = Visibility.Collapsed;
-			TextBlock target = Visual.GetDescendant<TextBlock>(source.Parent);
+			TextBlock target = VisualTree.GetChild<TextBlock>(source.Parent);
 			target.Visibility = Visibility.Visible;
 
 			(source.DataContext as IPropertyChangeNotifier).OnAllPropertiesChanged();
@@ -809,13 +825,13 @@ namespace Easynet.Edge.UI.Client.Pages
 			rule.MinValue = 0;
 			rule.AllowEmpty = true;
 
-			ItemsControl dialogItems = Visual.GetDescendant<ItemsControl>(BatchTargets_dialog);
+			ItemsControl dialogItems = VisualTree.GetChild<ItemsControl>(BatchTargets_dialog);
 			Dictionary<Measure, double?> values = new Dictionary<Measure, double?>();
 			
 			// Get measure values and stop for errors
 			foreach(Measure measue in _measures)
 			{
-				TextBox valueTextbox = Visual.GetDescendant<TextBox>(dialogItems.ItemContainerGenerator.ContainerFromItem(measue));
+				TextBox valueTextbox = VisualTree.GetChild<TextBox>(dialogItems.ItemContainerGenerator.ContainerFromItem(measue));
 				
 				ValidationResult validation =  rule.Validate(valueTextbox.Text, null);
 				if (!validation.IsValid)
@@ -850,15 +866,78 @@ namespace Easynet.Edge.UI.Client.Pages
 					if (values[measure] == null)
 						continue;
 
-					Visual.GetDescendant<TextBox>(container, "measure" + measure.MeasureID.ToString()).Text = values[measure].ToString();
+					VisualTree.GetChild<TextBox>(container, "measure" + measure.MeasureID.ToString()).Text = values[measure].ToString();
 				}
 			}
 		}
+
+		/// <summary>
+		/// The mechanism for displaying targets in a tab relies on the mechanism for table-wide targets.
+		/// This is to leverage the binding capabilities of TargetsRow.
+		/// </summary>
+		private void CampaignTargets_GotFocus(object sender, RoutedEventArgs e)
+		{
+			if (_campaignTargetsControl == null)
+				_campaignTargetsControl = VisualTree.GetChild<ItemsControl>(Campaign_dialog, "_campaignTargetsControl");
+
+			if (_campaignTargetsControl.ItemsSource != null)
+				return;
+
+			TargetsRow targetsRow = null;
+			int accountID = Window.CurrentAccount.ID;
+			Oltp.CampaignRow tempCampaign = Campaign_dialog.Content as Oltp.CampaignRow;
+			Oltp.CampaignRow campaign = Campaign_dialog.TargetContent as Oltp.CampaignRow;
+
+			Window.AsyncOperation(delegate()
+			{
+				if (_targetsEnabled) //(_targetData != null) // all that matters is whether they're enabled or not
+				{
+					// Since targets are enabled, clone the one attached to this campaign and use it as a temp row for dialog editing
+					DataTable cloned = _targetData.InnerTable.Clone();
+					cloned.ImportRow(campaign.Targets.InnerRow);
+					TargetsTable targetsTable = new TargetsTable(cloned);
+					targetsRow = targetsTable.GetCampaignTargets(campaign.GK);
+				}
+				else
+				{
+					TargetsTable targetsTable;
+
+					// Targets on this campaign row are not available, so get them from server
+					using (OltpProxy proxy = new OltpProxy())
+					{
+						DataTable t = proxy.Service.CampaignTargets_Get(
+							accountID,
+							campaign.GK
+						);
+						targetsTable = new TargetsTable(t);
+					}
+					targetsRow = targetsTable.GetCampaignTargets(campaign.GK);
+				}
+				tempCampaign.Targets = targetsRow;
+			},
+			delegate()
+			{
+				List<Measure> measuresTargets = new List<Measure>();
+
+				// Clone the meausres (just in case) and build a list that has a value source
+				foreach (Measure m in _measures)
+				{
+					Measure mt = m.Clone();
+					mt.SetValueSource(targetsRow);
+					measuresTargets.Add(mt);
+				};
+
+				_campaignTargetsControl.ItemsSource = measuresTargets;
+				VisualTree.GetChild<TextBlock>(Campaign_dialog, "note").Visibility =
+					_targetsEnabled ? Visibility.Visible : Visibility.Collapsed;
+			});
+		}
+
 	
 		/*=========================*/
 		#endregion
 
-		#region Campaigns
+		#region Campaign dialog
 		/*=========================*/
 
 		/// <summary>
@@ -886,8 +965,9 @@ namespace Easynet.Edge.UI.Client.Pages
 			Oltp.CampaignRow row = currentItem.Content as Oltp.CampaignRow;
 
 			// Update the segments tab if it is selected
-			TabControl tabs = Visual.GetDescendant<TabControl>(Campaign_dialog);
-			TabItem tabSegments = Visual.GetDescendant<TabItem>(tabs, "_tabSegments");
+			TabControl tabs = VisualTree.GetChild<TabControl>(Campaign_dialog);
+			TabItem tabSegments = VisualTree.GetChild<TabItem>(tabs, "_tabSegments");
+			TabItem tabTargets = VisualTree.GetChild<TabItem>(tabs, "_tabCampaigns");
 			if (tabSegments.IsSelected)
 				CampaignSegments_GotFocus(tabSegments, new RoutedEventArgs());
 
@@ -898,6 +978,9 @@ namespace Easynet.Edge.UI.Client.Pages
 				Dialog_MakeEditVersion<Oltp.CampaignDataTable, Oltp.CampaignRow>(_campaigns, row),
 				row
 			);
+
+			if (tabTargets.IsSelected)
+				CampaignTargets_GotFocus(tabTargets, new RoutedEventArgs());
 
 			// Get the current channel and see if it has an API
 			DataRow[] rs = _channelTable.Select(String.Format("ID = {0}", (Campaign_dialog.TargetContent as Oltp.CampaignRow).ChannelID));
@@ -916,14 +999,15 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void Campaign_dialog_ApplyingChanges(object sender, CancelRoutedEventArgs e)
 		{
-			Oltp.CampaignRow campaign = (Campaign_dialog.Content as Oltp.CampaignRow);
+			Oltp.CampaignRow tempCampaign = (Campaign_dialog.Content as Oltp.CampaignRow);
+			Oltp.CampaignRow targetCampaign = (Campaign_dialog.TargetContent as Oltp.CampaignRow);
 
-			// Check whether this is a new campaign
-			bool isNew = campaign.RowState == DataRowState.Added;
+			// Check whether this is a new tempCampaign
+			bool isNew = tempCampaign.RowState == DataRowState.Added;
 
-			if (!isNew && Window.CurrentAccount.HasBackOffice)
+			if (!isNew && Window.CurrentAccount.HasBackOffice && tempCampaign.RowState == DataRowState.Modified)
 			{
-				MessageBoxResult result = MessageBox.Show("Applying changes will override all the segments of trackers associated with this campaign. Continue?",
+				MessageBoxResult result = MessageBox.Show("Applying changes will override all the segments of trackers associated with this tempCampaign. Continue?",
 					"Warning",
 					MessageBoxButton.OKCancel,
 					MessageBoxImage.Warning);
@@ -936,11 +1020,13 @@ namespace Easynet.Edge.UI.Client.Pages
 				}
 			}
 
+			#region Adding new is disabled
+			/*
 			// Can't choose a channel with a PPC API
-			bool channelIDChanged = !isNew && campaign.ChannelID != (Campaign_dialog.TargetContent as Oltp.CampaignRow).ChannelID;
+			bool channelIDChanged = !isNew && tempCampaign.ChannelID != (Campaign_dialog.TargetContent as Oltp.CampaignRow).ChannelID;
 			if (isNew || channelIDChanged)
 			{
-				DataRow[] rs = _channelTable.Select(String.Format("{0} = {1}", _channelTable.IDColumn.ColumnName, campaign.ChannelID));
+				DataRow[] rs = _channelTable.Select(String.Format("{0} = {1}", _channelTable.IDColumn.ColumnName, tempCampaign.ChannelID));
 				string error = null;
 				if (rs.Length < 1)
 				{
@@ -958,14 +1044,16 @@ namespace Easynet.Edge.UI.Client.Pages
 					return;
 				}
 			}
+			*/
+			#endregion
 
-			// Check which segments have changed for refresh purposes
+			// Check which segments have changes for refresh purposes
 			bool[] segmentsHaveChanged = new bool[5];
-			segmentsHaveChanged[0] = !campaign["Segment1", DataRowVersion.Current].Equals(campaign["Segment1", DataRowVersion.Original]);
-			segmentsHaveChanged[1] = !campaign["Segment2", DataRowVersion.Current].Equals(campaign["Segment2", DataRowVersion.Original]);
-			segmentsHaveChanged[2] = !campaign["Segment3", DataRowVersion.Current].Equals(campaign["Segment3", DataRowVersion.Original]);
-			segmentsHaveChanged[3] = !campaign["Segment4", DataRowVersion.Current].Equals(campaign["Segment4", DataRowVersion.Original]);
-			segmentsHaveChanged[4] = !campaign["Segment5", DataRowVersion.Current].Equals(campaign["Segment5", DataRowVersion.Original]);
+			segmentsHaveChanged[0] = !tempCampaign["Segment1", DataRowVersion.Current].Equals(tempCampaign["Segment1", DataRowVersion.Original]);
+			segmentsHaveChanged[1] = !tempCampaign["Segment2", DataRowVersion.Current].Equals(tempCampaign["Segment2", DataRowVersion.Original]);
+			segmentsHaveChanged[2] = !tempCampaign["Segment3", DataRowVersion.Current].Equals(tempCampaign["Segment3", DataRowVersion.Original]);
+			segmentsHaveChanged[3] = !tempCampaign["Segment4", DataRowVersion.Current].Equals(tempCampaign["Segment4", DataRowVersion.Original]);
+			segmentsHaveChanged[4] = !tempCampaign["Segment5", DataRowVersion.Current].Equals(tempCampaign["Segment5", DataRowVersion.Original]);
 	
 			// Use the default dialog apply handler
 			Dialog_ApplyingChanges<Oltp.CampaignDataTable, Oltp.CampaignRow>(
@@ -986,17 +1074,39 @@ namespace Easynet.Edge.UI.Client.Pages
 					{
 						for (int i = campaignIndex + 1; i < _items.Count && _items[i] is Oltp.AdgroupRow; i++)
 						{
-							(_items[i] as Oltp.AdgroupRow).ChannelID = campaign.ChannelID;
-							if (segmentsHaveChanged[0]) (_items[i] as Oltp.AdgroupRow).Segment1 = campaign.Segment1;
-							if (segmentsHaveChanged[1]) (_items[i] as Oltp.AdgroupRow).Segment2 = campaign.Segment2;
-							if (segmentsHaveChanged[2]) (_items[i] as Oltp.AdgroupRow).Segment3 = campaign.Segment3;
-							if (segmentsHaveChanged[3]) (_items[i] as Oltp.AdgroupRow).Segment4 = campaign.Segment4;
-							if (segmentsHaveChanged[4]) (_items[i] as Oltp.AdgroupRow).Segment5 = campaign.Segment5;
+							(_items[i] as Oltp.AdgroupRow).ChannelID = tempCampaign.ChannelID;
+							if (segmentsHaveChanged[0]) (_items[i] as Oltp.AdgroupRow).Segment1 = tempCampaign.Segment1;
+							if (segmentsHaveChanged[1]) (_items[i] as Oltp.AdgroupRow).Segment2 = tempCampaign.Segment2;
+							if (segmentsHaveChanged[2]) (_items[i] as Oltp.AdgroupRow).Segment3 = tempCampaign.Segment3;
+							if (segmentsHaveChanged[3]) (_items[i] as Oltp.AdgroupRow).Segment4 = tempCampaign.Segment4;
+							if (segmentsHaveChanged[4]) (_items[i] as Oltp.AdgroupRow).Segment5 = tempCampaign.Segment5;
 							(_items[i] as Oltp.AdgroupRow).AcceptChanges();
 						}
 					}
 
-					Campaign_dialog.EndApplyChanges(e);
+					// Save (or update) targets
+					Window.AsyncOperation(delegate()
+					{
+						if (_targetsEnabled) // _targetData != null) // not relevant anymore
+						{
+							if (tempCampaign.Targets.InnerRow.RowState != DataRowState.Unchanged)
+							{
+								// Since this row was borrowed from the full target data table, apply changes to it
+								foreach (Measure m in _measures)
+									targetCampaign.Targets[m.FieldName] = tempCampaign.Targets[m.FieldName];
+							}
+						}
+						else
+						{
+							Targets_Save(false, tempCampaign.Targets.InnerRow.Table);
+						}
+					},
+					delegate()
+					{
+						Campaign_dialog.EndApplyChanges(e);
+					});
+					
+
 				});
 		}
 
@@ -1024,6 +1134,10 @@ namespace Easynet.Edge.UI.Client.Pages
 			{
 				_campaigns.RejectChanges();
 				SetValue(CurrentItemHasPpcApiProperty, false);
+				
+				// Clear the measures source
+				if (_campaignTargetsControl != null)
+					_campaignTargetsControl.ItemsSource = null;
 			}
 		}
 
@@ -1038,18 +1152,25 @@ namespace Easynet.Edge.UI.Client.Pages
 				if ((pair.Key.AssociationFlags & SegmentAssociationFlags.Campaign) == 0)
 					continue;
 
-				StackPanel segmentPanel = Visual.GetDescendant<StackPanel>(Campaign_dialog, "_segment" + pair.Key.SegmentNumber.ToString());
+				StackPanel segmentPanel = VisualTree.GetChild<StackPanel>(Campaign_dialog, "_segment" + pair.Key.SegmentNumber.ToString());
 				if (segmentPanel == null)
 					continue;
 
 				segmentPanel.Visibility = Visibility.Visible;
 
-				Visual.GetDescendant<Label>(segmentPanel).Content = pair.Key.Name;
-				Visual.GetDescendant<ComboBox>(segmentPanel).ItemsSource = pair.Value.Rows;
+				VisualTree.GetChild<Label>(segmentPanel).Content = pair.Key.Name;
+				VisualTree.GetChild<ComboBox>(segmentPanel).ItemsSource = pair.Value.Rows;
 			}
 
 			_campaignTabSegmentsInitialized = true;
 		}
+
+		/*=========================*/
+		#endregion
+
+		#region Campaign Merge
+		/*=========================*/
+
 
 		void CampaignMerge_Open(object sender, RoutedEventArgs e)
 		{
@@ -1091,7 +1212,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				return;
 			}
 
-			ComboBox _mergeTargetComboBox = Visual.GetDescendant<ComboBox>(CampaignMerge_dialog, "_mergeTargetComboBox");
+			ComboBox _mergeTargetComboBox = VisualTree.GetChild<ComboBox>(CampaignMerge_dialog, "_mergeTargetComboBox");
 			_mergeTargetComboBox.ItemsSource = targetItems;
 			_mergeTargetComboBox.SelectedIndex = 0;
 			CampaignMerge_dialog.IsOpen = true;
@@ -1114,7 +1235,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				return;
 			}
 
-			ComboBox _mergeTargetComboBox = Visual.GetDescendant<ComboBox>(CampaignMerge_dialog, "_mergeTargetComboBox");
+			ComboBox _mergeTargetComboBox = VisualTree.GetChild<ComboBox>(CampaignMerge_dialog, "_mergeTargetComboBox");
 			Oltp.CampaignRow targetCampaign = _mergeTargetComboBox.SelectedItem as Oltp.CampaignRow;
 			if (targetCampaign == null)
 			{
@@ -1170,6 +1291,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			});
 		}
 
+
 		/*=========================*/
 		#endregion
 
@@ -1217,7 +1339,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			Adgroup_dialog.Title = "New Adgroup";
 			Adgroup_dialog.BeginEdit(editVersion, tbl);
 
-			TabControl tabs = Visual.GetDescendant<TabControl>(Adgroup_dialog);
+			TabControl tabs = VisualTree.GetChild<TabControl>(Adgroup_dialog);
 			if (tabs.SelectedIndex == 1)
 			{
 				AdgroupKeywords_GotFocus(null, null);
@@ -1250,10 +1372,10 @@ namespace Easynet.Edge.UI.Client.Pages
 			SetValue(CurrentItemHasPpcApiProperty, rs.Length > 0 && (rs[0] as Oltp.ChannelRow).HasPpcApi);
 
 			// Update the selected tabs
-			TabControl tabs = Visual.GetDescendant<TabControl>(Adgroup_dialog);
-			TabItem tabSegments = Visual.GetDescendant<TabItem>(tabs, "_tabSegments");
-			TabItem tabKeywords = Visual.GetDescendant<TabItem>(tabs, "_tabKeywords");
-			TabItem tabCreatives = Visual.GetDescendant<TabItem>(tabs, "_tabCreatives");
+			TabControl tabs = VisualTree.GetChild<TabControl>(Adgroup_dialog);
+			TabItem tabSegments = VisualTree.GetChild<TabItem>(tabs, "_tabSegments");
+			TabItem tabKeywords = VisualTree.GetChild<TabItem>(tabs, "_tabKeywords");
+			TabItem tabCreatives = VisualTree.GetChild<TabItem>(tabs, "_tabCreatives");
 			if (tabSegments.IsSelected)
 				AdgroupSegments_GotFocus(tabSegments, new RoutedEventArgs());
 			if (tabKeywords.IsSelected)
@@ -1481,7 +1603,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				// Expand the parent if necessary
 				if (selectedIndex >= _items.Count-1 || _items[selectedIndex+1] is Oltp.CampaignRow)
 				{
-					ToggleButton tb = Visual.GetDescendant<ToggleButton>(parentItem);
+					ToggleButton tb = VisualTree.GetChild<ToggleButton>(parentItem);
 
 					if (tb.IsChecked != true)
 					{
@@ -1641,7 +1763,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void AdgroupKeywords_BatchInputOpen(object sender, RoutedEventArgs e)
 		{
 			Button btn = sender as Button;
-			DockPanel panel = Visual.GetDescendant<DockPanel>((btn.Parent as FrameworkElement).Parent);
+			DockPanel panel = VisualTree.GetChild<DockPanel>((btn.Parent as FrameworkElement).Parent);
 
 			panel.Visibility = panel.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
 			btn.Content = panel.Visibility == Visibility.Visible ? "Cancel" : "Batch add";
@@ -1649,7 +1771,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 		private void AdgroupKeywords_BatchInputPerform(object sender, RoutedEventArgs e)
 		{
-			TextBox batchInput = Visual.GetDescendant<TextBox>(((FrameworkElement)sender).Parent);
+			TextBox batchInput = VisualTree.GetChild<TextBox>(((FrameworkElement)sender).Parent);
 			if (batchInput.Text.Trim().Length < 1)
 				return;
 
@@ -1703,7 +1825,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				}
 
 				batchInput.Text = String.Empty;
-				AdgroupKeywords_BatchInputOpen(Visual.GetDescendant<Button>(Visual.GetRoot<Canvas>(batchInput), "_batchAddButton"), new RoutedEventArgs());
+				AdgroupKeywords_BatchInputOpen(VisualTree.GetChild<Button>(VisualTree.GetParent<Canvas>(batchInput), "_batchAddButton"), new RoutedEventArgs());
 			});
 		}
 
@@ -1963,14 +2085,14 @@ namespace Easynet.Edge.UI.Client.Pages
 				if ((pair.Key.AssociationFlags & SegmentAssociationFlags.Adgroup) == 0)
 					continue;
 
-				StackPanel segmentPanel = Visual.GetDescendant<StackPanel>(Adgroup_dialog, "_segment" + pair.Key.SegmentNumber.ToString());
+				StackPanel segmentPanel = VisualTree.GetChild<StackPanel>(Adgroup_dialog, "_segment" + pair.Key.SegmentNumber.ToString());
 				if (segmentPanel == null)
 					continue;
 
 				segmentPanel.Visibility = Visibility.Visible;
 
-				Visual.GetDescendant<Label>(segmentPanel).Content = pair.Key.Name;
-				Visual.GetDescendant<ComboBox>(segmentPanel).ItemsSource = pair.Value.Rows;
+				VisualTree.GetChild<Label>(segmentPanel).Content = pair.Key.Name;
+				VisualTree.GetChild<ComboBox>(segmentPanel).ItemsSource = pair.Value.Rows;
 			}
 
 			_adgroupTabSegmentsInitialized = true;

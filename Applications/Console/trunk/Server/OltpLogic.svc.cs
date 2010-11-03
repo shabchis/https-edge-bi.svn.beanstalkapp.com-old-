@@ -18,6 +18,7 @@ using Easynet.Edge.BusinessObjects;
 using Easynet.Edge.Services.DataRetrieval;
 using Easynet.Edge.Core.Configuration;
 using System.Security.Authentication;
+using System.Configuration;
 
 namespace Easynet.Edge.UI.Server
 {
@@ -28,6 +29,11 @@ namespace Easynet.Edge.UI.Server
 	public class OltpLogic: IOltpLogic
 	{
 		Oltp.UserRow CurrentUser;
+
+		static OltpLogic()
+		{
+			DataManager.ConnectionString = ConfigurationManager.ConnectionStrings["Easynet.Edge.UI.Data.Properties.Settings.easynet_OltpConnectionString"].ConnectionString;
+		}
 
 		#region Private
 		/*=========================*/
@@ -165,6 +171,46 @@ namespace Easynet.Edge.UI.Server
 		//	return s != null;
 		//}
 
+		public void AccountPermission_Copy(int sourceAccountID, int[] targetAccounts)
+		{
+			using (DataManager.Current.OpenConnection())
+			{
+				DataManager.Current.StartTransaction();
+
+				SqlCommand cmd = DataManager.CreateCommand(@"
+					delete from User_GUI_AccountPermission where AccountID = @targetAccountID:Int;
+
+					insert into User_GUI_AccountPermission
+					(
+						AccountID,
+						TargetID,
+						TargetIsGroup,
+						PermissionType,
+						Value
+					)
+					select
+						@targetAccountID as AccountID,
+						TargetID,
+						TargetIsGroup,
+						PermissionType,
+						Value
+					from
+						dbo.User_GUI_AccountPermission a
+					where
+						a.AccountID = @sourceAccountID:Int;
+				");
+				cmd.Parameters["@sourceAccountID"].Value = sourceAccountID;
+
+				foreach (int targetAccountID in targetAccounts)
+				{
+					cmd.Parameters["@targetAccountID"].Value = targetAccountID;
+					cmd.ExecuteNonQuery();
+				}
+
+				DataManager.Current.CommitTransaction();
+			}
+		}
+
 		/*=========================*/
 		#endregion
 
@@ -188,8 +234,9 @@ namespace Easynet.Edge.UI.Server
 			List<Measure> list = new List<Measure>();
 			using (connection)
 			{
-				SqlCommand cmd = DataManager.CreateCommand("select * from Measure where AccountID in (-1, @accountID:Int) and IsTarget=1");
+				SqlCommand cmd = DataManager.CreateCommand("Measure_GetMeasures(@accountID:int, @flags:int", CommandType.StoredProcedure);
 				cmd.Parameters["@accountID"].Value = accountID;
+				cmd.Parameters["@flags"].Value = 0x2; // = IsTarget only
 				using (SqlDataReader reader = cmd.ExecuteReader())
 				{
 					while (reader.Read())
@@ -200,7 +247,7 @@ namespace Easynet.Edge.UI.Server
 			return list.ToArray();
 		}
 
-		public DataTable CampaignTargets_Get(int accountID)
+		public DataTable CampaignTargets_Get(int accountID, long? campaignGK)
 		{
 			GatewayTableAdapter tempAdapter = From<GatewayTableAdapter>();
 			tempAdapter.CurrentConnection.Open();
@@ -227,13 +274,15 @@ namespace Easynet.Edge.UI.Server
 					from
 						User_GUI_CampaignTargets a
 					where
-						AccountID = @accountID:Int and 
+						AccountID = @accountID:Int and
+						(@campaignGK:BigInt is null or CampaignGK = @campaignGK) and
 						SegmentID = -1",
 					measureFields
 				);
 
 				SqlCommand cmd = DataManager.CreateCommand(cmdText);
 				cmd.Parameters["@accountID"].Value = accountID;
+				cmd.Parameters["@campaignGK"].Value = campaignGK == null ? (object) DBNull.Value : (object) campaignGK.Value;
 
 				SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 				adapter.Fill(targetsTable);
@@ -336,6 +385,27 @@ namespace Easynet.Edge.UI.Server
 		public Oltp.AccountDataTable Account_Get()
 		{
 			return From<AccountTableAdapter>().Get(CurrentUser.ID);
+		}
+
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		public Oltp.AccountDataTable Account_GetByPermission(string permissionType)
+		{
+			string cmdText = @"Account_GetByUserPermission(@userID:int, @permission:NVarChar)";
+			
+			Oltp.AccountDataTable table;
+			using (DataManager.Current.OpenConnection())
+			{
+				SqlDataAdapter adapter = new SqlDataAdapter(DataManager.CreateCommand(cmdText, CommandType.StoredProcedure));
+				adapter.SelectCommand.Parameters["@userID"].Value = CurrentUser.ID;
+				adapter.SelectCommand.Parameters["@permission"].Value = permissionType;
+
+				table = new Oltp.AccountDataTable();
+				adapter.Fill(table);
+			}
+
+			return table;
 		}
 
 		/// <summary>
@@ -1487,6 +1557,11 @@ namespace Easynet.Edge.UI.Server
 
 			// Return only new rows
 			return hasNew ? table : null;
+		}
+
+		public void SerpProfile_Duplicate(int profileID, int newAccountID)
+		{
+			throw new NotImplementedException("Duplicate profile not yet implemented.");
 		}
 
 		public Oltp.SerpProfileKeywordDataTable SerpProfileKeyword_Get(int profileID)

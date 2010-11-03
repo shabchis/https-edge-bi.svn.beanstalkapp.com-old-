@@ -131,7 +131,7 @@
 					<Button x:Name="_buttonMerge" Style="{StaticResource Link}" Content="Merge" Click="CampaignMerge_Open" Margin="0,0,15,0"/>
 					<StackPanel x:Name="_targetButtons" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
 						<TextBlock Text="|" Margin="0,0,15,0" Foreground="#666"/>
-						<Button x:Name="_buttonTargetsBatch" Style="{StaticResource Link}" Content="Assign" Click="Targets_BatchOpen" Margin="0,0,15,0"/>
+						<!--<Button x:Name="_buttonTargetsBatch" Style="{StaticResource Link}" Content="Assign" Click="Targets_BatchOpen" Margin="0,0,15,0"/>-->
 						<Button x:Name="_buttonTargetsSave" Style="{StaticResource Link}" Content="Save" Click="Targets_SaveClick" Margin="0,0,15,0"/>
 					</StackPanel>
 					<Button x:Name="_buttonTargetsToggle" Style="{StaticResource Link}" Content="Show targets" Click="Targets_Toggle"/>
@@ -201,6 +201,39 @@
 										<ComboBox SelectedValue="{Binding Path=Segment5}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
 									</StackPanel>
 								</StackPanel>
+							</TabItem>
+							
+							<TabItem Header="Targets" x:Name="_tabCampaigns" GotFocus="CampaignTargets_GotFocus">
+								<TabItem.Resources>
+									<Style TargetType="{x:Type Label}">
+										<Setter Property="Width" Value="150"/>
+									</Style>
+									<Style TargetType="{x:Type TextBox}">
+										<Setter Property="Width" Value="60"/>
+									</Style>
+								</TabItem.Resources>
+
+								<StackPanel Orientation="Vertical">
+									<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+										<ItemsControl x:Name="_campaignTargetsControl">
+											<ItemsControl.ItemsPanel>
+												<ItemsPanelTemplate>
+													<StackPanel Style="{StaticResource FormContents}"/>
+												</ItemsPanelTemplate>
+											</ItemsControl.ItemsPanel>
+											<ItemsControl.ItemTemplate>
+												<DataTemplate DataType="{x:Type data:Measure}">
+													<StackPanel Style="{StaticResource FormField}">
+														<Label Content="{Binding DisplayName}"/>
+														<TextBox Text="{Binding Value}"/>
+													</StackPanel>
+												</DataTemplate>
+											</ItemsControl.ItemTemplate>
+										</ItemsControl>
+									</ScrollViewer>
+									<TextBlock x:Name="note" Visibility="Collapsed">Note: to save this campaign's targets, you must save all targets from the top right of the main campaign list.</TextBlock>
+								</StackPanel>
+
 							</TabItem>
 							
 							<TabItem Header="Details">

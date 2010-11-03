@@ -259,7 +259,7 @@ namespace Easynet.Edge.UI.Client
 			if (App.InDesignMode)
 				return;
 
-			Visual.GetRoot<Grid>(this).Children.Remove(this);
+			VisualTree.GetParent<Grid>(this).Children.Remove(this);
 			App.CurrentPage.Window.FloatingDialogContainer.Children.Add(this);
 		}
 
@@ -271,9 +271,9 @@ namespace Easynet.Edge.UI.Client
 			base.OnApplyTemplate();
 
 			// Apply event handlers if available
-			_buttonOk = Visual.GetDescendant<Button>(this, "_buttonOK");
-			_buttonCancel = Visual.GetDescendant<Button>(this, "_buttonCancel");
-			_buttonApply = Visual.GetDescendant<Button>(this, "_buttonApply");
+			_buttonOk = VisualTree.GetChild<Button>(this, "_buttonOK");
+			_buttonCancel = VisualTree.GetChild<Button>(this, "_buttonCancel");
+			_buttonApply = VisualTree.GetChild<Button>(this, "_buttonApply");
 
 			if (_buttonOk != null)
 				_buttonOk.Click += new RoutedEventHandler(buttonOK_Click);
@@ -313,7 +313,7 @@ namespace Easynet.Edge.UI.Client
 		/// </summary>
 		void GetDialogFieldBindings()
 		{
-			ContentPresenter contentPresenter = Visual.GetDescendant<ContentPresenter>(this, "_contentPresenter");
+			ContentPresenter contentPresenter = VisualTree.GetChild<ContentPresenter>(this, "_contentPresenter");
 
 			// Get the bindings when a template is applied
 			if (contentPresenter == null)
@@ -425,7 +425,7 @@ namespace Easynet.Edge.UI.Client
 		/// </summary>
 		void buttonCancel_Click(object sender, RoutedEventArgs e)
 		{
-			this.Close();
+			this.Close(CloseReason.Cancel);
 		}
 
 		void FadeOutAnim_CompletedDialog(object sender, EventArgs e)
@@ -622,10 +622,16 @@ namespace Easynet.Edge.UI.Client
 		/// </summary>
 		public bool Close()
 		{
+			return Close(CloseReason.None);
+		}
+
+		public bool Close(CloseReason reason)
+		{
 			// Raise the confirmation event
 			CancelRoutedEventArgs args = new CancelRoutedEventArgs();
 			args.RoutedEvent = ClosingEvent;
 			args.Source = this;
+			args.Reason = reason;
 			OnClosing(args);
 
 			if (args.Cancel)
@@ -639,7 +645,6 @@ namespace Easynet.Edge.UI.Client
 			return true;
 		}
 
-
 		/*=========================*/
 		#endregion
 	}
@@ -651,11 +656,16 @@ namespace Easynet.Edge.UI.Client
 	{
 		public bool Skip = false;
 		public bool Cancel = false;
-		public string Reason = null;
+		public CloseReason Reason = CloseReason.None;
 		public Exception Exception = null;
 		public bool CloseDialog = false;
 	}
 
+	public enum CloseReason
+	{
+		None,
+		Cancel
+	}
 
 	public delegate void ContinueRoutedEventHandler(object source, CancelRoutedEventArgs e);
 	/*=========================*/
