@@ -26,10 +26,12 @@ namespace EdgeBI.Web.DataServices
             MeasureSort[] dataSort,
             MeasureSort[] viewSort,
             MeasureFormat[] format,
-            Dictionary<int, Measure> measuresList,
-            Mode mode
+            Dictionary<int, Measure> measuresList
             )
         {
+			// TODO: Ronen - you need to determine what is the mode without getting a parameter
+			Mode mode = Mode.Advanced;
+
             Measures = new List<Measure>(measuresList.Values);
             List<ObjData> Data = new List<ObjData>();
             int measureIndex = 0 ,RangeIndex = 0;

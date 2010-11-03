@@ -80,7 +80,7 @@ namespace EdgeBI.Web.DataServices
 			BodyStyle = WebMessageBodyStyle.Bare,
 			ResponseFormat = WebMessageFormat.Xml,
 			UriTemplate = "data?" +
-				"account={accountID}&" +
+				"account={account}&" +
 				"grouping={grouping}&" +
 				"top={top}&" + 
 				"measures={measures}&" +
@@ -91,7 +91,7 @@ namespace EdgeBI.Web.DataServices
 				"format={format}"
 		)]
 		public List<ObjData> GetData(
-			int accountID,
+			int account,
 			DataGrouping grouping,
 			int top,
 			MeasureRef[] measures,
@@ -99,15 +99,14 @@ namespace EdgeBI.Web.DataServices
 			MeasureDiff[] diff,
 			MeasureSort[] dataSort,
 			MeasureSort[] viewSort,
-			MeasureFormat[] format,
-            Mode mode
+			MeasureFormat[] format
 			)
 		{
 			// Get measures
-			List<Measure> measuresList = GetMeasures(accountID, true);
+			List<Measure> measuresList = GetMeasures(account, true);
 			Dictionary<int, Measure> measuresByID = measuresList.ToDictionary(m => m.MeasureID);
-            EdgeBI.Web.DataServices.DataHandler DataHandler = new EdgeBI.Web.DataServices.DataHandler();
-            return DataHandler.GetData(accountID, grouping, top, measures, ranges, diff, dataSort, viewSort, format, measuresByID, mode);
+            EdgeBI.Web.DataServices.DataHandler dataHandler = new EdgeBI.Web.DataServices.DataHandler();
+			return dataHandler.GetData(account, grouping, top, measures, ranges, diff, dataSort, viewSort, format, measuresByID);
 		}
 	}
 }
