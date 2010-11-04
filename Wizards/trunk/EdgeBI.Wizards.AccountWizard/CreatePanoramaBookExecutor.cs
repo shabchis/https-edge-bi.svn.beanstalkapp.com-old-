@@ -115,6 +115,7 @@ namespace EdgeBI.Wizards.AccountWizard
 
 		private void UpdateRelevantPropertiesOnXml(DirectoryInfo targetDirectory, Dictionary<string, object> lastExecutorStepData)
 		{
+            string pattern;
 			foreach (FileInfo file in targetDirectory.GetFiles())
 			{
 				if (file.Name.ToLower() == "schema.xml" || file.Name.ToLower() == "properties.xml")
@@ -130,36 +131,63 @@ namespace EdgeBI.Wizards.AccountWizard
 
 						
 					}
-					string pattern = @"\bhal\b"; //replace server hal
+					pattern = string.Format(@"\b{0}\b",AppSettings.Get(this,"Panorama.ServerToReplace")); //replace server 
 					//CubeAdress
 					fileString = Regex.Replace(fileString, pattern, AppSettings.Get(this, "AnalysisServer.ConnectionString").Replace("DataSource=", string.Empty), RegexOptions.IgnoreCase);
 					//CubeName //few options here
-					pattern = @"\bEasyNet-New Cube\b";
-					fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.CubeName"].ToString(), RegexOptions.IgnoreCase);
-					pattern = @"\bContent Cube\b";
-					fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.CubeName"].ToString(), RegexOptions.IgnoreCase);
-					pattern = @"\bBO PPC Cube\b";
+
+                    pattern = string.Format(@"\b{0}\b", AppSettings.Get(this, "Panorama.ContentCubeToReplace"));//ContentCubeToReplace
+
 					fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.CubeName"].ToString(), RegexOptions.IgnoreCase);
 
+                    pattern = string.Format(@"\b{0}\b", AppSettings.Get(this, "Panorama.BoCubeToReplace")); //BoCubeToReplace
+					fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.CubeName"].ToString(), RegexOptions.IgnoreCase);
+
+<<<<<<< .mine
+
+                    pattern = string.Format(@"\b{0}\b", AppSettings.Get(this, "Panorama.CubeDbtoReplace"));//CubeDbtoReplace
+					fileString = Regex.Replace(fileString, pattern, AppSettings.Get(this,"AnalysisServer.Database"), RegexOptions.IgnoreCase);
+=======
 					//CubeDb
 					pattern = @"\beasynet_UDM\b";
 					fileString = Regex.Replace(fileString, pattern, AppSettings.Get(this,"AnalysisServer.Database"), RegexOptions.IgnoreCase);
+>>>>>>> .r192
 					
 					//Replace client specific measures +new active users+new users
 
 					foreach (KeyValuePair<string,object> input in lastExecutorStepData)
 					{
+<<<<<<< .mine
+						if (input.Key.StartsWith(AccSettClientSpecific, true, null))//measures
+=======
 						if (input.Key.StartsWith(AccSettClientSpecific, true, null))
+>>>>>>> .r192
 						{
+<<<<<<< .mine
+                            pattern = string.Format(@"\b{0}\b", "BO " + input.Key.Replace("AccountSettings.", string.Empty));
+                            fileString = Regex.Replace(fileString, pattern, input.Value.ToString(), RegexOptions.IgnoreCase);
+=======
 							string patern = string.Format(@"\b{0}\b","BO " + input.Key.Replace("AccountSettings.", string.Empty));
 							fileString = Regex.Replace(fileString, patern, input.Value.ToString(), RegexOptions.IgnoreCase);
+>>>>>>> .r192
 							
-						}
+						}                             
+                        else if (input.Key.StartsWith("AccountSettings.StringReplacment."))//String ReplaceMent
+                        {
+                            pattern = string.Format(@"\b{0}\b", input.Key.Replace("AccountSettings.StringReplacment.", string.Empty));
+                            fileString = Regex.Replace(fileString, pattern, input.Value.ToString(), RegexOptions.IgnoreCase);
                         else if (input.Key.StartsWith("AccountSettings.StringReplacment."))
                         {
                             string patern = string.Format(@"\b{0}\b", input.Key.Replace("AccountSettings.StringReplacment.", string.Empty));
                             fileString = Regex.Replace(fileString, patern, input.Value.ToString(), RegexOptions.IgnoreCase);
 
+<<<<<<< .mine
+                        }
+                        else if (input.Key == "AccountSettings.New Active Users")// replace new active users
+                        {
+                            if (input.Value.ToString() != " ")
+                            {
+=======
                         }
 
 						
@@ -171,7 +199,14 @@ namespace EdgeBI.Wizards.AccountWizard
                         {
                             pattern = "\b% of activations\b";
                             fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
+>>>>>>> .r192
 
+<<<<<<< .mine
+                                pattern = @"\bActives\b";
+                                fileString = Regex.Replace(fileString, pattern, input.Value.ToString(), RegexOptions.IgnoreCase);
+
+                            }
+=======
 
                             pattern = "\bBO new activations\b";
                             fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
@@ -193,12 +228,28 @@ namespace EdgeBI.Wizards.AccountWizard
                         {
                             pattern = "\bBO New users\b";
                             fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Users"].ToString(), RegexOptions.IgnoreCase);
+>>>>>>> .r192
 
+<<<<<<< .mine
+                        }
+                        else if(input.Key=="AccountSettings.New Users") //new users Regs!!!!
+                        {
+                            if (input.Value.ToString() != " ")
+                            {
+                                pattern = @"\bRegs\b";
+                                fileString = Regex.Replace(fileString, pattern, input.Value.ToString(), RegexOptions.IgnoreCase);
+                            } 
+
+                        }						
+					}				
+
+=======
                             pattern = "\bRegs\b";
                             fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Users"].ToString(), RegexOptions.IgnoreCase);
                         } 
                     }
 
+>>>>>>> .r192
 					using (StreamWriter writer=new StreamWriter(file.FullName,false))
 					{
 						writer.Write(fileString);
