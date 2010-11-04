@@ -266,6 +266,7 @@ namespace EdgeBI.Web.DataServices
 
     public enum Mode
     {
+        None,
         Simple,
         Advanced
     }
