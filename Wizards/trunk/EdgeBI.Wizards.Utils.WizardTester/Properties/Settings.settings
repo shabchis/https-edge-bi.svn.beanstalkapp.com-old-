@@ -48,7 +48,7 @@
       <Value Profile="(Default)">easynet_UDM</Value>
     </Setting>
     <Setting Name="ServiceHostPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Codebase-2010\Applications\EdgeServiceHost\bin\Debug\EdgeServiceHost.exe</Value>
+      <Value Profile="(Default)">C:\Users\BIadmin\Desktop\Codebase-2010\Applications\EdgeServiceHost\bin\Debug\EdgeServiceHost.exe</Value>
     </Setting>
     <Setting Name="RoleMemberName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Edge\BIadmin</Value>

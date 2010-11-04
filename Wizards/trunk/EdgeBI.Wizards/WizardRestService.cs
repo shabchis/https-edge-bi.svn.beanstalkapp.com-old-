@@ -126,6 +126,60 @@ namespace EdgeBI.Wizards
 
 		}
 
+        [WebInvoke(Method = "GET", UriTemplate = "GetErrors?sessionID={sessionID}")]
+        public string GetErrors(int sessionID)
+        {
+            StringBuilder errors = new StringBuilder();
+            using (DataManager.Current.OpenConnection())
+            {
+                using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT T0.Source,T0.Message,T0.ExceptionDetails
+																		FROM Log T0
+                                                                        Inner Join Wizards_Data_Per_WizardID_SessionID_Step_And_Field T1 ON T0.ServiceInstanceID=T1.ServiceInstanceID
+																		WHERE T1.SessionID=@SessionID:Int AND T0.IsException=1"))
+                {
+                    sqlCommand.Parameters["@SessionID"].Value = sessionID;
+                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            errors.AppendLine(string.Format("Step {0}: \n Error: {1} \n ExecptionDetails: {2} \n", reader.GetString(0), reader.GetString(1),reader.GetString(2)));
+                        }
+                    }
+                }
+
+            }
+
+            return errors.ToString();
+
+        }
+        [WebInvoke(Method = "GET", UriTemplate = "GetStepState?sessionID={sessionID}")]
+        public StepStatus GetStepStatus(int sessionID)
+        {
+            StepStatus stepStatus = StepStatus.NotReady;
+            try
+            {
+                using (ServiceClient<IStepCollector> client = new ServiceClient<IStepCollector>("Test", String.Format("net.tcp://localhost:3636/wizard/step/{0}", sessionID)))
+                {
+                    if (client.State == CommunicationState.Created)
+                    {
+                        stepStatus = client.Service.GetStepStatus();
+
+                    }
+                    else
+                    {
+                        stepStatus = StepStatus.NotReady;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                stepStatus = StepStatus.NotReady;
+            }
+            return stepStatus;
+           
+
+        }
 		
 
 		[WebInvoke(Method = "GET", UriTemplate = "continue?sessionID={sessionID}")]
@@ -157,7 +211,7 @@ namespace EdgeBI.Wizards
 				{
 
 
-
+                    
 					tempResponse = client.Service.Collect(request.CollectedValues);
 
 					if (tempResponse.Errors == null || tempResponse.Errors.Count == 0) //successfuly
@@ -500,5 +554,11 @@ namespace EdgeBI.Wizards
 		Execute
 
 	}
+    public enum StepStatus
+    {
+        NotReady,
+        Ready
+        
+    }
 	#endregion
 }
