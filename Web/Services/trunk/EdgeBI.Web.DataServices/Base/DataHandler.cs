@@ -9,12 +9,13 @@ using System.Data.SqlClient;
 using System.Data;
 using Easynet.Edge.Core.Configuration;
 using System.Collections;
+using System.Configuration;
 
 namespace EdgeBI.Web.DataServices
 {
     public class DataHandler
     {
-        Dictionary<int, Measure> measuresByID;
+        Dictionary<string, string> DicMeasuresFormat = new Dictionary<string, string>();
         List<Measure> Measures = new List<Measure>();
         public List<ObjData> GetData(
             int accountID,
@@ -30,7 +31,7 @@ namespace EdgeBI.Web.DataServices
             )
         {
 			// TODO: Ronen - you need to determine what is the mode without getting a parameter
-			Mode mode = Mode.Advanced;
+			Mode mode = GetMode(dataSort);
 
             Measures = new List<Measure>(measuresList.Values);
             List<ObjData> Data = new List<ObjData>();
@@ -46,7 +47,8 @@ namespace EdgeBI.Web.DataServices
                     GetFieldsSQL(m,measureIndex,RangeIndex,out lAggregateFunction,out lHavingString);
                     AggregateFunction += "," + lAggregateFunction;
                     HavingString += "," + lHavingString;
-                    measureIndex++; 
+                    measureIndex++;
+                    DicMeasuresFormat.Add("M" + measureIndex + ".R" + RangeIndex + ".Value", m.StringFormat);
                 }
                 Sql = GetSQL(AggregateFunction, HavingString, accountID, dc, grouping, dataSort, top, IdsList,mode);
                 if(IdsList == null)
@@ -55,17 +57,54 @@ namespace EdgeBI.Web.DataServices
                     GetData(Sql,out Data);
                 RangeIndex++;
             }
-            if (diff.Length > 0) Data = GetDiffCalculation(Data, diff);
-            if (viewSort.Length > 0) Data = GetSortData(Data, viewSort);
+            if (diff.Length > 0) GetDiffCalculation(out Data, diff);
+            if (viewSort.Length > 0 && mode == Mode.Simple) GetSortData(out Data, viewSort);
+            if (mode == Mode.Advanced) GetDataByDataSort(out Data ,top, dataSort);  
             //format
             return Data;
         }
+
+        private void GetDataByDataSort(out List<ObjData> data, int top, MeasureSort[] dataSort)
+        {
+            GetSortData(out data, dataSort);
+            List<ObjData> RetData = new List<ObjData>();
+            int i = 1;
+            foreach (ObjData rd in data)
+            {
+                if (top >= i)
+                    RetData.Add(rd);
+                else
+                    break;
+                i++;
+            }
+            data = RetData;
+        }
+
         private void GetData(string sql, out List<ObjData> data)
         {
             string ids = null;
             GetData(out ids, sql,out data);
         }
-        
+
+        private Mode GetMode(MeasureSort[] dataSort)
+        {
+            Mode mode = Mode.None;
+            foreach (MeasureSort ms in dataSort)
+                if (ms.DiffType != DiffType.None)
+                    if(mode == Mode.None || mode == Mode.Simple)
+                        mode = Mode.Simple;
+                    else
+                        throw new System.ArgumentException("Parameter not legal", "dataSort parameter");
+                else
+                {
+                    if (mode == Mode.None)
+                        mode = Mode.Advanced;
+                    else
+                        throw new System.ArgumentException("Parameter not legal", "dataSort parameter");
+                }
+            return mode;
+        }
+
         private void GetData(out string idslist, string sql, out List<ObjData> data)
         {
             string ids = null;
@@ -103,8 +142,9 @@ namespace EdgeBI.Web.DataServices
             
         }
 
-        private List<ObjData> GetSortData(List<ObjData> Data, MeasureSort[] viewSort)
+        private void GetSortData( out List<ObjData> Data, MeasureSort[] viewSort)
         {
+            List<ObjData> SortedReturnData = new List<ObjData>();
             foreach (MeasureSort msort in viewSort)
             {
                 string sortBy = "M." + msort.MeasureIndex +  (msort.RangeIndex == 0 || msort.DiffType != DiffType.None  ? "Diff" + msort.DiffType.ToString(): "R." + msort.RangeIndex);
@@ -126,8 +166,6 @@ namespace EdgeBI.Web.DataServices
                                         return firstPair.Value.CompareTo(nextPair.Value);
                                     }
                                  );
-                                List<ObjData> SortedReturnData = new List<ObjData>();
-
                     switch (msort.SortDir)
                     {
                         case SortDir.Asc:
@@ -143,13 +181,12 @@ namespace EdgeBI.Web.DataServices
                             }
                             break;
                     }
-
-                    return SortedReturnData;
                 }
             }
+            Data = SortedReturnData;
         }
 
-        private ReturnData GetDataObject(List<ObjData> AllReturnData, Int64 Key)
+        private ObjData GetDataObject(List<ObjData> AllReturnData, Int64 Key)
         {
             ObjData RetEntity = new ObjData();
             foreach (ObjData Entity in AllReturnData)
@@ -313,7 +350,7 @@ namespace EdgeBI.Web.DataServices
             return new MeasureDiff();
         }
         
-        private List<ObjData> GetDiffCalculation(List<ObjData> data, MeasureDiff[] diff)
+        private void GetDiffCalculation(out List<ObjData> data, MeasureDiff[] diff)
         {
             List<ObjData> returndata = new List<ObjData>();
 
@@ -322,7 +359,7 @@ namespace EdgeBI.Web.DataServices
                 Dictionary<string, ArrayList> EntityValues = new Dictionary<string, ArrayList>(); ;
                 if (Entity.Values.Count > 1)
                 {
-                    string mIdnew,mIdprev;
+                    string mIdnew = null,mIdprev = null;
                     ArrayList mValues = new ArrayList();
                     foreach (ObjValue lvalue in Entity.Values)
                     {
@@ -339,7 +376,7 @@ namespace EdgeBI.Web.DataServices
                     foreach(string key in EntityValues.Keys)
                     {
                         mValues = EntityValues[key];
-                        for(int i; i<EntityValues.Count;i++)
+                        for(int i = 0; i<EntityValues.Count;i++)
                         {
                             double value1, value2;
                             value1 = Convert.ToDouble(mValues[i]);
@@ -380,12 +417,43 @@ namespace EdgeBI.Web.DataServices
                     }
                 }
             }
-            return data;
         }
 
-
-
-
-
+        private void FormateData(out List<ObjValue> data, MeasureDiff[] diffs)
+        {
+           ObjData rd = new ObjData();
+            rd.Values = new List<ObjValue>();
+            foreach (ObjValue value in data)
+            {
+                string StringFormat = DicMeasuresFormat[value.FieldName];
+                if (!value.FieldName.Contains(".Diff") && value.ValueData != null)
+                {
+                    if (StringFormat.Contains("C"))
+                    {
+                        string MinusSign = "";
+                        if (Convert.ToDouble(value.ValueData) < 0) MinusSign = "-";
+                        int NativeValue = decimal.ToInt32(Convert.ToDecimal(value.ValueData));
+                        if (NativeValue < 0) NativeValue = NativeValue * -1;
+                        value.ValueData = string.Format("{0:" + StringFormat + "}", Convert.ToDouble(value.ValueData));
+                        value.ValueData = value.ValueData.Replace(Convert.ToString(NativeValue), MinusSign + Convert.ToString(NativeValue));
+                    }
+                    else
+                        value.ValueData = string.Format("{0:" + StringFormat + "}", Convert.ToDouble(value.ValueData));
+                }
+                else if (value.FieldName.Contains(".Diff") && value.ValueData != null)
+                {
+                    if (value.FieldName.Contains(".DiffAbs"))
+                        value.ValueData = string.Format("{0:" + ConfigurationSettings.AppSettings["Dwh.Data.Service.ConsoleDataServices.Formating.Diff.Abs"].ToString() + "}", Convert.ToDouble(value.ValueData));//"{0:0.##}"
+                    else if (value.FieldName.Contains(".DiffRel"))
+                        value.ValueData = string.Format("{0:" + ConfigurationSettings.AppSettings["Dwh.Data.Service.ConsoleDataServices.Formating.Diff.Rel"].ToString() + "}", Convert.ToDouble(value.ValueData));//"{0:0.##}"
+               }
+                rd.Values.Add(value);
+                rd.ID = ;
+                rd.Name= ;
+            }
+            rd.ID = data.ID;
+            rd.Name = data.Name;
+            data =  rd;
+        }
     }
 }
