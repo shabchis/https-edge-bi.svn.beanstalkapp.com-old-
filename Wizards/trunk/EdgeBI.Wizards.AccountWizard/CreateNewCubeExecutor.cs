@@ -71,6 +71,23 @@ namespace EdgeBI.Wizards.AccountWizard
 
 					foreach (KeyValuePair<string, object> input in collectedData)
 					{
+<<<<<<< .mine
+                        //NEW USERS - 
+                       
+                            if (input.Key.ToUpper() == AccSettNewUser.ToUpper())
+                            {
+                                
+                                Measure measure = measureGroup.Measures.Find(input.Key.Replace("AccountSettings.", string.Empty));
+                                if (measure != null)
+                                {                                                                     //perfix of new useres /regs
+                                    if (input.Value.ToString() != " " && bool.Parse(collectedData["AccountSettings.Cpa1.OnlyCalC"].ToString()) == false)
+                                    {
+                                        if (measureGroup.Measures.FindByName(input.Value.ToString()) == null) //check if their is no measure with the same name
+                                        {
+                                            measure.Name = input.Value.ToString();
+                                        }
+                                    }
+=======
                         //NEW USERS
                         try
                         {
@@ -90,10 +107,54 @@ namespace EdgeBI.Wizards.AccountWizard
                                             measure.Name = input.Value.ToString();
                                         }
                                     }
+>>>>>>> .r192
 
 
                                 }
 
+<<<<<<< .mine
+                            }
+                            //NEW ACTIVE USERS
+                            else if (input.Key.ToUpper() == AccSettNewActiveUser.ToUpper())
+                            {
+                               
+                                Measure measure = measureGroup.Measures.Find(input.Key.Replace("AccountSettings.", string.Empty));
+                                if (measure != null)
+                                {                                                                  //key of new active useres /actives
+                                    if (input.Value.ToString() != " " && bool.Parse(collectedData["AccountSettings.Cpa2.OnlyCalC"].ToString()) == false)
+                                    {
+                                        if (measureGroup.Measures.FindByName(input.Value.ToString()) == null) //check if their is no measure with the same name
+                                        {
+                                            measure.Name = input.Value.ToString();
+                                        }
+                                    }
+
+
+                                }
+
+                            }
+                            //MEASURES CLIENT SPECIFIC
+                            else if (input.Key.StartsWith(AccSettClientSpecific, true, null))
+                            {
+                                
+                                Measure measure = measureGroup.Measures.Find(input.Key.Replace("AccountSettings.", string.Empty));
+                                if (measure != null)
+                                {
+                                    if (measureGroup.Measures.FindByName(input.Value.ToString()) == null) //check if their is no measure with the same name
+                                    {
+                                        measure.Name = input.Value.ToString();
+                                    }
+                                }
+
+                            }
+                        //Copy All Data to the next step Panorama cube
+                            if (!executorData.ContainsKey(input.Key))
+                            {
+                                executorData.Add(input.Key, input.Value);
+                            }
+                       
+
+=======
                             }
                             //NEW ACTIVE USERS
                             else if (input.Key.ToUpper() == AccSettNewActiveUser.ToUpper())
@@ -142,6 +203,7 @@ namespace EdgeBI.Wizards.AccountWizard
                             throw;
                         }
 
+>>>>>>> .r192
 					}
 
 					//Change scope_id
@@ -174,12 +236,39 @@ namespace EdgeBI.Wizards.AccountWizard
 					{
 						foreach (KeyValuePair<string, object> input in collectedData)
 						{
+<<<<<<< .mine
+							if (input.Key.StartsWith(AccSettClientSpecific,true,null ))
+							{		
+                                //Client specifixc x (measureres but this time by name + bo)
+								string patern = string.Format(@"\b{0}\b","BO " + input.Key.Replace("AccountSettings.", string.Empty));
+=======
 							if (input.Key.StartsWith(AccSettClientSpecific,true,null ))
 							{			//TODO: CHECK THIS AGAIN					
 								//command.Text = Regex.Replace(command.Text, input.Key.Replace("AccountSettings.", string.Empty), input.Value.ToString(), RegexOptions.IgnoreCase);
 								string patern = string.Format(@"\b{0}\b","BO " + input.Key.Replace("AccountSettings.", string.Empty));
+>>>>>>> .r192
 								command.Text = Regex.Replace(command.Text, patern, input.Value.ToString(), RegexOptions.IgnoreCase);
 							}
+<<<<<<< .mine
+                            else if (input.Key.ToUpper() == AccSettNewUser.ToUpper()) //cpa 1
+                            {
+                                string patern = string.Format(@"\b{0}\b", "Regs");
+                                command.Text = Regex.Replace(command.Text, patern, input.Value.ToString(), RegexOptions.IgnoreCase);
+
+                            }
+                            else if (input.Key.ToUpper() == AccSettNewActiveUser.ToUpper()) //cpa 2
+                            {
+                                string patern = string.Format(@"\b{0}\b", "Actives");
+                                command.Text = Regex.Replace(command.Text, patern, input.Value.ToString(), RegexOptions.IgnoreCase);
+
+                            }
+                            else if(input.Key.StartsWith("AccountSettings.StringReplacment.")) //string replacement
+                            {
+                                string patern = string.Format(@"\b{0}\b", input.Key.Replace("AccountSettings.StringReplacment.",string.Empty));
+                                command.Text = Regex.Replace(command.Text, patern, input.Value.ToString(), RegexOptions.IgnoreCase);
+
+                            }
+=======
                             else if (input.Key.ToUpper() == AccSettNewUser.ToUpper()) //cpa 1
                             {
                                 string patern = string.Format(@"\b{0}\b", "Regs");
@@ -198,6 +287,7 @@ namespace EdgeBI.Wizards.AccountWizard
                                 command.Text = Regex.Replace(command.Text, patern, input.Value.ToString(), RegexOptions.IgnoreCase);
 
                             }
+>>>>>>> .r192
 						}
 
 					}
@@ -291,10 +381,11 @@ namespace EdgeBI.Wizards.AccountWizard
 					}
 
 
-					SaveExecutorData(executorData);
+					
 
 
 				}
+                SaveExecutorData(executorData);
 			}
 		}
 		private void UpdateOltpDataBASE(Dictionary<string, object> collectedData)

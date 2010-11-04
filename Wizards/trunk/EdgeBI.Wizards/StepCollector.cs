@@ -13,6 +13,23 @@ using System.Data.SqlClient;
 namespace EdgeBI.Wizards
 {
 
+<<<<<<< .mine
+    #region Interfaces
+    /// <summary>
+    /// Step Collector Interface
+    /// </summary>
+    [ServiceContract]
+    public interface IStepCollector
+    {
+        [OperationContract]
+        [NetDataContract]
+        StepCollectResponse Collect(Dictionary<string, object> input);
+        [OperationContract]
+        [NetDataContract]
+        StepStatus GetStepStatus();
+    }
+    #endregion
+=======
     #region Interfaces
     /// <summary>
     /// Step Collector Interface
@@ -25,6 +42,7 @@ namespace EdgeBI.Wizards
         StepCollectResponse Collect(Dictionary<string, object> input);
     }
     #endregion
+>>>>>>> .r192
 
     #region Classes
     /// <summary>
@@ -138,6 +156,24 @@ namespace EdgeBI.Wizards
                 //Thread t = new Thread(new ThreadStart(this.Run));
                 //t.Start();
 
+<<<<<<< .mine
+                if (Instance.Configuration.Options["LastStep"] == "true")
+                {
+                    return new StepCollectResponse() { Errors = null, NextStep = new StepConfiguration() { MetaData = null, StepName = Instance.Configuration.Name }, Result = StepResult.Done };
+                }
+                else
+                {
+                    return new StepCollectResponse() { Errors = null, NextStep = new StepConfiguration() { MetaData = null, StepName = Instance.Configuration.Name }, Result = StepResult.Next };
+                }
+            }
+        }
+        public StepStatus GetStepStatus()
+        {
+            if (this.State != ServiceState.Waiting)
+                return StepStatus.NotReady;
+            else
+                return StepStatus.Ready;
+=======
                 if (Instance.Configuration.Options["LastStep"] == "true")
                 {
                     return new StepCollectResponse() { Errors = null, NextStep = new StepConfiguration() { MetaData = null, StepName = Instance.Configuration.Name }, Result = StepResult.Done };
@@ -149,7 +185,10 @@ namespace EdgeBI.Wizards
             }
         }
         #endregion
+>>>>>>> .r192
 
+<<<<<<< .mine
+=======
         #region Protected Methods
         /// <summary>
         /// Start new wcf session
@@ -158,9 +197,36 @@ namespace EdgeBI.Wizards
         {
             string sessionID = WizardSession.SessionID.ToString();
             StepCollectorHost = new ServiceHost(this, new Uri(String.Format("net.tcp://localhost:3636/wizard/step/{0}", sessionID)));
+>>>>>>> .r192
 
+<<<<<<< .mine
+        }
+        #endregion
+=======
             StepCollectorHost.Open();
+>>>>>>> .r192
 
+<<<<<<< .mine
+        #region Protected Methods
+        /// <summary>
+        /// Start new wcf session
+        /// </summary>
+        protected override void OnInit()
+        {
+            string sessionID = WizardSession.SessionID.ToString();
+            StepCollectorHost = new ServiceHost(this, new Uri(String.Format("net.tcp://localhost:3636/wizard/step/{0}", sessionID)));
+            
+            StepCollectorHost.Open();
+=======
+        }
+        protected override ServiceOutcome DoWork()
+        {
+            // We still haven't gotten a proper Collect()
+            if (ValidatedInput == null)
+                return ServiceOutcome.Unspecified;
+>>>>>>> .r192
+
+<<<<<<< .mine
         }
         protected override ServiceOutcome DoWork()
         {
@@ -199,6 +265,39 @@ namespace EdgeBI.Wizards
                 {
                     using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
 																			(WizardID,SessionID,ServiceInstanceID,StepName,Field,Value,StepIndex)
+=======
+            // Now we can store the input in the db and report success
+            return ServiceOutcome.Success;
+        }
+        protected abstract Dictionary<string, string> Validate(Dictionary<string, object> inputValues);
+        protected virtual void Prepare()
+        {
+            using (DataManager.Current.OpenConnection())
+            {
+                int sessionID = WizardSession.SessionID;
+                int wizardID = WizardSession.WizardID;
+                int? stepIndex;
+                //Get the last step index for current session
+                using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT Max(StepIndex) FROM Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
+                                                                        WHERE SessionID=@SessionID:Int AND ServiceInstanceID=@ServiceInstanceID:Int"))
+                {
+                    sqlCommand.Parameters["@SessionID"].Value = sessionID;
+                    sqlCommand.Parameters["@ServiceInstanceID"].Value = Instance.ParentInstance.ParentInstance.InstanceID;
+
+                    stepIndex = sqlCommand.ExecuteScalar() as int?;
+
+                }
+                if (stepIndex == null)
+                    stepIndex = 1;
+                else
+                    stepIndex = stepIndex+1;
+                
+
+                foreach (KeyValuePair<string, object> input in ValidatedInput)
+                {
+                    using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
+																			(WizardID,SessionID,ServiceInstanceID,StepName,Field,Value,StepIndex)
+>>>>>>> .r192
 																			Values 
 																			(@WizardID:Int,
 																			@SessionID:Int,
