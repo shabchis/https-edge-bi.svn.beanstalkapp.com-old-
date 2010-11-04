@@ -205,7 +205,8 @@ namespace EdgeBI.Wizards.Utils.WizardTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Codebase-2010\\Applications\\EdgeServiceHost\\bin\\Debug\\EdgeServiceHost.exe")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\BIadmin\\Desktop\\Codebase-2010\\Applications\\EdgeServiceHost\\bin\\Debug\\Edg" +
+            "eServiceHost.exe")]
         public string ServiceHostPath {
             get {
                 return ((string)(this["ServiceHostPath"]));

@@ -102,7 +102,7 @@ namespace EdgeBI.Wizards.AccountWizard
 			
 			
 			tNewTask.Properties["ProcessingCommands"].SetValue(tNewTask, procCmd);
-
+           
 			tNewTask.Name ="BO"+ collectedData["AccountSettings.CubeName"].ToString();
 			package.PrecedenceConstraints.Add(fromTask, newTask);
 
