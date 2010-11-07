@@ -133,7 +133,6 @@
 							</select>
 							</div>
 						</div>
-						
 						<div id="innertables2" class="factTableWrapper">
 							<div id="table3" class="factTable">
 								<h3>Top Positive</h3>
@@ -155,6 +154,7 @@
 							</div>
 							<div class="error1"><h4>No data found for the selection criteria.</h4></div>
 						</div>
+						
 					</div>
 				</div>
 			
@@ -178,7 +178,7 @@
 						
 						<div id="innertables3" class="factTableWrapper">
 							<div id="table5" class="factTable">
-								<h3>Top Positive</h3>
+								<h3>&nbsp</h3>
 								<table id="spending">
 									<tr id="tableheader5">
 										<th class="campaign">Campaign</th>
@@ -196,6 +196,7 @@
 				</div>
 			
 		</div>
+	</div>
 	<!--- <div class="layoutRow">
 						
 			
@@ -260,6 +261,17 @@
 	var bar = $("#weekagograph").height();
 $(function(){	
 
+
+$('#combo').ajaxStart(function(){
+$(this).attr('disabled',true);
+
+
+})
+$('#combo').ajaxStop(function(){
+$(this).removeAttr('disabled');
+
+
+})
 var title = $('#TopSpendCombo option:selected').text();
 	 $('th.title').text(title);
 	
@@ -285,8 +297,9 @@ var title = $('#TopSpendCombo option:selected').text();
 	// LoadTopCampaigns();
 	
 	changeCampaignPerforamceCombo();
-	 graphcombo();
+		  graphcombo();
 	 LoadGraph(account_id,startDate,endDate,measure,measureText);
+
 	 // ChangeYesterdayMatch();
 	// changeCampaignPerforamceCombo();
 		$("#combo").change(function(){
@@ -321,8 +334,7 @@ var title = $('#TopSpendCombo option:selected').text();
 		 var sectionTime = $("#second option:selected").val();
 		 
 		// getSectionTime();
-		// LoadGraph(startDate,endDate,measure);
-	
+	 LoadGraph(account_id,startDate,endDate,measure,measureText);
 		 })		
 		 
  
@@ -331,11 +343,11 @@ var title = $('#TopSpendCombo option:selected').text();
 		// LoadMap(startDate,endDate);
 		LoadTopCampaigns();
 		 LoadWorstCampaigns();
-		
 		 ChangeYesterdayMatch();
 		 topSpenders();
-		 
-		// LoadGraph(startDate,endDate,measure,startTimeFrame,endTimeFrame);
+		 graphcombo();
+	   	LoadGraph(account_id,startDate,endDate,measure,measureText);
+		
 
 
 })
@@ -473,6 +485,7 @@ function changeCampaignPerforamceCombo(){
 			 //console.log("http://testing/Dashboard/php/colsettings.php?measure="+measureText+"&endDate="+endDate+"&startDate="+startDate+"");
                var so = new SWFObject("charts/amcolumn/amcolumn.swf", "amcolumn", "100%", "300", "8", "#FFFFFF");
                so.addVariable("path", "charts/amcolumn/");
+
                // so.addVariable("settings_file", encodeURIComponent("amcolumn/amcolumn_settings.xml"));        // you can set two or more different settings files here (separated by commas)
                so.addVariable("settings_file", encodeURIComponent("php/colsettings.php?measure="+measureText+"&endDate="+endDate+"&startDate="+startDate+""));                          
 			 so.addVariable("data_file", encodeURIComponent("php/amcolumn_data.php?account_id="+account_id+"&endDate="+endDate+"&measure="+measure+"&startdate="+startDate+"&global="+globalMeasure+""));
@@ -546,7 +559,7 @@ function changeCampaignPerforamceCombo(){
 						$(xml).find('campaigns').each(function(){
 							var total = $(this).find('total').text();
 							var totaldiff = $(this).find('totaldiff').text();
-							$('#tableheader').after('<tr id="total1"><td>Total</td><td>'+total+'</td><td class="precent">'+totaldiff+'</td></tr>');
+							$('#tableheader').after('<tr id="total1"><td>Account Total</td><td>'+total+'</td><td class="precent">'+totaldiff+'</td></tr>');
 						});
 				
 			$(xml).find('campaign').each(function(){
@@ -596,7 +609,7 @@ function changeCampaignPerforamceCombo(){
 					$(xml).find('campaigns').each(function(){
 							var total = $(this).find('total').text();
 								var totaldiff = $(this).find('totaldiff').text();
-							$('#tableheader2').after('<tr id="total2"><td>Total</td><td>'+total+'</td><td class="precent">'+totaldiff+'</td></tr>');
+							$('#tableheader2').after('<tr id="total2"><td>Account Total</td><td>'+total+'</td><td class="precent">'+totaldiff+'</td></tr>');
 						});
 			$(xml).find('campaign').each(function(){
 				var name = $(this).find('name').text();
@@ -657,7 +670,7 @@ function changeCampaignPerforamceCombo(){
 			$(xml).find('campaigns').each(function(){
 							var total = $(this).find('total').text();
 								var totaldiff = $(this).find('totaldiff').text();
-							$('#tableheader3').after('<tr id="total3"><td>Total</td><td >'+total+'</td><td >'+totaldiff+'</td></tr>');
+							$('#tableheader3').after('<tr id="total3"><td>Account Total</td><td >'+total+'</td><td >'+totaldiff+'</td></tr>');
 						});
 				$(xml).find('campaign').each(function(){
 					var name = $(this).find('name').text();
@@ -693,7 +706,7 @@ function changeCampaignPerforamceCombo(){
 			}
 		});
 		
-$.ajax({
+		$.ajax({
 			type: "GET",
 			url: "php/worsecampaign.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=DESC&global="+globalMeasure+"",
 			dataType: "xml",
@@ -712,7 +725,7 @@ $.ajax({
 			$(xml).find('campaigns').each(function(){
 							var total = $(this).find('total').text();
 								var totaldiff = $(this).find('totaldiff').text();
-							$('#tableheader4').after('<tr id="total4"><td>Total</td><td>'+total+'</td><td>'+totaldiff+'</td></tr>');
+							$('#tableheader4').after('<tr id="total4"><td>Account Total</td><td>'+total+'</td><td>'+totaldiff+'</td></tr>');
 						});
 				$(xml).find('campaign').each(function(){
 					var name = $(this).find('name').text();
@@ -759,7 +772,7 @@ $.ajax({
 			 $("#innertables3").append('<div class="loader3"><img src="images/loading_bar7.gif"></img></div>');
 	$('tr.topspend').remove();
 	$('#total5').remove();
-	//console.log(startDate);
+
 		$.ajax({
 			type: "GET",
 			url: "php/topSpenders.php?account_id="+account_id+"&endDate="+endDate+"&startdate=1&measure="+measure+"&orderby=DESC",
@@ -788,7 +801,7 @@ $.ajax({
 								var totalcpa = $(this).find('totalcpa').text();
 								var totalacq= $(this).find('totalacq').text();
 								var totalroi = $(this).find('totalroi').text();
-							$('#tableheader5').after('<tr id="total5"><td>Total</td><td>'+total+'</td><td>'+totalcpa+'</td><td>'+totalacq+'</td><td class="roi>'+totalroi+'</td></tr>');
+							$('#tableheader5').after('<tr id="total5"><td>Account Total</td><td>'+total+'</td><td>'+totalcpa+'</td><td>'+totalacq+'</td><td class="roi">'+totalroi+'</td></tr>');
 						});
 			
 				$(xml).find('campaign').each(function(){
