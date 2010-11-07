@@ -1,5 +1,5 @@
 <?php  header("Content-Type:text/xml"); 
-	$startdate = $_GET['startdate']; 
+ $startdate = $_GET['startdate']; 
 	$measureId = $_GET['measure'];
 	$endDate = $_GET['endDate'];
 	$orderby = $_GET['orderby'];
@@ -13,6 +13,7 @@ $before = array('(',')');
 <?php
  $url = 'http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=5&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
  $totalurl = 'http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=account&top=5&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
+ // $totalurl = 'https://console.edge-bi.com/Seperia/DataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=account&top=5&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
  // $url = 'https://console.edge-bi.com/Seperia/DataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=10&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
 
  // echo $url;
@@ -56,14 +57,12 @@ else {
 	$diff = "";
 }
 
-if (empty($name)){
-$name = "";
-}
+
 if(strlen($name) > 20){
-	$name = substr($value->Name,0,17)."...";
+	$name = substr($value->Name,0,18)."...";
 }
 else {
-$name = $name = $value->Name;
+$name = $value->Name;
 }
 
 	echo '<campaign>';
