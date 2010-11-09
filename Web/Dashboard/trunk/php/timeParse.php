@@ -40,24 +40,23 @@ switch ($startdate){
 		$endDateName2 =date("Ymd",mktime(0,0,0,date("m"),date("d")-date("d"),date("Y")));
 		break;
 	case 6: 
-	  $startDateName1 =date("Ymd",strtotime('-2 week monday'));
-	  $startDateName2 = date("Ymd",strtotime('-1 week sunday'));
+	
+	 
 	  if(strtotime('today') == strtotime('monday'))
 	  {
-	  $endDateName1	= date("Ymd",strtotime('today'));
+	    $startDateName1 =date("Ymd",strtotime('-2 weeks'));
+		 $startDateName2 = date("Ymd",strtotime('-1 week last sunday'));
+	  $endDateName1	= date("Ymd",strtotime('-7 days'));
+	   $endDateName2 = date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y")));
 	  }
 	  else
 	  {
-	  $endDateName1 = date("Ymd",strtotime('last monday'));
+	    $startDateName1 =date("Ymd",strtotime('-1 week last monday'));
+		 $startDateName2 = date("Ymd",strtotime('last sunday'));
+		$endDateName1 = date("Ymd",strtotime('last monday'));
+		$endDateName2 = date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y")));
 	  }
-	  if (strtotime('today') <= strtotime('monday'))
-	  {
-		$endDateName2 = date("Ymd",strtotime('today'));
-	  }
-	  else
-	  {
-	  $endDateName2 = date("Ymd", mktime(0,0,0,date("m"),date("d")-1,date("Y")));
-	  }
+	 
   break;
 	 case 7: 
 	  if (strtotime('today') == strtotime('monday')){
