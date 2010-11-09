@@ -6,9 +6,6 @@
 	$account_id = $_GET['account_id'];
 	$global = $_GET['global'];
 	include ('timeParse.php');
-
-
-
  $url = 'http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=5&dataSort=value1&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'';
  $totalurl = 'http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=account&top=5&dataSort=value1&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'';
  // $url = 'https://console.edge-bi.com/Seperia/DataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=10&dataSort=value1&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'';
@@ -30,11 +27,8 @@
 $totalstr = file_get_contents($totalurl);
 
 $totalaxml =new SimpleXMLElement($totalstr);
-	
 	$namespaces = $totalaxml ->getNamespaces();
 	$totalaxml ->registerXPathNamespace('a', $namespaces['']); 
-	
-	
 	$total = $totalaxml->xpath('//a:ReturnData//a:clsvalue[a:FieldName="VALUE1"]/a:ValueData');  
 	$totaldiff =  $totalaxml->xpath('//a:ReturnData//a:clsvalue[a:FieldName="Diff2"]/a:ValueData');  
 		
@@ -86,8 +80,6 @@ if(strlen($totaldiff[0]) > 0){
 		}
 	echo '<total>'.$total[0].'</total>';
 	echo'<totaldiff>'.$totaldiff[0].'</totaldiff>';
-	echo	'</campaigns>';
+	echo'</campaigns>';
 	
-
-
 		?>

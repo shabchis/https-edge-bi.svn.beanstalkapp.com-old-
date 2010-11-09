@@ -174,7 +174,7 @@
 						<div class="timeframe">
 							<span class="timevalue">
 							</div>
-						</div>
+					
 						
 						<div id="innertables3" class="factTableWrapper">
 							<div id="table5" class="factTable">
@@ -192,6 +192,7 @@
 							
 							<div class="error3"><h4>No data found for the selection criteria.</h4></div>
 						</div>
+							</div>
 					</div>
 				</div>
 			
@@ -250,18 +251,11 @@
 	var globalMeasure = '17';
 	// var globalMeasure2 = '1';
 	
-	var startDateText = $("#yesterdayCombo option:selected").text();
-	var startDate = $("#yesterdayCombo option:selected").val();
-	var endDate = $("#combo option:selected").val();
-	var measure =  $("#GraphCombo option:selected").val();
-	var measureText = $("#GraphCombo option:selected").text();
-	var startTimeFrame = $("combo option:selected").text();
-	var endTimeFrame = $("second option:selected").text();
-	
-	var bar = $("#weekagograph").height();
+
+
 $(function(){	
 
-
+//Disable the main time combobox  when loading new content
 $('#combo').ajaxStart(function(){
 $(this).attr('disabled',true);
 
@@ -272,6 +266,7 @@ $(this).removeAttr('disabled');
 
 
 })
+
 var title = $('#TopSpendCombo option:selected').text();
 	 $('th.title').text(title);
 	
@@ -298,16 +293,11 @@ var title = $('#TopSpendCombo option:selected').text();
 	
 	changeCampaignPerforamceCombo();
 		  graphcombo();
-	 LoadGraph(account_id,startDate,endDate,measure,measureText);
+	 LoadGraph();
 
 	 // ChangeYesterdayMatch();
 	// changeCampaignPerforamceCombo();
 		$("#combo").change(function(){
-		
-		// var endDate = $("#combo option:selected").val()
-			// var text = $("#combo option:selected").text();
-			// var selectValue = $("#combo option:selected").val();
-			// var yesterday = $("<select id='yesterdayCombo'><option value = '1'>Previous Day</option><option value ='2'>7 days ago</option></select>");
 				var endDate = $("#combo option:selected").val();
 				// startDate = "Previous Day";
 			$('span.timevalue').empty();
@@ -320,22 +310,17 @@ var title = $('#TopSpendCombo option:selected').text();
 				
 	 			// getMainTime();
 				// LoadMap(startDate,endDate);
-				LoadGraph(account_id,startDate,endDate,measure,measureText);
+				LoadGraph();
 			
 				// ChangeYesterdayMatch();
-				LoadTopCampaigns(account_id,startDate);
-				LoadWorstCampaigns(account_id,startDate);
+				LoadTopCampaigns();
+				LoadWorstCampaigns();
 				 topSpenders();
 
 
 		})
 
-	 $("select#second").change(function(){
-		 var sectionTime = $("#second option:selected").val();
-		 
-		// getSectionTime();
-	 LoadGraph(account_id,startDate,endDate,measure,measureText);
-		 })		
+	 	
 		 
  
 		 // getMainTime();
@@ -346,14 +331,16 @@ var title = $('#TopSpendCombo option:selected').text();
 		 ChangeYesterdayMatch();
 		 topSpenders();
 		 graphcombo();
-	   	LoadGraph(account_id,startDate,endDate,measure,measureText);
+	   	LoadGraph();
 		
 
 
 })
+// the function responsable to change the content by changing the measure combo
+
 function changeCampaignPerforamceCombo(){
 	$("#TopCombo").change(function(){
-		LoadTopCampaigns(account_id);
+		LoadTopCampaigns();
 		
 	})
 	
@@ -366,15 +353,12 @@ function changeCampaignPerforamceCombo(){
 	$("#trendcahnges #flcamp").change(function(){
 			measure = $("#flcamp option:selected").val();
 			
-			LoadWorstCampaigns(account_id);
+			LoadWorstCampaigns();
 	})
 	topSpendersMeasures();
 	
-	// $("#yesterdayCombo").change(function(){
-			// startDate = $("#yesterdayCombo option:selected").val();
-			
-	// })
-	
+
+	//change the titles of the dates when changing the time combo 
 	function ChangeStatus(){
 	
 	  $('span.timevalue').empty();
@@ -427,6 +411,8 @@ function changeCampaignPerforamceCombo(){
 				}
 	}
 	
+	
+	//load the content by changing the yesterday combo 
 	function ChangeYesterdayMatch(){
 		$("#barPanel #yesterdayCombo").change(function(){
 		startDate = $("#barPanel #yesterdayCombo option:selected").val();
@@ -446,7 +432,7 @@ function changeCampaignPerforamceCombo(){
 	$("#atten #yesterdayCombo").change(function(){
 	startDate = $("#atten #yesterdayCombo option:selected").val();
 	
-		LoadTopCampaigns(startDate);
+		LoadTopCampaigns();
 	
 	})
 	
@@ -471,15 +457,22 @@ function changeCampaignPerforamceCombo(){
 		$("#GraphCombo").change(function(){
 			 measure =  $("#GraphCombo option:selected").val();
 			 measureText = $("#GraphCombo option:selected").text();
-			LoadGraph(account_id,startDate,endDate,measure,measureText);
+			LoadGraph();
 			
 			})
 			
 			
 			}
 			
-    function LoadGraph(account_id,startDate,endDate,measure,measureText){
-		startDate = $("#barPanel #yesterdayCombo").val(); 
+    function LoadGraph(){
+		
+	var startDate = $("#yesterdayCombo option:selected").val();
+	var endDate = $("#combo option:selected").val();
+	var measure =  $("#GraphCombo option:selected").val();
+	var measureText = $("#GraphCombo option:selected").text();
+	var startTimeFrame = $("combo option:selected").text();
+	var endTimeFrame = $("second option:selected").text();
+	
 	// console.log(account_id);
 				 // console.log('http://testing/Dashboard/php/amcolumn_data.php?account_id='+account_id+'&endDate='+endDate+'&measure='+measure+'&startdate='+startDate+'&global='+globalMeasure+'');
 			 //console.log("http://testing/Dashboard/php/colsettings.php?measure="+measureText+"&endDate="+endDate+"&startDate="+startDate+"");
@@ -734,8 +727,7 @@ function changeCampaignPerforamceCombo(){
 					var number = $(this).find('diff_number').text();
 						var	percent = $(this).find('percent').text();
 						var fullname = $(this).find('fullname').text();
-					// $('<tr class="worstcpa"><td>'+name+'</td><td class="color">'+cpa+'&nbsp &nbsp(<span class="precent">'+diff+'</span>%)</td></tr>').appendTo('#Worse');
-					// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class ="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#Worse');
+					
 						$('<tr class="worstcpa"><td class="name" title="'+fullname+'">'+name+'</td><td class="middle">'+diff+'</td><td>'+cpa+'</td></tr>').appendTo('#upward');
 		 	
 				$("span.precent:contains(-)").css('color','red').parent(".con").css('color','red');
@@ -759,7 +751,6 @@ function changeCampaignPerforamceCombo(){
 			
 			
 		});
-		
 		
 		
 		}
@@ -788,13 +779,7 @@ function changeCampaignPerforamceCombo(){
 					 if (xml.status == 500) {
 					$(".error3 h4").html('Data failed to load');
 					}
-	
-		
-		
-		
-			//console.log(xml.status);
-			},
-		
+				},
 			success: function(xml) {
 			$(xml).find('campaigns').each(function(){
 							var total = $(this).find('total').text();
@@ -858,31 +843,7 @@ function changeCampaignPerforamceCombo(){
 		});
 	}
 	
-		<?php /*
-	function LoadMeasures(){
-			$('#GaugeCombo,#GraphCombo,#MapCombo,#TopCombo,#TopSpendCombo').empty();
-		
-		$.ajax({
-			type: "GET",
-			url: "http://qa/ConsoleDataServices/service.svc/ConsoleDataServices/Measures?AccountID=''",
-
-		
-			success: function(xml) {
-		
-				$(xml).find('Measure').each(function(){
-					var name = $(this).find('DisplayName').text();
-					var value = $(this).find('MeasureID').text();
-				
-					
-					$('<option value="'+value+'">'+name+'</option>').appendTo('#TopCombo,#GraphCombo,#MapCombo,#GaugeCombo,#TopSpendCombo');
-				
-					
-					
-				});
-			}
-		});
-		
-		}*/?>
+	
 		
 	</script>
 
