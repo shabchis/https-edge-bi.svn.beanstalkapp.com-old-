@@ -286,13 +286,12 @@ var title = $('#TopSpendCombo option:selected').text();
 	 // $('.equal').empty();
 	
 	ChangeStatus();
-	
-	
-		// changeCampaignPerforamceCombo();
-	// LoadTopCampaigns();
-	
-	changeCampaignPerforamceCombo();
-		  graphcombo();
+	LoadTopCampaigns();
+	LoadWorstCampaigns();
+	topSpenders();
+	LoadGraph();
+	ChangeYesterdayMatch();
+	loadByMeasures();
 	 LoadGraph();
 
 	 // ChangeYesterdayMatch();
@@ -302,13 +301,13 @@ var title = $('#TopSpendCombo option:selected').text();
 				// startDate = "Previous Day";
 			$('span.timevalue').empty();
 			 $('.equal').empty();
-			// $('.equal').hide();
+
 				
 				ChangeStatus();
 	 			ChangeYesterdayMatch();
 				graphcombo();
 				
-	 			// getMainTime();
+
 				// LoadMap(startDate,endDate);
 				LoadGraph();
 			
@@ -323,39 +322,45 @@ var title = $('#TopSpendCombo option:selected').text();
 	 	
 		 
  
-		 // getMainTime();
-		 // getSectionTime();
-		// LoadMap(startDate,endDate);
-		LoadTopCampaigns();
-		 LoadWorstCampaigns();
-		 ChangeYesterdayMatch();
-		 topSpenders();
-		 graphcombo();
-	   	LoadGraph();
 		
-
 
 })
 // the function responsable to change the content by changing the measure combo
 
-function changeCampaignPerforamceCombo(){
+function loadByMeasures(){
 	$("#TopCombo").change(function(){
 		LoadTopCampaigns();
 		
 	})
-	
-	}
-	ChangeYesterdayMatch();
-	$("#MapCombo").change(function(){
+		$("#GraphCombo").change(function(){
+			 measure =  $("#GraphCombo option:selected").val();
+			 measureText = $("#GraphCombo option:selected").text();
+			LoadGraph();
+			
+			})
+			
+	$("#flcamp").change(function(){
+		measure = $("#flcamp option:selected").val();
+		LoadWorstCampaigns();
+		})
+		
+		$("#MapCombo").change(function(){
 		LoadMap(startDate,endDate);
 	})
 	
-	$("#trendcahnges #flcamp").change(function(){
-			measure = $("#flcamp option:selected").val();
-			
-			LoadWorstCampaigns();
-	})
-	topSpendersMeasures();
+	$("#TopSpendCombo").change(function(){
+		measure = $("#TopSpendCombo option:selected").val();
+			 topSpenders();
+		})
+	
+
+	}
+	
+
+	
+	
+	
+
 	
 
 	//change the titles of the dates when changing the time combo 
@@ -363,11 +368,11 @@ function changeCampaignPerforamceCombo(){
 	
 	  $('span.timevalue').empty();
 			 $('.equal').empty();
-			// $('.equal').show();
+			
 			var yesterday = $("<select id='yesterdayCombo'><option value = '1'>Previous Day</option><option value ='2'>7 days ago</option></select>");
 			 var parent = yesterday.parent().parent().parent().attr('id');
 			
-			// console.log(parent);
+
 	var selectValue = $("#combo option:selected").val();
 			
 				
@@ -416,7 +421,7 @@ function changeCampaignPerforamceCombo(){
 	function ChangeYesterdayMatch(){
 		$("#barPanel #yesterdayCombo").change(function(){
 		startDate = $("#barPanel #yesterdayCombo option:selected").val();
-		LoadGraph(account_id,startDate,endDate,measure,measureText);
+		LoadGraph();
 		
 		
 		
@@ -438,40 +443,18 @@ function changeCampaignPerforamceCombo(){
 	
 	
 		}
-	function fluncuatingMeasure(){
-		$("#flcamp").change(function(){
-		measure = $("#flcamp option:selected").val();
-		LoadWorstCampaigns();
-		})
-	}
+
 	
-	function topSpendersMeasures(){
-	$("#TopSpendCombo").change(function(){
-	 
-	topSpenders();
 	
-	})
-	
-	}
-	function graphcombo() {
-		$("#GraphCombo").change(function(){
-			 measure =  $("#GraphCombo option:selected").val();
-			 measureText = $("#GraphCombo option:selected").text();
-			LoadGraph();
-			
-			})
-			
-			
-			}
-			
+			/* Loads the Channel Performance graph */
     function LoadGraph(){
 		
-	var startDate = $("#yesterdayCombo option:selected").val();
-	var endDate = $("#combo option:selected").val();
-	var measure =  $("#GraphCombo option:selected").val();
-	var measureText = $("#GraphCombo option:selected").text();
-	var startTimeFrame = $("combo option:selected").text();
-	var endTimeFrame = $("second option:selected").text();
+		var startDate = $("#yesterdayCombo option:selected").val();
+		var endDate = $("#combo option:selected").val();
+		var measure =  $("#GraphCombo option:selected").val();
+		var measureText = $("#GraphCombo option:selected").text();
+		var startTimeFrame = $("combo option:selected").text();
+		var endTimeFrame = $("second option:selected").text();
 	
 	// console.log(account_id);
 				 // console.log('http://testing/Dashboard/php/amcolumn_data.php?account_id='+account_id+'&endDate='+endDate+'&measure='+measure+'&startdate='+startDate+'&global='+globalMeasure+'');
@@ -495,7 +478,7 @@ function changeCampaignPerforamceCombo(){
                so.write("weekagograph");
 			  
     }   
-
+/* Loads the map  */
 	function LoadMap(startdate,endDate){
 		var so = new SWFObject("charts/ammap/ammap.swf", "ammap", "100%", "368px", "8", "#e8f6f7");
 		so.addVariable("path", "charts/ammap/");
@@ -512,7 +495,9 @@ function changeCampaignPerforamceCombo(){
         so.write("map1");
 
 		}
-	function LoadTopCampaigns(startDate){
+		
+		/* Load the Campaign Performance tables  */
+	function LoadTopCampaigns(){
 	$("#table2,#table1").hide();
 	$(".loader1").remove();
 	$(".error").hide();
@@ -524,44 +509,39 @@ function changeCampaignPerforamceCombo(){
 	//console.log(startDate);
 			measure = $("#TopCombo option:selected").val();
 			endDate = $("#combo option:selected").val();
-			
+			startDate = $("#atten #yesterdayCombo option:selected").val();
 			$("#table2,#table1").hide();
 			 $("#innertables").append('<div class="loader1"><img src="images/loading_bar7.gif"></img></div>');
-			
-		startDate = $("#atten #yesterdayCombo option:selected").val();
-		
 			$.ajax({
-	
+				type: "GET",
+				url: "php/campaignPerformance.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=DESC&global="+globalMeasure+"",
+				dataType: "xml",
+				error: function (xml) {
 		
-		type: "GET",
-		url: "php/campaignPerformance.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=DESC&global="+globalMeasure+"",
-		dataType: "xml",
-		error: function (xml) {
-		
-				$(".loader1").hide();
-				$(".error").show();
-				$("#table2,#table1").hide();
-				
-			if (xml.status == 500){
-		
-			$(".error h4").html('Data failed to load');
-			}
+					$(".loader1").hide();
+					$(".error").show();
+					$("#table2,#table1").hide();
+					
+				if (xml.status == 500){
 			
-			},
-		success: function(xml) {
-						$(xml).find('campaigns').each(function(){
-							var total = $(this).find('total').text();
-							var totaldiff = $(this).find('totaldiff').text();
-							$('#tableheader').after('<tr id="total1"><td>Account Total</td><td>'+total+'</td><td class="precent">'+totaldiff+'</td></tr>');
-						});
+				$(".error h4").html('Data failed to load');
+				}
 				
-			$(xml).find('campaign').each(function(){
-				var name = $(this).find('name').text();
-				var cpa = $(this).find('value').text();
-				var diff = $(this).find('diff').text();
-			var fullname = $(this).find('fullname').text();	
-		
-			
+				},
+				success: function(xml) {
+							$(xml).find('campaigns').each(function(){
+								var total = $(this).find('total').text();
+								var totaldiff = $(this).find('totaldiff').text();
+								$('#tableheader').after('<tr id="total1"><td>Account Total</td><td>'+total+'</td><td class="precent">'+totaldiff+'</td></tr>');
+							});
+				
+							$(xml).find('campaign').each(function(){
+								var name = $(this).find('name').text();
+								var cpa = $(this).find('value').text();
+								var diff = $(this).find('diff').text();
+							var fullname = $(this).find('fullname').text();	
+						
+							
 				
 					$('<tr class="topcpa"><td class="name" title="'+fullname+'">'+name+'</td><td class="middle">'+cpa+'</td><td class="last"><span class="con"><span class="precent">'+diff+'</span></span></td></tr>').appendTo('#top');
 				// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp('+number+') </td></tr>').appendTo('#upward');
@@ -604,12 +584,12 @@ function changeCampaignPerforamceCombo(){
 								var totaldiff = $(this).find('totaldiff').text();
 							$('#tableheader2').after('<tr id="total2"><td>Account Total</td><td>'+total+'</td><td class="precent">'+totaldiff+'</td></tr>');
 						});
-			$(xml).find('campaign').each(function(){
-				var name = $(this).find('name').text();
-				var cpa = $(this).find('value').text();
-				var diff = $(this).find('diff').text();
-				var fullname = $(this).find('fullname').text();
-			
+				$(xml).find('campaign').each(function(){
+					var name = $(this).find('name').text();
+					var cpa = $(this).find('value').text();
+					var diff = $(this).find('diff').text();
+					var fullname = $(this).find('fullname').text();
+				
 				
 					$('<tr class="topcpa"><td title="'+fullname+'">'+name+'</td><td class="middle">'+cpa+'</td><td class="last"><span class="con"><span class="precent">'+diff+'</span></span></td></tr>').appendTo('#Worse');
 					// $('<div class="htmltooltip">RSS stands for Really Simple Syndication, and is a type of XML file format.</div>').appendTo("#table1");
@@ -630,7 +610,7 @@ function changeCampaignPerforamceCombo(){
 	});
 		
 	}
-
+		/* Loads the Fluctuating Campaigns tables */
 	function LoadWorstCampaigns(){
 	$(".error1").hide();
 		$('tr#total3').remove();
@@ -716,8 +696,8 @@ function changeCampaignPerforamceCombo(){
 			},
 			success: function(xml) {
 			$(xml).find('campaigns').each(function(){
-							var total = $(this).find('total').text();
-								var totaldiff = $(this).find('totaldiff').text();
+					var total = $(this).find('total').text();
+						var totaldiff = $(this).find('totaldiff').text();
 							$('#tableheader4').after('<tr id="total4"><td>Account Total</td><td>'+total+'</td><td>'+totaldiff+'</td></tr>');
 						});
 				$(xml).find('campaign').each(function(){
@@ -754,6 +734,8 @@ function changeCampaignPerforamceCombo(){
 		
 		
 		}
+		
+		/* Loads the top spenders tables */
 	function topSpenders(){
 		startDate = $("#TopSpenders #yesterdayCombo option:selected").val();
 		measure = $("#TopSpendCombo option:selected").val();
@@ -800,8 +782,7 @@ function changeCampaignPerforamceCombo(){
 						
 					var fullname = $(this).find('fullname').text();
 				
-					// $('<tr class="worstcpa"><td>'+name+'</td><td class="color">'+cpa+'&nbsp &nbsp(<span class="precent">'+diff+'</span>%)</td></tr>').appendTo('#Worse');
-					// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'</td><td class ="last"><span class="con">(<span class="precent">'+diff+'</span>%)</span></td></tr>').appendTo('#Worse');
+				
 						$('<tr class="topspend"><td title="'+fullname+'">'+name+'</td><td class="middle">'+cost+'</td><td>'+cpa+'</td><td>'+acq+'</td><td class="roi">'+roi+'</td></td></tr>').appendTo('#spending');
 		 	
 			
@@ -824,8 +805,11 @@ function changeCampaignPerforamceCombo(){
 			
 			
 			},
+			
+			
 			complete:function(xml) {
-				$("div.loader3").fadeOut(400);
+				$("div.loader3").fadeOut(400); //fade out the loading gif
+				//colors the ROI by number
 				$('.roi').each(function(){
 				var text =  $(this).text();
 				var num = parseFloat(text);
