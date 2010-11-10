@@ -30,35 +30,35 @@ namespace EdgeBI.Web.DataServices
             Dictionary<int, Measure> measuresList
             )
         {
-			// TODO: Ronen - you need to determine what is the mode without getting a parameter
 			Mode mode = GetMode(dataSort);
 
             Measures = new List<Measure>(measuresList.Values);
             List<ObjData> Data = new List<ObjData>();
-            int measureIndex = 0 ,RangeIndex = 0;
+            int measureIndex = 1 ,RangeIndex = 1;
             string Sql = null, IdsList = null;
             foreach (DayCodeRange dc in ranges)
             {
-                RangeIndex = 0;
+                RangeIndex = 1;
                 string AggregateFunction = null , HavingString = null;
-                foreach(Measure m in measuresList.Values)
+                foreach (MeasureRef mf in measures)
                 {
                     string lAggregateFunction = null , lHavingString = null;
+                    Measure m = measuresList[mf.MeasureID];
                     GetFieldsSQL(m,measureIndex,RangeIndex,out lAggregateFunction,out lHavingString);
                     AggregateFunction += "," + lAggregateFunction;
                     HavingString += "," + lHavingString;
-                    measureIndex++;
                     DicMeasuresFormat.Add("M" + measureIndex + ".R" + RangeIndex + ".Value", m.StringFormat);
+                    measureIndex++;
                 }
-                Sql = GetSQL(AggregateFunction, HavingString, accountID, dc, grouping, dataSort, top, IdsList,mode);
+                Sql = GetSQL(AggregateFunction.Substring(1), HavingString.Substring(1), accountID, dc, grouping, dataSort, top, IdsList,mode);
                 if(IdsList == null)
                     GetData(out IdsList, Sql,out Data);
                 else
                     GetData(Sql,out Data);
                 RangeIndex++;
             }
-            if (diff.Length > 0) GetDiffCalculation(out Data,Data, diff);
-            if (viewSort.Length > 0 && mode == Mode.Simple) GetSortData(out Data,Data, viewSort);
+            if (diff != null && diff.Length > 0) GetDiffCalculation(out Data, Data, diff);
+            if (viewSort != null && viewSort.Length > 0 && mode == Mode.Simple) GetSortData(out Data, Data, viewSort);
             if (mode == Mode.Advanced) GetDataByDataSort(out Data, Data ,top, dataSort);
             if (Data.Count>0) GetFormateData(out Data, Data);
             return Data;
@@ -89,19 +89,22 @@ namespace EdgeBI.Web.DataServices
         private Mode GetMode(MeasureSort[] dataSort)
         {
             Mode mode = Mode.None;
-            foreach (MeasureSort ms in dataSort)
-                if (ms.DiffType != DiffType.None)
-                    if(mode == Mode.None || mode == Mode.Simple)
-                        mode = Mode.Simple;
+            if (dataSort != null)
+            {
+                foreach (MeasureSort ms in dataSort)
+                    if (ms.DiffType != DiffType.None)
+                        if (mode == Mode.None || mode == Mode.Simple)
+                            mode = Mode.Simple;
+                        else
+                            throw new System.ArgumentException("Parameter not legal", "dataSort parameter");
                     else
-                        throw new System.ArgumentException("Parameter not legal", "dataSort parameter");
-                else
-                {
-                    if (mode == Mode.None)
-                        mode = Mode.Advanced;
-                    else
-                        throw new System.ArgumentException("Parameter not legal", "dataSort parameter");
-                }
+                    {
+                        if (mode == Mode.None)
+                            mode = Mode.Advanced;
+                        else
+                            throw new System.ArgumentException("Parameter not legal", "dataSort parameter");
+                    }
+            }
             return mode;
         }
 
@@ -110,7 +113,7 @@ namespace EdgeBI.Web.DataServices
             string ids = null;
             using (DataManager.Current.OpenConnection())
             {
-                SqlCommand searchEngineCmd = DataManager.CreateCommand(AppSettings.Get(this, "StoredProcedures.GetData"), CommandType.StoredProcedure);
+                SqlCommand searchEngineCmd = DataManager.CreateCommand(ConfigurationSettings.AppSettings["EdgeBI.Web.DataServices.MeasureDataService.Commands.GetData"].ToString(), CommandType.StoredProcedure);
                 searchEngineCmd.CommandTimeout = (60 * 1000) * 5;
                 searchEngineCmd.Parameters["@Sql"].Value = sql;
                 SqlDataReader reader = searchEngineCmd.ExecuteReader();
@@ -203,9 +206,9 @@ namespace EdgeBI.Web.DataServices
 
         private void GetFieldsSQL(Measure measure, int measureIndex, int RangeIndex,out string  AggregateFunction,out string  HavingString)
         {
-            AggregateFunction = BuildAggregateFunction(measure) + " AS M" + measureIndex + ".R" + RangeIndex + ".Value";
-            HavingString = AggregateFunction + " IS NOT NULL AND";
-            AggregateFunction = AggregateFunction + " AS M" + measureIndex + ".R" + RangeIndex + ".Value";
+            AggregateFunction = BuildAggregateFunction(measure);
+            HavingString = AggregateFunction + " IS NOT NULL ";
+            AggregateFunction = AggregateFunction + " AS 'M" + measureIndex + ".R" + RangeIndex + ".Value'";
 
         }
 
@@ -227,12 +230,15 @@ namespace EdgeBI.Web.DataServices
         {
             int index=0;
             string OrderBy = null;
-            while (index < DataSort.Length)
+            if (DataSort != null)
             {
-                OrderBy += "," + DataSort[index].MeasureIndex.ToString() + DataSort[index].RangeIndex.ToString() + ".Value" + DataSort[index].SortDir;
-                index++;
+                while (index < DataSort.Length)
+                {
+                    OrderBy += "," + DataSort[index].MeasureIndex.ToString() + DataSort[index].RangeIndex.ToString() + ".Value" + DataSort[index].SortDir;
+                    index++;
+                }
+                OrderBy = " ORDER BY " + OrderBy.Substring(1);
             }
-            OrderBy = " ORDER BY " + OrderBy.Substring(1); 
             return OrderBy;
         }
 
@@ -241,14 +247,14 @@ namespace EdgeBI.Web.DataServices
             switch (DataGrouping)
             {
                 case DataGrouping.Account:
-                    Selectfields = " a.Account_ID, b.Account,";
+                    Selectfields = " a.Account_ID AS ID, b.Account AS NAME,";
                     Join = "Dwh_Dim_Accounts b with (nolock) ON a.Account_ID = b.Account_ID";
                     GroupBy = "a.Account_ID,b.Account";
                     AdditionalWhere = " a.Account_ID in (" + IdsList + ") ";
                     AdditionalWhere2 = "";
                     break;
                 case DataGrouping.Channel:
-                    Selectfields = " a.Channel_ID , b.Channel_Name,";
+                    Selectfields = " a.Channel_ID AS ID, b.Channel_Name AS NAME,";
                     Join = "Dwh_Dim_Channels b with (nolock) ON a.Channel_ID = b.Channel_ID";
                     GroupBy = "a.Channel_ID,b.Channel_Name";
                     AdditionalWhere = " a.Channel_ID in (" + IdsList + ") ";
@@ -256,7 +262,7 @@ namespace EdgeBI.Web.DataServices
 
                     break;
                 case DataGrouping.Campaign:
-                    Selectfields = " a.Campaign_GK , b.Campaign,";
+                    Selectfields = " a.Campaign_GK AS ID, b.Campaign AS NAME,";
                     Join = "dwh_Dim_Campaigns b with (nolock) ON a.Campaign_Gk = b.Campaign_Gk";
                     GroupBy = "a.Campaign_GK,b.Campaign";
                     AdditionalWhere = " a.Campaign_GK in (" + IdsList + ") ";
@@ -277,14 +283,15 @@ namespace EdgeBI.Web.DataServices
             string AggregateFunction =null;
             if (measure.FunctionMeasures == null)
             {
-                string FieldName = null;
-                int Pos1 = measure.DWH_AggregateFunction.IndexOf("<");
-                int Pos2 = measure.DWH_AggregateFunction.IndexOf(">");
-                FieldName = measure.DWH_AggregateFunction.Substring(Pos1 + 1, (Pos2 - 1) - Pos1);
-                Type MyType = measure.GetType();
-                PropertyInfo prop = MyType.GetProperty(FieldName);
-                object o = prop.GetValue(measure, null);
-                AggregateFunction = measure.DWH_AggregateFunction.Replace("<" + FieldName + ">", "a." + o.ToString());
+                //string FieldName = null;
+                //int Pos1 = measure.DWH_AggregateFunction.IndexOf("<");
+                //int Pos2 = measure.DWH_AggregateFunction.IndexOf(">");
+                //FieldName = measure.DWH_AggregateFunction.Substring(Pos1 + 1, (Pos2 - 1) - Pos1);
+                //Type MyType = measure.GetType();
+                //PropertyInfo prop = MyType.GetProperty(FieldName);
+                //object o = prop.GetValue(measure, null);
+                //AggregateFunction = measure.DWH_AggregateFunction.Replace("<" + FieldName + ">", "a." + o.ToString());
+                AggregateFunction = measure.DWH_AggregateFunction.Replace("<DWH_Name>", "a." + measure.DWH_Name);
             }
             else
             {
