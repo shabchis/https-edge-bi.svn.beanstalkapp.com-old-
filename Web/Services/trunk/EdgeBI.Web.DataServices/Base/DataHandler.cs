@@ -44,13 +44,15 @@ namespace EdgeBI.Web.DataServices
                 {
                     string lAggregateFunction = null , lHavingString = null;
                     Measure m = measuresList[mf.MeasureID];
-                    GetFieldsSQL(m,measureIndex,RangeIndex,out lAggregateFunction,out lHavingString);
+                    if (mf.IsTargetRef)
+                        m = measuresList[m.TargetMeasureID];
+                    GetFieldsSQL(m, measureIndex, RangeIndex, out lAggregateFunction, out lHavingString, measuresList);
                     AggregateFunction += "," + lAggregateFunction;
-                    HavingString += "," + lHavingString;
+                    HavingString += HavingString != null ? " AND " + lHavingString : lHavingString;
                     DicMeasuresFormat.Add("M" + measureIndex + ".R" + RangeIndex + ".Value", m.StringFormat);
                     measureIndex++;
                 }
-                Sql = GetSQL(AggregateFunction.Substring(1), HavingString.Substring(1), accountID, dc, grouping, dataSort, top, IdsList,mode);
+                Sql = GetSQL(AggregateFunction.Substring(1), HavingString, accountID, dc, grouping, dataSort, top, IdsList,mode);
                 if(IdsList == null)
                     GetData(out IdsList, Sql,out Data);
                 else
@@ -126,8 +128,8 @@ namespace EdgeBI.Web.DataServices
                     if (!reader["ID"].Equals(System.DBNull.Value)) _Data.ID = Convert.ToInt64(reader["ID"]);
                     if (!reader["NAME"].Equals(System.DBNull.Value)) _Data.Name = (string)reader["Name"];
                     ObjValue _value = new ObjValue();
-                    if (!reader["FieldName"].Equals(System.DBNull.Value)) _value.FieldName = (string)reader["FieldName"];
-                    if (!reader["VALUE"].Equals(System.DBNull.Value)) _value.ValueData = Convert.ToString(reader["VALUE"]);
+                    _value.FieldName = reader.GetName(2).ToString();
+                    if (!reader[_value.FieldName].Equals(System.DBNull.Value)) _value.ValueData = Convert.ToString(reader[_value.FieldName]);
                     if (_Data.Values == null)
                         _Data.Values = new List<ObjValue>();
                     _Data.Values.Add(_value);
@@ -139,7 +141,7 @@ namespace EdgeBI.Web.DataServices
                 data = new List<ObjData>(arrAllReturnData.Values);
                 foreach (string id in arrAllReturnData.Keys)
                     ids += "," + id;
-                idslist = ids;
+                idslist = ids != null ? ids.Substring(1): null;
                 reader.Close();
             }
             
@@ -204,9 +206,9 @@ namespace EdgeBI.Web.DataServices
             return RetEntity;
         }
 
-        private void GetFieldsSQL(Measure measure, int measureIndex, int RangeIndex,out string  AggregateFunction,out string  HavingString)
+        private void GetFieldsSQL(Measure measure, int measureIndex, int RangeIndex, out string AggregateFunction, out string HavingString, Dictionary<int, Measure> measuresList)
         {
-            AggregateFunction = BuildAggregateFunction(measure);
+            AggregateFunction = BuildAggregateFunction(measure, measuresList);
             HavingString = AggregateFunction + " IS NOT NULL ";
             AggregateFunction = AggregateFunction + " AS 'M" + measureIndex + ".R" + RangeIndex + ".Value'";
 
@@ -234,7 +236,7 @@ namespace EdgeBI.Web.DataServices
             {
                 while (index < DataSort.Length)
                 {
-                    OrderBy += "," + DataSort[index].MeasureIndex.ToString() + DataSort[index].RangeIndex.ToString() + ".Value" + DataSort[index].SortDir;
+                    OrderBy += ",'M" + DataSort[index].MeasureIndex.ToString() + ".R" + DataSort[index].RangeIndex.ToString() + ".Value' " + DataSort[index].SortDir;
                     index++;
                 }
                 OrderBy = " ORDER BY " + OrderBy.Substring(1);
@@ -278,49 +280,40 @@ namespace EdgeBI.Web.DataServices
             }
         }
 
-        private string BuildAggregateFunction(Measure measure)
+        private string BuildAggregateFunction(Measure measure, Dictionary<int, Measure> measuresList)
         {
             string AggregateFunction =null;
             if (measure.FunctionMeasures == null)
-            {
-                //string FieldName = null;
-                //int Pos1 = measure.DWH_AggregateFunction.IndexOf("<");
-                //int Pos2 = measure.DWH_AggregateFunction.IndexOf(">");
-                //FieldName = measure.DWH_AggregateFunction.Substring(Pos1 + 1, (Pos2 - 1) - Pos1);
-                //Type MyType = measure.GetType();
-                //PropertyInfo prop = MyType.GetProperty(FieldName);
-                //object o = prop.GetValue(measure, null);
-                //AggregateFunction = measure.DWH_AggregateFunction.Replace("<" + FieldName + ">", "a." + o.ToString());
-                AggregateFunction = measure.DWH_AggregateFunction.Replace("<DWH_Name>", "a." + measure.DWH_Name);
-            }
+               AggregateFunction = measure.DWH_AggregateFunction.Replace("<DWH_Name>", "a." + measure.DWH_Name);
             else
             {
-                Measure _measure ;
-                char[] Delimiter = { ',' };
-                int MeasureID = 0;
+                int MeasureID;
+                Measure _measure = null;
                 MatchCollection matches = Regex.Matches(measure.DWH_AggregateFunction, @"\<[^\>]+\>");
                 foreach (Match m in matches)
                 {
+
                     if (m.Value.ToString().ToLower().Contains("id:"))
                     {
                         int Pos = m.Value.ToString().IndexOf(">");
-                        MeasureID =  Convert.ToInt32(m.Value.ToString().Substring(m.Value.ToString().IndexOf(":") + 1, (Pos - 1) - m.Value.ToString().IndexOf(":")));
+                        MeasureID = Convert.ToInt32(m.Value.ToString().Substring(m.Value.ToString().IndexOf(":") + 1, (Pos - 1) - m.Value.ToString().IndexOf(":")));
+                        _measure = measuresList[MeasureID];
                     }
                     else if (m.Value.ToString().ToLower().Contains("param:") && m.Value.ToString().ToLower().Contains("/"))
                     {
                         int Pos1, Pos2;
                         Pos1 = m.Value.ToString().IndexOf(":");
                         Pos2 = m.Value.ToString().IndexOf("/");
-                        MeasureID = Convert.ToInt32(m.Value.ToString().Substring(Pos1 + 1, Pos2 - Pos1 - 1)) - 1;
+                        _measure = measure.FunctionMeasures[Convert.ToInt32(m.Value.ToString().Substring(Pos1 + 1, Pos2 - Pos1 - 1)) - 1];
+                        measure = measuresList[_measure.TargetMeasureID];
                     }
                     else if (m.Value.ToString().ToLower().Contains("param:"))
                     {
                         int Pos1, Pos2;
                         Pos1 = m.Value.ToString().IndexOf(":");
                         Pos2 = m.Value.ToString().IndexOf(">");
-                        MeasureID = Convert.ToInt32(m.Value.ToString().Substring(Pos1 + 1, Pos2 - Pos1 - 1)) - 1;
+                        _measure = measure.FunctionMeasures[Convert.ToInt32(m.Value.ToString().Substring(Pos1 + 1, Pos2 - Pos1 - 1)) - 1];
                     }
-                    _measure = measure.FunctionMeasures[MeasureID]; 
                     AggregateFunction = AggregateFunction.Replace(m.Value, "a." + _measure.DWH_Name);
                 }
             }
@@ -333,20 +326,7 @@ namespace EdgeBI.Web.DataServices
         //{
         //    throw new NotImplementedException();
         //}
-        private int GetMeasureID(string MeasureID)
-        {
-            int TargetMeasureID;
-            if (MeasureID.Contains("T"))
-            {
-                int BaseMeasureID = Convert.ToInt32(MeasureID.Replace("T", ""));
-                Measure _measure = Measures.Find(delegate(Measure m1) { return m1.MeasureID == BaseMeasureID; });
-                TargetMeasureID = _measure.TargetMeasureID;
-            }
-            else
-                TargetMeasureID = Convert.ToInt32(MeasureID);
-            return TargetMeasureID;
-        }
-
+        
         private MeasureDiff GetMeasureDiff(string key, MeasureDiff[] diff)
         {
             foreach (MeasureDiff mdiff in diff)
@@ -448,7 +428,7 @@ namespace EdgeBI.Web.DataServices
                             value.ValueData = value.ValueData.Replace(Convert.ToString(NativeValue), MinusSign + Convert.ToString(NativeValue));
                         }
                         else
-                            value.ValueData = string.Format("{0:" + StringFormat + "}", Convert.ToDouble(value.ValueData));
+                            value.ValueData = string.Format("{0:" + StringFormat + ";" + StringFormat + ";0}", Convert.ToDouble(value.ValueData));
                     }
                     else if (value.FieldName.Contains(".Diff") && value.ValueData != null)
                     {
