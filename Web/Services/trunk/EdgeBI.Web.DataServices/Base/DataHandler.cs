@@ -34,31 +34,38 @@ namespace EdgeBI.Web.DataServices
 
             Measures = new List<Measure>(measuresList.Values);
             List<ObjData> Data = new List<ObjData>();
+            Dictionary<string, ObjData> arrAllReturnData = new Dictionary<string, ObjData>();
             int measureIndex = 1 ,RangeIndex = 1;
             string Sql = null, IdsList = null;
             foreach (DayCodeRange dc in ranges)
             {
-                RangeIndex = 1;
                 string AggregateFunction = null , HavingString = null;
+                measureIndex = 1;
                 foreach (MeasureRef mf in measures)
                 {
                     string lAggregateFunction = null , lHavingString = null;
                     Measure m = measuresList[mf.MeasureID];
                     if (mf.IsTargetRef)
                         m = measuresList[m.TargetMeasureID];
-                    GetFieldsSQL(m, measureIndex, RangeIndex, out lAggregateFunction, out lHavingString, measuresList);
+                    GetFieldsSQL(mf, measureIndex, RangeIndex, out lAggregateFunction, out lHavingString, measuresList);
                     AggregateFunction += "," + lAggregateFunction;
                     HavingString += HavingString != null ? " AND " + lHavingString : lHavingString;
                     DicMeasuresFormat.Add("M" + measureIndex + ".R" + RangeIndex + ".Value", m.StringFormat);
                     measureIndex++;
                 }
                 Sql = GetSQL(AggregateFunction.Substring(1), HavingString, accountID, dc, grouping, dataSort, top, IdsList,mode);
-                if(IdsList == null)
-                    GetData(out IdsList, Sql,out Data);
-                else
-                    GetData(Sql,out Data);
+                GetData(Sql, arrAllReturnData, out arrAllReturnData);
                 RangeIndex++;
+                if (IdsList == null)
+                {
+                    foreach (string id in arrAllReturnData.Keys)
+                        IdsList += "," + id;
+                    IdsList = IdsList.Substring(1);
+                }
+                    foreach (string id in arrAllReturnData.Keys)
+                        IdsList += "," + id;
             }
+            Data = new List<ObjData>(arrAllReturnData.Values);
             if (diff != null && diff.Length > 0) GetDiffCalculation(out Data, Data, diff);
             if (viewSort != null && viewSort.Length > 0 && mode == Mode.Simple) GetSortData(out Data, Data, viewSort);
             if (mode == Mode.Advanced) GetDataByDataSort(out Data, Data ,top, dataSort);
@@ -82,11 +89,6 @@ namespace EdgeBI.Web.DataServices
             dataout = RetData;
         }
 
-        private void GetData(string sql, out List<ObjData> data)
-        {
-            string ids = null;
-            GetData(out ids, sql,out data);
-        }
 
         private Mode GetMode(MeasureSort[] dataSort)
         {
@@ -110,16 +112,14 @@ namespace EdgeBI.Web.DataServices
             return mode;
         }
 
-        private void GetData(out string idslist, string sql, out List<ObjData> data)
+        private void GetData(string sql, Dictionary<string, ObjData> arrAllReturnData, out Dictionary<string, ObjData> arrAllReturnDataout)
         {
-            string ids = null;
             using (DataManager.Current.OpenConnection())
             {
                 SqlCommand searchEngineCmd = DataManager.CreateCommand(ConfigurationSettings.AppSettings["EdgeBI.Web.DataServices.MeasureDataService.Commands.GetData"].ToString(), CommandType.StoredProcedure);
                 searchEngineCmd.CommandTimeout = (60 * 1000) * 5;
                 searchEngineCmd.Parameters["@Sql"].Value = sql;
                 SqlDataReader reader = searchEngineCmd.ExecuteReader();
-                Dictionary<string, ObjData> arrAllReturnData = new Dictionary<string, ObjData>();
                 while (reader.Read())
                 {
                     ObjData _Data = new ObjData();
@@ -138,12 +138,9 @@ namespace EdgeBI.Web.DataServices
                     else
                         arrAllReturnData.Add(reader["ID"].ToString(), _Data);
                 }
-                data = new List<ObjData>(arrAllReturnData.Values);
-                foreach (string id in arrAllReturnData.Keys)
-                    ids += "," + id;
-                idslist = ids != null ? ids.Substring(1): null;
                 reader.Close();
             }
+            arrAllReturnDataout = arrAllReturnData;
             
         }
 
@@ -206,7 +203,7 @@ namespace EdgeBI.Web.DataServices
             return RetEntity;
         }
 
-        private void GetFieldsSQL(Measure measure, int measureIndex, int RangeIndex, out string AggregateFunction, out string HavingString, Dictionary<int, Measure> measuresList)
+        private void GetFieldsSQL(MeasureRef measure, int measureIndex, int RangeIndex, out string AggregateFunction, out string HavingString, Dictionary<int, Measure> measuresList)
         {
             AggregateFunction = BuildAggregateFunction(measure, measuresList);
             HavingString = AggregateFunction + " IS NOT NULL ";
@@ -219,12 +216,12 @@ namespace EdgeBI.Web.DataServices
             string OrderBy = null, TableName = null, AggregateFunctions = null, ltop = null, Selectfields = null, Join = null, GroupBy = null, AdditionalWhere = null, BetweenDatesSql = null, AdditionalWhere2 = null;
             
             TableName = "Dwh_Fact_PPC_Campaigns_ProcessedMeasures";
-            OrderBy = GetOrderBy(DataSort);
+            if( mode== Mode.Simple) OrderBy = GetOrderBy(DataSort);
             BetweenDatesSql = " AND a.Day_ID BETWEEN " + DaysCode.From + " AND " + DaysCode.To;
             if (mode == Mode.Simple) ltop = Top <= 0 ? "" : "TOP " + Top.ToString() + " ";
             AggregateFunctions = Sql;
             GetSqlOptions(out Selectfields, out  Join, out  GroupBy, out  AdditionalWhere, out  AdditionalWhere2, DataGrouping, IdsList);
-            Sql = "SELECT " + ltop + Selectfields + AggregateFunctions + " FROM " + TableName + " a inner JOIN " + Join + " WHERE a.Account_ID = " + AccountID + AdditionalWhere2 + BetweenDatesSql + " GROUP BY " + GroupBy + " HAVING " + HavingString + OrderBy;
+            Sql = "SELECT " + ltop + Selectfields + AggregateFunctions + " FROM " + TableName + " a inner JOIN " + Join + " WHERE a.Account_ID = " + AccountID + AdditionalWhere + AdditionalWhere2 + BetweenDatesSql + " GROUP BY " + GroupBy + " HAVING " + HavingString + OrderBy;
             return Sql;
         }
 
@@ -252,14 +249,14 @@ namespace EdgeBI.Web.DataServices
                     Selectfields = " a.Account_ID AS ID, b.Account AS NAME,";
                     Join = "Dwh_Dim_Accounts b with (nolock) ON a.Account_ID = b.Account_ID";
                     GroupBy = "a.Account_ID,b.Account";
-                    AdditionalWhere = " a.Account_ID in (" + IdsList + ") ";
+                    AdditionalWhere = IdsList != null ? " AND a.Account_ID in (" + IdsList + ") ": "";
                     AdditionalWhere2 = "";
                     break;
                 case DataGrouping.Channel:
                     Selectfields = " a.Channel_ID AS ID, b.Channel_Name AS NAME,";
                     Join = "Dwh_Dim_Channels b with (nolock) ON a.Channel_ID = b.Channel_ID";
                     GroupBy = "a.Channel_ID,b.Channel_Name";
-                    AdditionalWhere = " a.Channel_ID in (" + IdsList + ") ";
+                    AdditionalWhere = IdsList != null ? " AND a.Channel_ID in (" + IdsList + ") ": "";
                     AdditionalWhere2 = " AND a.Channel_ID > 0 ";
 
                     break;
@@ -267,7 +264,7 @@ namespace EdgeBI.Web.DataServices
                     Selectfields = " a.Campaign_GK AS ID, b.Campaign AS NAME,";
                     Join = "dwh_Dim_Campaigns b with (nolock) ON a.Campaign_Gk = b.Campaign_Gk";
                     GroupBy = "a.Campaign_GK,b.Campaign";
-                    AdditionalWhere = " a.Campaign_GK in (" + IdsList + ") ";
+                    AdditionalWhere = IdsList != null ? " AND a.Campaign_GK in (" + IdsList + ") ": "";
                     AdditionalWhere2 =  " AND a.Campaign_GK > 0 ";
                     break;
                 default:
@@ -280,43 +277,46 @@ namespace EdgeBI.Web.DataServices
             }
         }
 
-        private string BuildAggregateFunction(Measure measure, Dictionary<int, Measure> measuresList)
+        private string BuildAggregateFunction(MeasureRef measure, Dictionary<int, Measure> measuresList)
         {
+            Measure m = measuresList[measure.MeasureID];
+            if (measure.IsTargetRef)
+                m = measuresList[m.TargetMeasureID];
+
             string AggregateFunction =null;
-            if (measure.FunctionMeasures == null)
-               AggregateFunction = measure.DWH_AggregateFunction.Replace("<DWH_Name>", "a." + measure.DWH_Name);
-            else
-            {
-                int MeasureID;
-                Measure _measure = null;
-                MatchCollection matches = Regex.Matches(measure.DWH_AggregateFunction, @"\<[^\>]+\>");
-                foreach (Match m in matches)
+            //if (measure.FunctionMeasures == null)
+            //   AggregateFunction = m.DWH_AggregateFunction.Replace("<DWH_Name>", "a." + m.DWH_Name);
+            //else
+            //{
+                AggregateFunction = m.DWH_AggregateFunction.Replace("<DWH_Name>", "a." + m.DWH_Name);
+                int MeasureID = 0;
+                MatchCollection matches = Regex.Matches(m.DWH_AggregateFunction, @"\<[^\>]+\>");
+                foreach (Match ma in matches)
                 {
 
-                    if (m.Value.ToString().ToLower().Contains("id:"))
+                    if (ma.Value.ToString().ToLower().Contains("id:"))
                     {
-                        int Pos = m.Value.ToString().IndexOf(">");
-                        MeasureID = Convert.ToInt32(m.Value.ToString().Substring(m.Value.ToString().IndexOf(":") + 1, (Pos - 1) - m.Value.ToString().IndexOf(":")));
-                        _measure = measuresList[MeasureID];
+                        int Pos = ma.Value.ToString().IndexOf(">");
+                        MeasureID = Convert.ToInt32(ma.Value.ToString().Substring(ma.Value.ToString().IndexOf(":") + 1, (Pos - 1) - ma.Value.ToString().IndexOf(":")));
                     }
-                    else if (m.Value.ToString().ToLower().Contains("param:") && m.Value.ToString().ToLower().Contains("/"))
-                    {
-                        int Pos1, Pos2;
-                        Pos1 = m.Value.ToString().IndexOf(":");
-                        Pos2 = m.Value.ToString().IndexOf("/");
-                        _measure = measure.FunctionMeasures[Convert.ToInt32(m.Value.ToString().Substring(Pos1 + 1, Pos2 - Pos1 - 1)) - 1];
-                        measure = measuresList[_measure.TargetMeasureID];
-                    }
-                    else if (m.Value.ToString().ToLower().Contains("param:"))
+                    else if (ma.Value.ToString().ToLower().Contains("param:") && ma.Value.ToString().ToLower().Contains("/"))
                     {
                         int Pos1, Pos2;
-                        Pos1 = m.Value.ToString().IndexOf(":");
-                        Pos2 = m.Value.ToString().IndexOf(">");
-                        _measure = measure.FunctionMeasures[Convert.ToInt32(m.Value.ToString().Substring(Pos1 + 1, Pos2 - Pos1 - 1)) - 1];
+                        Pos1 = ma.Value.ToString().IndexOf(":");
+                        Pos2 = ma.Value.ToString().IndexOf("/");
+                        MeasureID = measure.FunctionMeasures[Convert.ToInt32(ma.Value.ToString().Substring(Pos1 + 1, Pos2 - Pos1 - 1)) - 1].MeasureID;
                     }
-                    AggregateFunction = AggregateFunction.Replace(m.Value, "a." + _measure.DWH_Name);
+                    else if (ma.Value.ToString().ToLower().Contains("param:"))
+                    {
+                        int Pos1, Pos2;
+                        Pos1 = ma.Value.ToString().IndexOf(":");
+                        Pos2 = ma.Value.ToString().IndexOf(">");
+                        MeasureID = measure.FunctionMeasures[Convert.ToInt32(ma.Value.ToString().Substring(Pos1 + 1, Pos2 - Pos1 - 1)) - 1].MeasureID;
+                    }
+                    Measure _measure = measuresList[MeasureID];
+                    AggregateFunction = AggregateFunction.Replace(ma.Value, "a." + _measure.DWH_Name);
                 }
-            }
+            //}
             
             return AggregateFunction;
 
@@ -359,7 +359,8 @@ namespace EdgeBI.Web.DataServices
                             EntityValues.Add(mIdnew,mValues);
                             mValues.Clear();
                         }
-                      }
+                    }
+                    if(mValues.Count>0) EntityValues.Add(mIdnew,mValues);
                     foreach(string key in EntityValues.Keys)
                     {
                         mValues = EntityValues[key];
@@ -428,7 +429,11 @@ namespace EdgeBI.Web.DataServices
                             value.ValueData = value.ValueData.Replace(Convert.ToString(NativeValue), MinusSign + Convert.ToString(NativeValue));
                         }
                         else
+                        {
                             value.ValueData = string.Format("{0:" + StringFormat + ";" + StringFormat + ";0}", Convert.ToDouble(value.ValueData));
+                            value.ValueData = string.Format("{0:" + StringFormat + ";" + StringFormat + ";0}", Convert.ToDouble(value.ValueData));
+
+                        }
                     }
                     else if (value.FieldName.Contains(".Diff") && value.ValueData != null)
                     {
