@@ -62,8 +62,6 @@ namespace EdgeBI.Web.DataServices
                         IdsList += "," + id;
                     IdsList = IdsList.Substring(1);
                 }
-                    foreach (string id in arrAllReturnData.Keys)
-                        IdsList += "," + id;
             }
             Data = new List<ObjData>(arrAllReturnData.Values);
             if (diff != null && diff.Length > 0) GetDiffCalculation(out Data, Data, diff);
@@ -96,7 +94,7 @@ namespace EdgeBI.Web.DataServices
             if (dataSort != null)
             {
                 foreach (MeasureSort ms in dataSort)
-                    if (ms.DiffType != DiffType.None)
+                    if (ms.DiffType == DiffType.None)
                         if (mode == Mode.None || mode == Mode.Simple)
                             mode = Mode.Simple;
                         else
@@ -122,21 +120,29 @@ namespace EdgeBI.Web.DataServices
                 SqlDataReader reader = searchEngineCmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    ObjData _Data = new ObjData();
+                    ObjData _Data;
                     if (arrAllReturnData.ContainsKey(reader["ID"].ToString()))
                         _Data = arrAllReturnData[reader["ID"].ToString()];
-                    if (!reader["ID"].Equals(System.DBNull.Value)) _Data.ID = Convert.ToInt64(reader["ID"]);
-                    if (!reader["NAME"].Equals(System.DBNull.Value)) _Data.Name = (string)reader["Name"];
-                    ObjValue _value = new ObjValue();
-                    _value.FieldName = reader.GetName(2).ToString();
-                    if (!reader[_value.FieldName].Equals(System.DBNull.Value)) _value.ValueData = Convert.ToString(reader[_value.FieldName]);
-                    if (_Data.Values == null)
-                        _Data.Values = new List<ObjValue>();
-                    _Data.Values.Add(_value);
+                    else
+                    {
+                        _Data = new ObjData();
+                        if (!reader["ID"].Equals(System.DBNull.Value)) _Data.ID = Convert.ToInt64(reader["ID"]);
+                        if (!reader["NAME"].Equals(System.DBNull.Value)) _Data.Name = (string)reader["Name"];
+                    }
+                    for (int i = 2; i < reader.FieldCount; i++)
+                    {
+                        ObjValue _value = new ObjValue();
+                        _value.FieldName = reader.GetName(i).ToString();
+                        if (!reader[_value.FieldName].Equals(System.DBNull.Value)) _value.ValueData = Convert.ToString(reader[_value.FieldName]);
+                        if (_Data.Values == null)
+                            _Data.Values = new List<ObjValue>();
+                        _Data.Values.Add(_value);
+                    }
                     if (arrAllReturnData.ContainsKey(reader["ID"].ToString()))
                         arrAllReturnData[reader["ID"].ToString()] = _Data;
                     else
                         arrAllReturnData.Add(reader["ID"].ToString(), _Data);
+                    
                 }
                 reader.Close();
             }
@@ -216,7 +222,7 @@ namespace EdgeBI.Web.DataServices
             string OrderBy = null, TableName = null, AggregateFunctions = null, ltop = null, Selectfields = null, Join = null, GroupBy = null, AdditionalWhere = null, BetweenDatesSql = null, AdditionalWhere2 = null;
             
             TableName = "Dwh_Fact_PPC_Campaigns_ProcessedMeasures";
-            if( mode== Mode.Simple) OrderBy = GetOrderBy(DataSort);
+            if (mode == Mode.Simple && IdsList == null) OrderBy = GetOrderBy(DataSort);
             BetweenDatesSql = " AND a.Day_ID BETWEEN " + DaysCode.From + " AND " + DaysCode.To;
             if (mode == Mode.Simple) ltop = Top <= 0 ? "" : "TOP " + Top.ToString() + " ";
             AggregateFunctions = Sql;
@@ -284,40 +290,37 @@ namespace EdgeBI.Web.DataServices
                 m = measuresList[m.TargetMeasureID];
 
             string AggregateFunction =null;
-            //if (measure.FunctionMeasures == null)
-            //   AggregateFunction = m.DWH_AggregateFunction.Replace("<DWH_Name>", "a." + m.DWH_Name);
-            //else
-            //{
-                AggregateFunction = m.DWH_AggregateFunction.Replace("<DWH_Name>", "a." + m.DWH_Name);
-                int MeasureID = 0;
-                MatchCollection matches = Regex.Matches(m.DWH_AggregateFunction, @"\<[^\>]+\>");
-                foreach (Match ma in matches)
-                {
+            AggregateFunction = m.DWH_AggregateFunction.Replace("<DWH_Name>", "a." + m.DWH_Name);
+            int MeasureID = 0;
+            MatchCollection matches = Regex.Matches(m.DWH_AggregateFunction, @"\<[^\>]+\>");
+            foreach (Match ma in matches)
+            {
 
-                    if (ma.Value.ToString().ToLower().Contains("id:"))
-                    {
-                        int Pos = ma.Value.ToString().IndexOf(">");
-                        MeasureID = Convert.ToInt32(ma.Value.ToString().Substring(ma.Value.ToString().IndexOf(":") + 1, (Pos - 1) - ma.Value.ToString().IndexOf(":")));
-                    }
-                    else if (ma.Value.ToString().ToLower().Contains("param:") && ma.Value.ToString().ToLower().Contains("/"))
-                    {
-                        int Pos1, Pos2;
-                        Pos1 = ma.Value.ToString().IndexOf(":");
-                        Pos2 = ma.Value.ToString().IndexOf("/");
-                        MeasureID = measure.FunctionMeasures[Convert.ToInt32(ma.Value.ToString().Substring(Pos1 + 1, Pos2 - Pos1 - 1)) - 1].MeasureID;
-                    }
-                    else if (ma.Value.ToString().ToLower().Contains("param:"))
-                    {
-                        int Pos1, Pos2;
-                        Pos1 = ma.Value.ToString().IndexOf(":");
-                        Pos2 = ma.Value.ToString().IndexOf(">");
-                        MeasureID = measure.FunctionMeasures[Convert.ToInt32(ma.Value.ToString().Substring(Pos1 + 1, Pos2 - Pos1 - 1)) - 1].MeasureID;
-                    }
+                if (ma.Value.ToString().ToLower().Contains("id:"))
+                {
+                    int Pos = ma.Value.ToString().IndexOf(">");
+                    MeasureID = Convert.ToInt32(ma.Value.ToString().Substring(ma.Value.ToString().IndexOf(":") + 1, (Pos - 1) - ma.Value.ToString().IndexOf(":")));
+                }
+                else if (ma.Value.ToString().ToLower().Contains("param:") && ma.Value.ToString().ToLower().Contains("/"))
+                {
+                    int Pos1, Pos2;
+                    Pos1 = ma.Value.ToString().IndexOf(":");
+                    Pos2 = ma.Value.ToString().IndexOf("/");
+                    MeasureID = measure.FunctionMeasures[Convert.ToInt32(ma.Value.ToString().Substring(Pos1 + 1, Pos2 - Pos1 - 1)) - 1].MeasureID;
+                }
+                else if (ma.Value.ToString().ToLower().Contains("param:"))
+                {
+                    int Pos1, Pos2;
+                    Pos1 = ma.Value.ToString().IndexOf(":");
+                    Pos2 = ma.Value.ToString().IndexOf(">");
+                    MeasureID = measure.FunctionMeasures[Convert.ToInt32(ma.Value.ToString().Substring(Pos1 + 1, Pos2 - Pos1 - 1)) - 1].MeasureID;
+                }
+                if (MeasureID > 0)
+                {
                     Measure _measure = measuresList[MeasureID];
                     AggregateFunction = AggregateFunction.Replace(ma.Value, "a." + _measure.DWH_Name);
                 }
-            //}
-            
+            }
             return AggregateFunction;
 
         }
@@ -346,29 +349,32 @@ namespace EdgeBI.Web.DataServices
                 Dictionary<string, ArrayList> EntityValues = new Dictionary<string, ArrayList>(); ;
                 if (Entity.Values.Count > 1)
                 {
-                    string mIdnew = null,mIdprev = null;
-                    ArrayList mValues = new ArrayList();
                     foreach (ObjValue lvalue in Entity.Values)
                     {
-                        mIdprev = mIdnew;
-                        mIdnew = lvalue.FieldName.Substring(0,lvalue.FieldName.IndexOf("."));
-                        if(mIdnew == mIdprev || mValues.Count==0)
-                            mValues.Add(lvalue.ValueData);
+                        string mName = lvalue.FieldName.Substring(0,lvalue.FieldName.IndexOf("."));
+                        ArrayList values;
+                        if (EntityValues.ContainsKey(mName))
+                            values = EntityValues[mName];
                         else
-                        {
-                            EntityValues.Add(mIdnew,mValues);
-                            mValues.Clear();
-                        }
+                            values = new ArrayList();
+
+                        values.Add(lvalue);
+                        if (EntityValues.ContainsKey(mName))
+                            EntityValues[mName] = values;
+                        else
+                            EntityValues.Add(mName, values);
                     }
-                    if(mValues.Count>0) EntityValues.Add(mIdnew,mValues);
                     foreach(string key in EntityValues.Keys)
                     {
-                        mValues = EntityValues[key];
-                        for(int i = 0; i<EntityValues.Count;i++)
+                        ArrayList values = EntityValues[key];
+                        for (int i = 0; i < values.Count-1; i++)
                         {
                             double value1, value2;
-                            value1 = Convert.ToDouble(mValues[i]);
-                            value2 = Convert.ToDouble(mValues[i + 1]);
+                            ObjValue objvalue1 = (ObjValue)values[i];
+                            ObjValue objvalue2 = (ObjValue)values[i+1];
+
+                            value1 = Convert.ToDouble(objvalue1.ValueData);
+                            value2 = Convert.ToDouble(objvalue2.ValueData);
                             ObjValue value = new ObjValue();
                             if (value2 != 0)
                             {
@@ -379,18 +385,18 @@ namespace EdgeBI.Web.DataServices
                                    switch(difftype)
                                    {
                                        case DiffType.Both:
-                                           value.FieldName = key + "DiffAbs" + i;
+                                           value.FieldName = key + ".DiffAbs" + (i+1).ToString();
                                            value.ValueData = Convert.ToString(value1 - value2); 
                                            Entity.Values.Add(value);
-                                           value.FieldName = key + "DiffRel" + i;
+                                           value.FieldName = key + ".DiffRel" + (i + 1).ToString();
                                            value.ValueData = Convert.ToString(((value1 - value2) / Math.Abs(value2)) * 100); 
                                            break;
                                        case DiffType.DiffAbs:
-                                           value.FieldName = key + "DiffAbs" + i;
+                                           value.FieldName = key + ".DiffAbs" + (i + 1).ToString();
                                            value.ValueData = Convert.ToString(value1 - value2); 
                                            break;
                                        case DiffType.DiffRel:
-                                           value.FieldName = key + "DiffRel" + i;
+                                           value.FieldName = key + ".DiffRel" + (i + 1).ToString();
                                            value.ValueData = Convert.ToString(((value1 - value2) / Math.Abs(value2)) * 100); 
                                            break;
                                    }
@@ -429,11 +435,7 @@ namespace EdgeBI.Web.DataServices
                             value.ValueData = value.ValueData.Replace(Convert.ToString(NativeValue), MinusSign + Convert.ToString(NativeValue));
                         }
                         else
-                        {
                             value.ValueData = string.Format("{0:" + StringFormat + ";" + StringFormat + ";0}", Convert.ToDouble(value.ValueData));
-                            value.ValueData = string.Format("{0:" + StringFormat + ";" + StringFormat + ";0}", Convert.ToDouble(value.ValueData));
-
-                        }
                     }
                     else if (value.FieldName.Contains(".Diff") && value.ValueData != null)
                     {
