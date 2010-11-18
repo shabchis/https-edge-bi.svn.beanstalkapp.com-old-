@@ -114,6 +114,7 @@ namespace EdgeBI.Web.DataServices
 	{
 		public int MeasureIndex;
 		public int RangeIndex;
+		public int DiffIndex;
 		public DiffType DiffType;
 		public SortDir SortDir;
 		
@@ -141,7 +142,7 @@ namespace EdgeBI.Web.DataServices
 					if (parts[0].ToLower()[0] == 'm')
 						msort.MeasureIndex = Int32.Parse(parts[0].Substring(1));
 					if (parts[1].ToLower()[0] == 'r')
-						msort.RangeIndex = Int32.Parse(parts[0].Substring(1));
+						msort.RangeIndex = Int32.Parse(parts[1].Substring(1));
 					if (parts.Length > 2)
 					{
 						string diffRaw = parts[2].Split(new char[] { '(' }, 2)[0];
@@ -149,6 +150,7 @@ namespace EdgeBI.Web.DataServices
 							DiffType.None :
 							(DiffType)Enum.Parse(typeof(DiffType), diffRaw, true);
 					}
+                    //if(parts.
 					else
 						msort.DiffType = DiffType.None;
 
@@ -197,7 +199,7 @@ namespace EdgeBI.Web.DataServices
 					if (parts[0].ToLower()[0] == 'm')
 						mdiff.MeasureIndex = Int32.Parse(parts[0].Substring(1));
 					else if (parts[0].ToLower() == "all")
-						mdiff.MeasureIndex = -1;
+						mdiff.MeasureIndex = 0;
 					else
 						throw new FormatException("Measure index (e.g. 'm1' or 'all') is missing.");
 

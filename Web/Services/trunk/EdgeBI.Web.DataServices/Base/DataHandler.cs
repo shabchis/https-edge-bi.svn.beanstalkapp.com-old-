@@ -155,40 +155,40 @@ namespace EdgeBI.Web.DataServices
             List<ObjData> SortedReturnData = new List<ObjData>();
             foreach (MeasureSort msort in viewSort)
             {
-                string sortBy = "M." + msort.MeasureIndex +  (msort.RangeIndex == 0 || msort.DiffType != DiffType.None  ? "Diff" + msort.DiffType.ToString(): "R." + msort.RangeIndex);
+                string sortBy = "M" + msort.MeasureIndex +  (msort.RangeIndex == 0 || msort.DiffType != DiffType.None  ? ".Diff" + msort.DiffType.ToString(): ".R" + msort.RangeIndex);
                 Dictionary<Int64, double> dic = new Dictionary<Int64, double>();
                 foreach (ObjData Entity in Datain)
                 {
                     foreach (ObjValue lvalue in Entity.Values)
                     {
-                        if (lvalue.FieldName.ToLower().Contains(sortBy))
+                        if (lvalue.FieldName.Contains(sortBy))
                         {
                             dic.Add(Entity.ID, Convert.ToDouble(lvalue.ValueData));
                         }
                     }
-                    List<KeyValuePair<Int64, double>> myList = new List<KeyValuePair<Int64, double>>(dic);
-                                myList.Sort(
-                                    delegate(KeyValuePair<Int64, double> firstPair,
-                                    KeyValuePair<Int64, double> nextPair)
-                                    {
-                                        return firstPair.Value.CompareTo(nextPair.Value);
-                                    }
-                                 );
-                    switch (msort.SortDir)
-                    {
-                        case SortDir.Asc:
-                            for (int i = 0; i < myList.Count; i++)
-                            {
-                                SortedReturnData.Add(GetDataObject(Datain, myList[i].Key));
-                            }
-                            break;
-                        case SortDir.Desc:
-                            for (int i = myList.Count - 1; i >= 0; i--)
-                            {
-                                SortedReturnData.Add(GetDataObject(Datain, myList[i].Key));
-                            }
-                            break;
-                    }
+                }
+                List<KeyValuePair<Int64, double>> myList = new List<KeyValuePair<Int64, double>>(dic);
+                            myList.Sort(
+                                delegate(KeyValuePair<Int64, double> firstPair,
+                                KeyValuePair<Int64, double> nextPair)
+                                {
+                                    return firstPair.Value.CompareTo(nextPair.Value);
+                                }
+                             );
+                switch (msort.SortDir)
+                {
+                    case SortDir.Asc:
+                        for (int i = 0; i < myList.Count; i++)
+                        {
+                            SortedReturnData.Add(GetDataObject(Datain, myList[i].Key));
+                        }
+                        break;
+                    case SortDir.Desc:
+                        for (int i = myList.Count - 1; i >= 0; i--)
+                        {
+                            SortedReturnData.Add(GetDataObject(Datain, myList[i].Key));
+                        }
+                        break;
                 }
             }
             Dataout = SortedReturnData;
@@ -385,18 +385,19 @@ namespace EdgeBI.Web.DataServices
                                    switch(difftype)
                                    {
                                        case DiffType.Both:
-                                           value.FieldName = key + ".DiffAbs" + (i+1).ToString();
+                                           value.FieldName = key + ".R" + (i + 1).ToString() + ".DiffAbs" ;
                                            value.ValueData = Convert.ToString(value1 - value2); 
                                            Entity.Values.Add(value);
-                                           value.FieldName = key + ".DiffRel" + (i + 1).ToString();
+                                           value = new ObjValue();
+                                           value.FieldName = key + ".R" + (i + 1).ToString() + ".DiffRel"; 
                                            value.ValueData = Convert.ToString(((value1 - value2) / Math.Abs(value2)) * 100); 
                                            break;
                                        case DiffType.DiffAbs:
-                                           value.FieldName = key + ".DiffAbs" + (i + 1).ToString();
+                                           value.FieldName = key + ".R" + (i + 1).ToString() + ".DiffAbs"; 
                                            value.ValueData = Convert.ToString(value1 - value2); 
                                            break;
                                        case DiffType.DiffRel:
-                                           value.FieldName = key + ".DiffRel" + (i + 1).ToString();
+                                           value.FieldName = key + ".R" + (i + 1).ToString() + ".DiffRel";
                                            value.ValueData = Convert.ToString(((value1 - value2) / Math.Abs(value2)) * 100); 
                                            break;
                                    }
@@ -421,10 +422,10 @@ namespace EdgeBI.Web.DataServices
                 ObjData rd = new ObjData();
                 foreach (ObjValue value in d.Values)
                 {
-                    rd.Values = new List<ObjValue>();
-                    string StringFormat = DicMeasuresFormat[value.FieldName];
+                    if(rd.Values == null) rd.Values =  new List<ObjValue>();
                     if (!value.FieldName.Contains(".Diff") && value.ValueData != null)
                     {
+                        string StringFormat = DicMeasuresFormat[value.FieldName];
                         if (StringFormat.Contains("C"))
                         {
                             string MinusSign = "";
@@ -440,9 +441,9 @@ namespace EdgeBI.Web.DataServices
                     else if (value.FieldName.Contains(".Diff") && value.ValueData != null)
                     {
                         if (value.FieldName.Contains(".DiffAbs"))
-                            value.ValueData = string.Format("{0:" + ConfigurationSettings.AppSettings["Dwh.Data.Service.ConsoleDataServices.Formating.Diff.Abs"].ToString() + "}", Convert.ToDouble(value.ValueData));//"{0:0.##}"
+                            value.ValueData = string.Format("{0:" + ConfigurationSettings.AppSettings["EdgeBI.Web.DataServices.MeasureDataService.Formating.Diff.Abs"].ToString() + "}", Convert.ToDouble(value.ValueData));//"{0:0.##}"
                         else if (value.FieldName.Contains(".DiffRel"))
-                            value.ValueData = string.Format("{0:" + ConfigurationSettings.AppSettings["Dwh.Data.Service.ConsoleDataServices.Formating.Diff.Rel"].ToString() + "}", Convert.ToDouble(value.ValueData));//"{0:0.##}"
+                            value.ValueData = string.Format("{0:" + ConfigurationSettings.AppSettings["EdgeBI.Web.DataServices.MeasureDataService.Formating.Diff.Rel"].ToString() + "}", Convert.ToDouble(value.ValueData));//"{0:0.##}"
                    }
                     rd.ID = d.ID ;
                     rd.Name=d.Name ;
