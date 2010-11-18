@@ -32,7 +32,7 @@ namespace EdgeBI.Wizards.AccountWizard
 
 			Log.Write("Update OLTP database", LogMessageType.Information);
 			UpdateOltpDataBase(collectedData);
-			this.ReportProgress(0.9f);
+			this.ReportProgress(1);
 
 			return base.DoWork();
 		}
@@ -82,7 +82,7 @@ namespace EdgeBI.Wizards.AccountWizard
                 try
                 {
                     
-                    analysisServer.Connect(AppSettings.Get(this, "AnalysisServer.ConnectionString"));
+                    analysisServer.Connect(AppSettings.GetAbsolute( "EdgeBI.Wizards.StepExecuter.AnalysisServer.ConnectionString"));
                 }
                 catch (Exception ex)
                 {
@@ -98,7 +98,16 @@ namespace EdgeBI.Wizards.AccountWizard
 				try
 				{
 					newRole = analysisDatabase.Roles.Add(collectedData["AccountSettings.RoleName"].ToString(), collectedData["AccountSettings.RoleID"].ToString());
-					newRole.Members.Add(new RoleMember(collectedData["AccountSettings.RoleMemberName"].ToString()));
+                    if (collectedData.ContainsKey("AccountSettings.RoleMemberName"))
+                    {
+                        newRole.Members.Add(new RoleMember(collectedData["AccountSettings.RoleMemberName"].ToString()));
+                    }
+                    else
+                    {
+                        Dictionary<string, object> executorData = GetExecutorData("ActiveDirectoryStepExecutor");
+                        newRole.Members.Add(new RoleMember(executorData["ActiveDirectory.UserName"].ToString()));
+                    }
+					
 					newRole.Update();
 				}
 				catch (Exception ex)

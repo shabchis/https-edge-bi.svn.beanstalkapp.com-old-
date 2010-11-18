@@ -6,6 +6,7 @@ using System.ServiceModel;
 using Easynet.Edge.Core.Services;
 using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
+using System.ComponentModel;
 
 namespace EdgeBI.Wizards
 {
@@ -36,10 +37,11 @@ namespace EdgeBI.Wizards
 		/// <returns></returns>
 		protected Dictionary<string, object> GetStepCollectedData(string StepName)
 		{
+            
 			Dictionary<string, object> collectedData = null;
 			using (DataManager.Current.OpenConnection())
 			{
-				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT Field,Value
+                using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT Field,Value,ValueType
 																		FROM Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
 																			WHERE StepName=@StepName:NVarChar 
 																			AND SessionID=@SessionID:Int 
@@ -56,8 +58,13 @@ namespace EdgeBI.Wizards
 						}
 						while (reader.Read())
 						{
-							collectedData.Add(reader.GetString(0), reader.GetString(1));
+                           
+                                Type t = Type.GetType(reader.GetString(2));
 
+                                collectedData.Add(reader.GetString(0), TypeDescriptor.GetConverter(t).ConvertFromString(reader.GetString(1))); 
+
+                            
+                            
 
 						}
 					}
@@ -77,14 +84,15 @@ namespace EdgeBI.Wizards
 				{
 
 					using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
-																			(WizardID,SessionID,ServiceInstanceID,StepName,Field,Value)
+																			(WizardID,SessionID,ServiceInstanceID,StepName,Field,Value,ValueType)
 																			Values 
 																			(@WizardID:Int,
 																			@SessionID:Int,
 																			@ServiceInstanceID:BigInt,
 																			@StepName:NvarChar,
 																			@Field:NVarChar,
-																			@Value:NVarChar)"))
+																			@Value:NVarChar,
+                                                                            @ValueType:NVarChar)"))
 					{
 						sqlCommand.Parameters["@WizardID"].Value = WizardSession.WizardID;
 						sqlCommand.Parameters["@SessionID"].Value = WizardSession.SessionID;
@@ -92,6 +100,7 @@ namespace EdgeBI.Wizards
 						sqlCommand.Parameters["@StepName"].Value = WizardSession.CurrentStep.StepName;
 						sqlCommand.Parameters["@Field"].Value = input.Key;
 						sqlCommand.Parameters["@Value"].Value = input.Value.ToString();
+                        sqlCommand.Parameters["@ValueType"].Value = input.Value.GetType().AssemblyQualifiedName;
 						sqlCommand.ExecuteNonQuery();
 
 					}
@@ -111,7 +120,7 @@ namespace EdgeBI.Wizards
 			{
 
 
-				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT Field,Value
+				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT Field,Value,ValueType
 																			   FROM Wizards_Data_Per_WizardID_SessionID_Step_And_Field
 																			   WHERE StepName=@StepName:NvarChar
 																		       AND ServiceInstanceID=@ServiceInstanceID:BigInt
@@ -131,7 +140,9 @@ namespace EdgeBI.Wizards
 								executorData = new Dictionary<string, object>();
 								while (reader.Read())
 								{
-									executorData.Add(reader.GetString(0), reader.GetString(1));
+                                    Type t = Type.GetType(reader.GetString(2));
+
+                                    executorData.Add(reader.GetString(0), TypeDescriptor.GetConverter(t).ConvertFromString(reader.GetString(1))); 
 
 								}
 

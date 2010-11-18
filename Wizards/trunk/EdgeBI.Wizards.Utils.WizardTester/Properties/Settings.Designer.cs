@@ -230,13 +230,25 @@ namespace EdgeBI.Wizards.Utils.WizardTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Signups,Leads,Purchase,Conversions")]
-        public string CombosValues {
+        [global::System.Configuration.DefaultSettingValueAttribute("Signups,Lead,Purchase,Conversions")]
+        public string GoogleValues {
             get {
-                return ((string)(this["CombosValues"]));
+                return ((string)(this["GoogleValues"]));
             }
             set {
-                this["CombosValues"] = value;
+                this["GoogleValues"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("CPA1,CPA2")]
+        public string CPAValues {
+            get {
+                return ((string)(this["CPAValues"]));
+            }
+            set {
+                this["CPAValues"] = value;
             }
         }
     }

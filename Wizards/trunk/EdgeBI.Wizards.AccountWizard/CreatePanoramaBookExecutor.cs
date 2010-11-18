@@ -30,7 +30,7 @@ namespace EdgeBI.Wizards.AccountWizard
 
 			//Log.Write("Update OLTP datbase", LogMessageType.Information);
 			//UpdateOltpDataBASE(collectedData); //since the book data is taken from last steps their is no point update it again.
-			this.ReportProgress(0.9f);
+			this.ReportProgress(1);
 
 			return base.DoWork();
 		}
@@ -41,7 +41,7 @@ namespace EdgeBI.Wizards.AccountWizard
 
 			// COPY THE TEMPLATE BOOK (PATH ON APP.CONFIG FOLDER AND RENAME IT'S NAME TO BO+NEW ACCOUNT NAME
 			DirectoryInfo templateSourceDirectory = new DirectoryInfo(Path.Combine(AppSettings.Get(this, "Folder.PanoramaBooks"), AppSettings.Get(this, "Folder.PanoramaBookTemplate"))); //source path
-			DirectoryInfo targetDirectory = new DirectoryInfo(Path.Combine(AppSettings.Get(this, "Folder.PanoramaBooks"), lastExecutorStepData["AccountSettings.CubeName"].ToString()));  //target path
+            DirectoryInfo targetDirectory = new DirectoryInfo(Path.Combine(AppSettings.Get(this, "Folder.PanoramaBooks"), AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.BO.Name.Perfix") + lastExecutorStepData["AccountSettings.CubeName"].ToString()));  //target path
 
 			// Check if the target directory exists, if not, create it.
 			if (!Directory.Exists(targetDirectory.FullName))
@@ -50,13 +50,16 @@ namespace EdgeBI.Wizards.AccountWizard
 				{
 					Directory.CreateDirectory(targetDirectory.FullName);
 					string newUsersChanged = string.Empty;
+                    bool copyContent = false;
 					string newActiveUsersChanged = string.Empty;
 					if (lastExecutorStepData.ContainsKey("AccountSettings.New Users"))
-						newUsersChanged = lastExecutorStepData["AccountSettings.New Users"].ToString();
-					if (lastExecutorStepData.ContainsKey("AccountSettings.New Active Users"))
-						newActiveUsersChanged = lastExecutorStepData["AccountSettings.New Active Users"].ToString();
-
-					CopyAllFilesAndFolders(templateSourceDirectory, targetDirectory,newUsersChanged,newActiveUsersChanged);					
+						newUsersChanged = ((Replacment)lastExecutorStepData["AccountSettings.New Users"]).ReplaceTo;
+                    if (lastExecutorStepData.ContainsKey("AccountSettings.New Active Users"))
+                        newActiveUsersChanged = ((Replacment)lastExecutorStepData["AccountSettings.New Active Users"]).ReplaceTo;
+                    if (bool.Parse(lastExecutorStepData["AccountSettings.AddContentCube"].ToString()) == true)
+                        copyContent = true;
+               
+					CopyAllFilesAndFolders(templateSourceDirectory, targetDirectory,newUsersChanged,newActiveUsersChanged,copyContent);					
 
 				}
 				catch (Exception ex)
@@ -77,15 +80,15 @@ namespace EdgeBI.Wizards.AccountWizard
 
 			XDocument applicationXml = XDocument.Load(AppSettings.Get(this, "Folder.File.AplicationXml"));
 			XElement applicationElement = applicationXml.Element("pnView").Element("Applications");
-			int numberOfItemElements = applicationElement.Elements().Count() - 1;//since the first element is not an item element but Properties element
+			int numberOfItemElements = applicationElement.Elements().Count();//since the first element is not an item element but Properties element
 			//So the next item element to be add is numberOfItemElements +1
 
 			applicationElement.Add(new XElement(string.Format("Item{0}", numberOfItemElements),
 				new XElement("Properties",
-					new XAttribute("Name", lastExecutorStepData["AccountSettings.CubeName"].ToString()),
+                    new XAttribute("Name", AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.BO.Name.Perfix") + lastExecutorStepData["AccountSettings.CubeName"].ToString()),
 					new XAttribute("Path", Path.Combine(targetDirectory.FullName, "schema.xml")),
 					new XAttribute("Description", string.Empty),
-					new XAttribute("Flags", "3"),
+					new XAttribute("Flags", "1"),
 					new XAttribute("DefPerm", "0")),
 				new XElement("Roles",
 					new XElement("Properties",
@@ -97,10 +100,12 @@ namespace EdgeBI.Wizards.AccountWizard
 
 			System.Diagnostics.Process Proc = new System.Diagnostics.Process();
 			Proc.StartInfo.FileName = AppSettings.Get(this, "Folder.File.PanoramaMsc");
-			Proc.Start();
+			
 
             try
             {
+                Proc.Start();
+                System.Threading.Thread.Sleep(4000);
                 Proc.Kill();
             }
             catch (Exception)
@@ -131,125 +136,65 @@ namespace EdgeBI.Wizards.AccountWizard
 
 						
 					}
-					pattern = string.Format(@"\b{0}\b",AppSettings.Get(this,"Panorama.ServerToReplace")); //replace server 
+                    pattern = RegxUtils.CreateExactMatchWholeWordRegExpression(AppSettings.Get(this, "Panorama.ServerToReplace")); //replace server 
 					//CubeAdress
 					fileString = Regex.Replace(fileString, pattern, AppSettings.Get(this, "AnalysisServer.ConnectionString").Replace("DataSource=", string.Empty), RegexOptions.IgnoreCase);
 					//CubeName //few options here
 
-                    pattern = string.Format(@"\b{0}\b", AppSettings.Get(this, "Panorama.ContentCubeToReplace"));//ContentCubeToReplace
+                    pattern = RegxUtils.CreateExactMatchWholeWordRegExpression(AppSettings.Get(this, "Panorama.ContentCubeToReplace"));//ContentCubeToReplace
 
-					fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.CubeName"].ToString(), RegexOptions.IgnoreCase);
+                    fileString = Regex.Replace(fileString, pattern, AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.Content.Name.Perfix") + lastExecutorStepData["AccountSettings.CubeName"].ToString(), RegexOptions.IgnoreCase);
 
-                    pattern = string.Format(@"\b{0}\b", AppSettings.Get(this, "Panorama.BoCubeToReplace")); //BoCubeToReplace
-					fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.CubeName"].ToString(), RegexOptions.IgnoreCase);
+                    pattern = RegxUtils.CreateExactMatchWholeWordRegExpression( AppSettings.Get(this, "Panorama.BoCubeToReplace")); //BoCubeToReplace
+                    fileString = Regex.Replace(fileString, pattern, AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.BO.Name.Perfix") + lastExecutorStepData["AccountSettings.CubeName"].ToString(), RegexOptions.IgnoreCase);
 
-<<<<<<< .mine
 
-                    pattern = string.Format(@"\b{0}\b", AppSettings.Get(this, "Panorama.CubeDbtoReplace"));//CubeDbtoReplace
+                    pattern = RegxUtils.CreateExactMatchWholeWordRegExpression(AppSettings.Get(this, "Panorama.CubeDbtoReplace"));//CubeDbtoReplace
 					fileString = Regex.Replace(fileString, pattern, AppSettings.Get(this,"AnalysisServer.Database"), RegexOptions.IgnoreCase);
-=======
-					//CubeDb
-					pattern = @"\beasynet_UDM\b";
-					fileString = Regex.Replace(fileString, pattern, AppSettings.Get(this,"AnalysisServer.Database"), RegexOptions.IgnoreCase);
->>>>>>> .r192
 					
 					//Replace client specific measures +new active users+new users
 
 					foreach (KeyValuePair<string,object> input in lastExecutorStepData)
 					{
-<<<<<<< .mine
-						if (input.Key.StartsWith(AccSettClientSpecific, true, null))//measures
-=======
-						if (input.Key.StartsWith(AccSettClientSpecific, true, null))
->>>>>>> .r192
-						{
-<<<<<<< .mine
-                            pattern = string.Format(@"\b{0}\b", "BO " + input.Key.Replace("AccountSettings.", string.Empty));
-                            fileString = Regex.Replace(fileString, pattern, input.Value.ToString(), RegexOptions.IgnoreCase);
-=======
-							string patern = string.Format(@"\b{0}\b","BO " + input.Key.Replace("AccountSettings.", string.Empty));
-							fileString = Regex.Replace(fileString, patern, input.Value.ToString(), RegexOptions.IgnoreCase);
->>>>>>> .r192
-							
-						}                             
-                        else if (input.Key.StartsWith("AccountSettings.StringReplacment."))//String ReplaceMent
-                        {
-                            pattern = string.Format(@"\b{0}\b", input.Key.Replace("AccountSettings.StringReplacment.", string.Empty));
-                            fileString = Regex.Replace(fileString, pattern, input.Value.ToString(), RegexOptions.IgnoreCase);
-                        else if (input.Key.StartsWith("AccountSettings.StringReplacment."))
-                        {
-                            string patern = string.Format(@"\b{0}\b", input.Key.Replace("AccountSettings.StringReplacment.", string.Empty));
-                            fileString = Regex.Replace(fileString, patern, input.Value.ToString(), RegexOptions.IgnoreCase);
 
-<<<<<<< .mine
-                        }
-                        else if (input.Key == "AccountSettings.New Active Users")// replace new active users
+                        if (input.Value is Replacment)
                         {
-                            if (input.Value.ToString() != " ")
+                            Replacment replacment = (Replacment)input.Value;
+                            if (input.Key.StartsWith(AccSettClientSpecific, true, null))//measures
                             {
-=======
-                        }
-
-						
-					}
-					// replace new active users
-                    if (lastExecutorStepData.ContainsKey("AccountSettings.New Active Users"))
-                    {
-                        if (lastExecutorStepData["AccountSettings.New Active Users"].ToString() != " ")
-                        {
-                            pattern = "\b% of activations\b";
-                            fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
->>>>>>> .r192
-
-<<<<<<< .mine
-                                pattern = @"\bActives\b";
-                                fileString = Regex.Replace(fileString, pattern, input.Value.ToString(), RegexOptions.IgnoreCase);
+                                pattern = RegxUtils.CreateExactMatchWholeWordRegExpression( "BO " + replacment.ReplaceFrom);
+                                fileString = Regex.Replace(fileString, pattern, replacment.ReplaceTo, RegexOptions.IgnoreCase);
 
                             }
-=======
-
-                            pattern = "\bBO new activations\b";
-                            fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
-
-                            pattern = "\bTarget activations\b";
-                            fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
-
-
-                            pattern = "\bActives\b";
-                            fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Active Users"].ToString(), RegexOptions.IgnoreCase);
-
-                        } 
-                    }
-					
-					//replace new users
-                    if (lastExecutorStepData.ContainsKey("AccountSettings.New Active Users"))
-                    {
-                        if (lastExecutorStepData["AccountSettings.New Active Users"].ToString() != " ")
-                        {
-                            pattern = "\bBO New users\b";
-                            fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Users"].ToString(), RegexOptions.IgnoreCase);
->>>>>>> .r192
-
-<<<<<<< .mine
-                        }
-                        else if(input.Key=="AccountSettings.New Users") //new users Regs!!!!
-                        {
-                            if (input.Value.ToString() != " ")
+                            else if (input.Key.StartsWith("AccountSettings.StringReplacment."))//String ReplaceMent
                             {
-                                pattern = @"\bRegs\b";
-                                fileString = Regex.Replace(fileString, pattern, input.Value.ToString(), RegexOptions.IgnoreCase);
-                            } 
+                                pattern = RegxUtils.CreateExactMatchWholeWordRegExpression( replacment.ReplaceFrom);
+                                fileString = Regex.Replace(fileString, pattern, replacment.ReplaceTo, RegexOptions.IgnoreCase);
 
-                        }						
+                            }
+                            else if (input.Key == "AccountSettings.New Active Users")// replace new active users
+                            {
+                                if (input.Value.ToString() != " ")
+                                {
+
+                                    pattern = @"\bActives\b";
+                                    fileString = Regex.Replace(fileString, pattern, replacment.ReplaceTo, RegexOptions.IgnoreCase);
+
+                                }
+
+                            }
+                            else if (input.Key == "AccountSettings.New Users") //new users Regs!!!!
+                            {
+                                if (input.Value.ToString() != " ")
+                                {
+                                    pattern = @"\bRegs\b";
+                                    fileString = Regex.Replace(fileString, pattern, replacment.ReplaceTo, RegexOptions.IgnoreCase);
+                                }
+
+                            }						 
+                        }
 					}				
 
-=======
-                            pattern = "\bRegs\b";
-                            fileString = Regex.Replace(fileString, pattern, lastExecutorStepData["AccountSettings.New Users"].ToString(), RegexOptions.IgnoreCase);
-                        } 
-                    }
-
->>>>>>> .r192
 					using (StreamWriter writer=new StreamWriter(file.FullName,false))
 					{
 						writer.Write(fileString);
@@ -260,26 +205,52 @@ namespace EdgeBI.Wizards.AccountWizard
 			}
 		}
 
-		private void CopyAllFilesAndFolders(DirectoryInfo templateSourceDirectory, DirectoryInfo targetDirectory,string newUsersChanged,string newActiverUsersChanged )
+		private void CopyAllFilesAndFolders(DirectoryInfo templateSourceDirectory, DirectoryInfo targetDirectory,string newUsersChanged,string newActiverUsersChanged ,bool copyContent)
 		{
 			foreach (FileInfo file in templateSourceDirectory.GetFiles() )
 			{
 				if  ( file.Name.Equals("2. ROI by Actives.xml") && !string.IsNullOrEmpty(newUsersChanged)) //regs				
-					file.CopyTo(Path.Combine(targetDirectory.ToString(),string.Format("2. ROI by {0}.xml",newUsersChanged)), true);	
-			
-				else if (file.Name.Equals("2. ROI by Regs.xml") && !string.IsNullOrEmpty(newActiverUsersChanged)) //actives				
-					file.CopyTo(Path.Combine(targetDirectory.ToString(),string.Format("2. ROI by {0}.xml",newActiverUsersChanged)), true);
-					
-				else
-					file.CopyTo(Path.Combine(targetDirectory.ToString(), file.Name), true);
+					file.CopyTo(Path.Combine(targetDirectory.ToString(),string.Format("2. ROI by {0}.xml",newUsersChanged)), true);
+
+                else if (file.Name.Equals("2. ROI by Regs.xml") && !string.IsNullOrEmpty(newActiverUsersChanged)) //actives				
+                    file.CopyTo(Path.Combine(targetDirectory.ToString(), string.Format("2. ROI by {0}.xml", newActiverUsersChanged)), true);
+                else
+                {
+                    if (copyContent) //if we create content cube then copy content files ,else...not
+                    {
+                        file.CopyTo(Path.Combine(targetDirectory.ToString(), file.Name), true);
+                    }
+                    else
+                    {
+                        string[] contentFiles = AppSettings.Get(this, "Panorama.ContentViews").Split(',');
+                        bool copyFile = true;                        
+                        foreach (string contentFile in contentFiles)
+                        {
+                            if (file.Name.Equals(contentFile))
+                                copyFile = false;
+                            
+                        }
+                        if (copyFile)
+                        {
+                            file.CopyTo(Path.Combine(targetDirectory.ToString(), file.Name), true);
+                        }
+                    }
+                   
+                }
+
 				
 			}
 			foreach (DirectoryInfo sourceSubDirectory in templateSourceDirectory.GetDirectories())
 			{
 				DirectoryInfo nextTargetDirectory = targetDirectory.CreateSubdirectory(sourceSubDirectory.Name);
-				CopyAllFilesAndFolders(sourceSubDirectory, nextTargetDirectory, newUsersChanged, newActiverUsersChanged);
+				CopyAllFilesAndFolders(sourceSubDirectory, nextTargetDirectory, newUsersChanged, newActiverUsersChanged,copyContent);
 				
 			}
+            if (!File.Exists(Path.Combine(targetDirectory.FullName,"refreshbook") ))
+            {
+                File.Create(Path.Combine(targetDirectory.FullName,"refreshbook"));
+                
+            }
 
 
 
