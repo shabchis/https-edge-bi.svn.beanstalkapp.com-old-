@@ -53,8 +53,11 @@
     <Setting Name="RoleMemberName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Edge\BIadmin</Value>
     </Setting>
-    <Setting Name="CombosValues" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Signups,Leads,Purchase,Conversions</Value>
+    <Setting Name="GoogleValues" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Signups,Lead,Purchase,Conversions</Value>
+    </Setting>
+    <Setting Name="CPAValues" Type="System.String" Scope="User">
+      <Value Profile="(Default)">CPA1,CPA2</Value>
     </Setting>
   </Settings>
 </SettingsFile>

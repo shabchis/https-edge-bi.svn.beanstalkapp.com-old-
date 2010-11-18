@@ -27,7 +27,8 @@ namespace EdgeBI.Wizards.AccountWizard
 			try
 			{
 				AddNewActiveDirectoryUser(collectedData["ActiveDirectory.UserName"].ToString(), collectedData["ActiveDirectory.Password"].ToString(), collectedData["ActiveDirectory.FullName"].ToString(), true);
-				this.ReportProgress((float)0.5);
+                this.SaveExecutorData(collectedData);
+                this.ReportProgress((float)0.5);
 			}
 			catch (Exception ex)
 			{
