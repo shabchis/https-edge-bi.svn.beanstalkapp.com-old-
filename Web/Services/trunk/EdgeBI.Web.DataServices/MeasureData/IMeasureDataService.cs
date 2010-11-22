@@ -28,7 +28,8 @@ namespace EdgeBI.Web.DataServices
 			MeasureDiff[] diff,
 			MeasureSort[] dataSort,
 			MeasureSort[] viewSort,
-			MeasureFormat[] format
+			MeasureFormat[] format,
+            string filter
 		);
 
 		/* EXAMPLE:
