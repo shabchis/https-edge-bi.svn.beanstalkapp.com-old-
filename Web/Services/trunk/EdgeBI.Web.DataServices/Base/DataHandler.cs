@@ -27,7 +27,8 @@ namespace EdgeBI.Web.DataServices
             MeasureSort[] dataSort,
             MeasureSort[] viewSort,
             MeasureFormat[] format,
-            Dictionary<int, Measure> measuresList
+            Dictionary<int, Measure> measuresList,
+            string filter
             )
         {
 			Mode mode = GetMode(dataSort);
@@ -47,7 +48,7 @@ namespace EdgeBI.Web.DataServices
                     Measure m = measuresList[mf.MeasureID];
                     if (mf.IsTargetRef)
                         m = measuresList[m.TargetMeasureID];
-                    GetFieldsSQL(mf, measureIndex, RangeIndex, out lAggregateFunction, out lHavingString, measuresList);
+                    GetFieldsSQL(mf, measureIndex, RangeIndex, out lAggregateFunction, out lHavingString, measuresList, filter);
                     AggregateFunction += "," + lAggregateFunction;
                     HavingString += HavingString != null ? " AND " + lHavingString : lHavingString;
                     DicMeasuresFormat.Add("M" + measureIndex + ".R" + RangeIndex + ".Value", m.StringFormat);
@@ -209,10 +210,11 @@ namespace EdgeBI.Web.DataServices
             return RetEntity;
         }
 
-        private void GetFieldsSQL(MeasureRef measure, int measureIndex, int RangeIndex, out string AggregateFunction, out string HavingString, Dictionary<int, Measure> measuresList)
+        private void GetFieldsSQL(MeasureRef measure, int measureIndex, int RangeIndex, out string AggregateFunction, out string HavingString, Dictionary<int, Measure> measuresList, string filter)
         {
             AggregateFunction = BuildAggregateFunction(measure, measuresList);
-            HavingString = AggregateFunction + " IS NOT NULL ";
+            HavingString = AggregateFunction + " IS NOT NULL " ;
+            HavingString += filter != null ? "AND " + filter : "";
             AggregateFunction = AggregateFunction + " AS 'M" + measureIndex + ".R" + RangeIndex + ".Value'";
 
         }
@@ -434,6 +436,12 @@ namespace EdgeBI.Web.DataServices
                             if (NativeValue < 0) NativeValue = NativeValue * -1;
                             value.ValueData = string.Format("{0:" + StringFormat + "}", Convert.ToDouble(value.ValueData));
                             value.ValueData = value.ValueData.Replace(Convert.ToString(NativeValue), MinusSign + Convert.ToString(NativeValue));
+                        }
+                        if (StringFormat.Contains("$"))
+                        {
+                            int NativeValue = decimal.ToInt32(Convert.ToDecimal(value.ValueData));
+                            if (NativeValue < 0) NativeValue = NativeValue * -1;
+                            value.ValueData = string.Format("{0:" + StringFormat + "}", Convert.ToDouble(value.ValueData));
                         }
                         else
                             value.ValueData = string.Format("{0:" + StringFormat + ";" + StringFormat + ";0}", Convert.ToDouble(value.ValueData));

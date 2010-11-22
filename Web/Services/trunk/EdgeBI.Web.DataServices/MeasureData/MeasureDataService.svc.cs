@@ -88,7 +88,8 @@ namespace EdgeBI.Web.DataServices
 				"diff={diff}&" +
 				"datasort={dataSort}&" +
 				"viewsort={viewSort}&" +
-				"format={format}"
+				"format={format}&" +
+                "filter={filter}"
 		)]
 		public List<ObjData> GetData(
 			int account,
@@ -99,14 +100,15 @@ namespace EdgeBI.Web.DataServices
 			MeasureDiff[] diff,
 			MeasureSort[] dataSort,
 			MeasureSort[] viewSort,
-			MeasureFormat[] format
+			MeasureFormat[] format,
+            string filter
 			)
 		{
 			// Get measures
 			List<Measure> measuresList = GetMeasures(account, true);
 			Dictionary<int, Measure> measuresByID = measuresList.ToDictionary(m => m.MeasureID);
             EdgeBI.Web.DataServices.DataHandler dataHandler = new EdgeBI.Web.DataServices.DataHandler();
-			return dataHandler.GetData(account, grouping, top, measures, ranges, diff, dataSort, viewSort, format, measuresByID);
+			return dataHandler.GetData(account, grouping, top, measures, ranges, diff, dataSort, viewSort, format, measuresByID,filter);
 		}
 	}
 }
