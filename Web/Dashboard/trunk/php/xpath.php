@@ -63,21 +63,63 @@
       <area title="MYANMAR" mc_name="MM"></area>
       <area title="NAMIBIA" mc_name="NA"></area>
       <area title="NAURU" mc_name="NR"></area>
-<?php
-  
- 	$xml = simplexml_load_file("books.xml") 
-    or die("Error: Cannot create object");
+<?php 
+ header('Content-type: text/xml; charset=utf-8'); 
+ $startdate = $_GET['startdate']; 
+	$measureId = $_GET['measure'];
+	$endDate = $_GET['endDate'];
+	$orderby = $_GET['orderby'];
+	$account_id = $_GET['account_id'];
+	$global = $_GET['global'];
+	include ('timeParse.php');
+	
+	
+$before = array('(',')');
+	
+?>
+  <?php
+   $url = 'http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=5&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
 
-	// we want to show just <title> nodes
-	foreach($xml->xpath('//book') as $data)
-	{
+ 	//load the variable using simple xml
+	$xml = simplexml_load_string($xmlstr);
+	//error if xml not right 
+	   if(!$xml){
+	header('HTTP/1.1 500 Internal Server Error');
+ echo '<xml>';
+ echo '<error>There is an error in the web service</error>';
+ echo '<address>'.$url.'</address>';
+ echo '</xml>';
+ 
+}
+echo  '<areas>';
+echo '<map>';
+
+foreach( $xml ->xpath('/a:ArrayOfReturnData//a:ReturnData') as $key => $item)
+{	
+		$item->registerXPathNamespace('a', $namespaces['']);
+		$name = $item->xpath('//a:Name');
+		$title = $item->xpath('//a:Name');
+		
+		$val =  $item->xpath('//a:Value//a:clsvalue[a:FieldName="VALUE1"]/a:ValueData');
+		
+			
+		if(strlen($name[$key]) >= 20){
+			$name[$key] = substr($name[$key],0,17).'...';
+		}
+		if (strlen($diff[$key])>0){
+			$diff[$key] = $diff[$key];
+		}
+		if (strlen($val[$key])>0){
+			$val[$key] = '('.$val[$key].')';
+		}
+
 	
 
 
- echo '<area title="'. $data->title['title'] .'" mc_name="'. $data->title['mc_name'] .'" value="'. $data->title['value'] .'"></area>';
+ echo '<area title="'. $name[$key] .'" mc_name="'. $data->title['mc_name'] .'" value="'. $val[$key] .'"></area>';
 	  
-	}
 
+}
 
 
 ?>

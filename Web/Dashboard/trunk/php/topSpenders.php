@@ -14,7 +14,7 @@ $url ='http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&
 // $url ='https://console.edge-bi.com/Seperia/DataServices/service.svc/Data?accountID='.$account_id.'&measureID=8&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=10&dataSort=value1&dataSortDir=DESC&functionDisplayMeasures='.$measureId.'&displayMeasures=20,'.$measureId.',19';
  
 
- // echo $totalurl;
+ // echo $url;
 
    if(!$xml=simplexml_load_file($url)){
     // trigger_error('Error reading XML file', E_USER_ERROR);

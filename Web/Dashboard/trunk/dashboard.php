@@ -39,7 +39,7 @@
 		<div class="layoutRow">
 			<div id="atten" class="widget">
 				<div class="header">
-							<h3 title="Campaign Performance – ROI">Campaign Performance – ROI</h3>
+							<h3 class="title" title="Campaign Performance – ROI"><a href="#">Campaign Performance – ROI</a></h3>
 							<select id="TopCombo">
 						<?php include 'php/measureDropDown.php'; ?>
 					</select>
@@ -85,7 +85,7 @@
 			
 			<div id="barPanel" class="widget" >
 				<div class="header">
-					<h3 title="Channel Performance">Channel Performance</h3>
+					<h3 class="title" title="Channel Performance"><a href="#">Channel Performance</a></h3>
 					<select id="GraphCombo">
 						<?php include 'php/measureDropDown.php'; ?>
 						
@@ -117,7 +117,7 @@
 			
 					<div id="trendcahnges" class="widget">
 					<div class="header">
-						<h3 title="Fluctuating Campaigns – ROI">Fluctuating Campaigns – ROI</h3>
+						<h3 class="title" title="Fluctuating Campaigns – ROI"><a href="">Fluctuating Campaigns – ROI</a></h3>
 						<select id="flcamp">
 					<?php include 'php/measureDropDown.php'; ?>
 						</select>
@@ -163,7 +163,8 @@
 			
 			<div id="TopSpenders" class="widget">
 					<div class="header">
-						<h3 title="Top Spending campaigns">Top Spending campaigns</h3>
+						<h3 class="title" title="Top Spending campaigns"><a href="#">Top Spending campaigns</a></h3>
+					
 						<select id="TopSpendCombo">
 								<?php include 'php/measureDropDown.php'; ?>
 									
@@ -284,33 +285,18 @@ var title = $('#TopSpendCombo option:selected').text();
 	$('.timevalue').empty();
 	// $('span.timevalue').append(text);
 	 // $('.equal').empty();
-	
-	ChangeStatus();
-	LoadTopCampaigns();
-	LoadWorstCampaigns();
-	topSpenders();
-	LoadGraph();
-	ChangeYesterdayMatch();
-	loadByMeasures();
-	 LoadGraph();
-
-	 // ChangeYesterdayMatch();
-	// changeCampaignPerforamceCombo();
-		$("#combo").change(function(){
+	$("#combo").change(function(){
 				var endDate = $("#combo option:selected").val();
 				// startDate = "Previous Day";
 			$('span.timevalue').empty();
 			 $('.equal').empty();
-
-				
+		
 				ChangeStatus();
 	 			ChangeYesterdayMatch();
-				graphcombo();
+		
 				
-
 				// LoadMap(startDate,endDate);
 				LoadGraph();
-			
 				// ChangeYesterdayMatch();
 				LoadTopCampaigns();
 				LoadWorstCampaigns();
@@ -318,6 +304,16 @@ var title = $('#TopSpendCombo option:selected').text();
 
 
 		})
+			ChangeStatus();
+			LoadTopCampaigns();
+			LoadWorstCampaigns();
+			topSpenders();
+			LoadGraph();
+			ChangeYesterdayMatch();
+			loadByMeasures();
+			 LoadGraph();
+
+		
 
 	 	
 		 
@@ -357,12 +353,6 @@ function loadByMeasures(){
 	}
 	
 
-	
-	
-	
-
-	
-
 	//change the titles of the dates when changing the time combo 
 	function ChangeStatus(){
 	
@@ -373,7 +363,7 @@ function loadByMeasures(){
 			 var parent = yesterday.parent().parent().parent().attr('id');
 			
 
-	var selectValue = $("#combo option:selected").val();
+				var selectValue = $("#combo option:selected").val();
 			
 				
 				if(selectValue == 1){
@@ -544,8 +534,6 @@ function loadByMeasures(){
 							
 				
 					$('<tr class="topcpa"><td class="name" title="'+fullname+'">'+name+'</td><td class="middle">'+cpa+'</td><td class="last"><span class="con"><span class="precent">'+diff+'</span></span></td></tr>').appendTo('#top');
-				// $('<tr class="topcpa"><td>'+name+'</td><td>'+cpa+'&nbsp &nbsp('+number+') </td></tr>').appendTo('#upward');
-		 // $('<tr class="worstcpa"><td>'+name+'</td><td>'+percent+'%</td><td>('+number+')</td></tr>').appendTo("#upward");
 				
 			
 				$(".precent:contains(-)").css('color','red').parent("td.last").css('color','red');
@@ -660,14 +648,7 @@ function loadByMeasures(){
 				$(".precent:contains(-)").css('color','red').parent(".con").css('color','red');
 			
 				$(".precent").not(":contains(-)").css('color','green').parent(".con").css('color','green');
-	  					// var title = "";
-					// $('#TopCombo').change(function(){
-						 // title = $('#TopCombo option:selected').text();
-
-						// $('#table2 h3 span,#table1 h3 span').text(title);
-						
-
-					// })
+	  				
 
 	
 				});
