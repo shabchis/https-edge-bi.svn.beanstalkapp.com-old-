@@ -67,7 +67,7 @@ $name = $value->Name;
 
 	echo '<campaign>';
 	 echo '<fullname>'.trim($fullname).'</fullname>';
-    echo '<name>'.$name.'</name>';
+    echo '<name>'.iconv("UTF-8","UTF-8",$name).'</name>';
 	echo '<value>('.str_replace($before,"",$value->Value->clsvalue[0]->ValueData).')</value>';
 	echo '<diff>'.$diff.'</diff>';
 	echo '</campaign>';
