@@ -6,6 +6,7 @@ using System.Web.Security;
 using System.Web.SessionState;
 using Easynet.Edge.Core.Data;
 using System.Configuration;
+using System.IO;
 
 namespace Easynet.Edge.UI.WebPages
 {
@@ -39,7 +40,7 @@ namespace Easynet.Edge.UI.WebPages
 
 		protected void Session_End(object sender, EventArgs e)
 		{
-
+			WebImporterPage.Cleanup(Session);
 		}
 
 		protected void Application_End(object sender, EventArgs e)

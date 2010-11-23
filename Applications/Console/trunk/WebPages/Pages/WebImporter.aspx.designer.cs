@@ -11,7 +11,7 @@
 namespace Easynet.Edge.UI.WebPages {
     
     
-    public partial class WebImporter {
+    public partial class WebImporterPage {
         
         /// <summary>
         /// _sourceSelector control.
