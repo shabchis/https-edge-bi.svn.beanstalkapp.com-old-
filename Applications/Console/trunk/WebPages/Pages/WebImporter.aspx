@@ -48,9 +48,7 @@
 	<div class="formField">
 	    <div class="label">Source:</div>
 	    <div class="control">
-		    <asp:DropDownList runat="server" AutoPostBack="false" id="_sourceSelector"
-				OnSelectedIndexChanged="_sourceSelector_SelectedIndexChanged"
-			>
+		    <asp:DropDownList runat="server" AutoPostBack="false" id="_sourceSelector">
 				<asp:ListItem Text="Back Office" Value="BackOffice"/>
 				<asp:ListItem Text="Bing" Value="Bing"/>
 				<asp:ListItem Text="Yahoo" Value="Yahoo"/>
