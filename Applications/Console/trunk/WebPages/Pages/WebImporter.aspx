@@ -1,7 +1,7 @@
-﻿<%@ Page MasterPageFile="~/default.Master" Language="C#" AutoEventWireup="true" CodeBehind="RunConvertor.aspx.cs" Inherits="Easynet.Edge.UI.WebPages.WebImporter" %>
+﻿<%@ Page MasterPageFile="~/default.Master" Language="C#" AutoEventWireup="true" CodeBehind="RunConvertor.aspx.cs" Inherits="Easynet.Edge.UI.WebPages.WebImporterPage" %>
  
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server">
-    <title>Run Convertor</title>
+    <title>Edge.BI Web Importer</title>
     <style type="text/css">
 		.formField
 		{
@@ -54,8 +54,8 @@
 				<asp:ListItem Text="Back Office" Value="BackOffice"/>
 				<asp:ListItem Text="Bing" Value="Bing"/>
 				<asp:ListItem Text="Yahoo" Value="Yahoo"/>
-				<asp:ListItem Text="Creative .txt" Value="CreativeTXTfile"/>
-				<asp:ListItem Text="Back Office .txt" Value="BoTXTfile"/>
+				<asp:ListItem Text="Pre-formatted Back Office" Value="DirectUpload.BO"/>
+				<asp:ListItem Text="Pre-formatted Creative" Value="DirectUpload.Creative"/>
 		    </asp:DropDownList>
 	    </div>
     </div>
@@ -71,15 +71,6 @@
 			<asp:ListBox runat="server" ID="_listboxFiles" CssClass="filesList"/>  
 		</div>
     </div>
-    
- 
-	
-	<%--<div class="formField">
-		<div class="label">Save as:</div>
-		<div class="control">
-			<asp:TextBox  runat="server" ID="saveFilePathTextBox" Width="250" ></asp:TextBox>
-		</div>
-	</div>--%>
 	
 	<div class="formField">
 		<div class="label"></div>

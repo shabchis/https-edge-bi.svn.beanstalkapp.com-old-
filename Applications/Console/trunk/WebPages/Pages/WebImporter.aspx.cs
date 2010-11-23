@@ -1,43 +1,27 @@
 ﻿using System;
-using System.Collections;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
+using System.Collections.Generic;
+using System.IO;
 using Easynet.Edge.Core;
 using Easynet.Edge.Core.Configuration;
-using Easynet.Edge.Core.Data;
 using Easynet.Edge.Core.Scheduling;
 using Easynet.Edge.Core.Services;
 using Easynet.Edge.Core.Utilities;
-using Easynet.Edge.Core.Workflow;
-using System.Data.SqlClient;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
- 
-using System.Collections.Specialized;
-using System.IO;
-using System.Net;
-using System.Web.Configuration;
-using Excel = Microsoft.Office.Interop.Excel;
-using Easynet.Edge.UI.WebPages.Classes.Convertors;
-using System.Xml;
 
 namespace Easynet.Edge.UI.WebPages
 {
     public partial class WebImporterPage : PageBase
     {
-        protected string ErrorMessage = null;
+		static string UploadRoot = AppSettings.Get(typeof(WebImporterPage), "UploadRoot");
+		static bool CleanupSession = bool.Parse(AppSettings.Get(typeof(WebImporterPage), "CleanupSession"));
+		static bool ThresholdEnabled = bool.Parse(AppSettings.Get(typeof(WebImporterPage), "AvailabilityThreshold.Enabled"));
+		static TimeSpan ThresholdUploadTime = TimeSpan.Parse(AppSettings.Get(typeof(WebImporterPage), "AvailabilityThreshold.UploadTime"));
+		static string ThresholdMessageDefault = AppSettings.Get(typeof(WebImporterPage), "AvailabilityThreshold.MessageDefault");
+		static string ThresholdMessageBefore = AppSettings.Get(typeof(WebImporterPage), "AvailabilityThreshold.MessageBefore");
+		static string ThresholdMessageAfter = AppSettings.Get(typeof(WebImporterPage), "AvailabilityThreshold.MessageAfter");
+
+		protected string ErrorMessage = null;
         protected string SuccessMessage = null;
 
-		public static string UploadRoot = AppSettings.Get(typeof(WebImporter), "UploadRoot");
 		Dictionary<string, string> UploadedFileNames
 		{
 			get
@@ -84,7 +68,7 @@ namespace Easynet.Edge.UI.WebPages
 			catch (Exception ex)
 			{
 				ErrorMessage = "Could not create an upload directory for this session.";
-				Log.Write("WebImporter", ErrorMessage, ex);
+				Log.Write(this.GetType().Name, ErrorMessage, ex);
 				return;
 			}
 
@@ -92,7 +76,7 @@ namespace Easynet.Edge.UI.WebPages
 			
 			// some hack - change non-yahoo tsv to csv
 			if (Path.GetExtension(uploadPath).ToLower().Equals(".tsv") && !_sourceSelector.SelectedValue.ToLower().Equals("yahoo"))
-				savePath = Path.ChangeExtension(uploadPath, "csv");
+				uploadPath = Path.ChangeExtension(uploadPath, "csv");
 
 			try
 			{
@@ -101,7 +85,7 @@ namespace Easynet.Edge.UI.WebPages
 			catch (Exception ex)
 			{
 				ErrorMessage = "Failed to upload file: " + ex.Message;
-				Log.Write("WebImporter", String.Format("Failed to upload file to {0}", uploadPath), ex);
+				Log.Write(this.GetType().Name, String.Format("Failed to upload file to {0}", uploadPath), ex);
 				return;
 			}
 
@@ -110,20 +94,6 @@ namespace Easynet.Edge.UI.WebPages
 
 			// keep a name conversion reference for later
 			UploadedFileNames[_fileUpload.PostedFile.FileName] = uploadPath;
-
-			// TODO:
-			/*
-			int count = _listboxFiles.Items.Count;
-			if (count > 0)
-			{
-				string outputFileName = originalFileName;
-				string name = Path.GetFileName(outputFileName);
-				string exten = Path.GetExtension(name);
-				//saveFilePathTextBox.Text = name.Remove(name.Length - exten.Length, exten.Length);
-				// DORON: Converted saveFilePathTextBox to a HiddenField
-				saveFilePathTextBox.Value = Request.QueryString["accountID"] + "_" + name.Remove(name.Length - exten.Length, exten.Length) + DayCode.ToDayCode(DateTime.Today) + "_" + DateTime.Now.TimeOfDay.Hours + "_" + DateTime.Now.TimeOfDay.Minutes + "_" + DateTime.Now.TimeOfDay.Seconds;
-			}
-			*/
 
 			// enable submit after we ensure one file is up
             _submit.Enabled = true;
@@ -149,8 +119,7 @@ namespace Easynet.Edge.UI.WebPages
 				}
 				catch (Exception ex)
 				{
-					Log.Write(
-						"WebImporter",
+					Log.Write(this.GetType().Name,
 						String.Format("User tried to remove an uploaded file from the list, but it could not be deleted: {0}", uploaded),
 						ex,
 						LogMessageType.Warning);
@@ -169,21 +138,28 @@ namespace Easynet.Edge.UI.WebPages
 
 			// Build a list of files
 			string delimetedList = string.Empty;
+			int count = 0;
 			foreach (string file in UploadedFileNames.Values)
 			{
 				delimetedList += file;
-				if (file < UploadedFileNames.Count-1)
+				if (count < UploadedFileNames.Count - 1)
 					delimetedList += ',';
+				count++;
 			}
 
-			//SourceType = manager.DoWork(accountID, listOfFiles, saveFilePathTextBox.Value, SourceType);
+			string sourceType = _sourceSelector.SelectedValue;
+			string serviceName = sourceType.StartsWith("DirectUpload") ?
+				"DirectWebImporter" :
+				"LegacyWebImporter";
+
 			try
 			{
 				using (ServiceClient<IScheduleManager> scheduleManager = new ServiceClient<IScheduleManager>())
 				{
-					scheduleManager.Service.AddToSchedule("WebImporter", this.AccountID, DateTime.Now, new SettingsCollection()
+
+					scheduleManager.Service.AddToSchedule(serviceName, this.AccountID, DateTime.Now, new SettingsCollection()
 					{
-						{ "SourceType", _sourceSelector.SelectedValue},
+						{ "SourceType", sourceType},
 						{ "ImportFiles", delimetedList }
 					});
 				}
@@ -191,31 +167,40 @@ namespace Easynet.Edge.UI.WebPages
 			catch(Exception ex)
 			{
 				ErrorMessage = "Failed to import: " + ex.Message;
-				Log.Write("WebImporter", "Failed to trigger WebImporter from ScheduleManager.", ex, LogMessageType.Error);
+				Log.Write(this.GetType().Name, "Failed to add " + serviceName + " to the schedule manager.", ex, LogMessageType.Error);
 				return;
 			}
 
-			SuccessMessage = SourceType;
+			if (ThresholdEnabled)
+			{
+				if ((DateTime.Now - DateTime.Today) < ThresholdUploadTime)
+					SuccessMessage = ThresholdMessageBefore;
+				else
+					SuccessMessage = ThresholdMessageAfter;
+			}
+			else
+			{
+				SuccessMessage = ThresholdMessageDefault;
+			}
+
 			_listboxFiles.Items.Clear();            
         }
 
-        void _sourceSelector_SelectedIndexChanged(object sender, EventArgs e)
-        {
-			_listboxFiles.Items.Clear();
-			UploadedFileNames.Clear();
-		}
-
 		internal static void Cleanup(System.Web.SessionState.HttpSessionState Session)
 		{
+			if (!CleanupSession)
+				return;
+
 			try
 			{
 				string path = Path.Combine(UploadRoot, Session.SessionID);
 				if (Directory.Exists(path))
 					Directory.Delete(path, false);
 			}
-			catch
+			catch(Exception ex)
 			{
-				Log.Write("WebImporter", String.Format("Failed to cleanup after user session {0}.", Session.SessionID), ex, LogMessageType.Warning);
+				Log.Write(typeof(WebImporterPage).Name, String.Format("Failed to cleanup after user session {0}.", Session.SessionID), ex, LogMessageType.Warning);
 			}
+		}
 	}
 }
