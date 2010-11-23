@@ -33,7 +33,7 @@ namespace Easynet.Edge.UI.WebPages
 			}
 		}
 		
-		void _addFile_Click(object sender, EventArgs e)
+		protected void _addFile_Click(object sender, EventArgs e)
         {
 			// empty filename
             if (String.IsNullOrEmpty(_fileUpload.PostedFile.FileName))
@@ -68,7 +68,7 @@ namespace Easynet.Edge.UI.WebPages
 			catch (Exception ex)
 			{
 				ErrorMessage = "Could not create an upload directory for this session.";
-				Log.Write(this.GetType().Name, ErrorMessage, ex);
+				Log.Write(typeof(WebImporterPage).Name, ErrorMessage, ex);
 				return;
 			}
 
@@ -85,7 +85,7 @@ namespace Easynet.Edge.UI.WebPages
 			catch (Exception ex)
 			{
 				ErrorMessage = "Failed to upload file: " + ex.Message;
-				Log.Write(this.GetType().Name, String.Format("Failed to upload file to {0}", uploadPath), ex);
+				Log.Write(typeof(WebImporterPage).Name, String.Format("Failed to upload file to {0}", uploadPath), ex);
 				return;
 			}
 
@@ -99,7 +99,7 @@ namespace Easynet.Edge.UI.WebPages
             _submit.Enabled = true;
         }
 
-		void _removeFile_Click(object sender, EventArgs e)
+		protected void _removeFile_Click(object sender, EventArgs e)
         {
 			string userUploadRoot = Path.Combine(UploadRoot, Session.SessionID);
             string fileName = _listboxFiles.SelectedItem.Text;
@@ -119,7 +119,7 @@ namespace Easynet.Edge.UI.WebPages
 				}
 				catch (Exception ex)
 				{
-					Log.Write(this.GetType().Name,
+					Log.Write(typeof(WebImporterPage).Name,
 						String.Format("User tried to remove an uploaded file from the list, but it could not be deleted: {0}", uploaded),
 						ex,
 						LogMessageType.Warning);
@@ -128,7 +128,7 @@ namespace Easynet.Edge.UI.WebPages
 				
         }
 
-		void _submit_Click(object sender, EventArgs e)
+		protected void _submit_Click(object sender, EventArgs e)
         {
 			if (_listboxFiles.Items.Count == 0)
 			{
@@ -157,17 +157,20 @@ namespace Easynet.Edge.UI.WebPages
 				using (ServiceClient<IScheduleManager> scheduleManager = new ServiceClient<IScheduleManager>())
 				{
 
-					scheduleManager.Service.AddToSchedule(serviceName, this.AccountID, DateTime.Now, new SettingsCollection()
+					bool success = scheduleManager.Service.AddToSchedule(serviceName, this.AccountID, DateTime.Now, new SettingsCollection()
 					{
 						{ "SourceType", sourceType},
 						{ "ImportFiles", delimetedList }
 					});
+
+					if (!success)
+						throw new Exception(String.Format("The selected source requires a service ({0}) that is not available for this account.", serviceName));
 				}
 			}
 			catch(Exception ex)
 			{
-				ErrorMessage = "Failed to import: " + ex.Message;
-				Log.Write(this.GetType().Name, "Failed to add " + serviceName + " to the schedule manager.", ex, LogMessageType.Error);
+				ErrorMessage = "Failed to import. " + ex.Message;
+				Log.Write(typeof(WebImporterPage).Name, "Failed to add " + serviceName + " to the schedule manager.", ex, LogMessageType.Error);
 				return;
 			}
 
