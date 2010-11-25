@@ -101,7 +101,7 @@ namespace EdgeBI.Web.DataServices
 			MeasureSort[] dataSort,
 			MeasureSort[] viewSort,
 			MeasureFormat[] format,
-            string filter
+            MeasureFilter filter
 			)
 		{
 			// Get measures
