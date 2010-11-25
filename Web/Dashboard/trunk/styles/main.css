@@ -185,6 +185,7 @@ position: relative;
 
 }
 #trendcahnges{
+padding-bottom:50px;
 /* float: left;
 margin-top:5px;
 margin-left:0px;
@@ -376,4 +377,9 @@ padding-right:10px;
 #total3,#total4,#total1,#total2,#total5{
 font-weight:bold;
 
+}
+
+#amcolumn{
+margin-bottom:0px;
+margin-top:-55px;
 }
