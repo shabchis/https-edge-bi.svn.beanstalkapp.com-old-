@@ -266,6 +266,68 @@ namespace EdgeBI.Web.DataServices
 		#endregion
 	}
 
+    [TypeConverter(typeof(MeasureFilter.Converter))]
+    public struct MeasureFilter
+    {
+        public int MeasureIndex;
+        public int RangeIndex;
+        public DiffType DiffType;
+        public int FilterValue;
+        public string Operator;
+
+        #region Converter
+        class Converter : TypeConverter
+        {
+            public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+            {
+                return sourceType == typeof(string);
+            }
+            public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+            {
+                return destinationType == typeof(string);
+            }
+            public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+            {
+                string raw = value as string;
+                try
+                {
+                    MeasureFilter mFilt = new MeasureFilter();
+                    // Segments
+                    string[] parts = raw.Split(new char[] { '.' }, 3);
+                    if (parts[0].ToLower()[0] == 'm')
+                        mFilt.MeasureIndex = Int32.Parse(parts[0].Substring(1));
+                    if (parts[1].ToLower()[0] == 'r')
+                        mFilt.RangeIndex = Int32.Parse(parts[1].Substring(1));
+                    if (parts.Length > 2)
+                    {
+                        string diffRaw = parts[2].Split(new char[] { '<','>','=' }, 2)[0];
+                        mFilt.DiffType = diffRaw.ToLower() == "value" ?
+                            DiffType.None :
+                            (DiffType)Enum.Parse(typeof(DiffType), diffRaw, true);
+                    }
+                    else
+                        mFilt.DiffType = DiffType.None;
+                    parts = raw.Split(new char[] { '<', '>', '=' }, 2);
+                    mFilt.FilterValue = Convert.ToInt32(parts[1]);
+                    if(raw.Contains(">")) mFilt.Operator = ">";
+                    if(raw.Contains("<")) mFilt.Operator = "<";
+                    if(raw.Contains("=")) mFilt.Operator = "=";
+
+                    return mFilt;
+                }
+                catch (NullReferenceException )
+                {
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Invalid measure filter: " + raw, ex);
+                }
+            }
+        }
+        #endregion
+    }
+
     public enum Mode
     {
         None,

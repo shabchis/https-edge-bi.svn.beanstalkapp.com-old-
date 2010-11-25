@@ -28,7 +28,7 @@ namespace EdgeBI.Web.DataServices
             MeasureSort[] viewSort,
             MeasureFormat[] format,
             Dictionary<int, Measure> measuresList,
-            string filter
+            MeasureFilter filter
             )
         {
 			Mode mode = GetMode(dataSort);
@@ -61,7 +61,7 @@ namespace EdgeBI.Web.DataServices
                 {
                     foreach (string id in arrAllReturnData.Keys)
                         IdsList += "," + id;
-                    IdsList = IdsList.Substring(1);
+                    if(IdsList != null) IdsList = IdsList.Substring(1);
                 }
             }
             Data = new List<ObjData>(arrAllReturnData.Values);
@@ -156,7 +156,7 @@ namespace EdgeBI.Web.DataServices
             List<ObjData> SortedReturnData = new List<ObjData>();
             foreach (MeasureSort msort in viewSort)
             {
-                string sortBy = "M" + msort.MeasureIndex +  (msort.RangeIndex == 0 || msort.DiffType != DiffType.None  ? ".Diff" + msort.DiffType.ToString(): ".R" + msort.RangeIndex);
+                string sortBy = "M" + msort.MeasureIndex +  (msort.RangeIndex == 0 || msort.DiffType != DiffType.None  ? "." + msort.DiffType.ToString(): ".R" + msort.RangeIndex);
                 Dictionary<Int64, double> dic = new Dictionary<Int64, double>();
                 foreach (ObjData Entity in Datain)
                 {
@@ -210,11 +210,19 @@ namespace EdgeBI.Web.DataServices
             return RetEntity;
         }
 
-        private void GetFieldsSQL(MeasureRef measure, int measureIndex, int RangeIndex, out string AggregateFunction, out string HavingString, Dictionary<int, Measure> measuresList, string filter)
+        private void GetFieldsSQL(MeasureRef measure, int measureIndex, int RangeIndex, out string AggregateFunction, out string HavingString, Dictionary<int, Measure> measuresList, MeasureFilter filter)
         {
             AggregateFunction = BuildAggregateFunction(measure, measuresList);
             HavingString = AggregateFunction + " IS NOT NULL " ;
-            HavingString += filter != null ? "AND " + filter : "";
+            try
+            {
+                if (filter.MeasureIndex == measureIndex && filter.RangeIndex == RangeIndex)
+                    HavingString += " AND " + AggregateFunction + filter.Operator.ToString() + filter.FilterValue;
+            }
+            catch (NullReferenceException)
+            {
+                
+            }
             AggregateFunction = AggregateFunction + " AS 'M" + measureIndex + ".R" + RangeIndex + ".Value'";
 
         }
@@ -378,35 +386,32 @@ namespace EdgeBI.Web.DataServices
                             value1 = Convert.ToDouble(objvalue1.ValueData);
                             value2 = Convert.ToDouble(objvalue2.ValueData);
                             ObjValue value = new ObjValue();
-                            if (value2 != 0)
+                            MeasureDiff mDiff = GetMeasureDiff(key, diff);
+                            DiffType difftype = mDiff.DiffType;
+                            if (mDiff.MeasureIndex > -1)
                             {
-                               MeasureDiff  mDiff = GetMeasureDiff(key,diff);
-                               DiffType difftype = mDiff.DiffType ;
-                               if (mDiff.MeasureIndex > -1)
-                               {
-                                   switch(difftype)
-                                   {
-                                       case DiffType.Both:
-                                           value.FieldName = key + ".R" + (i + 1).ToString() + ".DiffAbs" ;
-                                           value.ValueData = Convert.ToString(value1 - value2); 
-                                           Entity.Values.Add(value);
-                                           value = new ObjValue();
-                                           value.FieldName = key + ".R" + (i + 1).ToString() + ".DiffRel"; 
-                                           value.ValueData = Convert.ToString(((value1 - value2) / Math.Abs(value2)) * 100); 
-                                           break;
-                                       case DiffType.DiffAbs:
-                                           value.FieldName = key + ".R" + (i + 1).ToString() + ".DiffAbs"; 
-                                           value.ValueData = Convert.ToString(value1 - value2); 
-                                           break;
-                                       case DiffType.DiffRel:
-                                           value.FieldName = key + ".R" + (i + 1).ToString() + ".DiffRel";
-                                           value.ValueData = Convert.ToString(((value1 - value2) / Math.Abs(value2)) * 100); 
-                                           break;
-                                   }
-                               }
+                                switch(difftype)
+                                {
+                                    case DiffType.Both:
+                                        value.FieldName = key + ".R" + (i + 1).ToString() + ".DiffAbs" ;
+                                        value.ValueData = Convert.ToString(value1 - value2); 
+                                        Entity.Values.Add(value);
+                                        value = new ObjValue();
+                                        value.FieldName = key + ".R" + (i + 1).ToString() + ".DiffRel";
+                                        if (value2 != 0)
+                                            value.ValueData = Convert.ToString(((value1 - value2) / Math.Abs(value2)) * 100); 
+                                        break;
+                                    case DiffType.DiffAbs:
+                                        value.FieldName = key + ".R" + (i + 1).ToString() + ".DiffAbs"; 
+                                        value.ValueData = Convert.ToString(value1 - value2); 
+                                        break;
+                                    case DiffType.DiffRel:
+                                        value.FieldName = key + ".R" + (i + 1).ToString() + ".DiffRel";
+                                        if (value2 != 0)
+                                            value.ValueData = Convert.ToString(((value1 - value2) / Math.Abs(value2)) * 100); 
+                                        break;
+                                }
                             }
-                            else
-                                value.ValueData = null;
                             Entity.Values.Add(value);
                         }
                     }
