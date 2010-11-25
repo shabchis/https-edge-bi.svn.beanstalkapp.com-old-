@@ -1,16 +1,14 @@
-<?php  header("Content-Type:text/xml"); 
+<?php
+ header('Content-type: text/xml; charset=utf-8'); 
  $startdate = $_GET['startdate']; 
 	$measureId = $_GET['measure'];
 	$endDate = $_GET['endDate'];
 	$orderby = $_GET['orderby'];
 	$account_id = $_GET['account_id'];
 	$global = $_GET['global'];
-	
-$before = array('(',')');
 	include ('timeParse.php');
-?>
+		$before = array('(',')');
 
-<?php
  $url = 'http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=campaign&top=5&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
  $totalurl = 'http://qa/ConsoleDataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=account&top=5&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
  // $totalurl = 'https://console.edge-bi.com/Seperia/DataServices/service.svc/Data?accountID='.$account_id.'&measureID='.$global.'&ranges='.$endDateName1.'-'.$endDateName2.','.$startDateName1.'-'.$startDateName2.'&diff=True&grouping=account&top=5&dataSort=Diff2&dataSortDir='.$orderby.'&functionMeasures='.$measureId.'&UseSortByCalculatField=True&diffType=abs';
@@ -26,11 +24,7 @@ $before = array('(',')');
   echo '<address>'.$url.'</address>';
  echo '</xml>';
 }
-	// if (strlen($xml) == 0){
-		// header('HTTP/1.1 500 Internal Server Error');
-		// echo '<error>No data found for the selection criteria.</error>';
-	  // echo '<address>'.$url.'</address>';
-	// }
+	
 $totalstr = file_get_contents($totalurl);
 
 $totalaxml =new SimpleXMLElement($totalstr);
@@ -78,7 +72,6 @@ if(strlen($totaldiff[0]) > 0){
 	echo '<total>'.$total[0].'</total>';
 		echo'<totaldiff>'.$totaldiff[0].'</totaldiff>';
 echo '</campaigns>';
-
 	?>
 
 

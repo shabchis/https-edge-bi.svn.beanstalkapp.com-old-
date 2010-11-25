@@ -56,7 +56,7 @@ switch ($startdateName){
   <decimals_separator>.</decimals_separator>
   <thousands_separator>,</thousands_separator>
   <add_time_stamp>true</add_time_stamp>
-  <digits_after_decimal>1</digits_after_decimal>
+  <digits_after_decimal>0</digits_after_decimal>
   <plot_area>
     <margins>
       <left>60</left>
