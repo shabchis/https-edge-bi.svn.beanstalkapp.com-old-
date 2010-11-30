@@ -6,6 +6,9 @@ using Easynet.Edge.Core.Utilities;
 using Easynet.Edge.Core;
 using System.Reflection;
 using System.Diagnostics;
+using Easynet.Edge.Core.Services;
+using Easynet.Edge.Services.WebImporter.Configuration;
+using System.IO;
 
 namespace Easynet.Edge.Services.WebImporter.Converters
 {
@@ -352,37 +355,22 @@ namespace Easynet.Edge.Services.WebImporter.Converters
             }
         }
        
-        protected bool InitConnectionString(string soureFilePath)        
+        protected bool InitConnectionString(string sourceFilePath)        
         {
+			bool found = false;
+			if (Service.Current.Instance.Configuration.ExtendedElements.ContainsKey("FileTypes"))
+			{
+				string extension = Path.GetExtension(sourceFilePath);
+				FileTypeElementCollection fileTypes = (FileTypeElementCollection)Service.Current.Instance.Configuration.ExtendedElements["FileTypes"];
+				FileTypeElement perType = fileTypes[extension];
+				if (perType != null)
+				{
+					_connection.ConnectionString = perType.ConnectionString.Replace("{sourceFilePath}", sourceFilePath);
+					found = true;
+				}
+			}
 
-            if (System.IO.Path.GetExtension(soureFilePath) == ".xlsx")
-            {
-                _connection.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + soureFilePath + ";Extended Properties='Excel 12.0;HDR=Yes;'";
-                return true;
-            }
-            else if (System.IO.Path.GetExtension(soureFilePath) == ".xls"  )
-            {
-                _connection.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + soureFilePath + ";Extended Properties='Excel 8.0;HDR=Yes;IMEX=1;ImportMixedTypes=Text;TypeGuessRows=60'";
-                return true;
-            }
-            else if (System.IO.Path.GetExtension(soureFilePath) == ".csv")
-            {
-            //soureFilePath = @"C:\Convertor Files\1#csv";
-            
-             //   string connectionString = string.Format(@"Provider=Microsoft.Jet.OLEDB.4.0; Data Source={0}; Extended Properties=""text;HDR=YES;FMT=Delimited""", fileName);
-
-                _connection.ConnectionString = string.Format(@"Provider=Microsoft.Jet.OLEDB.4.0;"+  soureFilePath+@";Extended Properties=""text;HDR=YES;FMT=Delimited""");
-              //  _connection.ConnectionString = string.Format(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + soureFilePath + @";Extended Properties=""Excel 8.0;HDR=Yes;IMEX=0""");
-
-              //  _connection.ConnectionString = string.Format(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""" + soureFilePath + @""";Extended Properties='text;HDR=Yes;FMT=Delimited'");
-                _connection.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + soureFilePath + ";Extended Properties='text;HDR=Yes;FMT=Delimited'";
-          
-              //   _connection.ConnectionString = string.Format(@"Provider=Microsoft.JET.OLEDB.4.0;Data Source=" + soureFilePath + @";Extended Properties=""text;HDR=No""");
-                // _connection.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + soureFilePath + ";Extended Properties=text;HDR=YES;FMT=Delimited;IMEX=1;ImportMixedTypes=Text;TypeGuessRows=60'";
-                return true;
-            }
-
-            else return false;
+			return found;
         }
         public virtual bool DoWork(List<string> soureFileList, string saveFilePath)
         {
