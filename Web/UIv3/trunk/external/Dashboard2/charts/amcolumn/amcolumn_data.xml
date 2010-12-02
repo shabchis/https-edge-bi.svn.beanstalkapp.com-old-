@@ -1,0 +1,20 @@
+<chart>
+  <series>
+    <value xid="0">Google</value>
+    <value xid="1">Facebook</value>
+    <value xid="2">Bing</value>
+  </series>
+  <graphs>
+    <graph gid="0">
+      <value xid="0">1</value>
+      <value xid="1">101</value>
+      <value xid="2">61</value>
+    </graph>
+    <graph gid="1">
+      <value xid="0">12</value>
+      <value xid="1">101</value>
+      <value xid="2">903</value>
+    </graph>
+	
+  </graphs>
+</chart>
