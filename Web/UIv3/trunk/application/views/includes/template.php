@@ -5,28 +5,28 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<title>Framework</title>
 
-		<link rel="stylesheet" href="<?php base_url(); ?>css/style.css" type="text/css" media="screen" />
-		<link rel="stylesheet" href="<?php base_url(); ?>css/960.css" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php base_url(); ?>assets/css/style.css" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php base_url(); ?>assets/css/960.css" type="text/css" media="screen" />
 		<!--[if IE]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>  
 		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-		<script src="<?php base_url();?>js/jquery.tmpl.js"></script>
-		<script src="<?php base_url();?>js/scripts.js"></script>
+		<script src="<?php base_url();?>assets/js/jquery.tmpl.js"></script>
+		<script src="<?php base_url();?>assets/js/scripts.js"></script>
 	</head>
 
 	<body>
 		<div id="container" >
 
 		<header>
-			<img src="<?php base_url();?>img/edge_bi_logo.png" id="logo" />
+			<img src="<?php base_url();?>assets/img/edge_bi_logo.png" id="logo" />
 			<div id="login">
 				Logged in as <span>Doron</span>
 				<select id="account"></select>
 				<div id="ajaxloader">
-					<img src="<?php base_url(); ?>img/loading_bar.gif" id="ajax" />
+					<img src="<?php base_url(); ?>assets/img/loading_bar.gif" id="ajax" />
 				</div>
 </div>
  </header>
