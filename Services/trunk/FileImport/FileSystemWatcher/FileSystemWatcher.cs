@@ -6,6 +6,9 @@ using Easynet.Edge.Core.Services;
 using Easynet.Edge.Core.Utilities;
 using Easynet.Edge.Core.Scheduling;
 using Easynet.Edge.Core;
+using Easynet.Edge.Core.Data;
+using Easynet.Edge.Services.FileImport.Configuration;
+
 
 namespace Easynet.Edge.Services.FileImport
 {
@@ -14,10 +17,13 @@ namespace Easynet.Edge.Services.FileImport
 	{
 		#region Members
 		/*=========================*/
-		
+
+		string _scheduleManagerUrl;
+		string _scheduleManagerConfiguration;
+
 		bool _loaded = false;
 		Dictionary<string, FileSystemWatcher> _watchers = new Dictionary<string, FileSystemWatcher>();
-		Dictionary<FileSystemWatcher, ServiceElement> _handlers = new Dictionary<FileSystemWatcher, ServiceElement>();
+		Dictionary<FileSystemWatcher, string> _handlers = new Dictionary<FileSystemWatcher, string>();
 		
 		/*=========================*/
 		#endregion
@@ -29,13 +35,18 @@ namespace Easynet.Edge.Services.FileImport
 		{
 			if (!_loaded)
 			{
+				if (!Instance.Configuration.Options.TryGetValue("ScheduleManagerUrl", out _scheduleManagerUrl))
+					_scheduleManagerUrl = null;
+				if (!Instance.Configuration.Options.TryGetValue("ScheduleManagerConfiguration", out _scheduleManagerConfiguration))
+					_scheduleManagerConfiguration = "edgeServiceWebBinding";
+
 				if (Instance.Configuration.ExtendedElements.ContainsKey("Directories"))
 				{
 					foreach (DirectoryElement dir in (DirectoryElementCollection) Instance.Configuration.ExtendedElements["Directories"])
 					{
 						try
 						{
-							this.Add(dir.Path, dir.Filter, dir.IncludeSubdirs, dir.HandlerService.Element);
+							this.Add(dir.Path, dir.Filter, dir.IncludeSubdirs, dir.HandlerService);
 						}
 						catch (Exception ex)
 						{
@@ -43,9 +54,10 @@ namespace Easynet.Edge.Services.FileImport
 						}
 					}
 				}
-				else
+				
+				if (_watchers.Count < 1)
 				{
-					Log.Write("No directories were specified so the watcher will remain idle.", LogMessageType.Warning);
+					throw new Exception("No directories are watched by the file system watcher. Check the log for more information.");
 				}
 
 				_loaded = true;
@@ -55,7 +67,7 @@ namespace Easynet.Edge.Services.FileImport
 			return ServiceOutcome.Unspecified;
 		}
 	
-        private void Add(string path, string filter, bool includeSubdirs, ServiceElement handlerService)
+        private void Add(string path, string filter, bool includeSubdirs, string handlerService)
         {
 			// EXCEPTION:
             if (String.IsNullOrEmpty(path) || !Directory.Exists(path))
@@ -109,7 +121,7 @@ namespace Easynet.Edge.Services.FileImport
             Log.Write(String.Format("{0} has been {1} ", e.Name, e.ChangeType), LogMessageType.Information);
 
 			FileSystemWatcher watcher = (FileSystemWatcher) sender;
-			ServiceElement handlerService;
+			string handlerService;
 			if (!_handlers.TryGetValue(watcher, out handlerService))
 			{
 				Log.Write(String.Format("Invalid handler specified for {0}.", e.Name), LogMessageType.Warning);
@@ -117,7 +129,7 @@ namespace Easynet.Edge.Services.FileImport
 			}
 
 			// Make the request to the schedule manager
-			using (ServiceClient<IScheduleManager> scheduleManager =  new ServiceClient<IScheduleManager>())
+			using (ServiceClient<IScheduleManager> scheduleManager =  new ServiceClient<IScheduleManager>(_scheduleManagerConfiguration, _scheduleManagerUrl))
 			{
 				SettingsCollection options = new SettingsCollection();
 				options.Add("SourceFilePath", e.FullPath);
@@ -136,7 +148,7 @@ namespace Easynet.Edge.Services.FileImport
                     }
                 }
 
-                scheduleManager.Service.AddToSchedule(handlerService.Name, -1, DateTime.Now, options);
+                scheduleManager.Service.AddToSchedule(handlerService, -1, DateTime.Now, options);
 			}
 		}
 		/*=========================*/
