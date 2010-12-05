@@ -39,6 +39,7 @@
     <Reference Include="System.ServiceModel">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -52,6 +53,28 @@
     <Compile Include="FileSystemWatcher\Configuration.cs" />
     <Compile Include="FileSystemWatcher\FileSystemWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\CurrencyConvertor\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="WebImporter\Converters\888Convertor.cs" />
+    <Compile Include="WebImporter\Converters\BaseConvertor.cs" />
+    <Compile Include="WebImporter\Converters\BOConvertorManager.cs" />
+    <Compile Include="WebImporter\Converters\CreativeTXTfileConvertor.cs" />
+    <Compile Include="WebImporter\Converters\CSVReader.cs" />
+    <Compile Include="WebImporter\Converters\CurrencyManager.cs" />
+    <Compile Include="WebImporter\Converters\FacebookConvertor.cs" />
+    <Compile Include="WebImporter\Converters\MSNConvertor.cs" />
+    <Compile Include="WebImporter\Converters\YahooConvertor.cs" />
+    <Compile Include="WebImporter\Misc\Configuration.cs" />
+    <Compile Include="WebImporter\Misc\XmlNodeSectionHandler.cs" />
+    <Compile Include="WebImporter\WebImporterService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\BusinessObjects\BusinessObjects.csproj">
@@ -66,6 +89,34 @@
       <Project>{65DAED92-326B-401D-BF05-526C6BD5409C}</Project>
       <Name>Services.DataRetrieval</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://www.webservicex.net/CurrencyConvertor.asmx%3fWSDL">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\CurrencyConvertor\</RelPath>
+      <UpdateFromURL>http://www.webservicex.net/CurrencyConvertor.asmx%3fWSDL</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Edge_Services_WebImporter_CurrencyConvertor_CurrencyConvertor</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\CurrencyConvertor\CurrencyConvertor.wsdl" />
+    <None Include="Web References\CurrencyConvertor\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">

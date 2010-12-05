@@ -3,7 +3,7 @@ using System.Configuration;
 using Easynet.Edge.Core.Configuration;
 using System.Xml;
 
-namespace Easynet.Edge.Services.FileImport
+namespace Easynet.Edge.Services.FileImport.Configuration
 {
 	/// <summary>
 	/// Represents a collection of directories to monitor.
@@ -110,6 +110,7 @@ namespace Easynet.Edge.Services.FileImport
 				null,
 				ConfigurationPropertyOptions.IsRequired | ConfigurationPropertyOptions.IsKey);
 
+			/*
 			s_handler = new ConfigurationProperty(
 				"HandlerService",
 				typeof(ElementReference<ServiceElement>),
@@ -117,6 +118,14 @@ namespace Easynet.Edge.Services.FileImport
 				new Easynet.Edge.Core.Configuration.Converters.ElementReferenceConverter<ServiceElement>(this, "HandlerService"),
 				null,
 				ConfigurationPropertyOptions.IsRequired);
+			*/
+
+			s_handler = new ConfigurationProperty(
+				"HandlerService",
+				typeof(string),
+				null,
+				ConfigurationPropertyOptions.IsRequired);
+
 
 			s_filter = new ConfigurationProperty(
 				"Filter",
@@ -179,11 +188,11 @@ namespace Easynet.Edge.Services.FileImport
 			}
 		}
 
-		public ElementReference<ServiceElement> HandlerService
+		public string HandlerService
 		{
 			get
 			{
-				return (ElementReference<ServiceElement>) base[s_handler];
+				return (string)base[s_handler];
 			}
 			set
 			{
