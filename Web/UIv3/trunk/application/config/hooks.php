@@ -13,7 +13,7 @@
 
 $hook['post_controller_constructor'] = array(
                                 'class'    => 'MYlogin',
-                                'function' => 'login',
+                                'function' => 'userlogin',
                                 'filename' => 'Mylogin.php',
                                 'filepath' => 'hooks'
                                 
