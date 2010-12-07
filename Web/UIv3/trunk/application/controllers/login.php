@@ -5,7 +5,7 @@ class Login extends Controller {
 		
 	function index(){
 		
-	$this->load->view('login');
+		$this->load->view('login');
 		
 	}
 	
@@ -16,14 +16,14 @@ class Login extends Controller {
 		"password"=>$this->input->post('password')
 		
 		);
-		 $curl_handle = curl_init();  
+		$curl_handle = curl_init();  
 		curl_setopt($curl_handle, CURLOPT_URL, 'http://AlonYa-PC/API/EdgeBIAPIService.svc/sessions');  
 		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);  
 		curl_setopt($curl_handle, CURLOPT_POST, 1);  
 		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('Content-Type: application/json'));
-		 curl_setopt($curl_handle, CURLOPT_POSTFIELDS, json_encode($data));  
-		  $buffer = curl_exec($curl_handle);  
-			curl_close($curl_handle);  
+		curl_setopt($curl_handle, CURLOPT_POSTFIELDS, json_encode($data));  
+		$buffer = curl_exec($curl_handle);  
+		curl_close($curl_handle);  
    
 		$result = json_decode($buffer); 
 		$this->firephp->log($data); 
@@ -31,16 +31,16 @@ class Login extends Controller {
 		
 		$this->firephp->log($result); 
  		if(($result ==json_decode('{"LogINResult":-1}'))  )
-		 {
-	 	  
-	 	  
-	 	  echo 'fail';
-			}  
+		{
+	 	
+	 	
+	 	echo 'fail';
+		}  
   
-		 else  
+		else  
 		{
 			
-	//	  redirect('main');
+		redirect('main');
 
  		}  	
 		

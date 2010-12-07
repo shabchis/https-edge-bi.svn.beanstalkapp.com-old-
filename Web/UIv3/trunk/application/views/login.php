@@ -35,7 +35,7 @@ $("#submit").click(function(){
 		data: form_data,
 		success: function(msg) {
 		//console.log(msg);
-			$('body').html(msg);
+			//$('body').html(msg);
 		}
 	});
 		return false;
