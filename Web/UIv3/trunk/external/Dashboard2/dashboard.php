@@ -4,13 +4,13 @@
 	<title>DashBoard</title>
 
 	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	<link href="dashboard2/styles/main.css" rel="stylesheet" type="text/css" />
+	<link href="./external/Dashboard2/styles/main.css" rel="stylesheet" type="text/css" />
 
-	<script type='text/javascript' src='dashboard2/scripts/jquery-1.4.2.min.js'></script>
-	<script type="text/javascript" src="dashboard2/scripts/jquery.corners.js"></script>
-	<script type="text/javascript" src="dashboard2/scripts/DD_roundies_0.0.2a-min.js"></script>
-	<script type="text/javascript" src="dashboard2/scripts/jquery-ui-personalized-1.5.2.packed.js"></script>
-	<script type="text/javascript" src="dashboard2/scripts/swfobject.js"></script>
+	<script type='text/javascript' src='./external/Dashboard2/scripts/jquery-1.4.2.min.js'></script>
+	<script type="text/javascript" src="./external/Dashboard2scripts/jquery.corners.js"></script>
+	<script type="text/javascript" src="./external/Dashboard2/scripts/DD_roundies_0.0.2a-min.js"></script>
+	<script type="text/javascript" src="./external/Dashboard2/scripts/jquery-ui-personalized-1.5.2.packed.js"></script>
+	<script type="text/javascript" src="./external/Dashboard2/scripts/swfobject.js"></script>
 	<!-- <script type="text/javascript" src="scripts/jquery.qtip-1.0.0.min.js"></script> -->
 
 </head>
@@ -499,7 +499,7 @@ function loadByMeasures(){
 			 $("#innertables").append('<div class="loader1"><img src="images/loading_bar7.gif"></img></div>');
 			$.ajax({
 				type: "GET",
-				url: "php/campaignPerformance.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=DESC&global="+globalMeasure+"",
+				url: "./external/Dashboard2/php/campaignPerformance.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=DESC&global="+globalMeasure+"",
 				dataType: "xml",
 				error: function (xml) {
 		
@@ -549,7 +549,7 @@ function loadByMeasures(){
 	
 	
 		type: "GET",
-		url: "php/campaignPerformance.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=ASC&global="+globalMeasure+"",
+		url: "./external/Dashboard2/php/campaignPerformance.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=ASC&global="+globalMeasure+"",
 		dataType: "xml",
 		error: function (xml) {
 			$(".loader1").hide();
@@ -608,7 +608,7 @@ function loadByMeasures(){
 		$('tr.worstcpa').remove();
 		$.ajax({
 			type: "GET",
-			url: "php/fluctuatingCampaigns.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=ASC&global="+globalMeasure+"",
+			url: "./external/Dashboard2/php/fluctuatingCampaigns.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=ASC&global="+globalMeasure+"",
 			dataType: "xml",
 			error: function (xml) {
 		
@@ -664,7 +664,7 @@ function loadByMeasures(){
 		
 $.ajax({
 			type: "GET",
-			url: "php/fluctuatingCampaigns.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=DESC&global="+globalMeasure+"",
+			url: "./external/Dashboard2/php/fluctuatingCampaigns.php?account_id="+account_id+"&endDate="+endDate+"&startdate="+startDate+"&measure="+measure+"&orderby=DESC&global="+globalMeasure+"",
 			dataType: "xml",
 			error: function (xml) {
 		
@@ -732,7 +732,7 @@ $.ajax({
 
 		$.ajax({
 			type: "GET",
-			url: "php/topSpenders.php?account_id="+account_id+"&endDate="+endDate+"&startdate=1&measure="+measure+"&orderby=DESC",
+			url: "./external/Dashboard2/php/topSpenders.php?account_id="+account_id+"&endDate="+endDate+"&startdate=1&measure="+measure+"&orderby=DESC",
 			dataType: "xml",
 			 error: function (xml) {
 	
