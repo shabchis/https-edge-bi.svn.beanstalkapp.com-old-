@@ -28,62 +28,61 @@
 				<div id="ajaxloader">
 					<img src="<?php base_url(); ?>assets/img/loading_bar.gif" id="ajax" />
 				</div>
-</div>
- </header>
- <div class="clear"></div>
+			</div>
+ 		</header>
+ 		<div class="clear"></div>
 
-<script id="menuitems" type="text/x-jquery-tmpl">
+		<script id="menuitems" type="text/x-jquery-tmpl">
 
     
-<h2 class="trigger"><span> ${Name} </span></h2>
-<div class='toggle_container'>
-  <div class='block'>
-    <ul class="list">
+	<h2 class="trigger"><span> ${Name} </span></h2>
+	<div class='toggle_container'>
+  		<div class='block'>
+    		<ul class="list">
 
-      {{each childMenus}}
-         <li><a href="${Name}">${Name}</a></li>
-         <ul> 
-          {{each childMenus}} 
-          <li><a href="${Link}">${Name}</a><ul>
-          </ul>
-          {{each childMenus}} 
-          <ul>
+      		{{each ChildMenues}}
+        		<li><a href="${Name}">${Name}</a></li>
+         	<ul> 
+          {{each ChildMenues}} 
+          		<li><a href="${Link}">${Name}</a><ul>
+          	</ul>
+          		{{each ChildMenues}} 
+          	<ul>
             
-             <li><a href="${Name}">${Name}</a></li>
-            
-       
-          </ul>
+            	 <li><a href="${Name}">${Name}</a></li>
+                  
+          	</ul>
                 {{/each}}
              {{/each}}
-      </ul>
+      		</ul>
         {{/each}}
       
-  </div>
- </div>
-</div>
-
-
-</script>
-<div id="slider"><span><<</span><div id="caption">Hide</div></div>
-   <div id="menu">
-      <h2 class="trigger"><span>Menu</span></h2>
-     <div class='toggle_container'>
-         <div class='block'>
-            <ul class="list">
-              <li><a href="home">Home</a></li>
-              <li><a href="about">About</a></li>
-              <li><a href="dashboard">Dashboard</a></li>
-            </ul>
-        </div>
-    </div>
-   </div>
+	</div>
+ 		</div>
+			</div>
+	</script>
+	<div id="slider"><span><<</span><div id="caption">Hide</div></div>
+		<div id="menu">
+			<h2 class="trigger"><span>Menu</span></h2>
+			<div class='toggle_container'>
+				<div class='block'>
+				<ul class="list">
+					<li><a href="home">Home</a></li>
+					<li><a href="about">About</a></li>
+					<li><a href="dashboard">Dashboard</a></li>
+				</ul>
+				</div>
+			</div>
+		</div>
  
 
-<script type="text/javascript">
-     
- var menudata = jQuery.parseJSON('<?php echo $json; ?>');
+<script>
 
-$( "#menuitems" ).tmpl(menudata).appendTo("#menu");
+
+      var menudata = jQuery.parseJSON('<?php echo $json; ?>');
+		
+		$( "#menuitems" ).tmpl(menudata).appendTo("#menu");
+
 
 
 </script>
@@ -92,7 +91,7 @@ $( "#menuitems" ).tmpl(menudata).appendTo("#menu");
   </div>
   <div class="clear"></div>
 
-<footer>
+	<footer>
       footer
     </footer>
 
