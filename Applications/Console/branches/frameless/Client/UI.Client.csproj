@@ -1,0 +1,443 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7E36867C-423B-4C81-98DA-1BC9F31BD2FE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Easynet.Edge.UI.Client</RootNamespace>
+    <AssemblyName>Edge.UI.Client</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <EnableSecurityDebugging>true</EnableSecurityDebugging>
+    <ApplicationExtension>.xbap</ApplicationExtension>
+    <HostInBrowser>true</HostInBrowser>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetZone>Custom</TargetZone>
+    <GenerateManifests>true</GenerateManifests>
+    <SignManifests>True</SignManifests>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <SignManifests>true</SignManifests>
+    <ManifestCertificateThumbprint>D3BA6BF88BC11696D729B7F37C832A055E1A0A2C</ManifestCertificateThumbprint>
+    <ManifestKeyFile>Certificates\Certificate 2011.pfx</ManifestKeyFile>
+    <StartupObject>
+    </StartupObject>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <PublishUrl>Publish\seperia.edge-bi.com\</PublishUrl>
+    <Install>false</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>https://console.edge-bi.com/seperia/</InstallUrl>
+    <SupportUrl>https://console.edge-bi.com/seperia/install.html</SupportUrl>
+    <TargetCulture>en</TargetCulture>
+    <ProductName>Edge.BI Management Console [Seperia]</ProductName>
+    <PublisherName>Edge.BI</PublisherName>
+    <WebPage>install.html</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <TrustUrlParameters>true</TrustUrlParameters>
+    <ApplicationRevision>137</ApplicationRevision>
+    <ApplicationVersion>2.5.0.137</ApplicationVersion>
+    <UseApplicationTrust>true</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <!-- Debug configuration -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ProductName>Edge.BI Management Console [debug]</ProductName>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <None Include="Configuration\Debug\app.config">
+      <Link>app.config</Link>
+    </None>
+  </ItemGroup>
+  <!-- Production configuration -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Production' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Production\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PublishUrl>Publish\console.edge-bi.com\</PublishUrl>
+    <InstallUrl>https://console.edge-bi.com/</InstallUrl>
+    <SupportUrl>https://console.edge-bi.com/install.html</SupportUrl>
+    <ProductName>Edge.BI Management Console</ProductName>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Production' ">
+    <None Include="Configuration\Production\app.config">
+      <Link>app.config</Link>
+    </None>
+  </ItemGroup>
+  <!-- Seperia configuration -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Seperia' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Seperia\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PublishUrl>Publish\seperia.edge-bi.com\</PublishUrl>
+    <InstallUrl>https://console.edge-bi.com/seperia/</InstallUrl>
+    <SupportUrl>https://console.edge-bi.com/seperia/install.html</SupportUrl>
+    <ProductName>Edge.BI Management Console [Seperia]</ProductName>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Seperia' ">
+    <None Include="Configuration\Seperia\app.config">
+      <Link>app.config</Link>
+    </None>
+  </ItemGroup>
+  <!-- Demo configuration -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Demo|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Production\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PublishUrl>Publish\demo.edge-bi.com\</PublishUrl>
+    <InstallUrl>https://demo.edge-bi.com/</InstallUrl>
+    <SupportUrl>https://demo.edge-bi.com/install.html</SupportUrl>
+    <ProductName>Edge.BI Management Console [demo]</ProductName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Demo' ">
+    <None Include="Configuration\Demo\app.config">
+      <Link>app.config</Link>
+    </None>
+  </ItemGroup>
+  <!-- Project references -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\BusinessObjects\BusinessObjects.csproj">
+      <Project>{6E2451D8-DD5B-4B28-B84A-A652D539F8C0}</Project>
+      <Name>BusinessObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Core\Core\Core.csproj">
+      <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
+      <Name>Core %28Core\Core%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data\UI.Data.csproj">
+      <Project>{AC9C4389-97C8-47B9-84F3-E5E4E32C5E73}</Project>
+      <Name>UI.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdParty\Cjc.AwesomiumWrapper\Cjc.AwesomiumWrapper.vcproj">
+      <Project>{D92259E1-12E1-4545-8748-FB020A3F0DEC}</Project>
+      <Name>Cjc.AwesomiumWrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdParty\Cjc.ChromiumBrowser\Cjc.ChromiumBrowser.csproj">
+      <Project>{311544A4-C7E1-475C-B649-6BB25D907DFE}</Project>
+      <Name>Cjc.ChromiumBrowser</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Assembly references -->
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <!-- XAML -->
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+    <Page Include="Common\FloatingDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\MainMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Common\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\ListTable.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\AccountPermissions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\AccountSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\Segments.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\SerpProfiles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\GeneralLogin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\PpcCampaigns.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\MasterCreatives.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\MasterKeywords.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\PpcGateways.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\WebFrame.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\ChromiumFrame.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <!-- Code files -->
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Base\Cookies.cs" />
+    <Compile Include="Base\AutocompleteCombo.cs" />
+    <Compile Include="Base\GridLengthAnimation.cs" />
+    <Compile Include="Base\OltpLogicClient.cs" />
+    <Compile Include="Base\Validations.cs" />
+    <Compile Include="Base\Helpers.cs" />
+    <Compile Include="Base\PageBase.cs">
+    </Compile>
+    <Compile Include="Common\FloatingDialog.xaml.cs">
+      <DependentUpon>FloatingDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\MainMenu.xaml.cs">
+      <DependentUpon>MainMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\ListTable.xaml.cs">
+      <DependentUpon>ListTable.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\AccountPermissions.xaml.cs">
+      <DependentUpon>AccountPermissions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\AccountSettings.xaml.cs">
+      <DependentUpon>AccountSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Segments.xaml.cs">
+      <DependentUpon>Segments.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SerpProfiles.xaml.cs">
+      <DependentUpon>SerpProfiles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GeneralLogin.xaml.cs">
+      <DependentUpon>GeneralLogin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PpcCampaigns.xaml.cs">
+      <DependentUpon>PpcCampaigns.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MasterCreatives.xaml.cs">
+      <DependentUpon>MasterCreatives.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MasterKeywords.xaml.cs">
+      <DependentUpon>MasterKeywords.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PpcGateways.xaml.cs">
+      <DependentUpon>PpcGateways.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\WebFrame.xaml.cs">
+      <DependentUpon>WebFrame.xaml</DependentUpon>
+    </Compile>
+    <None Include="Properties\AssemblyInfo.cs.template" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Pages\ChromiumFrame.xaml.cs">
+      <DependentUpon>ChromiumFrame.xaml</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <!-- Resources -->
+  <ItemGroup>
+    <Resource Include="Graphics\easynet_edge_logo.png" />
+    <Resource Include="Graphics\cancel.png" />
+    <Resource Include="Graphics\button_ok.png" />
+    <Resource Include="Graphics\edit_add.png" />
+    <Resource Include="Graphics\logo-300-beta.png" />
+    <Resource Include="Graphics\adgroupTargets.png" />
+    <Resource Include="Graphics\campaignTargets.png" />
+    <Resource Include="Graphics\logo-300.png" />
+  </ItemGroup>
+  <!-- What is this? to delete? -->
+  <!--<ItemGroup>
+		<None Include="Properties\DataSources\Easynet.Edge.UI.Oltp.datasource" />
+		<None Include="Properties\DataSources\Easynet.Edge.UI.Data.Measure.datasource" />
+		<None Include="Properties\DataSources\Easynet.Edge.UI.Data.Oltp.datasource" />
+		<None Include="Properties\DataSources\System.Data.DataTable.datasource" />
+	</ItemGroup>-->
+  <!-- Bootstrapper packages -->
+  <ItemGroup>
+    <BootstrapperPackage Include="Edge.UI.Deployment.Certificates">
+      <Visible>False</Visible>
+      <ProductName>Edge.BI Certificates</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Java.Runtime.Environment">
+      <Visible>False</Visible>
+      <ProductName>Java Runtime Environment 1.6</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <!-- Misc. files -->
+  <ItemGroup>
+    <None Include="Properties\app.manifest" />
+    <None Include="index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Regions.txt" />
+    <None Include="Certificates\Create Certificate.bat" />
+    <None Include="Certificates\Certificate 2011.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Awesomium.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="icudt38.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- Build settings -->
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  <Target Name="BeforeCompile">
+    <SvnVersion LocalPath=".">
+      <Output TaskParameter="Revision" PropertyName="SvnRevision" />
+    </SvnVersion>
+    <FormatVersion Version="2.5.0.%2a" Revision="$(SvnRevision)">
+      <Output TaskParameter="OutputVersion" PropertyName="ApplicationVersion" />
+    </FormatVersion>
+  </Target>
+  <PropertyGroup>
+    <PreBuildEvent>subwcrev.exe "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.cs.template" "$(ProjectDir)Properties\AssemblyInfo.cs"</PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

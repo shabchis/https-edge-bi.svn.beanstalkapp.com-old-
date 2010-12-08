@@ -1,0 +1,579 @@
+﻿<this:PageBase x:Class="Easynet.Edge.UI.Client.Pages.PpcCampaigns"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:this="clr-namespace:Easynet.Edge.UI.Client"
+	xmlns:local="clr-namespace:Easynet.Edge.UI.Client.PpcCampaignsLocal"
+	xmlns:data="clr-namespace:Easynet.Edge.UI.Data;assembly=Edge.UI.Data"
+	x:Name="_page"
+>
+	
+	<this:PageBase.Resources>
+		<local:ChannelPickerChannelTemplateSelector x:Key="ChannelPickerChannelTemplateSelector"/>
+		<local:CampaignStatusPickerTemplateSelector x:Key="CampaignStatusPickerTemplateSelector"/>
+		<local:ChannelNameConverter x:Key="ChannelNameConverter"/>
+		<local:StatusNameConverter x:Key="StatusNameConverter"/>
+		<local:KeywordPickerTemplateSelector x:Key="KeywordPickerTemplateSelector"/>
+		<this:BoolToInvisibleConverter x:Key="BoolToInvisibleConverter"/>
+		<this:BoolToVisibleConverter x:Key="BoolToVisibleConverter"/>
+
+		<!-- ================== -->
+		<!--ListTable styling -->
+
+		<!-- Toggle column -->
+		<local:GroupExpandTemplateSelector x:Key="GroupExpandTemplateSelector"/>
+		<DataTemplate x:Key="GroupExpandTemplate">
+			<ToggleButton Style="{DynamicResource GroupExpander}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,0,0" />
+		</DataTemplate>
+		
+		<!-- Name column -->
+		<local:NameTemplateSelector x:Key="NameTemplateSelector"/>
+		<DataTemplate x:Key="CampaignNameTemplate">				
+			<Button x:Name="_itemName" Content="{Binding Name}" Style="{StaticResource Link}" VerticalAlignment="Center" Click="Campaign_dialog_Open" IsEnabled="{Binding _targetsEnabled}" Margin="0,6,0,6"/>
+		</DataTemplate>
+		<DataTemplate x:Key="AdgroupNameTemplate">
+			<StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,4,0,4">
+				<Ellipse Style="{DynamicResource Bullet}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+				<Button x:Name="_itemName" Content="{Binding Name}" Style="{StaticResource Link}" VerticalAlignment="Center" Click="Adgroup_dialog_Open"/>
+			</StackPanel>
+		</DataTemplate>
+
+		<!-- Channel column -->
+		<local:ChannelTemplateSelector x:Key="ChannelTemplateSelector"/>
+		<DataTemplate x:Key="ChannelTemplate">
+			<TextBlock Foreground="#666" Text="{Binding Path=ChannelID, Converter={StaticResource ChannelNameConverter}}"/>
+		</DataTemplate>
+
+		<!-- Status column -->
+		<local:StatusTemplateSelector x:Key="StatusTemplateSelector"/>
+		<DataTemplate x:Key="CampaignStatusTemplate">
+			<TextBlock Foreground="#666" Text="{Binding Path=StatusID, Converter={StaticResource StatusNameConverter}}"/>
+		</DataTemplate>
+		<!-- ================== -->
+		
+		<Style TargetType="{x:Type Button}" x:Key="TargetsSwitchStyle">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<StackPanel>
+							<Image x:Name="campaignIcon" Source="../Graphics/campaignTargets.png" Width="16" Height="16" ToolTip="Campaign-level targets" Cursor="Hand" Visibility="{Binding Path=Targets.IsActive, Converter={StaticResource BoolToInvisibleConverter}}"/>
+							<Image x:Name="adgroupIcon" Source="../Graphics/adgroupTargets.png" Width="16" Height="16" ToolTip="Adgroup-level targets" Cursor="Hand" Visibility="{Binding Path=Targets.IsActive, Converter={StaticResource BoolToVisibleConverter}}"/>
+						</StackPanel>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		
+		<DataTemplate x:Key="TargetsSwitchTemplate">
+			<Button Style="{StaticResource TargetsSwitchStyle}" Click="Targets_SwitchLevel"/>
+		</DataTemplate>
+
+		<DataTemplate x:Key="ChannelPickerChannelTemplate">
+			<TextBlock Text="{Binding Path=DisplayName}" />
+		</DataTemplate>
+
+		<DataTemplate x:Key="StatusPickerTemplate">
+			<TextBlock Text="{Binding Path=Name}" />
+		</DataTemplate>
+		
+		<Style x:Key="FormContents" TargetType="{x:Type StackPanel}">
+			<Setter Property="Margin" Value="10"/>
+			<Setter Property="Orientation" Value="Vertical"/>
+		</Style>
+		<Style x:Key="FormField" TargetType="{x:Type StackPanel}">
+			<Setter Property="Margin" Value="6"/>
+			<Setter Property="Orientation" Value="Horizontal"/>
+		</Style>
+	</this:PageBase.Resources>
+
+	<Grid>
+		<DockPanel LastChildFill="True">
+			
+			<StackPanel DockPanel.Dock="Top" Margin="0,8,0,0" Orientation="Horizontal" VerticalAlignment="Bottom" this:AccessKeyScoper.IsAccessKeyScope="true">
+				<StackPanel.Resources>
+					<Style TargetType="{x:Type ComboBox}">
+						<Setter Property="Width" Value="130"/>
+						<Setter Property="ItemContainerStyle">
+							<Setter.Value>
+								<Style TargetType="{x:Type ComboBoxItem}">
+									<Setter Property="Margin" Value="2"/>
+								</Style>
+							</Setter.Value>
+						</Setter>
+					</Style>
+					<Style TargetType="{x:Type StackPanel}">
+						<Setter Property="Margin" Value="0,0,15,0"/>
+					</Style>
+				</StackPanel.Resources>
+				<StackPanel Orientation="Vertical">
+					<Label Content="Channel"/>
+					<ComboBox x:Name="_channelPicker" Width="160" ItemTemplateSelector="{StaticResource ChannelPickerChannelTemplateSelector}"/>
+				</StackPanel>
+				<StackPanel Orientation="Vertical">
+					<Label Content="Campaign Status"/>
+					<ComboBox x:Name="_campaignStatusPicker" Width="160" ItemTemplateSelector="{StaticResource CampaignStatusPickerTemplateSelector}"/>
+				</StackPanel>
+				<StackPanel Orientation="Vertical" Margin="0,0,2,0">
+					<Label>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Margin="0,0,5,0">Name of </TextBlock>
+							<RadioButton IsChecked="True" Margin="0,0,5,0">Campaign</RadioButton>
+							<RadioButton x:Name="_campaignFilterByAdgroup">Adgroup</RadioButton>
+						</StackPanel>
+					</Label>
+					<TextBox x:Name="_campaignFilterTextBox" Width="240"/>
+				</StackPanel>
+				<Button Content="Filter" Click="_filterButton_Click" IsDefault="True" Height="{Binding ElementName=_campaignFilterTextBox, Path=ActualHeight}" VerticalAlignment="Bottom"/>
+			</StackPanel>
+
+			<Canvas DockPanel.Dock="Top" Margin="0,8,20,10">
+				<StackPanel Orientation="Horizontal" Canvas.Right="50" VerticalAlignment="Center" HorizontalAlignment="Right">
+					<Button x:Name="_buttonSelectAll" Style="{StaticResource Link}" Content="Select All" Click="_listTable_SelectAll" Margin="0,0,15,0"/>
+					<Button x:Name="_buttonMerge" Style="{StaticResource Link}" Content="Merge" Click="CampaignMerge_Open" Margin="0,0,15,0"/>
+					<StackPanel x:Name="_targetButtons" Orientation="Horizontal" VerticalAlignment="Center" Visibility="Collapsed">
+						<TextBlock Text="|" Margin="0,0,15,0" Foreground="#666"/>
+						<!--<Button x:Name="_buttonTargetsBatch" Style="{StaticResource Link}" Content="Assign" Click="Targets_BatchOpen" Margin="0,0,15,0"/>-->
+						<Button x:Name="_buttonTargetsSave" Style="{StaticResource Link}" Content="Save" Click="Targets_SaveClick" Margin="0,0,15,0"/>
+					</StackPanel>
+					<Button x:Name="_buttonTargetsToggle" Style="{StaticResource Link}" Content="Show targets" Click="Targets_Toggle"/>
+				</StackPanel>
+			</Canvas>
+
+			<this:ListTable x:Name="_listTable"
+				Margin="0,12,50,10"
+				SelectionMode="Extended"
+				VirtualizingStackPanel.IsVirtualizing="False"
+				GroupExpanded="_listTable_GroupExpanded"
+				GroupCollapsed="_listTable_GroupCollapsed"
+			> 
+				<this:ListTable.View>
+					<GridView>
+						<GridViewColumn						CellTemplateSelector="{DynamicResource GroupExpandTemplateSelector}" Width="45"/>
+						<GridViewColumn	Header="Campaign"	CellTemplateSelector="{DynamicResource NameTemplateSelector}" this:ListTable.AutoSize="true"/>
+						<GridViewColumn	Header="Channel"	CellTemplateSelector="{DynamicResource ChannelTemplateSelector}" Width="100" />
+						<GridViewColumn	Header="Status"		CellTemplateSelector="{DynamicResource StatusTemplateSelector}" Width="100" />
+						<!--<GridViewColumn Header="Updated"	CellTemplate="{DynamicResource StatusTemplate}" Width="70"/>-->
+					</GridView>
+				</this:ListTable.View>
+			</this:ListTable>
+		</DockPanel>
+
+		<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+			<this:FloatingDialog
+				x:Name="Campaign_dialog"
+				Width="600"
+				Height="400"
+				ApplyingChanges="Campaign_dialog_ApplyingChanges"
+				AppliedChanges="Campaign_dialog_AppliedChanges"
+				Closing="Campaign_dialog_Closing"
+			 >
+				
+				<this:FloatingDialog.ContentTemplate>
+					<DataTemplate>
+						<TabControl TabStripPlacement="Top" >
+							<TabItem Header="Segments" x:Name="_tabSegments" GotFocus="CampaignSegments_GotFocus">
+								<TabItem.Resources>
+									<Style TargetType="{x:Type Label}">
+										<Setter Property="Width" Value="150"/>
+									</Style>
+									<Style TargetType="{x:Type ComboBox}">
+										<Setter Property="Width" Value="250"/>
+									</Style>
+								</TabItem.Resources>
+								<StackPanel Style="{StaticResource FormContents}">
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment1" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment1}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment2" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment2}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment3" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment3}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment4" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment4}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment5" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment5}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+								</StackPanel>
+							</TabItem>
+							
+							<TabItem Header="Targets" x:Name="_tabCampaigns" GotFocus="CampaignTargets_GotFocus">
+								<TabItem.Resources>
+									<Style TargetType="{x:Type Label}">
+										<Setter Property="Width" Value="150"/>
+									</Style>
+									<Style TargetType="{x:Type TextBox}">
+										<Setter Property="Width" Value="60"/>
+									</Style>
+								</TabItem.Resources>
+
+								<StackPanel Orientation="Vertical">
+									<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+										<ItemsControl x:Name="_campaignTargetsControl">
+											<ItemsControl.ItemsPanel>
+												<ItemsPanelTemplate>
+													<StackPanel Style="{StaticResource FormContents}"/>
+												</ItemsPanelTemplate>
+											</ItemsControl.ItemsPanel>
+											<ItemsControl.ItemTemplate>
+												<DataTemplate DataType="{x:Type data:Measure}">
+													<StackPanel Style="{StaticResource FormField}">
+														<Label Content="{Binding DisplayName}"/>
+														<TextBox Text="{Binding Value}"/>
+													</StackPanel>
+												</DataTemplate>
+											</ItemsControl.ItemTemplate>
+										</ItemsControl>
+									</ScrollViewer>
+									<TextBlock x:Name="note" Visibility="Collapsed">Note: to save this campaign's targets, you must save all targets from the top right of the main campaign list.</TextBlock>
+								</StackPanel>
+
+							</TabItem>
+							
+							<TabItem Header="Details">
+								<TabItem.Resources>
+									<Style TargetType="{x:Type Label}">
+										<Setter Property="Width" Value="80"/>
+									</Style>
+									<Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource FormValidatedInput}">
+										<Setter Property="Width" Value="150"/>
+									</Style>
+									<Style TargetType="{x:Type ComboBox}">
+										<Setter Property="Width" Value="150"/>
+									</Style>
+								</TabItem.Resources>
+
+								<StackPanel Style="{StaticResource FormContents}" IsEnabled="False">
+									<StackPanel Style="{StaticResource FormField}">
+										<Label Content="Name"/>
+										<TextBox Text="{this:StringBinding Path=Name}" this:FloatingDialog.DialogFields="Text" IsReadOnly="{Binding ElementName=_page, Path=CurrentItemHasPpcApi}"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}">
+										<Label Content="Channel"/>
+										<ComboBox
+											x:Name="_campaignChannelPicker"
+											Loaded="_campaignChannelPicker_Loaded"
+											ItemsSource="{Binding Source={StaticResource ChannelTableRows}}"
+											DisplayMemberPath="DisplayName"
+											SelectedValuePath="ID"
+											SelectedValue="{Binding Path=ChannelID, Mode=TwoWay}"
+											this:FloatingDialog.DialogFields="SelectedValue"
+											/>
+									</StackPanel>
+								</StackPanel>
+							</TabItem>
+
+						</TabControl>
+
+					</DataTemplate>
+				</this:FloatingDialog.ContentTemplate>
+			</this:FloatingDialog>
+
+			<this:FloatingDialog
+				x:Name="Adgroup_dialog"
+				Width="640"
+				Height="480"
+				ApplyingChanges="Adgroup_dialog_ApplyingChanges"
+				AppliedChanges="Adgroup_dialog_AppliedChanges"
+				Closing="Adgroup_dialog_Closing"
+				Visibility="Hidden"
+			 >
+				<this:FloatingDialog.Resources>
+					<Style TargetType="{x:Type Label}">
+						<Setter Property="Width" Value="150"/>
+					</Style>
+					<Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource FormValidatedInput}">
+						<Setter Property="Width" Value="250"/>
+					</Style>
+				</this:FloatingDialog.Resources>
+				
+				<this:FloatingDialog.ContentTemplate>
+					<DataTemplate>
+						<TabControl TabStripPlacement="Top" VirtualizingStackPanel.IsVirtualizing="False">
+
+							<TabItem Header="Segments" x:Name="_tabSegments" GotFocus="AdgroupSegments_GotFocus">
+								<TabItem.Resources>
+									<Style TargetType="{x:Type Label}">
+										<Setter Property="Width" Value="130"/>
+									</Style>
+									<Style TargetType="{x:Type ComboBox}">
+										<Setter Property="Width" Value="200"/>
+									</Style>
+								</TabItem.Resources>
+								<StackPanel Style="{StaticResource FormContents}">
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment1" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment1}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment2" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment2}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment3" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment3}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment4" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment4}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment5" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment5}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+								</StackPanel>
+							</TabItem>
+
+							<TabItem Header="Keywords" GotFocus="AdgroupKeywords_GotFocus" x:Name="_tabKeywords">
+								<DockPanel LastChildFill="True" >
+									<Canvas DockPanel.Dock="Top" Height="30" Panel.ZIndex="1" Visibility="Collapsed">
+										<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,10,10,0">
+											<this:AutocompleteCombo
+												x:Name="_adgroupKeywordPicker"
+												Width="180"
+												Margin="0,0,6,0"
+												ItemsSourceRequired="_adgroupKeywordPicker_ItemsSourceRequired"
+												IsEnabled="{Binding ElementName=_page, Path=CurrentItemHasPpcApi, Converter={StaticResource BoolInverter}}"
+												Loaded="_adgroupKeywordPicker_Loaded"
+												ItemTemplateSelector="{StaticResource KeywordPickerTemplateSelector}"
+												DisplayMemberPath="Keyword"
+												/>
+											<Button Content="add" IsEnabled="{Binding ElementName=_page, Path=CurrentItemHasPpcApi, Converter={StaticResource BoolInverter}}" Click="AdgroupKeywords_Add"/>
+										</StackPanel>
+
+										<!--<StackPanel Orientation="Horizontal" Canvas.Right="10" VerticalAlignment="Center" HorizontalAlignment="Right">
+											<Button Name="_batchAddButton" Style="{StaticResource Link}" Margin="10,20,10,0" Content="Batch add" Click="AdgroupKeywords_BatchInputOpen"/>
+										</StackPanel>-->
+										<DockPanel Visibility="Collapsed" Background="#666" Width="250" Height="150" Canvas.Right="15" Canvas.Top="35" LastChildFill="True">
+											<Button Content="add" DockPanel.Dock="Bottom" Margin="5" Width="30" Click="AdgroupKeywords_BatchInputPerform"/>
+											<TextBox
+												TextWrapping="Wrap"
+												AcceptsReturn="True"
+												VerticalScrollBarVisibility="Visible"
+												Margin="5"
+												Width="240"
+											/>
+										</DockPanel>
+									</Canvas>
+									
+									<this:ListTable x:Name="_adgroupKeywords" Margin="10" Loaded="_adgroupKeywords_Loaded" Panel.ZIndex="0">
+										<this:ListTable.View>
+											<GridView>
+												<GridViewColumn Header="Keyword"	this:ListTable.AutoSize="true" >
+													<GridViewColumn.CellTemplate>
+														<DataTemplate>
+															<TextBlock Text="{Binding KeywordDisplay}" ToolTip="{Binding AdgroupKeywordGK}" Margin="6,3,3,3"/>
+														</DataTemplate>
+													</GridViewColumn.CellTemplate>
+												</GridViewColumn>
+												<GridViewColumn Header="Match Type" Width="100">
+													<GridViewColumn.CellTemplate>
+														<DataTemplate>
+															<TextBlock Text="{Binding MatchTypeDisplay}"/>
+														</DataTemplate>
+													</GridViewColumn.CellTemplate>
+												</GridViewColumn>
+												<GridViewColumn Header="Destination URL" this:ListTable.AutoSize="true">
+													<GridViewColumn.CellTemplate>
+														<DataTemplate>
+															<TextBlock Text="{Binding DestinationUrlDisplay}" ToolTip="{Binding DestinationUrlDisplay}"/>
+														</DataTemplate>
+													</GridViewColumn.CellTemplate>
+												</GridViewColumn>
+												<!--<GridViewColumn Header="Landing page" CellTemplate="{StaticResource LandingPageTemplate}" this:ListTable.AutoSize="true" />-->
+												<!--<GridViewColumn Header="Adunit" 	  CellTemplate="{StaticResource AdunitTemplate}" this:ListTable.AutoSize="true" />-->
+											</GridView>
+										</this:ListTable.View>
+									</this:ListTable>
+								</DockPanel>
+							</TabItem>
+
+							<TabItem Header="Creatives" GotFocus="AdgroupCreatives_GotFocus" x:Name="_tabCreatives">
+								<DockPanel LastChildFill="True" >
+									<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,10,10,0" Visibility="Collapsed">
+										<this:AutocompleteCombo
+											x:Name="_adgroupCreativePicker"
+											Width="180"
+											Margin="0,0,6,0"
+											DisplayMemberPath="Title"
+											ItemsSourceRequired="_adgroupCreativePicker_ItemsSourceRequired"
+											IsEnabled="{Binding ElementName=_page, Path=CurrentItemHasPpcApi, Converter={StaticResource BoolInverter}}"
+											Loaded="_adgroupCreativePicker_Loaded"
+											>
+											<this:AutocompleteCombo.ItemTemplate>
+												<DataTemplate>
+													<TextBlock>
+														<TextBlock Text="{Binding Title}" Margin="0,0,6,0"/>
+														<TextBlock Text="{Binding DisplayDescription}" Foreground="#666" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+													</TextBlock>
+												</DataTemplate>
+											</this:AutocompleteCombo.ItemTemplate>
+										</this:AutocompleteCombo>
+										<Button Content="add" IsEnabled="{Binding ElementName=_page, Path=CurrentItemHasPpcApi, Converter={StaticResource BoolInverter}}" Click="AdgroupCreatives_Add"/>
+									</StackPanel>
+
+									<this:ListTable x:Name="_adgroupCreatives" Margin="10" Loaded="_adgroupCreatives_Loaded" >
+										<this:ListTable.View>
+											<GridView>
+												<GridViewColumn Header="Creative"	this:ListTable.AutoSize="true">
+													<GridViewColumn.CellTemplate>
+														<DataTemplate>
+															<StackPanel Margin="6,3,3,3">
+																<TextBlock Text="{Binding DisplayTitle}" FontWeight="bold" Margin="0,0,0,5" ToolTip="{Binding AdgroupCreativeGK}"/>
+																<TextBlock Text="{Binding DisplayDesc1}"/>
+																<TextBlock Text="{Binding Desc2}" Margin="0,0,0,5"/>
+																<TextBlock Text="{Binding DisplayURL}" ToolTip="{Binding DestinationUrlDisplay}"/>
+															</StackPanel>
+														</DataTemplate>
+													</GridViewColumn.CellTemplate>
+												</GridViewColumn>
+												<!--<GridViewColumn Header="Landing page" CellTemplate="{StaticResource LandingPageTemplate}" this:ListTable.AutoSize="true" />-->
+												<GridViewColumn Header="Segments" this:ListTable.AutoSize="true">
+													<GridViewColumn.CellTemplate>
+														<DataTemplate>
+															<StackPanel Orientation="Vertical">
+																<StackPanel.Resources>
+																	<Style x:Key="FormField" TargetType="{x:Type StackPanel}">
+																		<Setter Property="Margin" Value="3"/>
+																		<Setter Property="Orientation" Value="Horizontal"/>
+																	</Style>
+																	<Style TargetType="{x:Type Label}">
+																		<Setter Property="Width" Value="100"/>
+																	</Style>
+																	<Style TargetType="{x:Type ComboBox}">
+																		<Setter Property="Width" Value="130"/>
+																	</Style>
+																</StackPanel.Resources>
+																<StackPanel Style="{StaticResource FormField}">
+																	<Label Content="Landing page"/>
+																	<ComboBox SelectedValue="{Binding Path=PageGK}" SelectedValuePath="GK" DisplayMemberPath="DisplayName" ItemsSource="{Binding Path=PageValues}"/>
+																</StackPanel>
+																<StackPanel Style="{StaticResource FormField}" Visibility="{Binding Path=Segment1Visibility}">
+																	<Label Content="{Binding Path=Segment1Name}"/>
+																	<ComboBox SelectedValue="{Binding Path=Segment1}" SelectedValuePath="ValueID" DisplayMemberPath="Value" ItemsSource="{Binding Path=Segment1Values}" Loaded="AdgroupCreatives_SegmentPickerLoaded"/>
+																</StackPanel>
+																<StackPanel Style="{StaticResource FormField}" Visibility="{Binding Path=Segment2Visibility}">
+																	<Label Content="{Binding Path=Segment2Name}"/>
+																	<ComboBox SelectedValue="{Binding Path=Segment2}" SelectedValuePath="ValueID" DisplayMemberPath="Value" ItemsSource="{Binding Path=Segment2Values}" Loaded="AdgroupCreatives_SegmentPickerLoaded"/>
+																</StackPanel>
+																<StackPanel Style="{StaticResource FormField}" Visibility="{Binding Path=Segment3Visibility}">
+																	<Label Content="{Binding Path=Segment3Name}"/>
+																	<ComboBox SelectedValue="{Binding Path=Segment3}" SelectedValuePath="ValueID" DisplayMemberPath="Value" ItemsSource="{Binding Path=Segment3Values}" Loaded="AdgroupCreatives_SegmentPickerLoaded"/>
+																</StackPanel>
+																<StackPanel Style="{StaticResource FormField}" Visibility="{Binding Path=Segment4Visibility}">
+																	<Label Content="{Binding Path=Segment4Name}"/>
+																	<ComboBox SelectedValue="{Binding Path=Segment4}" SelectedValuePath="ValueID" DisplayMemberPath="Value" ItemsSource="{Binding Path=Segment4Values}" Loaded="AdgroupCreatives_SegmentPickerLoaded"/>
+																</StackPanel>
+																<StackPanel Style="{StaticResource FormField}" Visibility="{Binding Path=Segment5Visibility}">
+																	<Label Content="{Binding Path=Segment5Name}"/>
+																	<ComboBox SelectedValue="{Binding Path=Segment5}" SelectedValuePath="ValueID" DisplayMemberPath="Value" ItemsSource="{Binding Path=Segment5Values}" Loaded="AdgroupCreatives_SegmentPickerLoaded"/>
+																</StackPanel>
+															</StackPanel>
+														</DataTemplate>
+													</GridViewColumn.CellTemplate>
+												</GridViewColumn>
+											</GridView>
+										</this:ListTable.View>
+									</this:ListTable>
+								</DockPanel>
+							</TabItem>
+
+							<!--<TabItem Header="Details">
+								<TabItem.Resources>
+									<Style TargetType="{x:Type Label}">
+										<Setter Property="Width" Value="80"/>
+									</Style>
+									<Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource FormValidatedInput}">
+										<Setter Property="Width" Value="150"/>
+									</Style>
+									<Style TargetType="{x:Type ComboBox}">
+										<Setter Property="Width" Value="150"/>
+									</Style>
+								</TabItem.Resources>
+
+								<StackPanel Style="{StaticResource FormContents}">
+									<StackPanel Style="{StaticResource FormField}">
+										<Label Content="Name"/>
+										<TextBox Text="{this:StringBinding Path=Name}" this:FloatingDialog.DialogFields="Text" IsReadOnly="{Binding ElementName=_page, Path=CurrentItemHasPpcApi}"/>
+									</StackPanel>
+								</StackPanel>
+							</TabItem>-->
+						</TabControl>
+					</DataTemplate>
+				</this:FloatingDialog.ContentTemplate>
+			</this:FloatingDialog>
+ 
+            <this:FloatingDialog
+				x:Name="CampaignMerge_dialog"
+				Width="400"
+				Height="180"
+				Title="Merge Campaigns"
+				ApplyingChanges="CampaignMerge_Apply"
+				ApplyButtonVisibility="Collapsed"
+				>
+                <this:FloatingDialog.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Name after merge:" FontWeight="Bold" Foreground="White"/>
+                            <ComboBox x:Name="_mergeTargetComboBox" 
+                                DisplayMemberPath="Name"
+						        SelectedValuePath="GK"
+                            />
+                        </StackPanel>
+                    </DataTemplate>
+                </this:FloatingDialog.ContentTemplate>
+            </this:FloatingDialog>
+			
+			<this:FloatingDialog
+				x:Name="BatchTargets_dialog"
+				Width="400"
+				Height="250"
+				Title="Assign Targets"
+				ApplyingChanges="Targets_BatchApply"
+				ApplyButtonVisibility="Collapsed"
+				>
+				<this:FloatingDialog.ContentTemplate>
+					<DataTemplate>
+						<DataTemplate.Resources>
+							<Style TargetType="{x:Type Label}">
+								<Setter Property="Width" Value="190"/>
+								<Setter Property="Foreground" Value="White"/>
+								<Setter Property="FontWeight" Value="Bold"/>
+							</Style>
+							<Style TargetType="{x:Type TextBox}">
+								<Setter Property="Width" Value="80"/>
+							</Style>
+						</DataTemplate.Resources>
+						<StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+							<TextBlock TextWrapping="Wrap" Foreground="White" Margin="8">Enter target values to be applied to the selected campaigns.</TextBlock>
+							<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+								<ItemsControl>
+									<ItemsControl.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+										</ItemsPanelTemplate>
+									</ItemsControl.ItemsPanel>
+									<ItemsControl.ItemTemplate>
+										<DataTemplate DataType="{x:Type data:Measure}">
+											<StackPanel Style="{StaticResource FormField}">
+												<Label Content="{Binding DisplayName}"/>
+												<TextBox/>
+											</StackPanel>
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+								</ItemsControl>
+							</ScrollViewer>
+						</StackPanel>
+					</DataTemplate>
+				</this:FloatingDialog.ContentTemplate>
+			</this:FloatingDialog>
+		</Grid>
+
+	</Grid>
+</this:PageBase>

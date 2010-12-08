@@ -1,0 +1,88 @@
+﻿html
+{
+    overflow: auto;
+}
+
+body
+{
+	font-family: Verdana;
+	font-size: 12px;
+	overflow: auto;
+}
+
+table
+{
+	font-family: Verdana;
+	font-size: 12px;
+}
+
+input
+{
+	font-family: Verdana;
+	font-size: 12px;
+}
+
+select
+{
+	font-family: Verdana;
+	font-size: 12px;
+}
+
+a
+{
+    color: #7CA81D;
+    text-decoration: none;
+}
+
+a:hover
+{
+    text-decoration: underline;
+}
+
+	#selectors .selector
+	{  
+		background-color: White;
+		float: left;
+		margin-right: 15px;
+		margin-bottom: 15px;
+	}
+	
+	#selectors .label
+	{  
+	}
+	
+	#selectors .control
+	{
+	}
+	
+	#selectors .calendarHost
+	{
+		position: relative;
+	}
+
+.calendar
+{
+    position: absolute;
+    top: 2.1em;
+    left: 0;
+    z-index: 999;
+    background-color: #fff;
+}
+
+.errorMessage
+{
+	font-size: 12px;
+	font-weight: bold;
+	color: red;
+	display: block;
+	margin: 0px 0 5px 0;
+	
+}
+.successMessage
+{
+	font-size: 12px;
+	font-weight: bold;
+	color: green; 
+	display: block;
+	margin: 0px 0 5px 0;
+}

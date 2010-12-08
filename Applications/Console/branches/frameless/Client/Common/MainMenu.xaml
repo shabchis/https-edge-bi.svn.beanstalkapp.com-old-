@@ -1,0 +1,355 @@
+﻿<UserControl x:Class="Easynet.Edge.UI.Client.MainMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    >
+	
+	<UserControl.Resources>
+		<XmlDataProvider x:Key="MenuData" XPath="/Sections"/>
+		
+		<Style x:Key="AnimatedExpander" TargetType="{x:Type Expander}">
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+			<Setter Property="VerticalContentAlignment" Value="Stretch"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Margin" Value="0,0,0,10" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Expander}">
+						<Border SnapsToDevicePixels="true" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
+							<DockPanel>
+								<ToggleButton x:Name="HeaderSite"
+									FontFamily="{TemplateBinding FontFamily}"
+									FontSize="{TemplateBinding FontSize}"
+									FontStretch="{TemplateBinding FontStretch}"
+									FontStyle="{TemplateBinding FontStyle}"
+									FontWeight="{TemplateBinding FontWeight}"
+									Foreground="{TemplateBinding Foreground}"
+									HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+									Padding="{TemplateBinding Padding}"
+									VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+									Margin="1"
+									MinHeight="0"
+									MinWidth="0"
+									Content="{TemplateBinding Header}"
+									ContentTemplate="{TemplateBinding HeaderTemplate}"
+									ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+									IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+									DockPanel.Dock="Top"
+									Cursor="Hand"
+								>
+									<ToggleButton.Template>
+										<ControlTemplate TargetType="{x:Type ToggleButton}">
+											<Border Padding="{TemplateBinding Padding}">
+												<Grid x:Name="header" SnapsToDevicePixels="False" Height="23">
+													<Grid.ColumnDefinitions>
+														<ColumnDefinition Width="3"/>
+														<ColumnDefinition Width="19"/>
+														<ColumnDefinition Width="*"/>
+													</Grid.ColumnDefinitions>
+													<Rectangle Grid.ColumnSpan="3" RadiusX="7" RadiusY="7" Fill="#90B63D"/>
+													
+													<Canvas Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="19" Height="19">
+														<Ellipse  x:Name="circle" Stroke="DarkGray" Width="19" Height="19">
+															<Ellipse.Fill>
+																<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+																	<GradientStop Color="#FCFCFA" Offset="0"/>
+																	<GradientStop Color="#F9F9F9" Offset="1"/>
+																</LinearGradientBrush>
+															</Ellipse.Fill>
+														</Ellipse>
+														<Ellipse  x:Name="shadow" Visibility="Hidden" HorizontalAlignment="Center" VerticalAlignment="Center" Width="17" Height="17">
+															<Ellipse.Fill>
+																<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+																	<GradientStop Color="Transparent" Offset="0.5"/>
+																	<GradientStop Color="#30111111" Offset="1"/>
+																</LinearGradientBrush>
+															</Ellipse.Fill>
+														</Ellipse>
+														
+														<!--<Path Grid.Column="1"  x:Name="arrow" SnapsToDevicePixels="false" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="#666" StrokeThickness="2" Data="M 1,1.5 L 4.5,5 L 8,1.5"/>-->
+														<Path x:Name="vertical" SnapsToDevicePixels="false" Stroke="#666" StrokeThickness="2" Data="M 9.5,5 v9"/>
+														<Path x:Name="horizontal" SnapsToDevicePixels="false" Stroke="#666" StrokeThickness="2" Data="M 5,9.5 h9"/>
+													</Canvas>
+													<ContentPresenter Grid.Column="2" SnapsToDevicePixels="True" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+												</Grid>
+											</Border>
+											<ControlTemplate.Triggers>
+												<Trigger Property="IsChecked" Value="true">
+													<!--<Setter Property="Data" TargetName="arrow" Value="M 1,4.5  L 4.5,1  L 8,4.5"/>-->
+													<Setter Property="Visibility" TargetName="vertical" Value="Hidden"/>
+												</Trigger>
+												<Trigger Property="IsMouseOver" Value="true">
+													<Setter Property="Stroke" TargetName="circle" Value="#666"/>
+													<Setter Property="Stroke" TargetName="vertical" Value="#222"/>
+													<Setter Property="Stroke" TargetName="horizontal" Value="#222"/>
+													<Setter Property="Visibility" TargetName="shadow" Value="Visible"/>
+												</Trigger>
+											</ControlTemplate.Triggers>
+										</ControlTemplate>
+									</ToggleButton.Template>
+								</ToggleButton>
+								
+								<ContentPresenter x:Name="ExpandSite"
+												  Focusable="false"
+												  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+												  Margin="{TemplateBinding Padding}"
+												  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+												  DockPanel.Dock="Bottom">
+									<ContentPresenter.LayoutTransform>
+										<ScaleTransform ScaleX="1" ScaleY="0" />
+									</ContentPresenter.LayoutTransform>
+								</ContentPresenter>
+							
+							</DockPanel>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsExpanded" Value="true">
+								<Trigger.EnterActions>
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="ExpandSite" Storyboard.TargetProperty="LayoutTransform.ScaleY" From="0" To="1" Duration="0:0:0.3" DecelerationRatio="1"/>
+											<DoubleAnimation Storyboard.TargetName="ExpandSite" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.3" DecelerationRatio="1"/>
+										</Storyboard>
+									</BeginStoryboard>
+								</Trigger.EnterActions>
+								<Trigger.ExitActions>
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="ExpandSite" Storyboard.TargetProperty="LayoutTransform.ScaleY" From="1" To="0" Duration="0:0:0.3" DecelerationRatio="1"/>
+											<DoubleAnimation Storyboard.TargetName="ExpandSite" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.3" DecelerationRatio="1"/>
+										</Storyboard>
+									</BeginStoryboard>
+								</Trigger.ExitActions>
+							</Trigger>
+							
+							<Trigger Property="IsEnabled" Value="false">
+								<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<!-- Menu item defintion -->
+		<Style x:Key="PagesListBox" TargetType="{x:Type ListBox}">
+			<Setter Property="ItemTemplate" Value="{DynamicResource PagesListItemTemplate}" />
+			<Setter Property="ItemContainerStyle" Value="{DynamicResource PagesListBoxItem}" />
+			<Setter Property="BorderBrush" Value="Transparent" />
+			<Setter Property="Width" Value="186" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="ListBox">
+						<Border BorderThickness="{TemplateBinding Border.BorderThickness}" Padding="1,1,1,1" BorderBrush="{TemplateBinding Border.BorderBrush}" Background="{TemplateBinding Panel.Background}" Name="Bd" SnapsToDevicePixels="True">
+							<ScrollViewer Padding="{TemplateBinding Control.Padding}" Focusable="False">
+								<ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+							</ScrollViewer>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style x:Key="PagesListBoxItem" TargetType="{x:Type ListBoxItem}">
+			<Setter Property="Margin" Value="18,0,0,0" />
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="Cursor" Value="Hand" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type ListBoxItem}">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="19"/>
+							</Grid.ColumnDefinitions>
+							<Rectangle Grid.ColumnSpan="2" x:Name="ListBG" Fill="{TemplateBinding Background}" RadiusX="5" RadiusY="5" Margin="0,6,0,6"></Rectangle>
+							<ContentPresenter Grid.Column="0" x:Name="ContentSite" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="15,8,0,8" />
+							<Path Grid.Column="1" x:Name="arrow"
+								  HorizontalAlignment="Center"
+								  VerticalAlignment="Center"
+								  SnapsToDevicePixels="false"
+								  Stroke="White"
+								  StrokeThickness="2"
+								  Data="M 1.5,1  L 6,5.5  L 1.5,10"
+								  Visibility="Hidden"/>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsSelected" Value="true">
+								<Setter Property="Background" Value="#8D8D8D" />
+								<Setter Property="Foreground" Value="white" />
+								<Setter TargetName="arrow" Property="Visibility" Value="Visible"/>
+							</Trigger>
+							<MultiTrigger>
+								<MultiTrigger.Conditions>
+									<Condition Property="IsSelected" Value="false"/>
+									<Condition Property="IsMouseOver" Value="true"/>
+								</MultiTrigger.Conditions>
+								<Setter Property="Background" Value="#E2EDCD" />
+								<Setter Property="Foreground" Value="black" />
+							</MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="#cccccc" />
+                            </Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<DataTemplate x:Key="PagesListItemTemplate">
+			<StackPanel>
+				<TextBlock Text="{Binding XPath=@Title}"></TextBlock>
+			</StackPanel>
+		</DataTemplate>
+
+		<!-- Menu section definition -->
+		<Style x:Key="SectionListBox" TargetType="{x:Type ListBox}">
+			<Setter Property="ItemTemplate" Value="{DynamicResource SectionListBoxItemTemplate}" />
+			<Setter Property="ItemContainerStyle" Value="{DynamicResource SectionListBoxItem}" />
+			<Setter Property="BorderBrush" Value="Transparent" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="ListBox">
+						<Border BorderThickness="{TemplateBinding Border.BorderThickness}" Padding="1,1,1,1" BorderBrush="{TemplateBinding Border.BorderBrush}" Name="Bd" SnapsToDevicePixels="True">
+							<ScrollViewer Padding="{TemplateBinding Control.Padding}" Focusable="False">
+								<ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+							</ScrollViewer>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Style.Triggers>
+				<Trigger Property="Visibility" Value="Visible">
+					<Trigger.EnterActions>
+						<BeginStoryboard>
+							<Storyboard>
+								<DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1"/>
+							</Storyboard>
+						</BeginStoryboard>
+					</Trigger.EnterActions>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+		<Style x:Key="SectionListBoxItem" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Background" Value="Transparent" />
+			<Setter Property="Margin" Value="1" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type ListBoxItem}">
+						<ContentPresenter x:Name="ContentSite" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </ControlTemplate>
+				</Setter.Value>
+			</Setter>
+        </Style>
+		<DataTemplate x:Key="SectionListBoxItemTemplate">
+			<Expander x:Name="_sectionExpander"
+					  Style="{DynamicResource AnimatedExpander}"
+					  IsExpanded="{Binding XPath=@IsOpen}"
+					  >
+				<Expander.Header>
+					<TextBlock Foreground="White">
+						<TextBlock Text="{Binding XPath=@Title}"></TextBlock>
+					</TextBlock>
+				</Expander.Header>
+				<ListBox x:Name="LayoutListBox"
+						 ItemsSource="{Binding XPath=./Page}"
+						 Style="{DynamicResource PagesListBox}"
+						 MaxHeight="200"
+						 SelectionChanged="LayoutListBox_SelectionChanged"
+						 SelectionMode="Single"
+                    >
+					<ListBox.ItemsPanel>
+						<ItemsPanelTemplate>
+							<StackPanel />
+						</ItemsPanelTemplate>
+					</ListBox.ItemsPanel>
+				</ListBox>
+			</Expander>
+		</DataTemplate>
+
+	</UserControl.Resources>
+	
+    <Grid>
+	    <Grid.RowDefinitions>
+		    <RowDefinition Height="10"/>
+		    <RowDefinition Height="*"/>
+	    </Grid.RowDefinitions>
+
+		<ToggleButton Grid.Row="0"  x:Name="_hideButton"
+						Click="_hideButton_Click"
+						Foreground="#8D8D8D"
+						HorizontalAlignment="Left"
+						Cursor="Hand"
+						IsChecked="False"
+						Margin="10,0,0,0"
+				>
+			<ToggleButton.Template>
+				<ControlTemplate TargetType="{x:Type ToggleButton}">
+					<ControlTemplate.Resources>
+						<StreamGeometry x:Key="rightArrow">M 1.5,1  L 5,4.5  L 1.5,8</StreamGeometry>
+						<StreamGeometry x:Key="leftArrow">M 5,1  L 1.5,4.5  L 5,8</StreamGeometry>
+					</ControlTemplate.Resources>
+					<Grid HorizontalAlignment="Center">
+						<Rectangle Fill="Transparent"/>
+						<StackPanel
+							Orientation="Horizontal"
+							
+						>
+							<Path x:Name="one"
+							  SnapsToDevicePixels="false"
+							  Stroke="{TemplateBinding Foreground}"
+							  StrokeThickness="2"
+							  Data="{StaticResource leftArrow}"
+							  HorizontalAlignment="Center"
+							  VerticalAlignment="Center"
+							/>
+							<Path x:Name="two"
+							  SnapsToDevicePixels="false"
+							  HorizontalAlignment="Center"
+							  VerticalAlignment="Center"
+							  Stroke="{TemplateBinding Foreground}"
+							  StrokeThickness="2"
+							  Data="{StaticResource leftArrow}"  
+							/>
+							<TextBlock x:Name="label" FontSize="9" VerticalAlignment="Center" Margin="5,0,0,0" Visibility="Hidden">hide</TextBlock>
+						</StackPanel>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsChecked" Value="true">
+							<Setter TargetName="one" Property="Path.Data" Value="{StaticResource rightArrow}"/>
+							<Setter TargetName="two" Property="Path.Data" Value="{StaticResource rightArrow}"/>
+						</Trigger>
+						<Trigger Property="IsMouseOver" Value="true">
+							<Setter TargetName="label" Property="TextBlock.Visibility" Value="Visible"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</ToggleButton.Template>
+			<ToggleButton.Triggers>
+				<EventTrigger RoutedEvent="ToggleButton.Checked">
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetName="_menuSections" Storyboard.TargetProperty="(ListBox.Opacity)" From="1" To="0" Duration="0:0:0.3" DecelerationRatio="1"/>
+						</Storyboard>
+					</BeginStoryboard>
+				</EventTrigger>
+				<EventTrigger RoutedEvent="ToggleButton.Unchecked">
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetName="_menuSections" Storyboard.TargetProperty="(ListBox.Opacity)" From="0" To="1" Duration="0:0:0.3" DecelerationRatio="1"/>
+						</Storyboard>
+					</BeginStoryboard>
+				</EventTrigger>
+			</ToggleButton.Triggers>
+		</ToggleButton>
+
+		<ListBox Grid.Row="1" x:Name="_menuSections"
+			     DataContext="{Binding Source={StaticResource MenuData}, XPath=/Sections/Section}"
+			     ItemsSource="{Binding}"
+			     Style="{DynamicResource SectionListBox}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                 HorizontalContentAlignment="Stretch"
+				 ScrollViewer.CanContentScroll="False"
+                 />
+    </Grid>
+	
+</UserControl>

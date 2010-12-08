@@ -1,0 +1,459 @@
+﻿<this:PageBase x:Class="Easynet.Edge.UI.Client.Pages.PpcGateways"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:this="clr-namespace:Easynet.Edge.UI.Client"
+	xmlns:local="clr-namespace:Easynet.Edge.UI.Client.PpcGatewaysLocal"
+>
+	
+	<this:PageBase.Resources>
+		<local:ExpandToggleTemplateSelector x:Key="ExpandToggleTemplateSelector"/>
+		<local:NameTemplateSelector x:Key="NameTemplateSelector"/>
+		<local:OptionsTemplateSelector x:Key="OptionsTemplateSelector"/>
+		<local:ChannelTemplateSelector x:Key="ChannelTemplateSelector"/>
+		<local:ChannelPickerChannelTemplateSelector x:Key="ChannelPickerChannelTemplateSelector"/>
+		<local:ChannelNameConverter x:Key="ChannelNameConverter"/>
+		<local:AdunitNameConverter x:Key="AdunitNameConverter"/>
+
+		<Style TargetType="{x:Type TextBlock}">
+			<Setter Property="Padding" Value="0,6,0,6"/>
+		</Style>
+
+		<Style TargetType="{x:Type Button}" x:Key="DropButtonStyle">
+			<Setter Property="Margin" Value="5"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Image Source="../Graphics/edit_add.png" Width="12" Height="12" Cursor="Hand"/>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<DataTemplate x:Key="GatewayNameTemplate">
+				<Button x:Name="_itemName" Content="{Binding DisplayName}" Style="{StaticResource Link}" Click="Gateway_dialog_Open" Margin="0,5,0,5"/>
+		</DataTemplate>
+
+		<DataTemplate x:Key="GatewayOptionsTemplate">
+			<!--<StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+				<Button Style="{StaticResource DeleteButtonStyle}"/>
+			</StackPanel>-->
+		</DataTemplate>
+
+		<DataTemplate x:Key="ChannelTemplate">
+			<TextBlock Foreground="#666" Text="{Binding Path=ChannelID, Converter={StaticResource ChannelNameConverter}}"/>
+		</DataTemplate>
+
+		<DataTemplate x:Key="ChannelPickerChannelTemplate">
+			<TextBlock Text="{Binding Path=DisplayName}" />
+		</DataTemplate>
+		
+		<Style x:Key="FormContents" TargetType="{x:Type StackPanel}">
+			<Setter Property="Margin" Value="10"/>
+			<Setter Property="Orientation" Value="Vertical"/>
+		</Style>
+		<Style x:Key="FormField" TargetType="{x:Type StackPanel}">
+			<Setter Property="Margin" Value="6"/>
+			<Setter Property="Orientation" Value="Horizontal"/>
+		</Style>
+	
+	</this:PageBase.Resources>
+
+	<Grid>
+		<DockPanel LastChildFill="True">
+
+			<Canvas DockPanel.Dock="Top">
+				<StackPanel Orientation="Horizontal" Canvas.Right="50" VerticalAlignment="Center" HorizontalAlignment="Right">
+					<Button x:Name="_buttonBatch" Style="{StaticResource Link}" Content="Batch Update" Click="GatewayBatch_Click"/>					
+				</StackPanel>
+			</Canvas>
+
+			<StackPanel DockPanel.Dock="Top" Margin="0,15,0,0" x:Name="_pageControls" Orientation="Horizontal" VerticalAlignment="Bottom" this:AccessKeyScoper.IsAccessKeyScope="true">
+				<StackPanel.Resources>
+					<Style TargetType="{x:Type ComboBox}">
+						<Setter Property="Width" Value="130"/>
+						<Setter Property="ItemContainerStyle">
+							<Setter.Value>
+								<Style TargetType="{x:Type ComboBoxItem}">
+									<Setter Property="Margin" Value="2"/>
+								</Style>
+							</Setter.Value>
+						</Setter>
+					</Style>
+					<Style TargetType="{x:Type StackPanel}">
+						<Setter Property="Margin" Value="0,0,15,0"/>
+					</Style>
+				</StackPanel.Resources>
+				<StackPanel Orientation="Vertical">
+					<Label Content="Channel"/>
+					<ComboBox x:Name="_channelPicker" ItemTemplateSelector="{StaticResource ChannelPickerChannelTemplateSelector}"/>
+				</StackPanel>
+				<StackPanel x:Name="_segment1Filter" Orientation="Vertical" Visibility="Collapsed">
+					<Label x:Name="_segment1Title"/>
+					<ComboBox x:Name="_segment1Picker" SelectedValuePath="ValueID" DisplayMemberPath="Value" />
+				</StackPanel>
+				<StackPanel x:Name="_segment2Filter" Orientation="Vertical" Visibility="Collapsed">
+					<Label x:Name="_segment2Title"/>
+					<ComboBox x:Name="_segment2Picker" SelectedValuePath="ValueID" DisplayMemberPath="Value" />
+				</StackPanel>
+				<StackPanel x:Name="_segment3Filter" Orientation="Vertical" Visibility="Collapsed">
+					<Label x:Name="_segment3Title"/>
+					<ComboBox x:Name="_segment3Picker" SelectedValuePath="ValueID" DisplayMemberPath="Value" />
+				</StackPanel>
+				<StackPanel x:Name="_segment4Filter" Orientation="Vertical" Visibility="Collapsed">
+					<Label x:Name="_segment4Title"/>
+					<ComboBox x:Name="_segment4Picker" SelectedValuePath="ValueID" DisplayMemberPath="Value" />
+				</StackPanel>
+				<StackPanel x:Name="_segment5Filter" Orientation="Vertical" Visibility="Collapsed">
+					<Label x:Name="_segment5Title"/>
+					<ComboBox x:Name="_segment5Picker" SelectedValuePath="ValueID" DisplayMemberPath="Value" />
+				</StackPanel>
+				<StackPanel Orientation="Vertical" >
+					<Label Content="Tracker ID"/>
+					<TextBox x:Name="_filterText" Width="100"/>
+				</StackPanel>
+				<StackPanel Orientation="Vertical">
+					<Label Content=" "/>
+					<Button x:Name="_filterButton" Content="Filter" IsDefault="True" Width="80" Click="_filterButton_Click"/>
+				</StackPanel>
+			</StackPanel>
+				
+			<this:ListTable x:Name="_listTable"
+				Margin="0,12,50,50"
+				SelectionMode="Extended"
+				VirtualizingStackPanel.IsVirtualizing="False"
+			> <!--GroupExpanded="_listTable_GroupExpanded"
+				GroupCollapsed="_listTable_GroupCollapsed"-->
+				<this:ListTable.View>
+					<GridView AllowsColumnReorder="False">
+						<GridViewColumn Width="35"		 CellTemplate="{StaticResource EmptyCell}"/>
+						<GridViewColumn Header="Name"	 CellTemplate="{DynamicResource GatewayNameTemplate}" this:ListTable.AutoSize="true"/>
+						<GridViewColumn	Header="Channel" Width="120"		CellTemplate="{DynamicResource ChannelTemplate}"/>
+					</GridView>
+				</this:ListTable.View>
+			</this:ListTable>
+		</DockPanel>
+
+		<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+			
+			<this:FloatingDialog
+				x:Name="Gateway_dialog"
+				Width="600"
+				Height="400"
+				ApplyingChanges="Gateway_dialog_ApplyingChanges"
+				AppliedChanges="Gateway_dialog_AppliedChanges"
+				Closing="Gateway_dialog_Closing"
+				Loaded="Gateway_dialog_Loaded"
+			 >
+				<this:FloatingDialog.Resources>
+					<Style TargetType="{x:Type Label}">
+						<Setter Property="Width" Value="120"/>
+					</Style>
+					<Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource FormValidatedInput}">
+						<Setter Property="Width" Value="150"/>
+					</Style>
+					<Style TargetType="{x:Type ComboBox}">
+						<Setter Property="Width" Value="150"/>
+					</Style>
+					<!--<this:StringValidator x:Key="UrlValidator" RegexPattern=".+" ErrorMessage="Please enter a URL"/>-->
+				</this:FloatingDialog.Resources>
+				
+				<this:FloatingDialog.ContentTemplate>
+					<DataTemplate>
+						<TabControl TabStripPlacement="Top">
+							<TabItem Header="Details">
+								<StackPanel Style="{StaticResource FormContents}">
+									<StackPanel Style="{StaticResource FormField}">
+										<Label Content="Name"/>
+										<TextBox Text="{Binding Path=Name}" this:FloatingDialog.DialogFields="Text"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}">
+										<Label Content="Identifier"/>
+										<TextBox x:Name="_input_originalID" Text="{this:NumberBinding Path=Identifier, MinValue=0}" this:FloatingDialog.DialogFields="Text" IsReadOnly="True"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}">
+										<Label Content="Channel"/>
+										<ComboBox
+											x:Name="_gatewayChannelPicker"
+											Loaded="_gatewayChannelPicker_Loaded"
+											ItemsSource="{Binding Source={StaticResource ChannelTableRows}}"
+											DisplayMemberPath="DisplayName"
+											SelectedValuePath="ID"
+											SelectedValue="{Binding Path=ChannelID, Mode=TwoWay}"
+											this:FloatingDialog.DialogFields="SelectedValue"
+											/>
+									</StackPanel>
+									
+									<StackPanel Style="{StaticResource FormField}">
+										<Label Content="Destination URL"/>
+										<TextBox Text="{Binding Path=DestinationURL}" Width="300" this:FloatingDialog.DialogFields="Text"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}">
+										<Label Content="Landing Page"/>
+										<this:AutocompleteCombo
+											x:Name="_input_gatewayPage"
+											Width="300" 
+											DisplayMemberPath="DisplayName"
+											ItemsSourceRequired="PagePicker_ItemsSourceRequired"
+											Loaded="_input_gatewayPage_Loaded"
+										/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" >
+										<Label Content="Applied to"/>
+										<StackPanel Orientation="Horizontal" x:Name="_gatewayAppliedTo" Margin="0,6,6,6">
+											<Button Style="{StaticResource Link}" Content="{Binding Path=Campaign.Name}"/>
+											<TextBlock Text=" &gt; "/>
+											<Button Style="{StaticResource Link}" Content="{Binding Path=Adgroup.Name}"/>
+											<TextBlock Text=" &gt; "/>
+											<TextBlock Text="{Binding Path=DisplayType}"/>
+											<TextBlock Text=": "/>
+											<Button Style="{StaticResource Link}" Content="{Binding Path=DisplayName}"/>
+										</StackPanel>
+									</StackPanel>
+								</StackPanel>
+							</TabItem>
+
+							<TabItem Header="Segments" x:Name="_tabSegments" GotFocus="GatewaySegments_GotFocus">
+								<TabItem.Resources>
+									<Style TargetType="{x:Type Label}">
+										<Setter Property="Width" Value="130"/>
+									</Style>
+									<Style TargetType="{x:Type ComboBox}">
+										<Setter Property="Width" Value="200"/>
+									</Style>
+								</TabItem.Resources>
+								<StackPanel Style="{StaticResource FormContents}">
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment1" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment1}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment2" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment2}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment3" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment3}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment4" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment4}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment5" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{Binding Path=Segment5}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+								</StackPanel>
+							</TabItem>
+
+						</TabControl>
+					</DataTemplate>
+				</this:FloatingDialog.ContentTemplate>
+			</this:FloatingDialog>
+
+			<this:FloatingDialog
+				x:Name="GatewayReserve_dialog"
+				Width="550"
+				Height="450"
+				Title="Reserve Trackers"
+				ApplyingChanges="GatewayReserve_dialog_ApplyingChanges"
+				Closing="GatewayReserve_dialog_Closing"
+				ApplyButtonVisibility="Collapsed"
+				>
+				<this:FloatingDialog.Resources>
+					<Style TargetType="{x:Type Label}">
+					</Style>
+					<Style x:Key="Number" TargetType="{x:Type TextBox}">
+						<Setter Property="Width" Value="50"/>
+						<Setter Property="HorizontalAlignment" Value="Right"/>
+					</Style>
+					<Style x:Key="RadioButtonContents" TargetType="{x:Type StackPanel}">
+						<Setter Property="Orientation" Value="Horizontal"/>
+						<Setter Property="VerticalAlignment" Value="Center"/>
+					</Style>
+				</this:FloatingDialog.Resources>
+
+				<TabControl>
+					<TabItem Header="       ">
+						<StackPanel Style="{StaticResource FormContents}" HorizontalAlignment="Left" >
+							<StackPanel Style="{StaticResource RadioButtonContents}" Margin="6">
+								<Label Content="Reserve Trackers"/>
+								<TextBox x:Name="_gatewayReserve_From" Style="{StaticResource Number}"/>
+
+								<Label Content="to" Margin="7,0,0,0"/>
+								<TextBox x:Name="_gatewayReserve_To"  Style="{StaticResource Number}"/>
+							</StackPanel>
+							<StackPanel Style="{StaticResource FormField}" Margin="6,20,6,6">
+								<Label Content="Unspecified page" Width="100"/>
+								<CheckBox x:Name="_gatewayReserve_Unspecified" IsChecked="False" Margin="0,4,0,0"/>
+							</StackPanel>
+							<StackPanel Style="{StaticResource FormField}" IsEnabled="{Binding ElementName=_gatewayReserve_Unspecified, Path=IsChecked, Converter={StaticResource BoolInverter}}">
+								<Label Content="Target page" Width="100"/>
+								<this:AutocompleteCombo
+									x:Name="_gatewayReserve_Page"
+									Width="300" 
+									DisplayMemberPath="DisplayName"
+									ItemsSourceRequired="PagePicker_ItemsSourceRequired"
+								/>
+							</StackPanel>
+							<StackPanel Style="{StaticResource FormField}">
+								<Label Content="Cross check" Width="100"/>
+								<ListBox x:Name="_gatewayReserve_crossCheckAccounts" Width="300" Height="120" VirtualizingStackPanel.IsVirtualizing="False" Loaded="_gatewayReserve_crossCheckAccounts_Loaded">
+									<ListBox.ItemTemplate>
+										<DataTemplate>
+											<StackPanel Orientation="Horizontal" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left">
+												<CheckBox Margin="0,0,6,0"/>
+												<TextBlock Text="{Binding Name}"/>
+											</StackPanel>
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+							</StackPanel>
+						</StackPanel>
+					</TabItem>
+				</TabControl>
+			</this:FloatingDialog>
+
+			<this:FloatingDialog
+				x:Name="GatewayCreate_dialog"
+				Width="550"
+				Height="450"
+				Title="Generate Trackers"
+				ApplyingChanges="GatewayCreate_dialog_ApplyingChanges"
+				Closing="GatewayCreate_dialog_Closing"
+				ApplyButtonVisibility="Collapsed"
+				>
+				<this:FloatingDialog.Resources>
+					<Style TargetType="{x:Type Label}">
+						<Setter Property="Width" Value="100"/>
+					</Style>
+					<Style x:Key="Number" TargetType="{x:Type TextBox}">
+						<Setter Property="Width" Value="50"/>
+						<Setter Property="HorizontalAlignment" Value="Right"/>
+					</Style>
+					<Style x:Key="RadioButtonContents" TargetType="{x:Type StackPanel}">
+						<Setter Property="Orientation" Value="Horizontal"/>
+						<Setter Property="VerticalAlignment" Value="Center"/>
+					</Style>
+				</this:FloatingDialog.Resources>
+
+				<TabControl>
+					<TabItem Header="       ">
+						<StackPanel Style="{StaticResource FormContents}" HorizontalAlignment="Left" >
+							<StackPanel Style="{StaticResource RadioButtonContents}" Margin="6">
+								<TextBlock Text="Generate " Margin="6"/>
+								<TextBox x:Name="_gatewayCreate_auto"   Style="{StaticResource Number}"/>
+								<TextBlock Text=" trackers" Margin="6"/>
+							</StackPanel>
+							<StackPanel Style="{StaticResource FormField}" Margin="6,30,6,6">
+								<Label Content="Unspecified page"/>
+								<CheckBox x:Name="_gatewayCreate_Unspecified" IsChecked="False" Margin="0,4,0,0"/>
+							</StackPanel>
+							<StackPanel Style="{StaticResource FormField}" IsEnabled="{Binding ElementName=_gatewayCreate_Unspecified, Path=IsChecked, Converter={StaticResource BoolInverter}}">
+								<Label Content="Target page"/>
+								<this:AutocompleteCombo
+									x:Name="_gatewayCreate_Page"
+									Width="300" 
+									DisplayMemberPath="DisplayName"
+									ItemsSourceRequired="PagePicker_ItemsSourceRequired"
+								/>
+							</StackPanel>
+
+							<StackPanel Style="{StaticResource FormField}">
+								<Label Content="Channel"/>
+								<ComboBox
+									x:Name="_gatewayCreate_Channel"
+									Width="200"
+									ItemsSource="{Binding Source={StaticResource ChannelTableRows}}"
+									DisplayMemberPath="DisplayName"
+									SelectedValuePath="ID"
+								/>
+							</StackPanel>
+
+
+						</StackPanel>
+					</TabItem>
+				</TabControl>
+			</this:FloatingDialog>
+
+			<this:FloatingDialog
+				x:Name="GatewayBatch_dialog"
+				Width="600"
+				Height="400"
+				Title="Batch Trackers"
+				ApplyingChanges="GatewayBatch_dialog_ApplyingChanges"
+				Closing="GatewayBatch_dialog_Closing"
+				ApplyButtonVisibility="Collapsed"
+				>
+				<this:FloatingDialog.Resources>
+					<Style TargetType="{x:Type Label}">
+						<Setter Property="Width" Value="100"/>
+					</Style>
+					<Style TargetType="{x:Type ComboBox}">
+						<Setter Property="Width" Value="200"/>
+					</Style>
+					<Style TargetType="{x:Type TextBox}">
+						<Setter Property="Width" Value="200"/>
+					</Style>
+				</this:FloatingDialog.Resources>
+	
+				<TabControl>
+
+					<TabItem Header="General">
+						
+						<StackPanel Style="{StaticResource FormContents}" >
+							<StackPanel Style="{StaticResource FormField}">
+								<Label Content="Range"/>
+								<TextBox x:Name="_batchRangeText"/>
+							</StackPanel>
+							<StackPanel Style="{StaticResource FormField}">
+								<Label Content="Channel"/>
+								<ComboBox
+											x:Name="_batchChannelPicker"
+											ItemsSource="{Binding Source={StaticResource ChannelTableRows}}"
+											DisplayMemberPath="DisplayName"
+											SelectedValuePath="ID"
+											/>
+							</StackPanel>
+							<StackPanel Style="{StaticResource FormField}">
+								<Label Content="Landing Page"/>
+								<this:AutocompleteCombo
+											x:Name="_batchPage"
+											Width="300" 
+											DisplayMemberPath="DisplayName"
+											ItemsSourceRequired="PagePicker_ItemsSourceRequired"
+										/>
+							</StackPanel>
+						</StackPanel>
+					</TabItem>
+					<TabItem Header="Segments">
+						
+						<StackPanel Style="{StaticResource FormContents}">
+							<StackPanel Style="{StaticResource FormField}" x:Name="_batchSegment1" Visibility="Collapsed">
+								<Label/>
+								<ComboBox SelectedValuePath="ValueID" DisplayMemberPath="Value"/>
+							</StackPanel>
+							<StackPanel Style="{StaticResource FormField}" x:Name="_batchSegment2" Visibility="Collapsed">
+								<Label/>
+								<ComboBox SelectedValuePath="ValueID" DisplayMemberPath="Value" />
+							</StackPanel>
+							<StackPanel Style="{StaticResource FormField}" x:Name="_batchSegment3" Visibility="Collapsed">
+								<Label/>
+								<ComboBox SelectedValuePath="ValueID" DisplayMemberPath="Value" />
+							</StackPanel>
+							<StackPanel Style="{StaticResource FormField}" x:Name="_batchSegment4" Visibility="Collapsed">
+								<Label/>
+								<ComboBox SelectedValuePath="ValueID" DisplayMemberPath="Value" />
+							</StackPanel>
+							<StackPanel Style="{StaticResource FormField}" x:Name="_batchSegment5" Visibility="Collapsed">
+								<Label/>
+								<ComboBox SelectedValuePath="ValueID" DisplayMemberPath="Value" />
+							</StackPanel>
+						</StackPanel>
+					</TabItem>
+				</TabControl>
+			</this:FloatingDialog>
+
+		</Grid>
+
+	</Grid>
+</this:PageBase>
