@@ -9,14 +9,14 @@ class Main extends Controller {
 	function index()
 	{
 	//	
-	$url = 'http://AlonYa-PC/API/EdgeBIAPIService.svc/menu';
- 	  $json =  file_get_contents($url);
-	
-
-   
+	$mainurl = 'http://AlonYa-PC/API/EdgeBIAPIService.svc/menu';
+ 	  $json =  file_get_contents($mainurl);
+	$accounturl = 'http://AlonYa-PC/API/EdgeBIAPIService.svc/accounts/1';
+		$json2 =     file_get_contents($accounturl);
+   	
      $data["json"]=$json;    
-	
-    //$this->firephp->log($data["json"]);
+	  $data["json2"]=$json2;    
+    //$this->firephp->log($data["json2"]);
 
 	$this->load->view('includes/template',$data);		
  
