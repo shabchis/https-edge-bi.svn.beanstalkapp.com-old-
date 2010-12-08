@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Sections xmlns="" >
+
+	<Section Title="Dashboard" IsOpen="true">
+		<Page Title="Overview" Class="Easynet.Edge.UI.Client.Pages.ChromiumPage" Permission="web/dashboard" Url="http://qa:7070/Version%201.0.1/dashboard_active_test.php"/>
+	</Section>
+
+	<Section Title="Intelligence" IsOpen="true">
+		<Page Title="Analysis" Class="Easynet.Edge.UI.Client.Pages.WebFramePage" Permission="web/pages/Analysis" Url="Intelligence.aspx?[[accountID: {Account.ID}; book: {Account.Settings.Book}; role: {Account.Settings.ADRole};]]"/>
+		<Page Title="Alerts" Class="Easynet.Edge.UI.Client.Pages.WebFramePage" Permission="web/pages/Alerts" Url="Alerts.aspx?accountID={Account.Settings.ID}"/>
+		<Page Title="Ad Performance" Class="Easynet.Edge.UI.Client.Pages.WebFramePage" Permission="web/pages/AdTest" Url="AdTest.aspx?accountID={Account.ID}"/>
+	</Section>
+	
+	<Section Title="Management" IsOpen="true">
+		<Page Title="Grouping &amp; Targets" Class="Easynet.Edge.UI.Client.Pages.PpcCampaigns"/>
+		<Page Title="Segments" Class="Easynet.Edge.UI.Client.Pages.SegmentsPage"/>
+		<Page Title="Trackers" Class="Easynet.Edge.UI.Client.Pages.PpcGateways"/>
+		<Page Title="Import Data" Class="Easynet.Edge.UI.Client.Pages.WebFramePage" Permission="web/pages/Importer"  Url="RunConvertor.aspx?accountID={Account.ID}"/>
+	</Section>
+	
+	<Section Title="Organic" IsOpen="true">
+		<Page Title="Ranking Profiles" Class="Easynet.Edge.UI.Client.Pages.SerpProfiles"/>
+		<Page Title="Ranking Reports" Class="Easynet.Edge.UI.Client.Pages.WebFramePage" Permission="web/pages/Organic" Url="Organic.aspx?accountID={Account.ID}"/>
+	</Section>
+	
+	<Section Title="Find">
+		<Page Title="Keywords" Class="Easynet.Edge.UI.Client.Pages.MasterKeywords"/>
+		<Page Title="Creatives" Class="Easynet.Edge.UI.Client.Pages.MasterCreatives"/>
+	</Section>
+
+	<Section Title="Administration">
+		<Page Title="Permissions" Class="Easynet.Edge.UI.Client.Pages.AccountPermissions"/>
+	</Section>
+
+</Sections>
+
