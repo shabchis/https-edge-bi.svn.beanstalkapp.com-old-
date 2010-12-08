@@ -6,7 +6,8 @@ using Easynet.Edge.Core.Services;
 using System.ServiceModel;
 using myFacebook = Facebook ;
 using Easynet.Edge.Services.DataRetrieval.Retriever;
-using Excel =  Microsoft.Office.Interop.Excel; 
+using Excel =  Microsoft.Office.Interop.Excel;
+using System.Xml; 
 
 namespace Easynet.Edge.Services.Facebook
 {
@@ -17,116 +18,7 @@ namespace Easynet.Edge.Services.Facebook
         protected List<FacebookRow> listOfRows = new List<FacebookRow>();
         protected List<AdGroupClass> listOfAdGroup;
         public List<CampaignClass> campaignList;
-      
-
-    //    private List<FacebookRow> listOfFaceBookRows;
-    //    private List<FacebookRow> listOfRows = new List<FacebookRow>();
-    //    private string targetDirectory;
-    //    private System.IO.StreamWriter wrtTxtFile;
-    //    private string _ApplicationID = string.Empty;
-    //    private string _FBaccountID = string.Empty;
-    //    private string _apiKey = string.Empty;
-    //    private string _ap_secret = string.Empty;
-    //    private string _session = string.Empty;
-    //    private string _sessionSecret = string.Empty;
-    //    private string _UserId = string.Empty;
-    //    private string _accoutnName = string.Empty;
-    //    private string _createExcelDirectoryPath = string.Empty;
-    //    private List<AdGroupClass> listOfAdGroup;
-    //    private List<CampaignClass> campaignList;
-    //    private myFacebook.Session.ConnectSession connSession;
  
-    //    protected override void InitalzieReportData()
-    //    {
-
-
-    //        try
-    //        {
-              
-    //            rawDataFields = (Easynet.Edge.Services.DataRetrieval.Configuration.FieldElementSection)System.Configuration.ConfigurationManager.GetSection
-    //         (GetConfigurationOptionsField("FieldsMapping"));
-               
-    //            if (Instance.Configuration.Options["APIKey"] == null)
-    //                _apiKey = Instance.ParentInstance.Configuration.Options["APIKey"].ToString();
-    //            else
-    //                _apiKey = Instance.Configuration.Options["APIKey"].ToString();
-
-                 
-    //            if (Instance.Configuration.Options["sessionKey"] == null)
-    //                _session = Instance.ParentInstance.Configuration.Options["sessionKey"].ToString();
-    //            else
-    //                _session = Instance.Configuration.Options["sessionKey"].ToString();
-           
-    //            //ffff
-    //            if (Instance.Configuration.Options["applicationSecret"] == null)
-    //                _ap_secret = Instance.ParentInstance.Configuration.Options["applicationSecret"].ToString();
-    //            else
-    //                _ap_secret = Instance.Configuration.Options["applicationSecret"].ToString();
-
- 
-    //            if (Instance.Configuration.Options["FBaccountID"] == null)
-    //                _FBaccountID = Instance.ParentInstance.Configuration.Options["FBaccountID"].ToString();
-    //            else
-    //                _FBaccountID = Instance.Configuration.Options["FBaccountID"].ToString();
-               
-               
-    //            //if (Instance.Configuration.Options["userId"] == null)
-    //            //    _UserId = Instance.ParentInstance.Configuration.Options["userId"].ToString();
-    //            //else
-    //            //    _UserId = Instance.Configuration.Options["userId"].ToString();
-
-               
-
-    //            if (Instance.Configuration.Options["applicationID"] == null)
-    //                _ApplicationID = Instance.ParentInstance.Configuration.Options["applicationID"].ToString();
-    //            else
-    //                _ApplicationID = Instance.Configuration.Options["applicationID"].ToString();
-
-              
-
-    //            if (Instance.Configuration.Options["accountName"] == null)
-    //                _accoutnName = Instance.ParentInstance.Configuration.Options["accountName"].ToString();
-    //            else
-    //                _accoutnName = Instance.Configuration.Options["accountName"].ToString();
-    ////if (Instance.Configuration.Options["CreateExcelDirectoryPath"] == null)
-    //            //    _createExcelDirectoryPath = Instance.ParentInstance.Configuration.Options["CreateExcelDirectoryPath"].ToString();
-    //            //else
-    //            //    _createExcelDirectoryPath = Instance.Configuration.Options["CreateExcelDirectoryPath"].ToString();
-
-    //            if (Instance.Configuration.Options["TargetDirectory"] == null)
-    //                _sessionSecret = Instance.ParentInstance.Configuration.Options["TargetDirectory"].ToString();
-    //            else
-    //                _sessionSecret = Instance.Configuration.Options["TargetDirectory"].ToString();
-
-                 
-
-    //            if (Instance.Configuration.Options["sessionSecret"] == null)
-    //                _sessionSecret = Instance.ParentInstance.Configuration.Options["sessionSecret"].ToString();
-    //            else
-    //                _sessionSecret = Instance.Configuration.Options["sessionSecret"].ToString();
-
-               
-    //            if (Instance.Configuration.Options["serviceType"] == null)
-    //                serviceType = Instance.ParentInstance.Configuration.Options["serviceType"].ToString();
-    //            else
-    //                serviceType = Instance.Configuration.Options["serviceType"].ToString();
-
-                
-
-    //            connSession = new myFacebook.Session.ConnectSession(_apiKey, _ap_secret);
-    //            connSession.SessionKey = _session;
-    //            connSession.SessionSecret = _sessionSecret;
-           
-              
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            Edge.Core.Utilities.Log.Write("Error in FacebookRetriever.InitConfigurtaionData(): " + ex.Message, Edge.Core.Utilities.LogMessageType.Error);
-
-    //        }
-
-    //    }
-
         protected override void GetReportData()
         {
 
@@ -174,7 +66,8 @@ namespace Easynet.Edge.Services.Facebook
 				string res = SendFacebookRequest(_facebookAPI, parameterList);
                 System.Xml.XmlDocument getAdGroupStatsXmlDoc = new System.Xml.XmlDocument();
                 getAdGroupStatsXmlDoc.LoadXml(res);
-                int getAdGroupStatsCount = getAdGroupStatsXmlDoc.ChildNodes[1].ChildNodes[0].ChildNodes[2].ChildNodes.Count;
+
+				int getAdGroupStatsCount = getAdGroupStatsXmlDoc.ChildNodes[1].ChildNodes[0].ChildNodes[2].ChildNodes.Count;
                 //~GettAdGroupStats
                 //======================================================================================
 
@@ -291,17 +184,21 @@ namespace Easynet.Edge.Services.Facebook
                 listOfAdGroup = new List<AdGroupClass>();
                 string adGroupID,campaignID;
 
+				XmlNamespaceManager xpathManager = new XmlNamespaceManager(getAdGroupStatsXmlDoc.NameTable);
+				xpathManager.AddNamespace("fb", getAdGroupStatsXmlDoc.DocumentElement.NamespaceURI);
+                
+
                 listOfFaceBookRows = new List<FacebookRow>();
          
-                    foreach (System.Xml.XmlNode node in getAdGroupStatsXmlDoc.ChildNodes[1].ChildNodes[0].ChildNodes[2])
+                    foreach (System.Xml.XmlNode node in getAdGroupStatsXmlDoc.DocumentElement.SelectNodes("//fb:Ads_getAdGroupStats_response_elt_elt_elt", xpathManager))
                     {
                       //  getAdGroupStatsXmlDoc.Load(@"c:\dt.txt");
                         Easynet.Edge.Services.Facebook.FacebookRow newRow = new FacebookRow();
-                    
-                        foreach (System.Xml.XmlNode innerChild in node.ChildNodes)
+
+						foreach (System.Xml.XmlElement innerChild in node.SelectNodes("fb:Ads_getAdGroupStats_response_elt_elt_elt_elt", xpathManager))
                         {
-                           
-                            if (innerChild.Name.Equals("id"))
+							string fieldName = innerChild.GetAttribute("key"); // FB changed this from simply the element name
+							if (fieldName.Equals("id"))
                             {
                                 adGroupID = innerChild.InnerText;
 
@@ -406,11 +303,11 @@ namespace Easynet.Edge.Services.Facebook
                             }
 
                             //run on AdGroupsStats results
-                            if (rawDataFields.Fields[innerChild.Name] != null)
+                            if (rawDataFields.Fields[fieldName] != null)
                             {
-                                if (rawDataFields.Fields[innerChild.Name].Enabled == true)
+                                if (rawDataFields.Fields[fieldName].Enabled == true)
                                 {
-                                    newRow._Values.Add(rawDataFields.Fields[innerChild.Name].Value, innerChild.InnerText);
+                                    newRow._Values.Add(rawDataFields.Fields[fieldName].Value, innerChild.InnerText);
                                 }
                             }
                         }
