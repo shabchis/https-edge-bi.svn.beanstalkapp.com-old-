@@ -187,9 +187,6 @@ namespace Easynet.Edge.Services.Facebook
         public string CreateXLSFile(List<FacebookRow> listOfFaceBookRows)
         {
 
-                Core.Utilities.Log.Write(" CreateXLSFile file size is: " + listOfFaceBookRows.Count.ToString(), Core.Utilities.LogMessageType.Information);
-           
-
 
                 string _createCopyFilePath;
                 if (listOfFaceBookRows.Count == 0)
