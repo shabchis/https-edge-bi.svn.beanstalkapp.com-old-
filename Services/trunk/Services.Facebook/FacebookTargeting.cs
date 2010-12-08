@@ -84,8 +84,6 @@ namespace Easynet.Edge.Services.Facebook
 
         protected override void GetReportData()
         {
-            try
-            {
 
 
                 myFacebook.Rest.Api _facebookAPI = new myFacebook.Rest.Api(connSession);
@@ -117,7 +115,7 @@ namespace Easynet.Edge.Services.Facebook
                 parameterList.Add("campaign_ids", "");
                 parameterList.Add("account_id", _FBaccountID);
                 parameterList.Add("method", "facebook.Ads.getAdGroupTargeting");
-                string res4 = _facebookAPI.Application.SendRequest(parameterList);
+				string res4 = SendFacebookRequest(_facebookAPI, parameterList);
                 res4 = res4.Replace("xsd:", "");
                 System.Xml.XmlDocument xmlTargeting = new System.Xml.XmlDocument();
                 xmlTargeting.LoadXml(res4);
@@ -203,13 +201,7 @@ namespace Easynet.Edge.Services.Facebook
                         keywords= keywords.Remove(0, 1);
                      UpdateDB(adgroup, ageMin, ageMax, birthday, languages, workplace, sex, relation,education,countries,keywords);
                 }
-            }
-
-            catch (Exception ex)
-            {
-                Core.Utilities.Log.Write("Error in GetReportData(), " + ex.Message, Core.Utilities.LogMessageType.Error);
-            }
-
+            
         }
          
 

@@ -129,9 +129,6 @@ namespace Easynet.Edge.Services.Facebook
 
         protected override void GetReportData()
         {
-            try
-            {
-               
 
 
                 myFacebook.Rest.Api _facebookAPI = new myFacebook.Rest.Api(connSession);
@@ -167,7 +164,6 @@ namespace Easynet.Edge.Services.Facebook
                 long fromLongDate = myFacebook.Utility.DateHelper.ConvertDateToFacebookDate(fromDate);
                 long toLongDate = myFacebook.Utility.DateHelper.ConvertDateToFacebookDate(toDate);
 
-                Core.Utilities.Log.Write("  ** DATE **:" + fromDate.ToString(), Core.Utilities.LogMessageType.Information);
                 //***** test
                //  fromLongDate = 0;
                //  toLongDate = 0;
@@ -175,7 +171,7 @@ namespace Easynet.Edge.Services.Facebook
                 string date = "[{\"time_start\":" + fromLongDate + ",\"time_stop\":" + toLongDate + "}]";
                 parameterList.Add("time_ranges", date);
 
-                string res = _facebookAPI.Application.SendRequest(parameterList);
+				string res = SendFacebookRequest(_facebookAPI, parameterList);
                 System.Xml.XmlDocument getAdGroupStatsXmlDoc = new System.Xml.XmlDocument();
                 getAdGroupStatsXmlDoc.LoadXml(res);
                 int getAdGroupStatsCount = getAdGroupStatsXmlDoc.ChildNodes[1].ChildNodes[0].ChildNodes[2].ChildNodes.Count;
@@ -195,7 +191,7 @@ namespace Easynet.Edge.Services.Facebook
                 parameterList.Add("method", "facebook.Ads.getAdGroups");
 
                 System.Xml.XmlDocument getAdGroupsXmlDoc = new System.Xml.XmlDocument();
-                string getAdGroupsRes = _facebookAPI.Application.SendRequest(parameterList);
+				string getAdGroupsRes = SendFacebookRequest(_facebookAPI, parameterList);
                 getAdGroupsXmlDoc.LoadXml(getAdGroupsRes);
 
                 int count = getAdGroupsXmlDoc.ChildNodes[1].ChildNodes.Count;
@@ -223,7 +219,7 @@ namespace Easynet.Edge.Services.Facebook
                 parameterList.Add("campaign_ids", "");
                 parameterList.Add("account_id", _FBaccountID);
                 parameterList.Add("method", "facebook.Ads.getCampaigns");
-                string getCampaignsRes = _facebookAPI.Application.SendRequest(parameterList);
+				string getCampaignsRes = SendFacebookRequest(_facebookAPI, parameterList);
                 System.Xml.XmlDocument xmlCampaing = new System.Xml.XmlDocument();
                 xmlCampaing.LoadXml(getCampaignsRes);
                
@@ -246,7 +242,7 @@ namespace Easynet.Edge.Services.Facebook
                 parameterList.Add("campaign_ids", "");
                 parameterList.Add("account_id", _FBaccountID);
                 parameterList.Add("method", "facebook.Ads.getAdGroupCreatives");
-                string res3 = _facebookAPI.Application.SendRequest(parameterList);
+				string res3 = SendFacebookRequest(_facebookAPI, parameterList);
                 System.Xml.XmlDocument xmlCreative = new System.Xml.XmlDocument();
                 xmlCreative.LoadXml(res3);
 
@@ -422,14 +418,6 @@ namespace Easynet.Edge.Services.Facebook
                     }
 
                    // Core.Utilities.Log.Write("---------------listOfFaceBookRows.Count, " + listOfFaceBookRows.Count, Core.Utilities.LogMessageType.Error);
-            }
- 
-
-
-            catch (Exception ex)
-            {
-                Core.Utilities.Log.Write("Error in GetReportData(), " + ex.Message, Core.Utilities.LogMessageType.Error);
-            }
         }
 
  
@@ -448,7 +436,6 @@ namespace Easynet.Edge.Services.Facebook
             GetReportData();
 
 
-            Core.Utilities.Log.Write(" GetReportData() is over"    , Core.Utilities.LogMessageType.Information);
            
 
 
@@ -481,8 +468,6 @@ namespace Easynet.Edge.Services.Facebook
 
         protected override string WriteResultToFile()
         {
-            try
-            {
                 if(null==listOfFaceBookRows)
                     return null;
                   //Core.Utilities.Log.Write("---------------listOfFaceBookRows.Count, " + listOfFaceBookRows.Count, Core.Utilities.LogMessageType.Error);
@@ -493,12 +478,7 @@ namespace Easynet.Edge.Services.Facebook
                 {
                     return "Zero resaults";
                 }
-            }
-            catch (Exception ex)
-            {
-                Core.Utilities.Log.Write("Error in WriteResultToFile(), " + ex.Message, Core.Utilities.LogMessageType.Error);
-                return null;
-            }
+            
         }
     
       
