@@ -40,7 +40,7 @@ class Login extends Controller {
 		else  
 		{
 			
-		redirect('main');
+		echo "success";
 
  		}  	
 		

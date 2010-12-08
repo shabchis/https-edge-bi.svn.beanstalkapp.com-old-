@@ -20,13 +20,12 @@ class Mylogin{
 			//redirect('main');
 		//	$this->CI->load->view('home');
 			//$this->CI->load->helper('url');
-			$logged = false;
+			$logged = true;
 			if($logged==true){
-				header("Location:http://localhost/projects/UIv3/#home");
+			//	header("Location:http://localhost/projects/UIv3/home");
 				
 			}
-
-//	exit;
+			
 	
 	
 		}

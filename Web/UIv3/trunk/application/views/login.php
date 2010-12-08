@@ -34,8 +34,14 @@ $("#submit").click(function(){
 		type: 'POST',
 		data: form_data,
 		success: function(msg) {
-		//console.log(msg);
-			//$('body').html(msg);
+	if(msg == "success"){
+	window.location = "<?php base_url() ?>main";  
+	}
+		else{	 
+	
+		
+		$("<div id='error>'").html("Email or Password are nor correct").appendTo("body"); 
+		}
 		}
 	});
 		return false;

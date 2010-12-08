@@ -19,71 +19,98 @@
 
 	<body>
 		<div id="container" >
-
+			<script id="topmenu" type ="text/x-jquery-tmpl">
+			 {{if Name == "TOPBAR"}}
+			 	 <ul>
+			 	{{each ChildMenues}}
+					<li><a href="#">${Name}</a></li>
+			  {{/each}}
+          		 </ul>
+			 {{/if}}
+			</script>
 		<header>
 			<img src="<?php base_url();?>assets/img/edge_bi_logo.png" id="logo" />
 			<div id="login">
+				<div id="user">
 				Logged in as <span>Doron</span>
-				<select id="account"></select>
+				</div>
+				
+				<div id="top"></div>
+				
+				
 				<div id="ajaxloader">
 					<img src="<?php base_url(); ?>assets/img/loading_bar.gif" id="ajax" />
 				</div>
 			</div>
+			<div id="breadcrumbs">
+			
+			</div>
+			
  		</header>
  		<div class="clear"></div>
 
 		<script id="menuitems" type="text/x-jquery-tmpl">
 
-    
+    {{if Name != "TOPBAR"}}
 	<h2 class="trigger"><span> ${Name} </span></h2>
 	<div class='toggle_container'>
   		<div class='block'>
-    		<ul class="list">
-
-      		{{each ChildMenues}}
-        		<li><a href="${Name}">${Name}</a></li>
-         	<ul> 
-          {{each ChildMenues}} 
-          		<li><a href="${Link}">${Name}</a><ul>
+  		{{if ChildMenues }}
+  		    <ul class="list">
+			
+		   	{{each ChildMenues}}
+      		<li class="menuheader"><a href="${Name}">${Name}</a>
+        {{if ChildMenues }}
+			 <ul data-name ="${Name}" class="parent"> 
+		 
+		  {{each ChildMenues}} 
+        	<li class="menuitem"><a href="${Name}">${Name}</a></li>
+         {{/each}}
+          		
           	</ul>
-          		{{each ChildMenues}} 
-          	<ul>
-            
-            	 <li><a href="${Name}">${Name}</a></li>
-                  
-          	</ul>
-                {{/each}}
-             {{/each}}
-      		</ul>
-        {{/each}}
-      
+			{{/if}}
+			  
+			</li>
+			{{/each}}
+        	
+			</ul>
+      		
+            {{/if}}
 	</div>
  		</div>
 			</div>
+			 {{/if}}
+	</script>
+	
+	<script id="accountbar"  type="text/x-jquery-tmpl">
+		<div id="accounts">
+		<div id="selected">${Name}</div>
+		
+		<ul>
+		{{each ChildAccounts}}
+			<li>${Name}</li>
+		{{/each}}
+		</ul>
+		</div>
+	
 	</script>
 	<div id="slider"><span><<</span><div id="caption">Hide</div></div>
 		<div id="menu">
-			<h2 class="trigger"><span>Menu</span></h2>
-			<div class='toggle_container'>
-				<div class='block'>
-				<ul class="list">
-					<li><a href="home">Home</a></li>
-					<li><a href="about">About</a></li>
-					<li><a href="dashboard">Dashboard</a></li>
-				</ul>
-				</div>
-			</div>
+		
+		<div id="sub"></div>
 		</div>
+		
  
 
 <script>
 
 
-      var menudata = jQuery.parseJSON('<?php echo $json; ?>');
+	var menudata = jQuery.parseJSON('<?php echo $json; ?>');
 		
-		$( "#menuitems" ).tmpl(menudata).appendTo("#menu");
-
-
+		$( "#menuitems" ).tmpl(menudata).appendTo("#sub");
+		$("#topmenu").tmpl(menudata).appendTo("#top");
+	var account = 	jQuery.parseJSON('<?php echo $json2; ?>');
+		$("#accountbar").tmpl(account).prependTo("#menu");
 
 </script>
   <div id="main">
