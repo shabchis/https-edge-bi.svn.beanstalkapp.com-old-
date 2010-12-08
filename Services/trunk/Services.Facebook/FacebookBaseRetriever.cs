@@ -6,7 +6,11 @@ using Easynet.Edge.Core.Services;
 using System.ServiceModel;
 using myFacebook = Facebook ;
 using Easynet.Edge.Services.DataRetrieval.Retriever;
-using Excel =  Microsoft.Office.Interop.Excel; 
+using Excel =  Microsoft.Office.Interop.Excel;
+using Easynet.Edge.Core.Utilities;
+using Easynet.Edge.Core;
+using Easynet.Edge.Core.Configuration;
+using System.IO; 
 
 namespace Easynet.Edge.Services.Facebook
 {
@@ -30,9 +34,6 @@ namespace Easynet.Edge.Services.Facebook
         {
 
 
-            try
-            {
-              
                 rawDataFields = (Easynet.Edge.Services.DataRetrieval.Configuration.FieldElementSection)System.Configuration.ConfigurationManager.GetSection
              (GetConfigurationOptionsField("FieldsMapping"));
                
@@ -117,14 +118,45 @@ namespace Easynet.Edge.Services.Facebook
                 connSession.SessionSecret = _sessionSecret;
            
               
-            }
-            catch (Exception ex)
-            {
-                Edge.Core.Utilities.Log.Write("Error in FacebookBaseRetriever.InitConfigurtaionData(): " + ex.Message, Edge.Core.Utilities.LogMessageType.Error);
-
-            }
+            
 
         }
+
+		static string ResultOutputPath = AppSettings.Get(typeof(FacebookBaseRetriever), "ResultOutputPath");
+		protected string SendFacebookRequest(myFacebook.Rest.Api facebookAPI, Dictionary<string, string> parameterList)
+		{
+			string paramsOutput = "";
+			foreach (KeyValuePair<string,string> entry in parameterList)
+			{
+				paramsOutput += String.Format("{0}: {1}\n", entry.Key, entry.Value);
+			}
+
+			Log.Write("Facebook API request.\n\n" + paramsOutput, LogMessageType.Information);
+
+			string result;
+			result = facebookAPI.Application.SendRequest(parameterList);
+
+			string outputDir = Path.Combine(ResultOutputPath, String.Format("{0:yyyy/MM/dd}", DateTime.Now));
+			if (!Directory.Exists(outputDir))
+				Directory.CreateDirectory(outputDir);
+
+			string outputPath = Path.Combine(outputDir, String.Format("{1:00000}@{0:hhmm} {2}.xml",
+				DateTime.Now,
+				Instance.AccountID,
+				parameterList.ContainsKey("method") ? parameterList["method"] : "(no method)"
+			));
+
+			try
+			{
+				File.WriteAllText(outputPath, result, Encoding.UTF8);
+				Log.Write("Facebook API results saved to " + outputPath, LogMessageType.Information);
+			}
+			catch(Exception ex)
+			{
+				Log.Write("Facebook API results could not be saved to " + outputPath, ex);
+			}
+			return result;
+		}
 
 
         protected virtual bool UpdateDB()
@@ -154,8 +186,6 @@ namespace Easynet.Edge.Services.Facebook
 
         public string CreateXLSFile(List<FacebookRow> listOfFaceBookRows)
         {
-            try
-            {
 
                 Core.Utilities.Log.Write(" CreateXLSFile file size is: " + listOfFaceBookRows.Count.ToString(), Core.Utilities.LogMessageType.Information);
            
@@ -166,8 +196,6 @@ namespace Easynet.Edge.Services.Facebook
                     return "empty";
                 string rowString = "";
 
-                try
-                {
                  //_createExcelDirectoryPath = _targetDirectory + "xxxxxxxxx.txt";
                  //_createExcelDirectoryPath=@"C:\"+ "TestFacebookFile222.txt";
                  //_createExcelDirectoryPath = @"D:\Edge\IMPORT\PPC\Creative\" + "TestFacebookFile222.txt";              
@@ -175,83 +203,67 @@ namespace Easynet.Edge.Services.Facebook
                     _createExcelDirectoryPath = dir + _targetDirectory +DateTime.Now.Millisecond.ToString() +"Facebook.txt";
 
 
-                    Edge.Core.Utilities.Log.Write("_createExcelDirectoryPath is : " + _createExcelDirectoryPath, Edge.Core.Utilities.LogMessageType.Warning);
 
                     string targetSubDir = Instance.ParentInstance.Configuration.Options["TargetSubDirectory"].ToString();
-                    Edge.Core.Utilities.Log.Write("TargetSubDirectory is : " + targetSubDir, Edge.Core.Utilities.LogMessageType.Warning);
 
 
 
                       _createCopyFilePath = InitalizeFileName(_createExcelDirectoryPath, DateTime.Now, string.Empty, targetSubDir);
-                      Edge.Core.Utilities.Log.Write("Copy File is in : " + _createCopyFilePath, Edge.Core.Utilities.LogMessageType.Warning);
-                      Edge.Core.Utilities.Log.Write("Real File is in : " + _createExcelDirectoryPath, Edge.Core.Utilities.LogMessageType.Warning);
-
-                    
-                      wrtTxtFile = new System.IO.StreamWriter(_createExcelDirectoryPath,
-                      false, Encoding.Unicode);
-                }
-                catch (Exception ex)
-                {
-                    Core.Utilities.Log.Write("Error in CreateXLSFile() cannot create file, " + ex.Message, Core.Utilities.LogMessageType.Error);
-                    return "";
-
-                }
 
 
-                string accountName = _accoutnName; //"EasyForex";
-                string month = _requiredDay.Month.ToString();
-                if (month.Length == 1)
-                    month = "0" + month;
-
-                string day = _requiredDay.Day.ToString();
-                if (day.Length == 1)
-                    day = "0" + day;
-
-                string date = _requiredDay.Year.ToString() + month + day;
-
- 
-
-                //Create the headers
-                rowString = "Channel\tAccountName\tDay_Code";
-                foreach (var item in listOfFaceBookRows[0]._Values.Keys)
-	            {
-                    
-                    rowString += "\t" + item;
-                }
-                wrtTxtFile.WriteLine(rowString);
-                //~Create the headers
+			  using (wrtTxtFile = new System.IO.StreamWriter(_createExcelDirectoryPath,
+					false, Encoding.Unicode))
+			  {
 
 
-                foreach (var row in listOfFaceBookRows)
-                {
-                    rowString = "Facebook\t" + accountName + "\t" + date + "\t";
-                    foreach (var value in row._Values)//.Values)
-                    {
-                        if (value.Key =="Cost")///100 the cost
-                        {
-                            double cost = Convert.ToDouble( value.Value);
-                            cost = cost / 100;
-                            string strCost =  String.Format("{0:0.00}", cost);
-                            rowString += strCost + "\t";
-                        }
-                        else
-                        rowString +=  value.Value+"\t";
-                    }
-                    wrtTxtFile.WriteLine(rowString);
-                }
 
-               
-                wrtTxtFile.Close();
-                wrtTxtFile.Dispose();
+				  string accountName = _accoutnName; //"EasyForex";
+				  string month = _requiredDay.Month.ToString();
+				  if (month.Length == 1)
+					  month = "0" + month;
+
+				  string day = _requiredDay.Day.ToString();
+				  if (day.Length == 1)
+					  day = "0" + day;
+
+				  string date = _requiredDay.Year.ToString() + month + day;
+
+
+
+				  //Create the headers
+				  rowString = "Channel\tAccountName\tDay_Code";
+				  foreach (var item in listOfFaceBookRows[0]._Values.Keys)
+				  {
+
+					  rowString += "\t" + item;
+				  }
+				  wrtTxtFile.WriteLine(rowString);
+				  //~Create the headers
+
+
+				  foreach (var row in listOfFaceBookRows)
+				  {
+					  rowString = "Facebook\t" + accountName + "\t" + date + "\t";
+					  foreach (var value in row._Values)//.Values)
+					  {
+						  if (value.Key == "Cost")///100 the cost
+						  {
+							  double cost = Convert.ToDouble(value.Value);
+							  cost = cost / 100;
+							  string strCost = String.Format("{0:0.00}", cost);
+							  rowString += strCost + "\t";
+						  }
+						  else
+							  rowString += value.Value + "\t";
+					  }
+					  wrtTxtFile.WriteLine(rowString);
+				  }
+
+
+			  }
                 if(_createCopyFilePath!=null)
                   System.IO.File.Copy(_createExcelDirectoryPath, _createCopyFilePath);
                 return _createExcelDirectoryPath;
-            }
-            catch (Exception ex)
-            {
-                Edge.Core.Utilities.Log.Write("Error in FacebookRetriever.CreateXLSFile(): " + ex.Message, Edge.Core.Utilities.LogMessageType.Error);
-                return null;
-            }
         }
          
        //public string CreateXLSFile(List<AdGroupClass> list)
