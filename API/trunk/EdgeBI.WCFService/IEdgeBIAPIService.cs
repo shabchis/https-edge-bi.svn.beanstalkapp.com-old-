@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.ServiceModel.Web;
+using System.Text;
+using EdgeBI.Objects;
+
+namespace EdgeBI.WCFService
+{
+	/// <summary>
+	/// Contract
+	/// </summary>
+	[ServiceContract]
+	public interface IEdgeBIAPIService
+	{
+		[OperationContract(Name = "GetUserByID")]		
+		User GetUserByID(string ID);		
+
+		[OperationContract(Name = "GetMenuByParentID",Action="*")]
+		List<Menu> GetMenu(string parentID);
+
+		[OperationContract(Name = "GetAccount")]
+		List<Account> GetAccount(string accountID);
+
+		[OperationContract(Name = "LogIN")]
+		int LogIN(string email, string password);
+
+		
+
+
+
+
+
+
+	}
+
+
+	
+}
