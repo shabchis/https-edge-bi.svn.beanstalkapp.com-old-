@@ -148,14 +148,6 @@
       <Project>{AC9C4389-97C8-47B9-84F3-E5E4E32C5E73}</Project>
       <Name>UI.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ThirdParty\Cjc.AwesomiumWrapper\Cjc.AwesomiumWrapper.vcproj">
-      <Project>{D92259E1-12E1-4545-8748-FB020A3F0DEC}</Project>
-      <Name>Cjc.AwesomiumWrapper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ThirdParty\Cjc.ChromiumBrowser\Cjc.ChromiumBrowser.csproj">
-      <Project>{311544A4-C7E1-475C-B649-6BB25D907DFE}</Project>
-      <Name>Cjc.ChromiumBrowser</Name>
-    </ProjectReference>
   </ItemGroup>
   <!-- Assembly references -->
   <ItemGroup>
@@ -174,6 +166,7 @@
     <Reference Include="System.ServiceModel">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -203,10 +196,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Common\MainMenu.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Common\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -216,10 +205,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\AccountPermissions.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\AccountSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -251,14 +236,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\WebFrame.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\ChromiumFrame.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <!-- Code files -->
   <ItemGroup>
@@ -266,7 +243,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Base\Cookies.cs" />
     <Compile Include="Base\AutocompleteCombo.cs" />
     <Compile Include="Base\GridLengthAnimation.cs" />
     <Compile Include="Base\OltpLogicClient.cs" />
@@ -277,9 +253,6 @@
     <Compile Include="Common\FloatingDialog.xaml.cs">
       <DependentUpon>FloatingDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\MainMenu.xaml.cs">
-      <DependentUpon>MainMenu.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Common\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -289,9 +262,6 @@
     </Compile>
     <Compile Include="Pages\AccountPermissions.xaml.cs">
       <DependentUpon>AccountPermissions.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\AccountSettings.xaml.cs">
-      <DependentUpon>AccountSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Segments.xaml.cs">
       <DependentUpon>Segments.xaml</DependentUpon>
@@ -314,9 +284,6 @@
     <Compile Include="Pages\PpcGateways.xaml.cs">
       <DependentUpon>PpcGateways.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\WebFrame.xaml.cs">
-      <DependentUpon>WebFrame.xaml</DependentUpon>
-    </Compile>
     <None Include="Properties\AssemblyInfo.cs.template" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -330,9 +297,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Pages\ChromiumFrame.xaml.cs">
-      <DependentUpon>ChromiumFrame.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -409,20 +373,9 @@
   <!-- Misc. files -->
   <ItemGroup>
     <None Include="Properties\app.manifest" />
-    <None Include="index.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Regions.txt" />
     <None Include="Certificates\Create Certificate.bat" />
     <None Include="Certificates\Certificate 2011.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Awesomium.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="icudt38.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <!-- Build settings -->
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

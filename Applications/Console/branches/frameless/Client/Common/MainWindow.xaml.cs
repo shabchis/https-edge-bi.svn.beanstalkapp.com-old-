@@ -20,6 +20,8 @@ using System.Runtime.Remoting.Messaging;
 using Easynet.Edge.Core.Utilities;
 using System.Windows.Controls.Primitives;
 using System.Deployment.Application;
+using System.Collections.Specialized;
+using System.Web;
 
 namespace Easynet.Edge.UI.Client
 {
@@ -31,19 +33,16 @@ namespace Easynet.Edge.UI.Client
 		#region Fields
 		/*=========================*/
 
+		private Oltp.AccountDataTable _accountsTable = null;
 		private Oltp.AccountRow _currentAccount = null;
 		private PageBase _currentPage = null;
-		private SelectionChangedEventHandler _accountsSelector_SelectionChangedHandler;
-		private Oltp.AccountDataTable _accountsTable = null;
 		private DataTable _userPermissions = null;
 
 		/*=========================*/
 		#endregion
 
 		#region Start + Login
-		/*=========================*/
-
-		
+		/*=========================*/		
 
 		/// <summary>
 		/// 
@@ -52,14 +51,8 @@ namespace Easynet.Edge.UI.Client
 		{
 			InitializeComponent();
 
-			// HACK due to shitty namescope-related bug
-			MainMenu.RegisterName("_menuColumn", _menuColumn);
-
 			// Event handlers
 			this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
-
-			_accountsSelector.SelectionChanged += _accountsSelector_SelectionChangedHandler =
-				new SelectionChangedEventHandler(_accountsSelector_SelectionChanged);
 		}
 
 		/// <summary>
@@ -67,62 +60,60 @@ namespace Easynet.Edge.UI.Client
 		/// </summary>
 		void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
-			Version v = ApplicationDeployment.IsNetworkDeployed ? ApplicationDeployment.CurrentDeployment.CurrentVersion : Assembly.GetExecutingAssembly().GetName().Version;
+			Version v = ApplicationDeployment.IsNetworkDeployed ?
+				ApplicationDeployment.CurrentDeployment.CurrentVersion :
+				Assembly.GetExecutingAssembly().GetName().Version;
+
 			//Version v = Assembly.GetExecutingAssembly().GetName().Version;
 			_version.Content = "Version " + v.ToString();
 
-			// Log in from cookie
-			int? userID = GetUserIDFromCookie();
-			bool logout = userID == null;
+			// Check access
+			bool allowedAccess = false;
+			if (ApplicationDeployment.CurrentDeployment.ActivationUri.Query == null)
+			{
+				HidePageContents("Local XBAP access not supported.");
+				return;
+			}
 
-			if (userID != null)
+			NameValueCollection urlParams =
+				HttpUtility.ParseQueryString(ApplicationDeployment.CurrentDeployment.ActivationUri.Query);
+
+			// Invalid account
+			string accountIDParam = urlParams["account"];
+			int accountID;
+			if (accountIDParam == null || !Int32.TryParse(accountIDParam, out accountID))
+			{
+				HidePageContents("Invalid account specified. Please select another account.");
+				return;
+			}
+
+			// Log in from cookie
+			string sessionID = urlParams["session"];
+			if (sessionID != null)
 			{
 				try
 				{
-					OltpProxy.SessionStart(userID.Value);
+					OltpProxy.SessionStart(sessionID);
+					allowedAccess = true;
 				}
-				catch
-				{
-					logout = true;
-				}
+				catch {}
 			}
 
-			if (logout)
+			if (!allowedAccess)
 			{
-				LogoutUser();
+				HidePageContents("Your session has expired. Please refresh the page.");
+				return;
 			}
-			else
-			{
-				LoginUser();
-			}
-		}
-
-		public int? GetUserIDFromCookie()
-		{
-			// Get the cookie value
-			string signInCookie = App.Cookies[Const.Cookies.Login];
-			if (signInCookie == null)
-				return null;
-
-			// Decode cookie value
-			string decodedString;
-			try { decodedString = Encryptor.Decrypt(signInCookie); }
-			catch { return null; }
-			if (decodedString == null)
-				return null;
-
-			int userID;
-			if (!Int32.TryParse(decodedString, out userID))
-				return null;
-
-			return userID;
-		}
-
-		public void LoginUser()
-		{
 			CurrentUser = OltpProxy.CurrentUser;
 
-			// Try to get the user's client list
+			string menuItemPath = urlParams["path"];
+			if (String.IsNullOrEmpty(menuItemPath))
+			{
+				HidePageContents("No menu path specified. Please select an item from the menu.");
+				return;
+			}
+
+			// Get user settings
 			AsyncOperation(delegate()
 			{
 				using (OltpProxy proxy = new OltpProxy())
@@ -138,48 +129,18 @@ namespace Easynet.Edge.UI.Client
 			},
 			delegate()
 			{
-				// Hide all menu items/sections that have NO PERMISSIONS at all (account = null)
-				MainMenu.Visibility = Visibility.Visible;
-				MainMenu.UpdateLayout();
-				MainMenu.ApplyPermissions(null);
-
-				_header.Visibility = Visibility.Visible;
-				_currentPageViewer.Content = CurrentPage = null;
-				_pageTitle.Content = "";
-
-				_accountsSelector.ItemsSource = _accountsTable;
-
-				string selectedAccountCookie = String.Format("{0}.SelectedAccount", OltpProxy.CurrentUser.ID);
-				string selectedAccount = App.Cookies[selectedAccountCookie];
-				if (selectedAccount != null)
+				DataRow[] rs = _accountsTable.Select("ID = " + accountIDParam);
+				if (rs.Length < 1)
 				{
-					DataRow[] rs = _accountsTable.Select("ID = " + selectedAccount);
-					if (rs.Length > 0)
-					{
-						_accountsSelector.SelectedIndex = _accountsTable.Rows.IndexOf(rs[0]);
-					}
+					HidePageContents("Specified account was not found. Please select another account.");
+					return;
+				}
+				else
+				{
+					_currentAccount = (Oltp.AccountRow)rs[0];
+					_currentPageViewer.Content = CurrentPage = null;
 				}
 			});
-		}
-
-		public void LogoutUser()
-		{
-			if (CurrentPage != null && !CurrentPage.TryToCloseDialogs())
-				return;
-
-			OltpProxy.SessionEnd();
-			App.Cookies.ClearCookie(Const.Cookies.Login);
-
-			MainMenu.Visibility = Visibility.Hidden;
-			MainMenu.CollapseAll();
-			_accountsSelector.ItemsSource = null;
-			_accountsSelector.SelectedItem = null;
-			_header.Visibility = Visibility.Hidden;
-
-			CurrentPage = new Pages.GeneralLogin();
-			_currentPageViewer.Content = CurrentPage;
-			_pageTitle.Content = "Login";
-
 		}
 
 
@@ -273,71 +234,19 @@ namespace Easynet.Edge.UI.Client
 
 		#region Internal methods
 		/*=========================*/
-		/// <summary>
-		/// 
-		/// </summary>
-		private void _accountsSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			if (e.AddedItems.Count < 1)
-				return;
-
-			// Get the selected account
-			Oltp.AccountRow accountToChangeTo = (e.AddedItems[0] as DataRowView).Row as Oltp.AccountRow;
-
-			if (CurrentPage != null && !CurrentPage.OnAccountChanging(accountToChangeTo))
-			{
-				// Cancel the change (disable the event)
-				_accountsSelector.SelectionChanged -= _accountsSelector_SelectionChangedHandler;
-				_accountsSelector.SelectedItem = CurrentAccount;
-				_accountsSelector.SelectionChanged += _accountsSelector_SelectionChangedHandler;
-			}
-
-			// Disable unavialable menu items for this account
-			MainMenu.ApplyPermissions(accountToChangeTo);
-
-			if (CurrentPage != null && !HasPermission(accountToChangeTo, CurrentPage.PageData))
-			{
-				// Hide page if the current page is not enabled
-				HidePageContents(HideContentsReason.AccessDenied);
-			}
-			else
-			{
-				// Complete the change
-				CurrentAccount = accountToChangeTo;
-
-				string selectedAccountCookie = String.Format("{0}.SelectedAccount", OltpProxy.CurrentUser.ID);
-				App.Cookies[selectedAccountCookie] = accountToChangeTo.ID.ToString();
-			}
-
-			if (CurrentPage != null)
-			{
-				RestorePageContents();
-				CurrentPage.OnAccountChanged();
-			}
-		}
-
 
 		/// <summary>
 		/// 
 		/// </summary>
-		private void _mainMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void LoadPage(ApiMenuItem menuItem)
 		{
-			if (!MainMenu.IsLoaded)
-				return;
-
-			if (e.AddedItems.Count < 1)
-				return;
-
 			if (CurrentPage != null)
 			{
 				bool unloadCurrent = CurrentPage.Unload();
 
 				// Cancel
 				if (!unloadCurrent)
-				{
-					e.Handled = true;
 					return;
-				}
 			}
 
 			// Kill all async wait handles
@@ -350,68 +259,60 @@ namespace Easynet.Edge.UI.Client
 			// Get page XML data
 			XmlElement pageData = e.AddedItems[0] as XmlElement;
 
-			// Load the defined class (PageBase-derived) if CurrentPage allows it
-			if (pageData.HasAttribute("Class"))
+			try
 			{
-				try
+				Type newPage = Type.GetType(pageData.Attributes["Class"].Value);
+				CurrentPage = (PageBase)Activator.CreateInstance(newPage);
+
+				CurrentPage.PageData = pageData;
+
+				_currentPageViewer.Content = CurrentPage;
+
+				if (newPage.GetCustomAttributes(typeof(AccountDependentPageAttribute), false).Length > 0)
 				{
-					Type newPage = Type.GetType(pageData.Attributes["Class"].Value);
-					CurrentPage = (PageBase)Activator.CreateInstance(newPage);
-
-                    CurrentPage.PageData = pageData;
-
-                    _currentPageViewer.Content = CurrentPage;
-
-					if (newPage.GetCustomAttributes(typeof(AccountDependentPageAttribute), false).Length > 0)
+					if (CurrentAccount != null)
 					{
-						if (CurrentAccount != null)
-						{
-							// Tell the page to load the account
-							CurrentPage.OnAccountChanged();
-						}
-						else
-						{
-							// Tell the page to hide the account
-							HidePageContents(HideContentsReason.NoAccountSelected);
-						}
-					}
-
-					// Hack for avoiding hiding the account dropdown behind the web browser
-					if (newPage == typeof(WebFramePage))
-					{
-						_accountsSelector.MaxDropDownHeight = 50.0;
-						AsyncOperationIndicator.VerticalAlignment = VerticalAlignment.Top;
-						AsyncOperationIndicator.MaxHeight = 60;
-
+						// Tell the page to load the account
+						CurrentPage.OnAccountChanged();
 					}
 					else
 					{
-						_accountsSelector.ClearValue(ComboBox.MaxDropDownHeightProperty);
-						AsyncOperationIndicator.VerticalAlignment = VerticalAlignment.Center;
-						AsyncOperationIndicator.LayoutTransform = null;
-						AsyncOperationIndicator.ClearValue(Grid.MaxHeightProperty);
+						// Tell the page to hide the account
+						HidePageContents(HideContentsReason.NoAccountSelected);
 					}
 				}
-				catch (Exception ex)
+
+				// Hack for avoiding hiding the account dropdown behind the web browser
+				if (newPage == typeof(WebFramePage))
 				{
-					CurrentPage = null;
-					string error = 
-						String.Format("Failed to load page. \n\n {0} ({1})", ex.Message, ex.GetType().FullName);
+					_accountsSelector.MaxDropDownHeight = 50.0;
+					AsyncOperationIndicator.VerticalAlignment = VerticalAlignment.Top;
+					AsyncOperationIndicator.MaxHeight = 60;
 
-					Exception innerEx = ex.InnerException;
-					while (innerEx != null)
-					{
-						error += String.Format("\n {0} ({1})", innerEx.Message, innerEx.GetType().FullName);
-						innerEx = innerEx.InnerException;
-					}
+				}
+				else
+				{
+					_accountsSelector.ClearValue(ComboBox.MaxDropDownHeightProperty);
+					AsyncOperationIndicator.VerticalAlignment = VerticalAlignment.Center;
+					AsyncOperationIndicator.LayoutTransform = null;
+					AsyncOperationIndicator.ClearValue(Grid.MaxHeightProperty);
+				}
+			}
+			catch (Exception ex)
+			{
+				CurrentPage = null;
+				string error =
+					String.Format("Failed to load page. \n\n {0} ({1})", ex.Message, ex.GetType().FullName);
 
-					_currentPageViewer.Content = error;
+				Exception innerEx = ex.InnerException;
+				while (innerEx != null)
+				{
+					error += String.Format("\n {0} ({1})", innerEx.Message, innerEx.GetType().FullName);
+					innerEx = innerEx.InnerException;
 				}
 
+				_currentPageViewer.Content = error;
 			}
-
-			// Change the title
-			_pageTitle.Content = pageData.Attributes["Title"].Value;
 			
 			// Force garbage collection
 			this.FloatingDialogContainer.Children.Clear();
@@ -434,12 +335,18 @@ namespace Easynet.Edge.UI.Client
 			return _userPermissions.Select(condition).Length > 0;
 		}
 
-		public void HidePageContents(HideContentsReason reason)
+		public void HidePageContents(string message)
 		{
 			TextBlock msg = new TextBlock();
 			msg.FontSize = 14;
 			msg.Foreground = Brushes.Red;
 			msg.FontWeight = FontWeights.Bold;
+			msg.Text = message;
+			_currentPageViewer.Content = msg;
+		}
+
+		public void HidePageContents(HideContentsReason reason)
+		{
 			string msgText = "";
 			switch (reason)
 			{
@@ -454,9 +361,7 @@ namespace Easynet.Edge.UI.Client
 					break;
 
 			}
-			msg.Text = msgText;
-
-			_currentPageViewer.Content = msg;
+			HidePageContents(msgText);
 		}
 
 		public void RestorePageContents()

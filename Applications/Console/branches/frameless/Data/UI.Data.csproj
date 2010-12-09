@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiMenuItem.cs" />
     <Compile Include="IOltpLogic.cs" />
     <Compile Include="Oltp.cs">
       <DependentUpon>Oltp.xsd</DependentUpon>
