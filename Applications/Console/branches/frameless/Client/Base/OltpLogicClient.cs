@@ -55,17 +55,12 @@ namespace Easynet.Edge.UI.Client
 			}
 		}
 
-		public static void SessionStart(string email, string password)
+		public static void SessionStart(string sessionID)
 		{
 			InitProxy();
-			_currentUser = (Oltp.UserRow) _internalProxy.Service.User_LoginByEmail(email, password).Rows[0];
+			_currentUser = (Oltp.UserRow) _internalProxy.Service.User_FromSessionID(sessionID).Rows[0];
 		}
 
-		public static void SessionStart(int userID)
-		{
-			InitProxy();
-			_currentUser = (Oltp.UserRow) _internalProxy.Service.User_LoginByID(userID).Rows[0];
-		}
 
 		public static void SessionEnd()
 		{
