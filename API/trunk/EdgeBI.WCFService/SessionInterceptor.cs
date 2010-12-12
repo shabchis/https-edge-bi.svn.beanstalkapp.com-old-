@@ -11,6 +11,7 @@ using System.ServiceModel.Channels;
 using System.Net;
 using Easynet.Edge.Core.Utilities;
 using System.Collections.Specialized;
+using Easynet.Edge.Core.Configuration;
 
 namespace EdgeBI.WCFService
 {
@@ -27,7 +28,7 @@ namespace EdgeBI.WCFService
 
 	public class SessionInterceptor : RequestInterceptor
 	{
-		private const string Key = "5c51374e366f41297356413c71677220386c534c394742234947567840";
+		private const string KeyEncrypt = "5c51374e366f41297356413c71677220386c534c394742234947567840";
 		private const string SessionHeader = "x-edgebi-session";
 		private const string LogInMessageAdress = "http://localhost:54796/EdgeBIAPIService.svc/sessions";
 		public SessionInterceptor()
@@ -37,57 +38,61 @@ namespace EdgeBI.WCFService
 
 		public override void ProcessRequest(ref System.ServiceModel.Channels.RequestContext requestContext)
 		{
-			//Message reply;
-			//reply = Message.CreateMessage(MessageVersion.None, null);
-			//HttpResponseMessageProperty responseProp = new HttpResponseMessageProperty() { StatusCode = HttpStatusCode.Unauthorized };
-			//if (requestContext == null || requestContext.RequestMessage == null)
-			//{
-			//    return;
-			//}
+			if (bool.Parse(AppSettings.GetAbsolute("CheckSession"))==true)
+			{
+				Message reply;
+				reply = Message.CreateMessage(MessageVersion.None, null);
+				HttpResponseMessageProperty responseProp = new HttpResponseMessageProperty() { StatusCode = HttpStatusCode.Unauthorized };
+				if (requestContext == null || requestContext.RequestMessage == null)
+				{
+					return;
+				}
 
-			//Message request = requestContext.RequestMessage;
+				Message request = requestContext.RequestMessage;
 
 
-			//HttpRequestMessageProperty requestProp = (HttpRequestMessageProperty)request.Properties[HttpRequestMessageProperty.Name];
-			//NameValueCollection queryParams = HttpUtility.ParseQueryString(requestProp.QueryString);
-			//if (request.Properties.Via.OriginalString!=LogInMessageAdress)
-			//{
-			//    if (requestProp.Headers[SessionHeader] == null)//case header not specified
-			//    {
-			//        responseProp.StatusDescription = ("You have not specified session header");
-			//        responseProp.Headers[HttpResponseHeader.ContentType] = "text/html";
-			//        reply.Properties[HttpResponseMessageProperty.Name] = responseProp;
-			//        requestContext.Reply(reply);
-			//        // set the request context to null to terminate processing of this request
-			//        requestContext = null;
-			//    }
-			//    else
-			//    {
-			//        string session = requestProp.Headers[SessionHeader];
-			//        if (!IsSessionValid(session)) //if session is valid
-			//        {
-			//            responseProp.StatusDescription = ("session is not exist or out of date");
-			//            responseProp.Headers[HttpResponseHeader.ContentType] = "text/html";
-			//            reply.Properties[HttpResponseMessageProperty.Name] = responseProp;
-			//            requestContext.Reply(reply);
-			//            // set the request context to null to terminate processing of this request
-			//            requestContext = null;
+				HttpRequestMessageProperty requestProp = (HttpRequestMessageProperty)request.Properties[HttpRequestMessageProperty.Name];
+				NameValueCollection queryParams = HttpUtility.ParseQueryString(requestProp.QueryString);
+				if (request.Properties.Via.OriginalString != LogInMessageAdress)
+				{
+					if (requestProp.Headers[SessionHeader] == null)//case header not specified
+					{
+						responseProp.StatusDescription = ("You have not specified session header");
+						responseProp.Headers[HttpResponseHeader.ContentType] = "text/html";
+						reply.Properties[HttpResponseMessageProperty.Name] = responseProp;
+						requestContext.Reply(reply);
+						// set the request context to null to terminate processing of this request
+						requestContext = null;
+					}
+					else
+					{
+						string session = requestProp.Headers[SessionHeader];
+						if (!IsSessionValid(session)) //if session is valid
+						{
+							responseProp.StatusDescription = ("session is not exist or out of date");
+							responseProp.Headers[HttpResponseHeader.ContentType] = "text/html";
+							reply.Properties[HttpResponseMessageProperty.Name] = responseProp;
+							requestContext.Reply(reply);
+							// set the request context to null to terminate processing of this request
+							requestContext = null;
 
-			//        }
-			//    }
-			//}
+						}
+					}
+				} 
+			}
 
 
 
 
 		}
+		
 		private bool IsSessionValid(string session)
 		{
 			bool isValid = false;
 			int sessionID = 0;
 			DateTime lastModified;
 
-			Encryptor encryptor = new Encryptor(Key);
+			Encryptor encryptor = new Encryptor(KeyEncrypt);
 
 
 			sessionID = int.Parse(encryptor.Decrypt(session));

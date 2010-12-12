@@ -42,32 +42,18 @@ namespace EdgeBI.Objects
 
 			ThingReader<Account> thingReader;
 			List<Account> returnObject = new List<Account>();
+			Dictionary<int?, Account> parents = new Dictionary<int?, Account>();
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
 			using (DataManager.Current.OpenConnection())
 			{
 				SqlCommand sqlCommand = null;
-				if (firstTime)
-				{
-					if (id != null)
-					{
-						sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID FROM [V_User_GUI_Accounts] WHERE ID=@ID:Int ORDER BY Parent_ID", CommandType.Text);
-						sqlCommand.Parameters["@ID"].Value = id;
-					}
-					else
-						sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID FROM [V_User_GUI_Accounts] WHERE Parent_ID IS NULL  ORDER BY Parent_ID", CommandType.Text);
-					firstTime = false;
-				}
-				else
-				{
-					if (id != null)
-					{
-						sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID FROM [V_User_GUI_Accounts] WHERE Parent_ID=@ID:Int  ORDER BY Parent_ID", CommandType.Text);
-						sqlCommand.Parameters["@ID"].Value = id;
-					}
 
-					firstTime = false;
 
-				}
+				sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID FROM [V_User_GUI_Accounts]   ORDER BY Parent_ID", CommandType.Text);
+
+
+
+
 
 
 				thingReader = new ThingReader<Account>(sqlCommand.ExecuteReader(), CustomApply);
@@ -75,19 +61,18 @@ namespace EdgeBI.Objects
 				while (thingReader.Read())
 				{
 					Account account = thingReader.Current;
-					returnObject.Add(account);
+					if (account.ParentID == null || !parents.ContainsKey(account.ParentID))
+						returnObject.Add(account);
+					else					
+						parents[account.ParentID].ChildAccounts.Add(account);
+			
+					if (!parents.ContainsKey(account.ID))
+						parents.Add(account.ID, account);
 
 				}
 
 			}
-			if (returnObject != null && returnObject.Count != 0)
-			{
-				foreach (Account account in returnObject)
-				{
-					if (account.ID != account.ParentID)
-						account.ChildAccounts = GetAccount(account.ID, firstTime);
-				}
-			}
+
 
 			return returnObject;
 		}
