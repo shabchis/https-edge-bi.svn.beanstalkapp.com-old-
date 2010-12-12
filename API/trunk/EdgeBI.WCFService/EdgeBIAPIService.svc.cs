@@ -11,6 +11,8 @@ using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
 using System.ServiceModel.Dispatcher;
 using System.Web;
+using System.Net;
+using Easynet.Edge.Core.Utilities;
 
 namespace EdgeBI.WCFService
 {
@@ -20,7 +22,7 @@ namespace EdgeBI.WCFService
 	[ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
 	public class EdgeBIAPIService : IEdgeBIAPIService
 	{
-
+		private const string KeyEncrypt = "5c51374e366f41297356413c71677220386c534c394742234947567840";
 		/// <summary>
 		/// Get user
 		/// </summary>
@@ -64,9 +66,9 @@ namespace EdgeBI.WCFService
 		}
 
 		[WebInvoke(Method = "POST", UriTemplate = "sessions", BodyStyle = WebMessageBodyStyle.Wrapped, RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
-		public int LogIN(string email, string password)
+		public string LogIN(string email, string password)
 		{
-			int session = -1;
+			string session = "-1";
 
 
 			using (DataManager.Current.OpenConnection())
@@ -84,13 +86,26 @@ namespace EdgeBI.WCFService
 															(UserID)
 															VALUES(@UserID:Int);SELECT @@IDENTITY");
 					sqlCommand.Parameters["@UserID"].Value = id;
-					session = System.Convert.ToInt32(sqlCommand.ExecuteScalar());
+					session = sqlCommand.ExecuteScalar().ToString();
+					Encryptor encryptor = new Encryptor(KeyEncrypt);
+					session = encryptor.Encrypt(session);
+
+
+
+				}
+				else
+				{
+					WebOperationContext.Current.OutgoingResponse.StatusCode =HttpStatusCode.Unauthorized;
+					WebOperationContext.Current.OutgoingResponse.StatusDescription = "Wrong user name/password";
 
 				}
 
+		
+					
+
 
 			}
-			return (int)session;
+			return session;
 		}
 
 		

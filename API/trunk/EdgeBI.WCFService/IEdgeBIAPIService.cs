@@ -28,7 +28,7 @@ namespace EdgeBI.WCFService
 		List<Account> GetAccount();
 
 		[OperationContract(Name = "LogIN")]
-		int LogIN(string email, string password);
+		string LogIN(string email, string password);
 
 		
 
