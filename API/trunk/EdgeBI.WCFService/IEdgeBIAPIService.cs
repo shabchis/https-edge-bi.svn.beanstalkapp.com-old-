@@ -21,8 +21,11 @@ namespace EdgeBI.WCFService
 		[OperationContract(Name = "GetMenuByParentID",Action="*")]
 		List<Menu> GetMenu(string parentID);
 
-		[OperationContract(Name = "GetAccount")]
+		[OperationContract(Name = "GetAccountByID")]
 		List<Account> GetAccount(string accountID);
+
+		[OperationContract(Name = "GetAccount")]
+		List<Account> GetAccount();
 
 		[OperationContract(Name = "LogIN")]
 		int LogIN(string email, string password);

@@ -37,23 +37,29 @@ namespace EdgeBI.WCFService
 		[WebGet(UriTemplate = "menu?Path={parentID}", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
 		public List<Menu> GetMenu(string menuID)
 		{
-			if (IsSessionValid())
-			{
+			
 				List<Menu> m = Menu.GetMenuByParentID(menuID);
 				if (m == null || m.Count == 0)
 					WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.NotFound;
 
 				return m;
-			}
-			return null; 
+			
+			 
 
 		}
 
 		[WebGet(UriTemplate = "Accounts/{accountID}", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
 		public List<Account> GetAccount(string accountID)
 		{
-			int accId = int.Parse(accountID);
+			int? accId = int.Parse(accountID);
 			List<Account> acc = Account.GetAccount(accId, true);
+			return acc;
+		}
+		[WebGet(UriTemplate = "Accounts", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
+		public List<Account> GetAccount()
+		{
+			
+			List<Account> acc = Account.GetAccount(null, true);
 			return acc;
 		}
 
@@ -87,34 +93,7 @@ namespace EdgeBI.WCFService
 			return (int)session;
 		}
 
-		private bool IsSessionValid()
-		{
-			bool isValid = false;
-			int sessionID = 0;
-			DateTime lastModified;
-			if (WebOperationContext.Current.IncomingRequest.Headers["x-edgebi-session"] == null)
-				WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.BadRequest;
-			else
-			{
-
-				sessionID = int.Parse(WebOperationContext.Current.IncomingRequest.Headers["x-edgebi-session"]);
-				using (DataManager.Current.OpenConnection())
-				{
-					using (SqlCommand sqlCommand = DataManager.CreateCommand("Session_ValidateSession(@SessionID:Int",System.Data.CommandType.StoredProcedure))
-					{
-						sqlCommand.Parameters["@SessionID"].Value = sessionID;
-						isValid = System.Convert.ToBoolean(sqlCommand.ExecuteScalar());
-
-
-					}
-
-				}
-			}
-			if (!isValid)
-				WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.Forbidden;
-			return isValid;
-
-		}
+		
 
 
 
