@@ -16,7 +16,7 @@ namespace EdgeBI.Objects
 	{
 		[DataMember(Order = 1)]
 		[FieldMap("ID", IsKey = true, RecursiveLookupField = true, IsDistinct = true)]
-		public int ID;
+		public int? ID;
 
 		[DataMember(Order = 2)]
 		[FieldMap("Name")]
@@ -27,16 +27,16 @@ namespace EdgeBI.Objects
 
 
 
-		[DataMember(Order = 3)]		
+		[DataMember(Order = 3)]
 		public List<Account> ChildAccounts = new List<Account>();
 
-		
+
 		private static object CustomApply(FieldInfo info, IDataRecord reader)
 		{
 			throw new NotImplementedException();
 		}
 
-		public static List<Account> GetAccount(int id, bool firstTime)
+		public static List<Account> GetAccount(int? id, bool firstTime)
 		{
 
 
@@ -45,19 +45,28 @@ namespace EdgeBI.Objects
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
 			using (DataManager.Current.OpenConnection())
 			{
-				SqlCommand sqlCommand;
+				SqlCommand sqlCommand = null;
 				if (firstTime)
 				{
-					sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID FROM [V_User_GUI_Accounts] WHERE ID=@ID:Int", CommandType.Text);
-					sqlCommand.Parameters["@ID"].Value = id;
+					if (id != null)
+					{
+						sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID FROM [V_User_GUI_Accounts] WHERE ID=@ID:Int ORDER BY Parent_ID", CommandType.Text);
+						sqlCommand.Parameters["@ID"].Value = id;
+					}
+					else
+						sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID FROM [V_User_GUI_Accounts] WHERE Parent_ID IS NULL  ORDER BY Parent_ID", CommandType.Text);
 					firstTime = false;
 				}
 				else
 				{
-					sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID FROM [V_User_GUI_Accounts] WHERE Parent_ID=@ID:Int", CommandType.Text);
-					sqlCommand.Parameters["@ID"].Value = id;
+					if (id != null)
+					{
+						sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID FROM [V_User_GUI_Accounts] WHERE Parent_ID=@ID:Int  ORDER BY Parent_ID", CommandType.Text);
+						sqlCommand.Parameters["@ID"].Value = id;
+					}
+
 					firstTime = false;
-					firstTime = false;
+
 				}
 
 
@@ -71,14 +80,13 @@ namespace EdgeBI.Objects
 				}
 
 			}
-			if (returnObject != null)
+			if (returnObject != null && returnObject.Count != 0)
 			{
 				foreach (Account account in returnObject)
 				{
-					account.ChildAccounts = GetAccount(account.ID, firstTime);
+					if (account.ID != account.ParentID)
+						account.ChildAccounts = GetAccount(account.ID, firstTime);
 				}
-
-
 			}
 
 			return returnObject;
