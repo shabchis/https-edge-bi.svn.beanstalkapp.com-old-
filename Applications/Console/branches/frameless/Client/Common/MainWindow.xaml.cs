@@ -15,13 +15,14 @@ using System.Windows.Shapes;
 using System.Xml;
 using Easynet.Edge.UI.Data;
 using System.Collections;
-using Easynet.Edge.UI.Client.Pages;
 using System.Runtime.Remoting.Messaging;
 using Easynet.Edge.Core.Utilities;
 using System.Windows.Controls.Primitives;
 using System.Deployment.Application;
 using System.Collections.Specialized;
 using System.Web;
+using System.Net;
+using Easynet.Edge.Core.Configuration;
 
 namespace Easynet.Edge.UI.Client
 {
@@ -32,6 +33,8 @@ namespace Easynet.Edge.UI.Client
 	{
 		#region Fields
 		/*=========================*/
+		public static string AssemblyAddressRoot;
+		public static string AssemblyDownloadPath;
 
 		private Oltp.AccountDataTable _accountsTable = null;
 		private Oltp.AccountRow _currentAccount = null;
@@ -53,6 +56,16 @@ namespace Easynet.Edge.UI.Client
 
 			// Event handlers
 			this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
+
+			if (AssemblyAddressRoot == null)
+			{
+				string rootAddressRelative = AppSettings.Get(typeof(MainWindow), "AssemblyDownloadRoot.Relative", false);
+				string rootAddressAbsolute = AppSettings.Get(typeof(MainWindow), "AssemblyDownloadRoot.Absolute", false);
+				if (ApplicationDeployment.IsNetworkDeployed)
+					AssemblyAddressRoot = new Uri(System.Deployment.Application.ApplicationDeployment.CurrentDeployment.ActivationUri, rootAddressRelative).ToString();
+				else
+					AssemblyAddressRoot = rootAddressAbsolute;
+			}
 		}
 
 		/// <summary>
@@ -71,7 +84,7 @@ namespace Easynet.Edge.UI.Client
 			bool allowedAccess = false;
 			if (ApplicationDeployment.CurrentDeployment.ActivationUri.Query == null)
 			{
-				HidePageContents("Local XBAP access not supported.");
+				HidePageContents("XBAP must be accessed via a web URL.");
 				return;
 			}
 
@@ -106,12 +119,19 @@ namespace Easynet.Edge.UI.Client
 			}
 			CurrentUser = OltpProxy.CurrentUser;
 
-			string menuItemPath = urlParams["path"];
-			if (String.IsNullOrEmpty(menuItemPath))
+			string menuItemParam = urlParams["page"];
+			if (String.IsNullOrEmpty(menuItemParam))
 			{
-				HidePageContents("No menu path specified. Please select an item from the menu.");
+				HidePageContents("No page specified. Please select an item from the menu.");
 				return;
 			}
+			int menuItemID;
+			if (!int.TryParse(menuItemParam, out menuItemID))
+			{
+				HidePageContents("Invalid page specified. Please select an item from the menu.");
+				return;
+			}
+			ApiMenuItem menuItem = null;
 
 			// Get user settings
 			AsyncOperation(delegate()
@@ -120,11 +140,12 @@ namespace Easynet.Edge.UI.Client
 				{
 					_accountsTable = proxy.Service.Account_Get();
 					_userPermissions = proxy.Service.User_GetAllPermissions();
+					menuItem = proxy.Service.ApiMenuItem_Get(menuItemID);
 				}
 			},
 			delegate(Exception ex)
 			{
-				PageBase.MessageBoxError("Failed to load user settings.", ex);
+				MessageBoxError("Failed to load user settings.", ex);
 				return false;
 			},
 			delegate()
@@ -135,14 +156,113 @@ namespace Easynet.Edge.UI.Client
 					HidePageContents("Specified account was not found. Please select another account.");
 					return;
 				}
-				else
-				{
-					_currentAccount = (Oltp.AccountRow)rs[0];
-					_currentPageViewer.Content = CurrentPage = null;
-				}
+
+				_currentAccount = (Oltp.AccountRow)rs[0];
+				LoadPage(menuItem);
 			});
 		}
 
+		/// 
+		/// </summary>
+		private void LoadPage(ApiMenuItem menuItem)
+		{
+			if (CurrentPage != null)
+			{
+				bool unloadCurrent = CurrentPage.Unload();
+
+				// Cancel
+				if (!unloadCurrent)
+					return;
+			}
+
+			string className;
+			if (!menuItem.Metadata.TryGetValue("WPF-class", out className))
+			{
+				HidePageContents("This menu item cannot be loaded in WPF.");
+				return;
+			}
+
+			// Kill all async wait handles
+			foreach (System.Threading.AutoResetEvent handle in _asyncHandles.Values)
+			{
+				handle.Set();
+			}
+			_asyncHandles.Clear();
+
+			// Try to get the target page type
+			Type newPageType = Type.GetType(className, false);
+
+			// This is performed after we load the target DLL
+			Action displayPageAction = delegate()
+			{
+				if (newPageType == null)
+				{
+					HidePageContents("Could not load the requested page - class not found.");
+					return;
+				}
+
+				try
+				{
+					CurrentPage = (PageBase)Activator.CreateInstance(newPageType);
+				}
+				catch (Exception ex)
+				{
+					CurrentPage = null;
+					HidePageContents(ex);
+				}
+
+				CurrentPage.PageData = menuItem;
+				_currentPageViewer.Content = CurrentPage;
+
+				if (newPageType.GetCustomAttributes(typeof(AccountDependentPageAttribute), false).Length > 0)
+				{
+					if (CurrentAccount != null)
+					{
+						// Tell the page to load the account
+						CurrentPage.OnAccountChanged();
+					}
+					else
+					{
+						// Tell the page to hide the account
+						HidePageContents("You do not have permission to view this page for the selected account.");
+					}
+				}
+
+				// Force garbage collection
+				this.FloatingDialogContainer.Children.Clear();
+				GC.Collect();
+			};
+
+			// Resolve the class reference
+			if (newPageType == null)
+			{
+				string assemblyAddress = menuItem.Metadata["WPF-assembly"];
+				if (String.IsNullOrEmpty(assemblyAddress))
+				{
+					HidePageContents("Could not load the requested page - DLL not specified.");
+					return;
+				}
+
+				AsyncOperation(
+					delegate()
+					{
+						Uri downloadUri = new Uri(new Uri(AssemblyAddressRoot), assemblyAddress);
+						string downloadTarget = System.IO.Path.Combine(AssemblyDownloadPath, System.IO.Path.GetFileName(downloadUri.LocalPath));
+						using (WebClient client = new WebClient())
+						{
+							client.DownloadFile(downloadUri, downloadTarget);
+						}
+					},
+					HidePageContents,
+					displayPageAction);
+
+			}
+			else
+			{
+				displayPageAction();
+			}
+
+		}
 
 		/*=========================*/
 		#endregion
@@ -232,161 +352,6 @@ namespace Easynet.Edge.UI.Client
 		/*=========================*/
 		#endregion
 
-		#region Internal methods
-		/*=========================*/
-
-		/// <summary>
-		/// 
-		/// </summary>
-		private void LoadPage(ApiMenuItem menuItem)
-		{
-			if (CurrentPage != null)
-			{
-				bool unloadCurrent = CurrentPage.Unload();
-
-				// Cancel
-				if (!unloadCurrent)
-					return;
-			}
-
-			// Kill all async wait handles
-			foreach (System.Threading.AutoResetEvent handle in _asyncHandles.Values)
-			{
-				handle.Set();
-			}
-			_asyncHandles.Clear();
-
-			// Get page XML data
-			XmlElement pageData = e.AddedItems[0] as XmlElement;
-
-			try
-			{
-				Type newPage = Type.GetType(pageData.Attributes["Class"].Value);
-				CurrentPage = (PageBase)Activator.CreateInstance(newPage);
-
-				CurrentPage.PageData = pageData;
-
-				_currentPageViewer.Content = CurrentPage;
-
-				if (newPage.GetCustomAttributes(typeof(AccountDependentPageAttribute), false).Length > 0)
-				{
-					if (CurrentAccount != null)
-					{
-						// Tell the page to load the account
-						CurrentPage.OnAccountChanged();
-					}
-					else
-					{
-						// Tell the page to hide the account
-						HidePageContents(HideContentsReason.NoAccountSelected);
-					}
-				}
-
-				// Hack for avoiding hiding the account dropdown behind the web browser
-				if (newPage == typeof(WebFramePage))
-				{
-					_accountsSelector.MaxDropDownHeight = 50.0;
-					AsyncOperationIndicator.VerticalAlignment = VerticalAlignment.Top;
-					AsyncOperationIndicator.MaxHeight = 60;
-
-				}
-				else
-				{
-					_accountsSelector.ClearValue(ComboBox.MaxDropDownHeightProperty);
-					AsyncOperationIndicator.VerticalAlignment = VerticalAlignment.Center;
-					AsyncOperationIndicator.LayoutTransform = null;
-					AsyncOperationIndicator.ClearValue(Grid.MaxHeightProperty);
-				}
-			}
-			catch (Exception ex)
-			{
-				CurrentPage = null;
-				string error =
-					String.Format("Failed to load page. \n\n {0} ({1})", ex.Message, ex.GetType().FullName);
-
-				Exception innerEx = ex.InnerException;
-				while (innerEx != null)
-				{
-					error += String.Format("\n {0} ({1})", innerEx.Message, innerEx.GetType().FullName);
-					innerEx = innerEx.InnerException;
-				}
-
-				_currentPageViewer.Content = error;
-			}
-			
-			// Force garbage collection
-			this.FloatingDialogContainer.Children.Clear();
-			GC.Collect();
-		}
-
-		public bool HasPermission(Oltp.AccountRow account, XmlElement pageData)
-		{
-			if (OltpProxy.CurrentUser.AccountAdmin)
-				return true;
-
-			string permissionName = pageData.HasAttribute("Permission") ?
-				pageData.Attributes["Permission"].Value :
-				pageData.Attributes["Class"].Value;
-
-			string condition = account != null ?
-				String.Format("AccountID = {0} and PermissionType = '{1}'", account.ID, permissionName) :
-				String.Format("PermissionType = '{0}'", permissionName);
-
-			return _userPermissions.Select(condition).Length > 0;
-		}
-
-		public void HidePageContents(string message)
-		{
-			TextBlock msg = new TextBlock();
-			msg.FontSize = 14;
-			msg.Foreground = Brushes.Red;
-			msg.FontWeight = FontWeights.Bold;
-			msg.Text = message;
-			_currentPageViewer.Content = msg;
-		}
-
-		public void HidePageContents(HideContentsReason reason)
-		{
-			string msgText = "";
-			switch (reason)
-			{
-				case HideContentsReason.AccessDenied:
-					msgText = "\nYou do not have permission to view this page for the selected account.";
-					break;
-				case HideContentsReason.NoAccountSelected:
-					msgText = "\nPlease select an account.";
-					break;
-				case HideContentsReason.BlockPage:
-					msgText = "\n";
-					break;
-
-			}
-			HidePageContents(msgText);
-		}
-
-		public void RestorePageContents()
-		{
-			_currentPageViewer.Content = CurrentPage;
-		}
-
-        
-
-		private void _logoutButton_Click(object sender, RoutedEventArgs e)
-		{
-			LogoutUser();
-		}
-
-		private void _mainMenu_Hidden(object sender, EventArgs e)
-		{
-		}
-
-		private void _mainMenu_Revealed(object sender, EventArgs e)
-		{
-
-		}
-		/*=========================*/
-		#endregion
-
 		#region Async methods
 		/*=========================*/
 
@@ -454,7 +419,7 @@ namespace Easynet.Edge.UI.Client
 					{
 						if (onException == null)
 						{
-							PageBase.MessageBoxError("Operation failed.", ex);
+							MessageBoxError("Operation failed.", ex);
 							cont = false;
 						}
 						else
@@ -465,7 +430,7 @@ namespace Easynet.Edge.UI.Client
 							}
 							catch (Exception innerEx)
 							{
-								PageBase.MessageBoxError("Operation failed.", ex);
+								MessageBoxError("Operation failed.", innerEx);
 								cont = false;
 							}
 						}
@@ -480,7 +445,7 @@ namespace Easynet.Edge.UI.Client
 						}
 						catch (Exception ex)
 						{
-							PageBase.MessageBoxError("An error occured after the operation completed.", ex);
+							MessageBoxError("An error occured after the operation completed.", ex);
 						}
 					}
 
@@ -517,6 +482,93 @@ namespace Easynet.Edge.UI.Client
 
 		/*=========================*/
 		#endregion
+
+		#region Message box messages
+		/*=========================*/
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="excep"></param>
+		public static void MessageBoxError(string message, Exception ex)
+		{
+			if (ex is TargetInvocationException)
+				ex = ex.InnerException;
+
+			MessageBox.Show(
+				ex == null ?
+					message :
+					String.Format("{0}\n\n{1}\n\n({2})", message, ex.Message, ex.GetType().FullName),
+				"Error",
+				MessageBoxButton.OK, MessageBoxImage.Error
+			);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="dialog"></param>
+		/// <returns></returns>
+		public static bool MessageBoxPromptForCancel(FloatingDialog dialog)
+		{
+			DataRow row = dialog.Content as DataRow;
+			if (row == null)
+				return false;
+
+			if (row.Table.GetChanges() == null)
+				return false;
+
+			MessageBoxResult result = MessageBox.Show(
+				"Discard changes?",
+				"Confirm",
+				MessageBoxButton.OKCancel,
+				MessageBoxImage.Warning,
+				MessageBoxResult.Cancel);
+
+			return result == MessageBoxResult.Cancel;
+		}
+
+		/*=========================*/
+		#endregion
+	
+		#region Full page messages
+		/*=========================*/
+
+		public void HidePageContents(string message)
+		{
+			TextBlock msg = new TextBlock();
+			msg.FontSize = 14;
+			msg.Foreground = Brushes.Red;
+			msg.FontWeight = FontWeights.Bold;
+			msg.Text = message;
+			_currentPageViewer.Content = msg;
+		}
+
+		public bool HidePageContents(Exception ex)
+		{
+			string error =
+						String.Format("Failed to load page. \n\n {0} ({1})", ex.Message, ex.GetType().FullName);
+
+			Exception innerEx = ex.InnerException;
+			while (innerEx != null)
+			{
+				error += String.Format("\n {0} ({1})", innerEx.Message, innerEx.GetType().FullName);
+				innerEx = innerEx.InnerException;
+			}
+
+			_currentPageViewer.Content = error;
+			return false;
+		}
+
+		public void RestorePageContents()
+		{
+			_currentPageViewer.Content = CurrentPage;
+		}
+
+        
+		/*=========================*/
+		#endregion
+
 	}
 
 	public class AsyncMask : Grid
@@ -562,34 +614,13 @@ namespace Easynet.Edge.UI.Client
 		}
 	}
 
-    namespace MainWindowLocal
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public class AccountItemTemplateSelector : DataTemplateSelector
-        {
-            public override DataTemplate SelectTemplate(object item, DependencyObject container)
-            {
-                if (item is DataRowView && ((DataRowView)item).Row is Oltp.AccountRow)
-                {
-					Oltp.AccountRow accountRow = (Oltp.AccountRow)((DataRowView)item).Row;
-					string template =
-						accountRow.ID == accountRow.ClientID ?
-							"AccountItem_AccountTopLevel_{0}" :
-							"AccountItem_AccountSubLevel_{0}";
+	[global::System.AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+	public sealed class AccountDependentPageAttribute : Attribute
+	{
+		// This is a positional argument
+		public AccountDependentPageAttribute()
+		{
+		}
+	}
 
-					template = String.Format(template,
-						!OltpProxy.CurrentUser.IsAccountAdminNull() && OltpProxy.CurrentUser.AccountAdmin ?
-							"Admin" :
-							"Normal");
-
-                    return MainWindow.Current
-                        .FindResource(template) as DataTemplate;
-                }
-                else
-                    return null;
-            }
-        }
-    }
 }

@@ -149,9 +149,9 @@ namespace Easynet.Edge.UI.Client.Pages
 				tabItem.RaiseEvent(new RoutedEventArgs(TabItem.GotFocusEvent, tabItem));
 				
 			// When opening, select it only if no more than one is already selected
-			if (_listTable._listView.SelectedItems.Count < 2)
+			if (_listTable.ListView.SelectedItems.Count < 2)
 			{
-				_listTable._listView.SelectedItems.Clear();
+				_listTable.ListView.SelectedItems.Clear();
 				currentItem.IsSelected = true;
 			}
 		}
@@ -166,7 +166,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			if (IsMissingData(isNew, _segmentValuesTable))
 			{
-				MessageBoxError("At least one value is required for a segment.", null);
+				MainWindow.MessageBoxError("At least one value is required for a segment.", null);
 				e.Cancel = true;
 				return;
 			}
@@ -216,7 +216,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				},
 				delegate(Exception ex)
 				{
-					MessageBoxError("Failed to save segment values.", ex);
+					MainWindow.MessageBoxError("Failed to save segment values.", ex);
 					e.Cancel = true;
 					return false;
 				},
@@ -238,7 +238,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			Oltp.SegmentRow dataItem = Segment_dialog.TargetContent as Oltp.SegmentRow;
 
 			// Call the univeral applied change handler
-			Dialog_AppliedChanges<Oltp.SegmentRow>(Segment_dialog, dataItem.Name, _listTable._listView, e);
+			Dialog_AppliedChanges<Oltp.SegmentRow>(Segment_dialog, dataItem.Name, _listTable.ListView, e);
 		}
 
 		/// <summary>
@@ -261,7 +261,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			// Cancel if user regrets
 			if (!e.Cancel)
-				e.Cancel = MessageBoxPromptForCancel(Segment_dialog);
+				e.Cancel = MainWindow.MessageBoxPromptForCancel(Segment_dialog);
 
 			if (e.Cancel)
 				return;
@@ -319,7 +319,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				_segmentValuesTable.ValueColumn.ColumnName,
 				valueText.Replace("'", "''"))).Length > 0)
 			{
-				MessageBoxError("This value is already defined.", null);
+				MainWindow.MessageBoxError("This value is already defined.", null);
 				return;
 			}
 

@@ -238,7 +238,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				VisualTree.GetChild<TabControl>(Creative_dialog).SelectedIndex = 0;
 				_titleField.Focus();
 
-				MessageBoxError("Please enter a valid title", null);
+				MainWindow.MessageBoxError("Please enter a valid title", null);
 				e.Cancel = true;
 				return;
 			}
@@ -256,7 +256,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void Creative_dialog_AppliedChanges(object sender, CancelRoutedEventArgs e)
 		{
 			// Call the univeral applied change handler
-			Dialog_AppliedChanges<Oltp.CreativeRow>(Creative_dialog, "Editing Creative", _listTable._listView, e);
+			Dialog_AppliedChanges<Oltp.CreativeRow>(Creative_dialog, "Editing Creative", _listTable.ListView, e);
 		}
 
 		/// <summary>
@@ -265,7 +265,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void Creative_dialog_Closing(object sender, CancelRoutedEventArgs e)
 		{
 			// Cancel if user regrets
-			e.Cancel = MessageBoxPromptForCancel(Creative_dialog);
+			e.Cancel = MainWindow.MessageBoxPromptForCancel(Creative_dialog);
 
 			if (!e.Cancel)
 				_creatives.RejectChanges();
@@ -288,7 +288,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			bool monitor = sender == _buttonMonitor;
 
 			// First mark the correct monitoring state
-			foreach (Oltp.CreativeRow creative in _listTable._listView.SelectedItems)
+			foreach (Oltp.CreativeRow creative in _listTable.ListView.SelectedItems)
 				creative.IsMonitored = monitor;
 
 			Window.AsyncOperation(delegate()
@@ -301,14 +301,14 @@ namespace Easynet.Edge.UI.Client.Pages
 			delegate(Exception ex)
 			{
 				// Failed, so cancel and display a message
-				MessageBoxError("Creatives could not be updated.", ex);
+				MainWindow.MessageBoxError("Creatives could not be updated.", ex);
 				_creatives.RejectChanges();
 				return false;
 			},
 			delegate()
 			{
-				Oltp.CreativeRow[] rowsToIterate = new Oltp.CreativeRow[_listTable._listView.SelectedItems.Count];
-				_listTable._listView.SelectedItems.CopyTo(rowsToIterate, 0);
+				Oltp.CreativeRow[] rowsToIterate = new Oltp.CreativeRow[_listTable.ListView.SelectedItems.Count];
+				_listTable.ListView.SelectedItems.CopyTo(rowsToIterate, 0);
 
 				foreach (Oltp.CreativeRow creative in rowsToIterate)
 				{
@@ -320,7 +320,7 @@ namespace Easynet.Edge.UI.Client.Pages
 					}
 					else
 					{
-						ListViewItem item = _listTable._listView.ItemContainerGenerator.ContainerFromItem(creative) as ListViewItem;
+						ListViewItem item = _listTable.ListView.ItemContainerGenerator.ContainerFromItem(creative) as ListViewItem;
 
 						// Apply the correcy template
 						(this.Resources["NameTemplateSelector"] as MasterCreativesLocal.NameTemplateSelector)

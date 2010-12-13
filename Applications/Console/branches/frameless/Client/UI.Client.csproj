@@ -50,7 +50,7 @@
     <InstallUrl>https://console.edge-bi.com/seperia/</InstallUrl>
     <SupportUrl>https://console.edge-bi.com/seperia/install.html</SupportUrl>
     <TargetCulture>en</TargetCulture>
-    <ProductName>Edge.BI Management Console [Seperia]</ProductName>
+    <ProductName>Edge.BI Management Console [debug]</ProductName>
     <PublisherName>Edge.BI</PublisherName>
     <WebPage>install.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
@@ -204,38 +204,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\AccountPermissions.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\Segments.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\SerpProfiles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\GeneralLogin.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\PpcCampaigns.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\MasterCreatives.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\MasterKeywords.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\PpcGateways.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <!-- Code files -->
   <ItemGroup>
@@ -259,30 +227,6 @@
     </Compile>
     <Compile Include="Common\ListTable.xaml.cs">
       <DependentUpon>ListTable.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\AccountPermissions.xaml.cs">
-      <DependentUpon>AccountPermissions.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Segments.xaml.cs">
-      <DependentUpon>Segments.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\SerpProfiles.xaml.cs">
-      <DependentUpon>SerpProfiles.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\GeneralLogin.xaml.cs">
-      <DependentUpon>GeneralLogin.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\PpcCampaigns.xaml.cs">
-      <DependentUpon>PpcCampaigns.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\MasterCreatives.xaml.cs">
-      <DependentUpon>MasterCreatives.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\MasterKeywords.xaml.cs">
-      <DependentUpon>MasterKeywords.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\PpcGateways.xaml.cs">
-      <DependentUpon>PpcGateways.xaml</DependentUpon>
     </Compile>
     <None Include="Properties\AssemblyInfo.cs.template" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -310,16 +254,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <!-- Resources -->
-  <ItemGroup>
-    <Resource Include="Graphics\easynet_edge_logo.png" />
-    <Resource Include="Graphics\cancel.png" />
-    <Resource Include="Graphics\button_ok.png" />
-    <Resource Include="Graphics\edit_add.png" />
-    <Resource Include="Graphics\logo-300-beta.png" />
-    <Resource Include="Graphics\adgroupTargets.png" />
-    <Resource Include="Graphics\campaignTargets.png" />
-    <Resource Include="Graphics\logo-300.png" />
-  </ItemGroup>
   <!-- What is this? to delete? -->
   <!--<ItemGroup>
 		<None Include="Properties\DataSources\Easynet.Edge.UI.Oltp.datasource" />

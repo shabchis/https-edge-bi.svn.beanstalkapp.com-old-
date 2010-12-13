@@ -49,26 +49,10 @@ namespace Easynet.Edge.UI.Server
 		#region User
 		/*=========================*/
 
-		public Oltp.UserDataTable User_LoginByID(int userID)
+		public Oltp.UserDataTable User_LoginBySessionID(string sessionID)
 		{
-			Oltp.UserDataTable table = From<UserTableAdapter>().Get(userID);
-			if (table.Rows.Count < 1)
-				throw new AuthenticationException("Incorrect user ID.");
-
-			CurrentUser = (Oltp.UserRow) table.Rows[0];
-			return table;
-		}
-
-		static bool Encrypt = bool.Parse(AppSettings.GetAbsolute("Easynet.Edge.UI.Server.User.EncryptedPasswords"));
-		public Oltp.UserDataTable User_LoginByEmail(string email, string password)
-		{
-			string pass = Encrypt ? Encryptor.Encrypt(password) : password;
-			Oltp.UserDataTable table = From<UserTableAdapter>().GetByEmail(email, pass);
-			if (table.Rows.Count < 1)
-				throw new AuthenticationException("Incorrect user/password.");
-
-			CurrentUser = (Oltp.UserRow)table.Rows[0];
-			return table;
+			// implement login system
+			throw new NotImplementedException();
 		}
 
 		public Oltp.UserDataTable User_GetByGroup(int groupID)
@@ -1795,5 +1779,34 @@ namespace Easynet.Edge.UI.Server
 
 		/*=========================*/
 		//#endregion
+
+		public ApiMenuItem ApiMenuItem_Get(int id)
+		{
+			using (DataManager.Current.OpenConnection())
+			{
+				SqlCommand cmd = DataManager.CreateCommand("select * from [API_Menus] where ID = @id:int");
+				cmd.Parameters["@id"].Value = id;
+
+				using (SqlDataReader reader = cmd.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						return new ApiMenuItem()
+						{
+							ID = reader.GetInt32(reader.GetOrdinal("ID")),
+							Name = reader.GetString(reader.GetOrdinal("Name")),
+							Path = reader.GetString(reader.GetOrdinal("Path")),
+							Metadata = new SettingsCollection(reader.GetString(reader.GetOrdinal("Metadata")))
+						};
+					}
+					else
+					{
+						return null;
+					}
+				}
+			}
+
+		}
+
 	}
 }

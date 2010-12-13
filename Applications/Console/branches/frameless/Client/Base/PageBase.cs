@@ -21,29 +21,16 @@ using System.ServiceModel;
 
 namespace Easynet.Edge.UI.Client
 {
-	public enum HideContentsReason
-	{
-		AccessDenied,
-		NoAccountSelected,
-        BlockPage
-	}
-
-	[global::System.AttributeUsage(AttributeTargets.Class, Inherited=false, AllowMultiple=false)]
-	sealed class AccountDependentPageAttribute: Attribute
-	{
-		// This is a positional argument
-		public AccountDependentPageAttribute()
-		{
-		}
-	}
-
 	/// <summary>
-	/// Base class for settings pages in the Manager.
+	/// Base class for XAML pages.
 	/// </summary>
 	public class PageBase: UserControl
 	{
 		MainWindow _main = null;
-        XmlElement _pageData = null;
+        ApiMenuItem _pageData = null;
+
+		#region Startup
+		/*=========================*/
 
 		/// <summary>
 		/// 
@@ -57,51 +44,6 @@ namespace Easynet.Edge.UI.Client
 		{
 			if (App.InDesignMode)
 				return;
-		}
-
-		#region Message box Methods
-		/*=========================*/
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="excep"></param>
-		public static void MessageBoxError(string message, Exception ex)
-		{
-			if (ex is TargetInvocationException)
-				ex = ex.InnerException;
-
-			MessageBox.Show(
-				ex == null ?
-					message :
-					String.Format("{0}\n\n{1}\n\n({2})", message, ex.Message, ex.GetType().FullName),
-				"Error",
-				MessageBoxButton.OK, MessageBoxImage.Error
-			);
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="dialog"></param>
-		/// <returns></returns>
-		protected static bool MessageBoxPromptForCancel(FloatingDialog dialog)
-		{
-			DataRow row = dialog.Content as DataRow;
-			if (row == null)
-				return false;
-
-			if (row.Table.GetChanges() == null)
-				return false;
-
-			MessageBoxResult result = MessageBox.Show(
-				"Discard changes?",
-				"Confirm",
-				MessageBoxButton.OKCancel,
-				MessageBoxImage.Warning,
-				MessageBoxResult.Cancel);
-
-			return result == MessageBoxResult.Cancel;
 		}
 
 		/*=========================*/
@@ -118,7 +60,6 @@ namespace Easynet.Edge.UI.Client
 		/// <param name="table"></param>
 		/// <param name="row"></param>
 		/// <returns></returns>
-		[Obsolete]
 		protected static RowType Dialog_MakeEditVersion<TableType, RowType>(RowType row)
 			where TableType: DataTable, new()
 			where RowType: DataRow
@@ -211,7 +152,7 @@ namespace Easynet.Edge.UI.Client
 			(Func<Exception, bool>) delegate(Exception ex)
 			{
 				// Failed, so cancel and display a message
-				MessageBoxError("Error while updating.", ex);
+				MainWindow.MessageBoxError("Error while updating.", ex);
 				e.Cancel = true;
 				return false;
 			},
@@ -400,7 +341,7 @@ namespace Easynet.Edge.UI.Client
 		}
 
 
-        public XmlElement PageData
+        public ApiMenuItem PageData
         {
             get { return _pageData; }
             set { _pageData = value; }
