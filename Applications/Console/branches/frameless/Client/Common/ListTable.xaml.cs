@@ -33,8 +33,6 @@ namespace Easynet.Edge.UI.Client
 		int _drag_itemIndex = -1;
 		ListViewItem _drag_itemContainer = null;
 		ListViewItem _drag_lastDropTarget = null;
-		NotifyCollectionChangedEventHandler _viewRefresher;
-		INotifyCollectionChanged _collection = null;
 
 		/*=========================*/
 		#endregion

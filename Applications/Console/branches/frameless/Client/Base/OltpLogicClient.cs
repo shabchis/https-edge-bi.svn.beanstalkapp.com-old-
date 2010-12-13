@@ -17,6 +17,7 @@ namespace Easynet.Edge.UI.Client
 		#region Static
 		//=========================
 
+		static string _currentSessionID;
 		static Oltp.UserRow _currentUser = null;
 		static ServiceClient<IOltpLogic> _internalProxy = null;
 		static string _serverAddress = null;
@@ -58,7 +59,8 @@ namespace Easynet.Edge.UI.Client
 		public static void SessionStart(string sessionID)
 		{
 			InitProxy();
-			_currentUser = (Oltp.UserRow) _internalProxy.Service.User_FromSessionID(sessionID).Rows[0];
+			_currentUser = (Oltp.UserRow) _internalProxy.Service.User_LoginBySessionID(sessionID).Rows[0];
+			_currentSessionID = sessionID;
 		}
 
 
@@ -75,6 +77,12 @@ namespace Easynet.Edge.UI.Client
 		{
 			get { return _currentUser; }
 		}
+
+		public static string CurrentSessionID
+		{
+			get { return _currentSessionID; }
+		}
+
 
 		//=========================
 		#endregion
@@ -93,7 +101,7 @@ namespace Easynet.Edge.UI.Client
 				else
 				{
 					// Automatically restart session
-					SessionStart(CurrentUser.ID);
+					SessionStart(CurrentSessionID);
 				}
 			}
 		}

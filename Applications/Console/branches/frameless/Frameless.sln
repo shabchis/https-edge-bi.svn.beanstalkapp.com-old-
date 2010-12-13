@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Deployment.Certificates", "Deployment\Certificates\UI.Deployment.Certificates.csproj", "{08730AF4-DE67-41B0-BCB1-3483D25E71D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.XamlPages", "XamlPages\UI.XamlPages.csproj", "{E3340E17-48E7-425A-ADA4-F59AB6812B1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -243,6 +245,31 @@ Global
 		{08730AF4-DE67-41B0-BCB1-3483D25E71D1}.Seperia|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{08730AF4-DE67-41B0-BCB1-3483D25E71D1}.Seperia|Mixed Platforms.Build.0 = Release|Any CPU
 		{08730AF4-DE67-41B0-BCB1-3483D25E71D1}.Seperia|Win32.ActiveCfg = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Demo|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Demo|Any CPU.Build.0 = Debug|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Demo|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Demo|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Demo|Win32.ActiveCfg = Debug|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Production|Any CPU.ActiveCfg = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Production|Any CPU.Build.0 = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Production|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Production|Mixed Platforms.Build.0 = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Production|Win32.ActiveCfg = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Release|Win32.ActiveCfg = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Seperia|Any CPU.ActiveCfg = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Seperia|Any CPU.Build.0 = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Seperia|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Seperia|Mixed Platforms.Build.0 = Release|Any CPU
+		{E3340E17-48E7-425A-ADA4-F59AB6812B1B}.Seperia|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

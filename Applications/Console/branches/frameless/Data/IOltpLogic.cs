@@ -15,10 +15,7 @@ namespace Easynet.Edge.UI.Server
 		//=========================
 
 		[OperationContract(IsInitiating = true)] [NetDataContract]
-		Oltp.UserDataTable User_LoginByEmail(string email, string password);
-
-		[OperationContract(IsInitiating = true)] [NetDataContract]
-		Oltp.UserDataTable User_LoginByID(int userID);
+		Oltp.UserDataTable User_LoginBySessionID(string sessionID);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
 		Oltp.UserDataTable User_GetByGroup(int groupID);
@@ -262,5 +259,8 @@ namespace Easynet.Edge.UI.Server
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
 		Oltp.SegmentValueDataTable SegmentValue_Save(Oltp.SegmentValueDataTable table);
+
+		[OperationContract(IsInitiating = false)] [NetDataContract]
+		ApiMenuItem ApiMenuItem_Get(int i);
 	}
 }

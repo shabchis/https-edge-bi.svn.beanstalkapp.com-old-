@@ -216,7 +216,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				if (onComplete != null)
 					onComplete();
 
-				MessageBoxError("Failed to get campaigns.", ex);
+				MainWindow.MessageBoxError("Failed to get campaigns.", ex);
 				return false;
 			},
 			delegate()
@@ -692,7 +692,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				}
 				catch (Exception ex)
 				{
-					MessageBoxError("Failed to save targets.", ex);
+					MainWindow.MessageBoxError("Failed to save targets.", ex);
 					return false;
 				}
 
@@ -796,7 +796,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			{
 				if (!(row is Oltp.CampaignRow))
 				{
-					MessageBoxError("Please select campaigns only.", null);
+					MainWindow.MessageBoxError("Please select campaigns only.", null);
 					return;
 				}
 				else
@@ -804,7 +804,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			}
 			if (campaigns.Count < 1)
 			{
-				MessageBoxError("Please select one or more campaigns.", null);
+				MainWindow.MessageBoxError("Please select one or more campaigns.", null);
 				return;
 			}
 
@@ -836,7 +836,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				ValidationResult validation =  rule.Validate(valueTextbox.Text, null);
 				if (!validation.IsValid)
 				{
-					MessageBoxError("Please enter valid numbers only.", null);
+					MainWindow.MessageBoxError("Please enter valid numbers only.", null);
 					e.Cancel = true;
 					return;
 				}
@@ -961,7 +961,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void Campaign_dialog_Open(object sender, RoutedEventArgs e)
 		{
 			ListViewItem currentItem = _listTable.GetParentListViewItem(e.OriginalSource as FrameworkElement);
-			bool batch = _listTable._listView.SelectedItems.Count > 1;
+			bool batch = _listTable.ListView.SelectedItems.Count > 1;
 
 			Oltp.CampaignRow row;
 			if (!batch)
@@ -1003,9 +1003,9 @@ namespace Easynet.Edge.UI.Client.Pages
 			SetValue(CurrentItemHasPpcApiProperty, rs.Length > 0 && (rs[0] as Oltp.ChannelRow).HasPpcApi);
 
 			// When opening, select it only if no more than one is already selected
-			if (_listTable._listView.SelectedItems.Count < 2)
+			if (_listTable.ListView.SelectedItems.Count < 2)
 			{
-				_listTable._listView.SelectedItems.Clear();
+				_listTable.ListView.SelectedItems.Clear();
 				currentItem.IsSelected = true;
 			}
 		}
@@ -1079,7 +1079,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void Campaign_dialog_ApplyingChanges(object sender, CancelRoutedEventArgs e)
 		{
-			bool batch = _listTable._listView.SelectedItems.Count > 1;
+			bool batch = _listTable.ListView.SelectedItems.Count > 1;
 			Oltp.CampaignRow tempCampaign = (Campaign_dialog.Content as Oltp.CampaignRow);
 			Oltp.CampaignRow targetCampaign = batch ?
 				null :
@@ -1122,7 +1122,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 				if (error != null)
 				{
-					MessageBoxError(error, null);
+					MainWindow.MessageBoxError(error, null);
 					e.Cancel = true;
 					return;
 				}
@@ -1219,7 +1219,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void Campaign_dialog_AppliedChanges(object sender, CancelRoutedEventArgs e)
 		{
 			// Call the univeral applied change handler
-			Dialog_AppliedChanges<Oltp.CampaignRow>(Campaign_dialog, "Editing Campaign", _listTable._listView, e);
+			Dialog_AppliedChanges<Oltp.CampaignRow>(Campaign_dialog, "Editing Campaign", _listTable.ListView, e);
 		}
 
 		/// <summary>
@@ -1230,7 +1230,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			
 			// Cancel if user regrets
 			if (!e.Cancel)
-				e.Cancel = MessageBoxPromptForCancel(Campaign_dialog);
+				e.Cancel = MainWindow.MessageBoxPromptForCancel(Campaign_dialog);
 
 			if (!e.Cancel)
 			{
@@ -1278,7 +1278,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		{
 			if (_listTable.ListView.SelectedItems.Count < 2)
 			{
-				MessageBoxError("Select two or more campaigns/adgroups to merge.", null);
+				MainWindow.MessageBoxError("Select two or more campaigns/adgroups to merge.", null);
 				return;
 			}
 
@@ -1301,7 +1301,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				)
 				{
 					// Ensure only same types are selected
-					MessageBoxError("The selected items are of different types. Select two or more items of the same type (campaign or adgroup).", null);
+					MainWindow.MessageBoxError("The selected items are of different types. Select two or more items of the same type (campaign or adgroup).", null);
 					return;
 				}
 
@@ -1310,7 +1310,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			if (mergeType == adgroupMerge)
 			{
-				MessageBoxError("Merging adgroups is not supported in this version.", null);
+				MainWindow.MessageBoxError("Merging adgroups is not supported in this version.", null);
 				return;
 			}
 
@@ -1342,7 +1342,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			if (targetCampaign == null)
 			{
 				e.Cancel = true;
-				MessageBoxError("Please select a target campaign.", null);
+				MainWindow.MessageBoxError("Please select a target campaign.", null);
 				return;
 			}
 
@@ -1369,7 +1369,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			delegate(Exception ex)
 			{
 				e.Cancel = true;
-				MessageBoxError("Failed to merge campaigns.", ex);
+				MainWindow.MessageBoxError("Failed to merge campaigns.", ex);
 				return false;
 			},
 			delegate()
@@ -1486,9 +1486,9 @@ namespace Easynet.Edge.UI.Client.Pages
 				AdgroupCreatives_GotFocus(null, null);
 
 			// When opening, select it only if no more than one is already selected
-			if (_listTable._listView.SelectedItems.Count < 2)
+			if (_listTable.ListView.SelectedItems.Count < 2)
 			{
-				_listTable._listView.SelectedItems.Clear();
+				_listTable.ListView.SelectedItems.Clear();
 				currentItem.IsSelected = true;
 			}
 		}
@@ -1665,7 +1665,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				},
 				delegate(Exception ex)
 				{
-					MessageBoxError("Error occured while saving the adgroup's keywords and/or creatives.", ex);
+					MainWindow.MessageBoxError("Error occured while saving the adgroup's keywords and/or creatives.", ex);
 					e.Cancel = true;
 					return false;
 				},
@@ -1723,7 +1723,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			}
 	
 			// Call the univeral applied change handler
-			Dialog_AppliedChanges<Oltp.AdgroupRow>(Adgroup_dialog, "Editing Adgroup", _listTable._listView, minIndex, e);
+			Dialog_AppliedChanges<Oltp.AdgroupRow>(Adgroup_dialog, "Editing Adgroup", _listTable.ListView, minIndex, e);
 
 			if (replaceTarget)
 			{
@@ -1761,7 +1761,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			// Cancel if user regrets
 			if (!e.Cancel)
-				e.Cancel = MessageBoxPromptForCancel(Adgroup_dialog);
+				e.Cancel = MainWindow.MessageBoxPromptForCancel(Adgroup_dialog);
 
 			if (e.Cancel)
 				return;
@@ -1891,7 +1891,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			},
 			delegate(Exception ex)
 			{
-				MessageBoxError("Failed to check the keywords on the server.", ex);
+				MainWindow.MessageBoxError("Failed to check the keywords on the server.", ex);
 				return false;
 			},
 			delegate()
@@ -2045,7 +2045,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				//}
 				//else
 				//{
-					MessageBoxError("A creative must be selected from the list (click on one to select).", null);
+					MainWindow.MessageBoxError("A creative must be selected from the list (click on one to select).", null);
 					return;
 				//}
 			}
@@ -2090,7 +2090,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				DataRow previousItem = _items[index-1];
 				adunitItem = previousItem is Oltp.AdgroupRow ?
 					null : 
-					(ListViewItem) _listTable._listView.ItemContainerGenerator.ContainerFromItem(previousItem as Oltp.CampaignRow);
+					(ListViewItem) _listTable.ListView.ItemContainerGenerator.ContainerFromItem(previousItem as Oltp.CampaignRow);
 			}
 
 			return adunitItem;

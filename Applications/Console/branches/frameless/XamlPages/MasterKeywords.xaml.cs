@@ -182,9 +182,9 @@ namespace Easynet.Edge.UI.Client.Pages
 			}
 				
 			// When opening, select it only if no more than one is already selected
-			if (_listTable._listView.SelectedItems.Count < 2)
+			if (_listTable.ListView.SelectedItems.Count < 2)
 			{
-				_listTable._listView.SelectedItems.Clear();
+				_listTable.ListView.SelectedItems.Clear();
 				currentItem.IsSelected = true;
 			}
 		}
@@ -254,7 +254,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				VisualTree.GetChild<TabControl>(Keyword_dialog).SelectedIndex = 0;
 				_keywordValueField.Focus();
 
-				MessageBoxError("Please enter a valid keyword", null);
+				MainWindow.MessageBoxError("Please enter a valid keyword", null);
 				e.Cancel = true; // No significance since we are not calling dialog.EndApplyChanges()
 				return;
 			}
@@ -275,7 +275,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 					if (tbl.Rows.Count > 0)
 					{
-						MessageBoxError("Keyword already exists.", null);
+						MainWindow.MessageBoxError("Keyword already exists.", null);
 						e.Cancel = true;
 						return;
 					}
@@ -285,7 +285,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			{
 				if (tbl.Rows.Count > 0)
 				{
-					MessageBoxError("Keyword already exists.", null);
+					MainWindow.MessageBoxError("Keyword already exists.", null);
 					e.Cancel = true;
 					return;
 				}
@@ -306,13 +306,13 @@ namespace Easynet.Edge.UI.Client.Pages
 			Oltp.KeywordRow dataItem = Keyword_dialog.TargetContent as Oltp.KeywordRow;
 
 			// Call the univeral applied change handler
-			Dialog_AppliedChanges<Oltp.KeywordRow>(Keyword_dialog, dataItem.Keyword, _listTable._listView, e);
+			Dialog_AppliedChanges<Oltp.KeywordRow>(Keyword_dialog, dataItem.Keyword, _listTable.ListView, e);
 
 			// Disable editing keyword value
 			_keywordValueField.IsEnabled = false;
 
 			// Set correct data template
-			ListViewItem item = _listTable._listView.ItemContainerGenerator.ContainerFromItem(dataItem) as ListViewItem;
+			ListViewItem item = _listTable.ListView.ItemContainerGenerator.ContainerFromItem(dataItem) as ListViewItem;
 			(this.Resources["NameTemplateSelector"] as MasterKeywordsLocal.NameTemplateSelector)
 				.ApplyTemplate(dataItem, item);
 		}
@@ -323,7 +323,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void Keyword_dialog_Closing(object sender, CancelRoutedEventArgs e)
 		{
 			// Cancel if user regrets
-			e.Cancel = MessageBoxPromptForCancel(Keyword_dialog);
+			e.Cancel = MainWindow.MessageBoxPromptForCancel(Keyword_dialog);
 
 			if (e.Cancel)
 				return;
@@ -350,7 +350,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			bool monitor = sender == _buttonMonitor;
 
 			// First mark the correct monitoring state
-			foreach (Oltp.KeywordRow kw in _listTable._listView.SelectedItems)
+			foreach (Oltp.KeywordRow kw in _listTable.ListView.SelectedItems)
 				kw.IsMonitored = monitor;
 			
 
@@ -364,13 +364,13 @@ namespace Easynet.Edge.UI.Client.Pages
 			catch (Exception ex)
 			{
 				// Failed, so cancel and display a message
-				MessageBoxError("Keywords could not be updated.", ex);
+				MainWindow.MessageBoxError("Keywords could not be updated.", ex);
 				_keywords.RejectChanges();
 				return;
 			}
 
-			Oltp.KeywordRow[] rowsToIterate = new Oltp.KeywordRow[_listTable._listView.SelectedItems.Count];
-			_listTable._listView.SelectedItems.CopyTo(rowsToIterate, 0);
+			Oltp.KeywordRow[] rowsToIterate = new Oltp.KeywordRow[_listTable.ListView.SelectedItems.Count];
+			_listTable.ListView.SelectedItems.CopyTo(rowsToIterate, 0);
 
 			foreach (Oltp.KeywordRow kw in rowsToIterate)
 			{
@@ -382,7 +382,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				}
 				else
 				{
-					ListViewItem item = _listTable._listView.ItemContainerGenerator.ContainerFromItem(kw) as ListViewItem;
+					ListViewItem item = _listTable.ListView.ItemContainerGenerator.ContainerFromItem(kw) as ListViewItem;
 					
 					// Apply the correcy template
 					(this.Resources["NameTemplateSelector"] as MasterKeywordsLocal.NameTemplateSelector)

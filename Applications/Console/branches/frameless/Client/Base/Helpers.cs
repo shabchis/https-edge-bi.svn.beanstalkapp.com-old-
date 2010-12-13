@@ -18,7 +18,7 @@ namespace Easynet.Edge.UI.Client
 {
 
 	#region Visual helpers
-	class VisualTree
+	public class VisualTree
 	{
 		public static List<T> GetChildren<T>(DependencyObject parent) where T : DependencyObject
 		{

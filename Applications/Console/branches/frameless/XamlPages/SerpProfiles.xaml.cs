@@ -183,14 +183,14 @@ namespace Easynet.Edge.UI.Client.Pages
 			},
 			delegate(Exception ex)
 			{
-				MessageBoxError("Failed to check if this profile can be run now.", ex);
+				MainWindow.MessageBoxError("Failed to check if this profile can be run now.", ex);
 				return false;
 			},
 			delegate()
 			{
 				if (!canRun)
 				{
-					MessageBoxError("The profile has already been run today and can not be run again.", null);
+					MainWindow.MessageBoxError("The profile has already been run today and can not be run again.", null);
 				}
 				else
 				{
@@ -203,7 +203,7 @@ namespace Easynet.Edge.UI.Client.Pages
 					},
 					delegate(Exception ex)
 					{
-						MessageBoxError("Failed to schedule a profile run.", ex);
+						MainWindow.MessageBoxError("Failed to schedule a profile run.", ex);
 						return false;
 					},
 					delegate()
@@ -241,9 +241,9 @@ namespace Easynet.Edge.UI.Client.Pages
 				tabItem.RaiseEvent(new RoutedEventArgs(TabItem.GotFocusEvent, tabItem));
 				
 			// When opening, select it only if no more than one is already selected
-			if (_listTable._listView.SelectedItems.Count < 2)
+			if (_listTable.ListView.SelectedItems.Count < 2)
 			{
-				_listTable._listView.SelectedItems.Clear();
+				_listTable.ListView.SelectedItems.Clear();
 				currentItem.IsSelected = true;
 			}
 		}
@@ -285,7 +285,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			if (IsMissingData(isNew, _profileKeywordsTable, _profileDomainsTable, _profileSearchEnginesTable))
 			{
-				MessageBoxError("At least one keyword, one domain filter, and one search engine is required for a profile.", null);
+				MainWindow.MessageBoxError("At least one keyword, one domain filter, and one search engine is required for a profile.", null);
 				e.Cancel = true;
 				return;
 			}
@@ -435,7 +435,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				},
 				delegate(Exception ex)
 				{
-					MessageBoxError("Error while saving profile settings.", ex);
+					MainWindow.MessageBoxError("Error while saving profile settings.", ex);
 					e.Cancel = true;
 					return false;
 				},
@@ -464,7 +464,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			Oltp.SerpProfileRow dataItem = Profile_dialog.TargetContent as Oltp.SerpProfileRow;
 
 			// Call the univeral applied change handler
-			Dialog_AppliedChanges<Oltp.SerpProfileRow>(Profile_dialog, dataItem.Name, _listTable._listView, e);
+			Dialog_AppliedChanges<Oltp.SerpProfileRow>(Profile_dialog, dataItem.Name, _listTable.ListView, e);
 		}
 
 		/// <summary>
@@ -488,7 +488,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			// Cancel if user regrets
 			if (!e.Cancel)
-				e.Cancel = MessageBoxPromptForCancel(Profile_dialog);
+				e.Cancel = MainWindow.MessageBoxPromptForCancel(Profile_dialog);
 
 			if (e.Cancel)
 				return;
@@ -861,7 +861,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			//if (!Uri.IsWellFormedUriString(_domainTextbox.Text.Trim(), UriKind.Absolute))
 			//{
-			//	MessageBoxError("Domain must be a proper URL including http: or https:", null);
+			//	MainWindow.MessageBoxError("Domain must be a proper URL including http: or https:", null);
 			//	return;
 			//}
 
@@ -869,7 +869,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				_profileDomainsTable.DomainColumn.ColumnName,
 				_domainTextbox.Text.Trim().Replace("'", "''"))).Length > 0)
 			{
-				MessageBoxError("This filter is already used in this profile.", null);
+				MainWindow.MessageBoxError("This filter is already used in this profile.", null);
 				return;
 			}
 

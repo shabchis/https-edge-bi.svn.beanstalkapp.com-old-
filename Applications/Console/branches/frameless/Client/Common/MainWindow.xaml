@@ -2,7 +2,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:this="clr-namespace:Easynet.Edge.UI.Client"
-	xmlns:local="clr-namespace:Easynet.Edge.UI.Client.MainWindowLocal"
 	x:Name="_mainWindow"
 	ShowsNavigationUI="False"
     Title="Edge.BI"
@@ -19,7 +18,6 @@
 	
 	<Page.Resources>
 		<DropShadowBitmapEffect x:Key="effectShadow" Color="Black" Softness=".4" ShadowDepth="7"/>
-        <local:AccountItemTemplateSelector x:Key="AccountItemTemplateSelector"/>
     </Page.Resources>
 
 	<Grid>

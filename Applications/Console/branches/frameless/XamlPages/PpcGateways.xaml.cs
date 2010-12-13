@@ -344,7 +344,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			if (!String.IsNullOrEmpty(_filterText.Text) && !Int32.TryParse(_filterText.Text, out gatewayIdentifier))
 			{
 			    // Ignore
-			    MessageBoxError("Please enter a valid identifier (number bigger than 0)", null);
+			    MainWindow.MessageBoxError("Please enter a valid identifier (number bigger than 0)", null);
 
 			    // Make re-entering a number easier
 			    _filterText.SelectAll();
@@ -475,9 +475,9 @@ namespace Easynet.Edge.UI.Client.Pages
 			_gatewayAppliedTo.DataContext = new GatewayReferenceData(row);
 
 			// When opening, select it only if no more than one is already selected
-			if (_listTable._listView.SelectedItems.Count < 2)
+			if (_listTable.ListView.SelectedItems.Count < 2)
 			{
-				_listTable._listView.SelectedItems.Clear();
+				_listTable.ListView.SelectedItems.Clear();
 				currentItem.IsSelected = true;
 			}
 		}
@@ -497,7 +497,7 @@ namespace Easynet.Edge.UI.Client.Pages
 					Oltp.GatewayDataTable usedGW = proxy.Service.Gateway_GetByIdentifier(Window.CurrentAccount.ID, editVersion.Identifier);
 					if (usedGW.Rows.Count > 0)
 					{
-						MessageBoxError(
+						MainWindow.MessageBoxError(
 							String.Format("Tracker {0} is already taken. Please use a different identifier.", editVersion.Identifier), null);
 
 						_input_originalID.Focus();
@@ -510,7 +510,7 @@ namespace Easynet.Edge.UI.Client.Pages
 						Oltp.GatewayReservationDataTable reservations = proxy.Service.GatewayReservation_GetByIdentifier(Window.CurrentAccount.ID, editVersion.Identifier);
 						if (reservations.Rows.Count > 0)
 						{
-							MessageBoxError(
+							MainWindow.MessageBoxError(
 								String.Format("Tracker {0} has been reserved by {1}. Please use a different identifier.", editVersion.Identifier, (reservations.Rows[0] as Oltp.GatewayReservationRow).ReservedByUserName), null);
 
 							_input_originalID.Focus();
@@ -541,7 +541,7 @@ namespace Easynet.Edge.UI.Client.Pages
 					}
 					catch (Exception ex)
 					{
-						MessageBoxError("Failed to create a new page for this tracker.", ex);
+						MainWindow.MessageBoxError("Failed to create a new page for this tracker.", ex);
 						e.Cancel = true;
 						return;
 					}
@@ -590,7 +590,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			int selectedIndex = _listTable.ListView.SelectedIndex;
 			
 			// Call the univeral applied change handler
-			Dialog_AppliedChanges<Oltp.GatewayRow>(Gateway_dialog, "Editing Tracker", _listTable._listView, minIndex, e);
+			Dialog_AppliedChanges<Oltp.GatewayRow>(Gateway_dialog, "Editing Tracker", _listTable.ListView, minIndex, e);
 
 			if (replaceTarget)
 			{
@@ -613,7 +613,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void Gateway_dialog_Closing(object sender, CancelRoutedEventArgs e)
 		{
 			// Cancel if user regrets
-			e.Cancel = MessageBoxPromptForCancel(Gateway_dialog);
+			e.Cancel = MainWindow.MessageBoxPromptForCancel(Gateway_dialog);
 
 			if (!e.Cancel)
 			{
@@ -703,7 +703,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 				if (error)
 				{
-					MessageBoxError("Make sure the range is in the correct format: 111-222,333-444,555,666 etc.", null);
+					MainWindow.MessageBoxError("Make sure the range is in the correct format: 111-222,333-444,555,666 etc.", null);
 					_batchRangeText.SelectAll();
 					_batchRangeText.Focus();
 					e.Cancel = true;
@@ -754,7 +754,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			}
 			catch (Exception ex)
 			{
-				MessageBoxError("Failed to apply batch operation.", ex);
+				MainWindow.MessageBoxError("Failed to apply batch operation.", ex);
 				e.Cancel = true;
 				return;
 			}
@@ -783,6 +783,9 @@ namespace Easynet.Edge.UI.Client.Pages
 		
 		private int[] GetOtherAccountsToCheckAgainst()
 		{
+			return new int[0];
+			#region Disabled
+			/*
 			// Get other accounts to check against
 			List<int> otherAccounts = new List<int>();
 			for (int i = 0; i < Window.AvailableAccounts.Count; i++)
@@ -803,6 +806,8 @@ namespace Easynet.Edge.UI.Client.Pages
 			}
 
 			return otherAccounts.ToArray();
+			*/
+			#endregion
 		}
 
 		private string ConvertToDelimitedString(IEnumerable otherAccounts, char delimiter)
@@ -866,7 +871,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 					if (invalid)
 					{
-						MessageBoxError("The page you entered is not a valid URL. \n" +
+						MainWindow.MessageBoxError("The page you entered is not a valid URL. \n" +
 						"Please enter a valid URL or the name of an existing page.", null);
 
 						if (allowNone)
@@ -902,6 +907,8 @@ namespace Easynet.Edge.UI.Client.Pages
 			GatewayReserve_dialog.IsOpen = true;
 			PagePicker_ItemsSourceRequired(_gatewayReserve_Page, EventArgs.Empty);
 
+			#region Disabled
+			/*
 			// Set last used check accounts
 			string[] ids = null;
 			string cookie = App.Cookies[Const.Cookies.AccountsForGatewayIdCheck + Window.CurrentAccount.ID.ToString()];
@@ -913,6 +920,8 @@ namespace Easynet.Edge.UI.Client.Pages
 				ListBoxItem item = (ListBoxItem) _gatewayReserve_crossCheckAccounts.ItemContainerGenerator.ContainerFromIndex(i);
 				VisualTree.GetChild<CheckBox>(item).IsChecked = ids != null && ids.Contains<string>(Window.AvailableAccounts[i].ID.ToString());
 			}
+			*/
+			#endregion
 		}
 
 		/// <summary>
@@ -926,7 +935,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			if (!Int64.TryParse(_gatewayReserve_From.Text, out fromID) || !Int64.TryParse(_gatewayReserve_To.Text, out toID))
 			{
 				// Validation
-				MessageBoxError("Please enter 2 valid identifiers.", null);
+				MainWindow.MessageBoxError("Please enter 2 valid identifiers.", null);
 				_gatewayReserve_From.SelectAll();
 				_gatewayReserve_From.Focus();
 				e.Cancel = true;
@@ -946,7 +955,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				if (existingReservations.Rows.Count > 0)
 				{
 					Oltp.GatewayReservationRow existingReservation = existingReservations.Rows[0] as Oltp.GatewayReservationRow;
-					MessageBoxError(String.Format(
+					MainWindow.MessageBoxError(String.Format(
 						"An overlapping range ({0} to {1}) has already been reserved by {2}.",
 						existingReservation.FromGateway, existingReservation.ToGateway, existingReservation.ReservedByUserName
 						), null);
@@ -1032,7 +1041,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			}
 			catch (Exception ex)
 			{
-				MessageBoxError("Could not complete the reservation.", ex);
+				MainWindow.MessageBoxError("Could not complete the reservation.", ex);
 				e.Cancel = true;
 				return;
 			}
@@ -1088,7 +1097,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			if (!Int32.TryParse(_gatewayCreate_auto.Text, out autoCount))
 			{
-				MessageBoxError("Please enter a valid number.", null);
+				MainWindow.MessageBoxError("Please enter a valid number.", null);
 				_gatewayCreate_auto.SelectAll();
 				_gatewayCreate_auto.Focus();
 				e.Cancel = true;
@@ -1103,7 +1112,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				if (page == null)
 				{
 					// Failed to return a page
-					MessageBoxError("Please select an existing page", null);
+					MainWindow.MessageBoxError("Please select an existing page", null);
 					e.Cancel = true;
 					return;
 				}
@@ -1118,7 +1127,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			if (reservations.Count < 1)
 			{
-				MessageBoxError(
+				MainWindow.MessageBoxError(
 					page == null ?
 						"Cannot generate trackers with an unspecified page because no unspecified range has been reserved." :
 						"Cannot generate trackers for this page because no range has been reserved for it."
@@ -1156,7 +1165,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			}
 			catch (Exception ex)
 			{
-				MessageBoxError("Could not complete the reservation.", ex);
+				MainWindow.MessageBoxError("Could not complete the reservation.", ex);
 				e.Cancel = true;
 				return;
 			}
@@ -1190,7 +1199,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				}
 				catch (Exception ex)
 				{
-					MessageBoxError(String.Format(
+					MainWindow.MessageBoxError(String.Format(
 						"Couldn't copy trackers to clipboard. The trackers that were generated are:\n\n{0}",
 						textForClipboard)
 						, ex);

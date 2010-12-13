@@ -48,7 +48,6 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		public AccountPermissions()
 		{
-			this.Resources.Add("MenuData", Window.MainMenu.XmlProvider);
 			InitializeComponent();
 		}
 
@@ -99,7 +98,7 @@ namespace Easynet.Edge.UI.Client.Pages
 						_copyToAccounts
 						??
 						// else
-						proxy.Service.Account_GetByPermission(GetPermissionValue(this.PageData));
+						proxy.Service.Account_GetByPermission(this.PageData.Path);
 				}
 			},
 			delegate()
@@ -156,14 +155,6 @@ namespace Easynet.Edge.UI.Client.Pages
 			return rows;
 		}
 
-		string GetPermissionValue(XmlLinkedNode x)
-		{
-			return x.Attributes["Permission"] != null ?
-				x.Attributes["Permission"].Value :
-				x.Attributes["Class"] != null ? x.Attributes["Class"].Value :
-					null;
-		}
-
 		/*=========================*/
 		#endregion
 
@@ -200,7 +191,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			},
 			delegate(Exception ex)
 			{
-				MessageBoxError("Failed to remove permissions.", ex);
+				MainWindow.MessageBoxError("Failed to remove permissions.", ex);
 				return false;
 			},
 			delegate()
@@ -237,7 +228,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			},
 			delegate(Exception ex)
 			{
-				MessageBoxError("Failed to open permissions.", ex);
+				MainWindow.MessageBoxError("Failed to open permissions.", ex);
 				return false;
 			},
 			delegate()
@@ -249,7 +240,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				for (int i = 0; i < permissionsList.Items.Count; i++)
 				{
 					XmlLinkedNode x = (XmlLinkedNode)permissionsList.Items[i];
-					string permissionValue = GetPermissionValue(x);
+					string permissionValue = this.PageData.Path;
 
 					if (permissionValue == null)
 						continue;
@@ -377,7 +368,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			delegate(Exception ex)
 			{
 				// Failed, so cancel and display a message
-				MessageBoxError("Error while saving permissions.", ex);
+				MainWindow.MessageBoxError("Error while saving permissions.", ex);
 				e.Cancel = true;
 				return false;
 			},
@@ -449,7 +440,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			},
 			delegate(Exception ex)
 			{
-				MessageBoxError("Failed to add new permissions.", ex);
+				MainWindow.MessageBoxError("Failed to add new permissions.", ex);
 				return false;
 			},
 			delegate()
@@ -468,7 +459,7 @@ namespace Easynet.Edge.UI.Client.Pages
 					);
 
 				(sender as ComboBox).SelectedIndex = 0;
-				_listTable._listView.SelectedIndex = newIndex;
+				_listTable.ListView.SelectedIndex = newIndex;
 			});
 		}
 
@@ -527,7 +518,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			},
 			delegate(Exception ex)
 			{
-				MessageBoxError("Failed to copy permissions.", ex);
+				MainWindow.MessageBoxError("Failed to copy permissions.", ex);
 				return false;
 			},
 			delegate()

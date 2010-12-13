@@ -15,19 +15,6 @@ namespace Easynet.Edge.UI.Client
 	/// </summary>
 	public partial class App: Application
 	{
-		private static CookieManager _cookies;
-
-		public static CookieManager Cookies
-		{
-			get
-			{
-				if (_cookies == null)
-					_cookies = new CookieManager(IsolatedStorageFile.GetUserStoreForApplication());
-
-				return _cookies;
-			}
-		}
-
 		public static PageBase CurrentPage
 		{
 			get
@@ -51,7 +38,7 @@ namespace Easynet.Edge.UI.Client
 
 		private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
-			PageBase.MessageBoxError("An unhandled error has occured.", e.Exception);
+			CurrentPage.Window.HidePageContents(e.Exception);
 			e.Handled = true;
 		}
 	}
