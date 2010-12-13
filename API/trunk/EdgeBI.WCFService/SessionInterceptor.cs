@@ -86,6 +86,7 @@ namespace EdgeBI.WCFService
 
 		}
 		
+		
 		private bool IsSessionValid(string session)
 		{
 			bool isValid = false;

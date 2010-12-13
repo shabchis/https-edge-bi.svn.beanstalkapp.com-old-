@@ -5,18 +5,23 @@ using System.Text;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.Reflection;
 using System.Data;
 using System.Data.SqlClient;
 using Easynet.Edge.Core.Data;
 
 
+
+
 namespace EdgeBI.Objects
 {
+	
 	[DataContract]
 	[TableMap("User_GUI_User")]
 	public class User
 	{
+		
 		[DataMember(Order = 0)]
 		[FieldMap("UserID", IsKey = true)]
 		public int UserID;
