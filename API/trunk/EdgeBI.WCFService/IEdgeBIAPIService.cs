@@ -17,8 +17,8 @@ namespace EdgeBI.WCFService
 	{
 		[OperationContract(Name = "GetUserByID")]		
 		User GetUserByID(string ID);		
-
-		[OperationContract(Name = "GetMenuByParentID",Action="*")]
+		
+		[OperationContract(Name = "GetMenuByParentID")]
 		List<Menu> GetMenu(string parentID);
 
 		[OperationContract(Name = "GetAccountByID")]
