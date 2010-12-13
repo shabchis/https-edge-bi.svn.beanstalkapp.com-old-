@@ -26,10 +26,10 @@ class Login extends Controller {
 		curl_close($curl_handle);  
    
 		$result = json_decode($buffer); 
-		$this->firephp->log($data); 
-		$this->firephp->log($buffer); 
+		//$this->firephp->log($data); 
+		//$this->firephp->log($buffer); 
 		
-		$this->firephp->log($result); 
+		//$this->firephp->log($result); 
  		if(($result ==json_decode('{"LogINResult":-1}'))  )
 		{
 	 	
