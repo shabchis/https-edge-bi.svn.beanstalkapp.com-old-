@@ -60,11 +60,11 @@
 			
 		   	{{each ChildMenues}}
       		<li class="menuheader"><a href="${Name}">${Name}</a>
-        {{if ChildMenues }}
+        {{if ChildMenues != ""}}
 			 <ul data-name ="${Name}" class="parent"> 
 		 
 		  {{each ChildMenues}} 
-        	<li class="menuitem"><a href="${Name}">${Name}</a></li>
+        	<li class="menuitem"><a href="${Path}">${Name}</a></li>
          {{/each}}
           		
           	</ul>
@@ -83,20 +83,49 @@
 	</script>
 	
 	<script id="accountbar"  type="text/x-jquery-tmpl">
-		<div id="accounts">
-		<div id="selected">${Name}</div>
 		
+			
+		{{if Name}}
+	<ul>
+		<li class="campaign"><span>${Name}</span>
+		{{if ChildAccounts}}
+		
+		{{each ChildAccounts}}
+			{{if ChildAccounts}}
+		<li class="parent"><a href="#">${Name}</a>
+			{{if ChildAccounts}}
 		<ul>
 		{{each ChildAccounts}}
-			<li>${Name}</li>
+		<li><a href="#">${Name}</a></li>
 		{{/each}}
 		</ul>
-		</div>
-	
+			{{/if}}
+		</li>
+		{{else}}
+			<li><a href="#">${Name}</a></li>
+		
+		{{/if}}
+		{{/each}}
+		</ul>
+		
+		{{/if}}
+		</li>
+		
+		{{/if}}
+	</ul>
 	</script>
 	<div id="slider"><span><<</span><div id="caption">Hide</div></div>
 		<div id="menu">
-		
+			<div id="accounts" class="folded">	
+			<div id="head">
+				<div id="favicon"><img src="http://www.getfavicon.org/?url=www."+url+".com" /></div>	
+				<div id="selected"></div>
+				<div id="arrow">v</div>
+			</div>
+			<div class="clear"></div>
+			<div id="Campaign"></div>	
+	
+			</div>
 		<div id="sub"></div>
 		</div>
 		
@@ -106,12 +135,13 @@
 
 
 	var menudata = jQuery.parseJSON('<?php echo $json; ?>');
-		
+		var account = 	jQuery.parseJSON('<?php echo $json2; ?>');
 		$( "#menuitems" ).tmpl(menudata).appendTo("#sub");
 		$("#topmenu").tmpl(menudata).appendTo("#top");
-	var account = 	jQuery.parseJSON('<?php echo $json2; ?>');
-		$("#accountbar").tmpl(account).prependTo("#menu");
-
+	
+	//console.log(menudata);
+		$("#accountbar").tmpl(account).appendTo("#accounts");
+console.log(menudata);
 </script>
   <div id="main">
   main content --- 
