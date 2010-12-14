@@ -239,9 +239,8 @@ namespace Easynet.Edge.UI.Client.Pages
 				ListBox permissionsList = VisualTree.GetChild<ListBox>(PermissionTarget_dialog);
 				for (int i = 0; i < permissionsList.Items.Count; i++)
 				{
-					XmlLinkedNode x = (XmlLinkedNode)permissionsList.Items[i];
-					string permissionValue = this.PageData.Path;
-
+					ApiMenuItem x = (ApiMenuItem)permissionsList.Items[i];
+					string permissionValue = x.Path;
 					if (permissionValue == null)
 						continue;
 
@@ -286,8 +285,8 @@ namespace Easynet.Edge.UI.Client.Pages
 			
 			// Retrieve the data of the permission being set
 			ListBoxItem lbItem = VisualTree.GetParent<ListBoxItem>(sender as RadioButton);
-			XmlLinkedNode x = (XmlLinkedNode) lbItem.Content;
-			string permissionValue = GetPermissionValue(x);
+			ApiMenuItem x = (ApiMenuItem)lbItem.Content;
+			string permissionValue = x.Path;
 			if (permissionValue == null)
 				return;
 
@@ -547,6 +546,8 @@ namespace Easynet.Edge.UI.Client.Pages
 	}
 }
 
+#region Local stuff
+
 namespace Easynet.Edge.UI.Client
 {
 	public partial class Const
@@ -556,8 +557,6 @@ namespace Easynet.Edge.UI.Client
 	}
 
 }
-
-
 
 namespace Easynet.Edge.UI.Client.AccountPermissionsLocal
 {
@@ -588,3 +587,5 @@ namespace Easynet.Edge.UI.Client.AccountPermissionsLocal
 		}
 	}
 }
+
+#endregion

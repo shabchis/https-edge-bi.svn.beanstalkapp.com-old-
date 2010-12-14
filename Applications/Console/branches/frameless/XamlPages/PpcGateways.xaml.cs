@@ -27,7 +27,6 @@ namespace Easynet.Edge.UI.Client.Pages
 		/*=========================*/
 
 		private ObservableCollection<DataRow> _items;
-		long? _gatewayIdentifier = null;
 		public Oltp.ChannelDataTable _channelTable;
 		bool _changingChannel = false;
 		TextBox _input_originalID;
