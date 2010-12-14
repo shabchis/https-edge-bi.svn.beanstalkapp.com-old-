@@ -31,25 +31,32 @@ namespace EdgeBI.Objects
 		[FieldMap("Path")]
 		public string Path;
 
-
 		[DataMember(Order = 4)]
+		[FieldMap("Ordinal")]
+		public int Ordinal;
+
+
+		[DataMember(Order = 5)]
 		[FieldMap("MetaData", UseApplyFunction = true)]  //todo change to true and get as dictionary
 		public Dictionary<string, string> MetaData;
 
-		[DataMember(Order = 5)]
+		[DataMember(Order = 6)]
 		public List<Menu> ChildMenues = new List<Menu>();
 
 
 		public static List<Menu> GetMenuByParentID(string path)
 		{
+			Stack<Menu> stackMenu = new Stack<Menu>();
+
 			string newPath = string.Format("{0}%", path);
 			int level = -1;
 			ThingReader<Menu> thingReader;
 			List<Menu> returnObject = new List<Menu>();
+			Dictionary<int, List<Menu>> menuesByLevel = new Dictionary<int, List<Menu>>();
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
 			using (DataManager.Current.OpenConnection())
 			{
-				SqlCommand sqlCommand = DataManager.CreateCommand("select [ID],[Name],[Path],[MetaData] FROM [API_Menus] WHERE [Path] LIKE @Path:NVarChar ORDER BY Path");
+				SqlCommand sqlCommand = DataManager.CreateCommand("select [ID],[Name],[Path],[MetaData],[Ordinal] FROM [API_Menus] WHERE [Path] LIKE @Path:NVarChar ORDER BY Path");
 				sqlCommand.Parameters["@Path"].Value = newPath;
 
 				thingReader = new ThingReader<Menu>(sqlCommand.ExecuteReader(), CustomApply);
@@ -58,32 +65,70 @@ namespace EdgeBI.Objects
 				{
 
 					Menu menu = (Menu)thingReader.Current;
-					if (Regex.Matches(menu.Path, "/").Count < 1)
-					{
-						level = Regex.Matches(menu.Path, "/").Count;
-						returnObject.Add(menu);
-						currrentList = returnObject;
 
+					if (stackMenu.Count == 0)
+						stackMenu.Push(menu);
+					else if (menu.Path.StartsWith(stackMenu.Peek().Path))
+					{
+						stackMenu.Peek().ChildMenues.Add(menu);
+						stackMenu.Push(menu);
 					}
 					else
 					{
-						if (level < Regex.Matches(menu.Path, "/").Count)
+						while (stackMenu.Count != 1 && !menu.Path.StartsWith(stackMenu.Peek().Path))
 						{
-							currrentList = currrentList[currrentList.Count - 1].ChildMenues;
-						}
-						level = Regex.Matches(menu.Path, "/").Count;
-						currrentList.Add(menu);
 
+							stackMenu.Pop();
+						}
+						if (!menu.Path.StartsWith(stackMenu.Peek().Path))
+						{
+							returnObject.Add(stackMenu.Pop());
+							stackMenu.Push(menu);
+						}
+						else
+						{
+							stackMenu.Peek().ChildMenues.Add(menu);
+							//stackMenu.Push(menu);
+						}
 					}
 
+
+
 				}
+
+				
+
 			}
-			
+			//stackMenu.Pop();
+			returnObject.Add(stackMenu.Pop());
+			returnObject = Order(returnObject);
 			return returnObject;
 
 
+
 		}
+
+		private static List<Menu> Order(List<Menu> returnObject)
+		{
+			if (returnObject != null && returnObject.Count>0)
+			{
+				IEnumerable<Menu> menues = returnObject.OrderBy(menu => menu.Ordinal);
+			
+				foreach (Menu menu in menues)
+				{
+					menu.ChildMenues = Order(menu.ChildMenues);
+				}
+				returnObject = menues.ToList();
+			}				
+			return returnObject;
+		}
+
 		
+
+
+
+
+
 		private static Dictionary<string, string> CustomApply(FieldInfo info, IDataRecord reader)
 		{
 
