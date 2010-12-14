@@ -80,57 +80,71 @@ namespace Easynet.Edge.UI.Client
 			//Version v = Assembly.GetExecutingAssembly().GetName().Version;
 			_version.Content = "Version " + v.ToString();
 
-			// Check access
-			bool allowedAccess = false;
-			if (ApplicationDeployment.CurrentDeployment.ActivationUri.Query == null)
-			{
-				HidePageContents("XBAP must be accessed via a web URL.");
-				return;
-			}
-
-			NameValueCollection urlParams =
-				HttpUtility.ParseQueryString(ApplicationDeployment.CurrentDeployment.ActivationUri.Query);
-
-			// Invalid account
-			string accountIDParam = urlParams["account"];
+			// Settings we should get from the deployment URL
 			int accountID;
-			if (accountIDParam == null || !Int32.TryParse(accountIDParam, out accountID))
-			{
-				HidePageContents("Invalid account specified. Please select another account.");
-				return;
-			}
-
-			// Log in from cookie
-			string sessionID = urlParams["session"];
-			if (sessionID != null)
-			{
-				try
-				{
-					OltpProxy.SessionStart(sessionID);
-					allowedAccess = true;
-				}
-				catch {}
-			}
-
-			if (!allowedAccess)
-			{
-				HidePageContents("Your session has expired. Please refresh the page.");
-				return;
-			}
-			CurrentUser = OltpProxy.CurrentUser;
-
-			string menuItemParam = urlParams["page"];
-			if (String.IsNullOrEmpty(menuItemParam))
-			{
-				HidePageContents("No page specified. Please select an item from the menu.");
-				return;
-			}
 			int menuItemID;
-			if (!int.TryParse(menuItemParam, out menuItemID))
+
+			// Normal producion
+			if (ApplicationDeployment.IsNetworkDeployed)
 			{
-				HidePageContents("Invalid page specified. Please select an item from the menu.");
-				return;
+				if (ApplicationDeployment.CurrentDeployment.ActivationUri.Query == null)
+				{
+					HidePageContents("This XBAP must be accessed via the Edge.BI interface.");
+					return;
+				}
+
+				NameValueCollection urlParams =
+					HttpUtility.ParseQueryString(ApplicationDeployment.CurrentDeployment.ActivationUri.Query);
+
+				// Invalid account
+				string accountIDParam = urlParams["account"];
+				if (accountIDParam == null || !Int32.TryParse(accountIDParam, out accountID))
+				{
+					HidePageContents("Invalid account specified. Please select another account.");
+					return;
+				}
+
+				// Log in from session param
+				string sessionID = urlParams["session"];
+				if (sessionID != null)
+				{
+					try
+					{
+						OltpProxy.SessionStart(sessionID);
+						allowedAccess = true;
+					}
+					catch { }
+				}
+
+				// Check access
+				bool allowedAccess = false;
+				if (!allowedAccess)
+				{
+					HidePageContents("Your session has expired. Please refresh the page.");
+					return;
+				}
+				CurrentUser = OltpProxy.CurrentUser;
+
+
+				string menuItemParam = urlParams["page"];
+				if (String.IsNullOrEmpty(menuItemParam))
+				{
+					HidePageContents("No page specified. Please select an item from the menu.");
+					return;
+				}
+				if (!int.TryParse(menuItemParam, out menuItemID))
+				{
+					HidePageContents("Invalid page specified. Please select an item from the menu.");
+					return;
+				}
 			}
+			else
+			{
+				// Local debug scenario
+				accountID = 7;
+				menuItemID = 
+			}
+
 			ApiMenuItem menuItem = null;
 
 			// Get user settings

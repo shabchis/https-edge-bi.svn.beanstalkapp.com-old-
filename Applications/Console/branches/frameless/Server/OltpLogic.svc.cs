@@ -1780,32 +1780,81 @@ namespace Easynet.Edge.UI.Server
 		/*=========================*/
 		//#endregion
 
-		public ApiMenuItem ApiMenuItem_Get(int id)
+		public ApiMenuItem ApiMenuItem_GetAll()
 		{
-			using (DataManager.Current.OpenConnection())
+			List<ApiMenuItem> list = new List<ApiMenuItem>();
+			
+			////////////////
+			string prevConnString = DataManager.ConnectionString;
+			DataManager.ConnectionString = AppSettings.GetAbsolute("AlonConnectionString");
+			////////////////
+			try
 			{
-				SqlCommand cmd = DataManager.CreateCommand("select * from [API_Menus] where ID = @id:int");
-				cmd.Parameters["@id"].Value = id;
-
-				using (SqlDataReader reader = cmd.ExecuteReader())
+				using (DataManager.Current.OpenConnection())
 				{
-					if (reader.Read())
+					SqlCommand cmd = DataManager.CreateCommand("select * from [API_Menus] order by Path");
+
+					using (SqlDataReader reader = cmd.ExecuteReader())
 					{
-						return new ApiMenuItem()
+						while (reader.Read())
 						{
-							ID = reader.GetInt32(reader.GetOrdinal("ID")),
-							Name = reader.GetString(reader.GetOrdinal("Name")),
-							Path = reader.GetString(reader.GetOrdinal("Path")),
-							Metadata = new SettingsCollection(reader.GetString(reader.GetOrdinal("Metadata")))
-						};
-					}
-					else
-					{
-						return null;
+							list.Add(new ApiMenuItem()
+							{
+								ID = reader.GetInt32(reader.GetOrdinal("ID")),
+								Name = reader.GetString(reader.GetOrdinal("Name")),
+								Path = reader.GetString(reader.GetOrdinal("Path")),
+								Metadata = new SettingsCollection(reader.GetString(reader.GetOrdinal("Metadata")))
+							});
+						}
 					}
 				}
 			}
+			finally
+			{
+				////////////////
+				DataManager.ConnectionString = prevConnString;
+				////////////////
+			}
+		}
 
+		public ApiMenuItem ApiMenuItem_GetByID(int id)
+		{
+			////////////////
+			string prevConnString = DataManager.ConnectionString;
+			DataManager.ConnectionString = AppSettings.GetAbsolute("AlonConnectionString");
+			////////////////
+			try
+			{
+				using (DataManager.Current.OpenConnection())
+				{
+					SqlCommand cmd = DataManager.CreateCommand("select * from [API_Menus] where ID = @id:int");
+					cmd.Parameters["@id"].Value = id;
+
+					using (SqlDataReader reader = cmd.ExecuteReader())
+					{
+						if (reader.Read())
+						{
+							return new ApiMenuItem()
+							{
+								ID = reader.GetInt32(reader.GetOrdinal("ID")),
+								Name = reader.GetString(reader.GetOrdinal("Name")),
+								Path = reader.GetString(reader.GetOrdinal("Path")),
+								Metadata = new SettingsCollection(reader.GetString(reader.GetOrdinal("Metadata")))
+							};
+						}
+						else
+						{
+							return null;
+						}
+					}
+				}
+			}
+			finally
+			{
+				////////////////
+				DataManager.ConnectionString = prevConnString;
+				////////////////
+			}
 		}
 
 	}
