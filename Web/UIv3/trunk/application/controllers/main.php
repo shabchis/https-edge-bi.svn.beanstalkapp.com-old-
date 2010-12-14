@@ -13,10 +13,10 @@ class Main extends Controller {
  	  $json =  file_get_contents($mainurl);
 	$accounturl = 'http://AlonYa-PC/API/EdgeBIAPIService.svc/accounts';
 		$json2 =     file_get_contents($accounturl);
-   	
+
      $data["json"]=$json;    
 	 $data["json2"]=$json2;    
- // $this->firephp->log($data["json2"]);
+ $this->firephp->log(json_decode($data["json"]));
 		
 	$this->load->view('includes/template',$data);		
  

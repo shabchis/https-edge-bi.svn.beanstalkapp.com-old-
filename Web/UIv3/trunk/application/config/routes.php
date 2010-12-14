@@ -39,9 +39,12 @@
 | routes must come before any wildcard or regular expression routes.
 |
 */
-
 $route['default_controller'] = "main";
 $route['scaffolding_trigger'] = "";
+$route['Intelligence/Dashboard/Test1']= "dashboard";
+$route['Intelligence/Dashboard/Test1/1']= "dashboard";
+$route['Intelligence/Dashboard/:any']= "dashboard";
+$route['Intelligence/:any']= "Home";
 
 
 

@@ -13,7 +13,9 @@
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>  
 		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+		<script src="<?php base_url();?>assets/js/jquery.dropshadow.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.tmpl.js"></script>
+		<script src="<?php base_url();?>assets/js/DD_roundies_0.0.2a.js"></script>
 		<script src="<?php base_url();?>assets/js/scripts.js"></script>
 	</head>
 
@@ -23,16 +25,16 @@
 			 {{if Name == "TOPBAR"}}
 			 	 <ul>
 			 	{{each ChildMenues}}
-					<li><a href="#">${Name}</a></li>
+					<li>| <a href="#">${Name}</a></li>
 			  {{/each}}
           		 </ul>
 			 {{/if}}
 			</script>
 		<header>
-			<img src="<?php base_url();?>assets/img/edge_bi_logo.png" id="logo" />
+			<img src="<?php base_url();?>assets/img/logo_01.png" id="logo" />
 			<div id="login">
 				<div id="user">
-				Logged in as <span>Doron</span>
+				<span>Doron</span> (<span id="loginout">Log Out</span>)
 				</div>
 				
 				<div id="top"></div>
@@ -64,7 +66,16 @@
 			 <ul data-name ="${Name}" class="parent"> 
 		 
 		  {{each ChildMenues}} 
-        	<li class="menuitem"><a href="${Path}">${Name}</a></li>
+        	<li class="menuitem"><a href="${Path}">${Name}</a>
+        	{{if ChildMenues }}
+      			<ul data-name ="${Name}">  	
+           	  {{each ChildMenues}}
+           	  
+           	  	<li class="menuitem"><a href="${Path}">${Name}</a>
+        	  {{/each}}
+        	  </ul>
+        	</li>
+        	{{/if}}
          {{/each}}
           		
           	</ul>
@@ -114,13 +125,24 @@
 		{{/if}}
 	</ul>
 	</script>
-	<div id="slider"><span><<</span><div id="caption">Hide</div></div>
+	<script type="text/javascript">
+	$(function(){
+	$("#accounts").delegate("li","click",function(){
+  
+  var url = "ynet";
+  console.log(url);
+  
+  });
+	});
+	  
+	</script>
+	<div id="slider"><span><img src="<?php base_url();?>assets/img/2arrows-close_03.gif" /></span><div id="caption">Hide</div></div>
 		<div id="menu">
 			<div id="accounts" class="folded">	
 			<div id="head">
-				<div id="favicon"><img src="http://www.getfavicon.org/?url=www."+url+".com" /></div>	
+				<div id="favicon"><img src='http://www.google.com/s2/favicons?domain=www.888.com'></img></div>	
 				<div id="selected"></div>
-				<div id="arrow">v</div>
+				<div id="arrow" class="regular">&nbsp;</div>
 			</div>
 			<div class="clear"></div>
 			<div id="Campaign"></div>	
@@ -131,17 +153,19 @@
 		
  
 
-<script>
+<script type="text/javascript">
+/*get url for favicon, must be here*/
+
 
 
 	var menudata = jQuery.parseJSON('<?php echo $json; ?>');
 		var account = 	jQuery.parseJSON('<?php echo $json2; ?>');
-		$( "#menuitems" ).tmpl(menudata).appendTo("#sub");
+		$("#menuitems").tmpl(menudata).appendTo("#sub");
 		$("#topmenu").tmpl(menudata).appendTo("#top");
-	
-	//console.log(menudata);
+
+
 		$("#accountbar").tmpl(account).appendTo("#accounts");
-console.log(menudata);
+
 </script>
   <div id="main">
   main content --- 
