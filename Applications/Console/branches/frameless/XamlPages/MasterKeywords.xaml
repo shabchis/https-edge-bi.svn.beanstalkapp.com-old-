@@ -1,7 +1,7 @@
 ﻿<this:PageBase x:Class="Easynet.Edge.UI.Client.Pages.MasterKeywords"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:this="clr-namespace:Easynet.Edge.UI.Client"
+	xmlns:this="clr-namespace:Easynet.Edge.UI.Client;assembly=Edge.UI.Client"
 	xmlns:local="clr-namespace:Easynet.Edge.UI.Client.MasterKeywordsLocal"
 >
 	

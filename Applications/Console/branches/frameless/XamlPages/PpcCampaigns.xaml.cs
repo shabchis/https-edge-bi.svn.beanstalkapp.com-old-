@@ -971,7 +971,8 @@ namespace Easynet.Edge.UI.Client.Pages
 			}
 			else
 			{
-				row = Campaign_GetBatchRow(_listTable.ListView.SelectedItems);
+				throw new NotImplementedException("BATCH");
+				//row = Campaign_GetBatchRow(_listTable.ListView.SelectedItems);
 				if (row == null)
 					return;
 			}
@@ -1021,7 +1022,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			Dictionary<DataColumn, bool> nullified = new Dictionary<DataColumn, bool>();
 			List<Oltp.CampaignRow> targetCampaigns = new List<Oltp.CampaignRow>();
 
-			foreach (DataRow selected in list)
+			foreach (DataRow selected in source)
 			{
 				if (!(selected is Oltp.CampaignRow))
 				{

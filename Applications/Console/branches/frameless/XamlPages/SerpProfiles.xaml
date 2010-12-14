@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	xmlns:sc="clr-namespace:System.Collections;assembly=mscorlib"
-	xmlns:this="clr-namespace:Easynet.Edge.UI.Client"
+	xmlns:this="clr-namespace:Easynet.Edge.UI.Client;assembly=Edge.UI.Client"
 	xmlns:local="clr-namespace:Easynet.Edge.UI.Client.SerpProfilesLocal"
 >
 	

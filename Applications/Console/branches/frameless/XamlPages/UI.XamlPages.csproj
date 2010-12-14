@@ -126,11 +126,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Graphics\adgroupTargets.png" />
-    <Content Include="Graphics\button_ok.png" />
-    <Content Include="Graphics\campaignTargets.png" />
-    <Content Include="Graphics\cancel.png" />
-    <Content Include="Graphics\edit_add.png" />
+    <Resource Include="Graphics\adgroupTargets.png" />
+    <Resource Include="Graphics\button_ok.png" />
+    <Resource Include="Graphics\campaignTargets.png" />
+    <Resource Include="Graphics\cancel.png" />
+    <Resource Include="Graphics\edit_add.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
