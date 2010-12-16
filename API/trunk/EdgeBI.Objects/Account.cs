@@ -25,11 +25,8 @@ namespace EdgeBI.Objects
 		[FieldMap("Parent_ID")]
 		public int? ParentID;
 
-
-
 		[DataMember(Order = 3)]
 		public List<Account> ChildAccounts = new List<Account>();
-
 
 		private static object CustomApply(FieldInfo info, IDataRecord reader)
 		{
@@ -38,8 +35,6 @@ namespace EdgeBI.Objects
 
 		public static List<Account> GetAccount(int? id, bool firstTime)
 		{
-
-
 			ThingReader<Account> thingReader;
 			List<Account> returnObject = new List<Account>();
 			Dictionary<int?, Account> parents = new Dictionary<int?, Account>();
@@ -47,17 +42,8 @@ namespace EdgeBI.Objects
 			using (DataManager.Current.OpenConnection())
 			{
 				SqlCommand sqlCommand = null;
-
-
 				sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID FROM [V_User_GUI_Accounts]   ORDER BY Parent_ID", CommandType.Text);
-
-
-
-
-
-
 				thingReader = new ThingReader<Account>(sqlCommand.ExecuteReader(), CustomApply);
-
 				while (thingReader.Read())
 				{
 					Account account = thingReader.Current;
@@ -68,12 +54,8 @@ namespace EdgeBI.Objects
 			
 					if (!parents.ContainsKey(account.ID))
 						parents.Add(account.ID, account);
-
 				}
-
 			}
-
-
 			return returnObject;
 		}
 	}

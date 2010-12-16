@@ -485,10 +485,6 @@ namespace EdgeBI.Objects
 			return selectClause.ToString();
 		}
 		#endregion
-
-
-
-
 	}
 	#region AtrributesClass
 	[AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = false)]

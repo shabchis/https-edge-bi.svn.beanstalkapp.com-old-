@@ -39,14 +39,15 @@ namespace EdgeBI.WCFService
 		[WebGet(UriTemplate = "menu?Path={parentID}", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
 		public List<Menu> GetMenu(string menuID)
 		{
-			
-				List<Menu> m = Menu.GetMenuByParentID(menuID);
-				if (m == null || m.Count == 0)
-					WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.NotFound;
+			string currentUser = WebOperationContext.Current.IncomingRequest.Headers["user"];
 
-				return m;
-			
-			 
+			List<Menu> m = Menu.GetMenuByParentID(menuID, currentUser);
+			if (m == null || m.Count == 0)
+				WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.NotFound;
+
+			return m;
+
+
 
 		}
 
@@ -60,7 +61,7 @@ namespace EdgeBI.WCFService
 		[WebGet(UriTemplate = "Accounts", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
 		public List<Account> GetAccount()
 		{
-			
+
 			List<Account> acc = Account.GetAccount(null, true);
 			return acc;
 		}
@@ -95,20 +96,20 @@ namespace EdgeBI.WCFService
 				}
 				else
 				{
-					WebOperationContext.Current.OutgoingResponse.StatusCode =HttpStatusCode.Unauthorized;
+					WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.Unauthorized;
 					WebOperationContext.Current.OutgoingResponse.StatusDescription = "Wrong user name/password";
 
 				}
 
-		
-					
+
+
 
 
 			}
 			return session;
 		}
 
-		
+
 
 
 

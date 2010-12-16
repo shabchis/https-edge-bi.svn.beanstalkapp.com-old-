@@ -30,7 +30,8 @@ namespace EdgeBI.WCFService
 	{
 		private const string KeyEncrypt = "5c51374e366f41297356413c71677220386c534c394742234947567840";
 		private const string SessionHeader = "x-edgebi-session";
-		private const string LogInMessageAdress = "http://localhost:54796/EdgeBIAPIService.svc/sessions";
+		private const string LogInMessageAdress = "/api/EdgeBIAPIService.svc/sessions";
+												
 		public SessionInterceptor()
 			: base(false)
 		{
@@ -38,7 +39,11 @@ namespace EdgeBI.WCFService
 
 		public override void ProcessRequest(ref System.ServiceModel.Channels.RequestContext requestContext)
 		{
-			if (bool.Parse(AppSettings.GetAbsolute("CheckSession"))==true)
+			Message request = requestContext.RequestMessage;
+			HttpRequestMessageProperty requestProp = (HttpRequestMessageProperty)request.Properties[HttpRequestMessageProperty.Name];
+			
+		
+			if (bool.Parse(AppSettings.GetAbsolute("CheckSession")) == true)
 			{
 				Message reply;
 				reply = Message.CreateMessage(MessageVersion.None, null);
@@ -47,13 +52,13 @@ namespace EdgeBI.WCFService
 				{
 					return;
 				}
+				
+				
 
-				Message request = requestContext.RequestMessage;
 
-
-				HttpRequestMessageProperty requestProp = (HttpRequestMessageProperty)request.Properties[HttpRequestMessageProperty.Name];
+				
 				NameValueCollection queryParams = HttpUtility.ParseQueryString(requestProp.QueryString);
-				if (request.Properties.Via.OriginalString != LogInMessageAdress)
+				if (request.Properties.Via.LocalPath.ToUpper() != LogInMessageAdress.ToUpper())
 				{
 					if (requestProp.Headers[SessionHeader] == null)//case header not specified
 					{
@@ -67,14 +72,22 @@ namespace EdgeBI.WCFService
 					else
 					{
 						string session = requestProp.Headers[SessionHeader];
-						if (!IsSessionValid(session)) //if session is valid
+						int userCode;
+						if (!IsSessionValid(session,out userCode)) //if session is valid
 						{
+							responseProp.StatusCode = HttpStatusCode.Unauthorized;
 							responseProp.StatusDescription = ("session is not exist or out of date");
 							responseProp.Headers[HttpResponseHeader.ContentType] = "text/html";
 							reply.Properties[HttpResponseMessageProperty.Name] = responseProp;
 							requestContext.Reply(reply);
 							// set the request context to null to terminate processing of this request
 							requestContext = null;
+
+						}
+						else
+						{
+
+							requestProp.Headers.Add("xUserCode", "userCode");
 
 						}
 					}
@@ -87,7 +100,7 @@ namespace EdgeBI.WCFService
 		}
 		
 		
-		private bool IsSessionValid(string session)
+		private bool IsSessionValid(string session,out int userCode)
 		{
 			bool isValid = false;
 			int sessionID = 0;
@@ -102,7 +115,13 @@ namespace EdgeBI.WCFService
 				using (SqlCommand sqlCommand = DataManager.CreateCommand("Session_ValidateSession(@SessionID:Int)", System.Data.CommandType.StoredProcedure))
 				{
 					sqlCommand.Parameters["@SessionID"].Value = sessionID;
-					isValid = System.Convert.ToBoolean(sqlCommand.ExecuteScalar());
+					using (SqlDataReader sqlDataReader=sqlCommand.ExecuteReader())
+					{
+						isValid = System.Convert.ToBoolean(sqlDataReader[0]);
+						userCode = System.Convert.ToInt32(sqlDataReader[1]);
+					}
+					
+					
 
 
 				}

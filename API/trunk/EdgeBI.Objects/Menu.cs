@@ -41,11 +41,12 @@ namespace EdgeBI.Objects
 		public Dictionary<string, string> MetaData;
 
 		[DataMember(Order = 6)]
-		public List<Menu> ChildMenues = new List<Menu>();
+		public List<Menu> ChildItems = new List<Menu>();
 
 
 		public static List<Menu> GetMenuByParentID(string path)
 		{
+			
 			Stack<Menu> stackMenu = new Stack<Menu>();
 
 			string newPath = string.Format("{0}%", path);
@@ -70,7 +71,7 @@ namespace EdgeBI.Objects
 						stackMenu.Push(menu);
 					else if (menu.Path.StartsWith(stackMenu.Peek().Path))
 					{
-						stackMenu.Peek().ChildMenues.Add(menu);
+						stackMenu.Peek().ChildItems.Add(menu);
 						stackMenu.Push(menu);
 					}
 					else
@@ -87,24 +88,16 @@ namespace EdgeBI.Objects
 						}
 						else
 						{
-							stackMenu.Peek().ChildMenues.Add(menu);
+							stackMenu.Peek().ChildItems.Add(menu);
 							//stackMenu.Push(menu);
 						}
 					}
-
-
-
 				}
-
-				
-
 			}
 			//stackMenu.Pop();
 			returnObject.Add(stackMenu.Pop());
 			returnObject = Order(returnObject);
 			return returnObject;
-
-
 
 		}
 
@@ -116,23 +109,14 @@ namespace EdgeBI.Objects
 			
 				foreach (Menu menu in menues)
 				{
-					menu.ChildMenues = Order(menu.ChildMenues);
+					menu.ChildItems = Order(menu.ChildItems);
 				}
 				returnObject = menues.ToList();
 			}				
 			return returnObject;
 		}
-
-		
-
-
-
-
-
 		private static Dictionary<string, string> CustomApply(FieldInfo info, IDataRecord reader)
 		{
-
-
 			Dictionary<string, string> metadata = new Dictionary<string, string>();
 			Regex settingParser = new Regex(@"\b[A-Za-z]+[A-Za-z0-9-_/=\+]*\s*:[^;:]*");
 			Regex keyParser = new Regex(@"^\b[A-Za-z]+[A-Za-z0-9-_/=\+]*");
@@ -172,8 +156,6 @@ namespace EdgeBI.Objects
 				throw;
 			}
 			return metadata;
-
-
 		}
 
 		//System.Data.SqlClient.SqlCommand cmd = Easynet.Edge.Core.Data.DataManager.CreateCommand("User_GetAllPermissions(@userID:int)");
