@@ -41,10 +41,20 @@
 */
 $route['default_controller'] = "main";
 $route['scaffolding_trigger'] = "";
-$route['Intelligence/Dashboard/Test1']= "dashboard";
-$route['Intelligence/Dashboard/Test1/1']= "dashboard";
-$route['Intelligence/Dashboard/:any']= "dashboard";
+
+// Merge controller names from menu
+global $MENU_ROUTES;
+if(!empty($MENU_ROUTES)) $route = array_merge($route,$MENU_ROUTES);
+
+
+/*
 $route['Intelligence/:any']= "Home";
+$route['Intelligence/Dashboard/Test1']= "dashboard";
+$route['Intelligence/Dashboard/Test2']="dashboard";
+$route['Intelligence/Dashboard/Test1/1']="dashboard";
+$route['Intelligence/Dashboard/:any/:any']= "dashboard";
+$route['Intelligence/Dashboard/:any']= "dashboard";
+*/
 
 
 
