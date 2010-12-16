@@ -8,14 +8,6 @@
 	FontFamily="Verdana"
 	FontSize="12px"
 >
-	
-	<Page.Background>
-		<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-			<GradientStop Offset="0" Color="#EFEFEF"/>
-			<GradientStop Offset="0.07" Color="#FFFFFF"/>
-		</LinearGradientBrush>
-	</Page.Background>
-	
 	<Page.Resources>
 		<DropShadowBitmapEffect x:Key="effectShadow" Color="Black" Softness=".4" ShadowDepth="7"/>
     </Page.Resources>

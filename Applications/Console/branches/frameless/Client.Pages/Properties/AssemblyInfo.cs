@@ -6,12 +6,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Edge.UI.XamlPages")]
+[assembly: AssemblyTitle("Edge.UI.Client.Pages")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("easynet")]
-[assembly: AssemblyProduct("Pages")]
-[assembly: AssemblyCopyright("Copyright © easynet 2010")]
+[assembly: AssemblyCompany("Edge.BI")]
+[assembly: AssemblyProduct("Edge.UI.Client.Pages")]
+[assembly: AssemblyCopyright("Copyright © Edge.BI 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

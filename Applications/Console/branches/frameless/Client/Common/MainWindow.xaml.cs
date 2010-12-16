@@ -89,7 +89,7 @@ namespace Easynet.Edge.UI.Client
 			{
 				if (ApplicationDeployment.CurrentDeployment.ActivationUri.Query == null)
 				{
-					HidePageContents("This XBAP must be accessed via the Edge.BI interface.");
+					HidePageContents("This page must be accessed via the Edge.BI interface.");
 					return;
 				}
 
@@ -106,6 +106,7 @@ namespace Easynet.Edge.UI.Client
 
 				// Log in from session param
 				string sessionID = urlParams["session"];
+				bool allowedAccess = false;
 				if (sessionID != null)
 				{
 					try
@@ -117,7 +118,6 @@ namespace Easynet.Edge.UI.Client
 				}
 
 				// Check access
-				bool allowedAccess = false;
 				if (!allowedAccess)
 				{
 					HidePageContents("Your session has expired. Please refresh the page.");
@@ -140,9 +140,18 @@ namespace Easynet.Edge.UI.Client
 			}
 			else
 			{
-				// Local debug scenario
-				accountID = 7;
-				menuItemID = 
+				#if DEBUG
+				{
+					// Local debug scenario
+					OltpProxy.SessionStart(null);
+					accountID = 7;
+					menuItemID = 7;
+				}
+				#else
+				{
+					throw new InvalidOperationException("This page must be accessed via the Edge.BI interface.");
+				}
+				#endif
 			}
 
 			ApiMenuItem menuItem = null;
@@ -154,7 +163,7 @@ namespace Easynet.Edge.UI.Client
 				{
 					_accountsTable = proxy.Service.Account_Get();
 					_userPermissions = proxy.Service.User_GetAllPermissions();
-					menuItem = proxy.Service.ApiMenuItem_Get(menuItemID);
+					menuItem = proxy.Service.ApiMenuItem_GetByID(menuItemID);
 				}
 			},
 			delegate(Exception ex)
@@ -164,7 +173,7 @@ namespace Easynet.Edge.UI.Client
 			},
 			delegate()
 			{
-				DataRow[] rs = _accountsTable.Select("ID = " + accountIDParam);
+				DataRow[] rs = _accountsTable.Select("ID = " + accountID.ToString());
 				if (rs.Length < 1)
 				{
 					HidePageContents("Specified account was not found. Please select another account.");
@@ -203,12 +212,13 @@ namespace Easynet.Edge.UI.Client
 			}
 			_asyncHandles.Clear();
 
-			// Try to get the target page type
-			Type newPageType = Type.GetType(className, false);
 
+			#region DisplayPage()
 			// This is performed after we load the target DLL
-			Action displayPageAction = delegate()
+			Action displayPageDelegate = delegate()
 			{
+				// Try to get the target page type
+				Type newPageType = Type.GetType(className, false);
 				if (newPageType == null)
 				{
 					HidePageContents("Could not load the requested page - class not found.");
@@ -246,17 +256,18 @@ namespace Easynet.Edge.UI.Client
 				this.FloatingDialogContainer.Children.Clear();
 				GC.Collect();
 			};
+			#endregion
 
 			// Resolve the class reference
-			if (newPageType == null)
+			string assemblyAddress = menuItem.Metadata["WPF-assembly"];
+			if (String.IsNullOrEmpty(assemblyAddress))
 			{
-				string assemblyAddress = menuItem.Metadata["WPF-assembly"];
-				if (String.IsNullOrEmpty(assemblyAddress))
-				{
-					HidePageContents("Could not load the requested page - DLL not specified.");
-					return;
-				}
+				HidePageContents("Could not load the requested page - DLL not specified.");
+				return;
+			}
 
+			if (t)
+			{
 				AsyncOperation(
 					delegate()
 					{
@@ -268,12 +279,11 @@ namespace Easynet.Edge.UI.Client
 						}
 					},
 					HidePageContents,
-					displayPageAction);
-
+					displayPageDelegate);
 			}
 			else
 			{
-				displayPageAction();
+				displayPageDelegate();
 			}
 
 		}
