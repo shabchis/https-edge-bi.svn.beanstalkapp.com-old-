@@ -8,8 +8,8 @@
     <ProjectGuid>{E3340E17-48E7-425A-ADA4-F59AB6812B1B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Easynet.Edge.UI.XamlPages</RootNamespace>
-    <AssemblyName>Edge.UI.XamlPages</AssemblyName>
+    <RootNamespace>Easynet.Edge.UI.Client.Pages</RootNamespace>
+    <AssemblyName>Edge.UI.Client.Pages</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

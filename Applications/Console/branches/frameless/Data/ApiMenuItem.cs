@@ -11,6 +11,6 @@ namespace Easynet.Edge.UI.Data
 		public int ID;
 		public string Name;
 		public string Path;
-		public SettingsCollection Metadata;
+		public Dictionary<string,string> Metadata;
 	}
 }

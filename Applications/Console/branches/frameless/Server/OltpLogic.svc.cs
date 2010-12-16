@@ -52,7 +52,18 @@ namespace Easynet.Edge.UI.Server
 		public Oltp.UserDataTable User_LoginBySessionID(string sessionID)
 		{
 			// implement login system
+			#if DEBUG
+			//-----------------------
+			Oltp.UserDataTable table = From<UserTableAdapter>().GetByEmail("doron@edge.bi", "asdfhjkl");
+			if (table.Rows.Count < 1)
+				throw new AuthenticationException("Incorrect user/password.");
+
+			CurrentUser = (Oltp.UserRow)table.Rows[0];
+			return table;
+			//-----------------------
+			#else
 			throw new NotImplementedException();
+			#endif
 		}
 
 		public Oltp.UserDataTable User_GetByGroup(int groupID)
@@ -1780,7 +1791,7 @@ namespace Easynet.Edge.UI.Server
 		/*=========================*/
 		//#endregion
 
-		public ApiMenuItem ApiMenuItem_GetAll()
+		public ApiMenuItem[] ApiMenuItem_GetAll()
 		{
 			List<ApiMenuItem> list = new List<ApiMenuItem>();
 			
@@ -1815,6 +1826,8 @@ namespace Easynet.Edge.UI.Server
 				DataManager.ConnectionString = prevConnString;
 				////////////////
 			}
+
+			return list.ToArray();
 		}
 
 		public ApiMenuItem ApiMenuItem_GetByID(int id)
@@ -1839,7 +1852,8 @@ namespace Easynet.Edge.UI.Server
 								ID = reader.GetInt32(reader.GetOrdinal("ID")),
 								Name = reader.GetString(reader.GetOrdinal("Name")),
 								Path = reader.GetString(reader.GetOrdinal("Path")),
-								Metadata = new SettingsCollection(reader.GetString(reader.GetOrdinal("Metadata")))
+								Metadata = new SettingsCollection(reader.GetString(reader.GetOrdinal("Metadata"))).ToDictionary()
+									
 							};
 						}
 						else
