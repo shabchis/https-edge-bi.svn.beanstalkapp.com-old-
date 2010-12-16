@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using EdgeBI.Objects;
+using Easynet.Edge.Core.Services;
 
 namespace EdgeBI.WCFService
 {
@@ -16,9 +17,9 @@ namespace EdgeBI.WCFService
 	public interface IEdgeBIAPIService
 	{
 		[OperationContract(Name = "GetUserByID")]		
-		User GetUserByID(string ID);		
-		
-		[OperationContract(Name = "GetMenuByParentID")]
+		User GetUserByID(string ID);
+
+		[OperationContract][NetDataContract]
 		List<Menu> GetMenu(string parentID);
 
 		[OperationContract(Name = "GetAccountByID")]
