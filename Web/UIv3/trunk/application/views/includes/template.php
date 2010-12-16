@@ -16,6 +16,8 @@
 		<script src="<?php base_url();?>assets/js/jquery.dropshadow.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.tmpl.js"></script>
 		<script src="<?php base_url();?>assets/js/DD_roundies_0.0.2a.js"></script>
+		<script src="<?php base_url();?>assets/js/jquery.ba-hashchange.js"></script>
+		<script src="<?php base_url();?>assets/js/animatetoselector.jquery.js"></script>
 		<script src="<?php base_url();?>assets/js/scripts.js"></script>
 	</head>
 
@@ -34,7 +36,7 @@
 			<img src="<?php base_url();?>assets/img/logo_01.png" id="logo" />
 			<div id="login">
 				<div id="user">
-				<span>Doron</span> (<span id="loginout">Log Out</span>)
+				<span>Doron</span> <span id="loginout"><a href="login">(Log Out)</a> </span>
 				</div>
 				
 				<div id="top"></div>
@@ -57,19 +59,19 @@
 	<h2 class="trigger"><span> ${Name} </span></h2>
 	<div class='toggle_container'>
   		<div class='block'>
-  		{{if ChildMenues }}
+  		{{if ChildItems }}
   		    <ul class="list">
 			
-		   	{{each ChildMenues}}
-      		<li class="menuheader"><a href="${Name}">${Name}</a>
-        {{if ChildMenues != ""}}
+		   	{{each ChildItems}}
+      		<li class="menuheader"><a href="${Path}">${Name}</a>
+        {{if ChildItems != ""}}
 			 <ul data-name ="${Name}" class="parent"> 
 		 
-		  {{each ChildMenues}} 
+		  {{each ChildItems}} 
         	<li class="menuitem"><a href="${Path}">${Name}</a>
-        	{{if ChildMenues }}
+        	{{if ChildItems }}
       			<ul data-name ="${Name}">  	
-           	  {{each ChildMenues}}
+           	  {{each ChildItems}}
            	  
            	  	<li class="menuitem"><a href="${Path}">${Name}</a>
         	  {{/each}}
@@ -96,14 +98,14 @@
 	<script id="accountbar"  type="text/x-jquery-tmpl">
 		
 			
-		{{if Name}}
+		{{if Name }}
 	<ul>
-		<li class="campaign"><span>${Name}</span>
+		<li class="campaign"><span>${ Name }</span>
 		{{if ChildAccounts}}
 		
 		{{each ChildAccounts}}
 			{{if ChildAccounts}}
-		<li class="parent"><a href="#">${Name}</a>
+		<li class="parent"><a href="#">${ Name }</a>
 			{{if ChildAccounts}}
 		<ul>
 		{{each ChildAccounts}}
@@ -130,17 +132,17 @@
 	$("#accounts").delegate("li","click",function(){
   
   var url = "ynet";
-  console.log(url);
+  //console.log(url);
   
   });
 	});
 	  
 	</script>
-	<div id="slider"><span><img src="<?php base_url();?>assets/img/2arrows-close_03.gif" /></span><div id="caption">Hide</div></div>
+	<div id="slider"><span><img src="<?php base_url();?>assets/img/arrows_04.png" /></span><div id="caption">Hide</div></div>
 		<div id="menu">
 			<div id="accounts" class="folded">	
 			<div id="head">
-				<div id="favicon"><img src='http://www.google.com/s2/favicons?domain=www.888.com'></img></div>	
+				<div id="favicon"><img src='<?php base_url();?>assets/img/favicon4.ico'></img></div>	
 				<div id="selected"></div>
 				<div id="arrow" class="regular">&nbsp;</div>
 			</div>
@@ -158,9 +160,10 @@
 
 
 
-	var menudata = jQuery.parseJSON('<?php echo $json; ?>');
-		var account = 	jQuery.parseJSON('<?php echo $json2; ?>');
-		$("#menuitems").tmpl(menudata).appendTo("#sub");
+	var menudata = jQuery.parseJSON('<?php echo $menu; ?>');
+		var account = 	jQuery.parseJSON('<?php echo $account; ?>');
+ 		var menu =		$("#menuitems").tmpl(menudata);
+			$("#sub").html(menu);
 		$("#topmenu").tmpl(menudata).appendTo("#top");
 
 

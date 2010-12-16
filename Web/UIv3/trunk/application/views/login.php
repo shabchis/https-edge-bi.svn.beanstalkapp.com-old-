@@ -2,16 +2,47 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>  
 
 </head>
+<style>
+html{
+margin:0 auto;
+width: 960px;
+}
 
+
+#login_form{
+margin: 0 auto;
+border:1px solid black;
+-moz-border-radius:5px;
+height: 400px;
+
+}
+input{
+display: block;
+margin:10px auto 10px auto;
+padding:5px;
+-moz-border-radius:10px;
+-webkit-border-radius:10px;
+}
+
+h1{
+text-align: center;
+}
+#submit{
+display: block;
+background-color: white;
+-moz-border-radius: 5px;
+
+}
+</style>
 <body>
 
 <div id="login_form">
 
-	<h1>Login, Fool!</h1>
+	<h1>Login</h1>
     <?php 
 	echo form_open('login/validate_credentials');
 	echo form_input('username', 'Username','id="username"');
-	echo form_password('password', 'Password','id="password"');
+	echo form_input('password', 'Password','id="password"');
 	echo form_submit('submit', 'Login','id="submit"');
 	
 	echo form_close();
@@ -21,6 +52,8 @@
 
 </body>
 <script>
+
+
 $("#submit").click(function(){
 		
 		var form_data = {
@@ -34,18 +67,35 @@ $("#submit").click(function(){
 		type: 'POST',
 		data: form_data,
 		success: function(msg) {
-	if(msg == "success"){
-	window.location = "<?php base_url() ?>main";  
-	}
-		else{	 
+		//console.log(msg);
 	
+	var result = msg;
+		var json =  jQuery.parseJSON(result);
+	
+		//console.log(msg);
+		var session = {"session":json.LogINResult};
+	
+		setsession(session);
+		},
+		error:function(msg){
+			//console.log(msg);
 		
-		$("<div id='error>'").html("Email or Password are nor correct").appendTo("body"); 
 		}
-		}
+		
 	});
+	function setsession(session){
+		$.post("<?php echo site_url('login/sendsession'); ?>", session);
+		
+		
+		
+	 
+
+		  
+		
+			}
 		return false;
 });
+
 
 
 </script>
