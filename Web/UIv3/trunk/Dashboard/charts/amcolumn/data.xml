@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<datas>
+  <books>
+    <book>
+      <id>1</id>
+      <title title="United States" mc_name="US">PHP Undercover</title>
+      <author>Wiwit Siswoutomo</author>
+    </book>
+    <book>
+      <id>2</id>
+      <title title="Israel" mc_name="IL">PHP Enterprise</title>
+      <author>Wiwit Siswoutomo</author>
+    </book>
+  </books>
+</datas>

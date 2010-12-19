@@ -1,0 +1,83 @@
+<settings>
+  <font>Verdana</font>
+  <redraw>1</redraw>
+  <background>
+    <alpha>100</alpha>
+    <border_color>FFFFFF</border_color>
+    <border_alpha>20</border_alpha>
+  </background>
+  <plot_area>
+    <margins>
+      <left>48</left>
+      <right>11</right>
+    </margins>
+  </plot_area>
+  <grid>
+    <category>
+      <color>FFFFFF</color>
+      <dashed>1</dashed>
+      <dash_length>1</dash_length>
+    </category>
+    <value>
+      <dash_length>1</dash_length>
+      <approx_count>7</approx_count>
+    </value>
+  </grid>
+  <axes>
+    <category>
+      <tick_length>1</tick_length>
+      <width>1</width>
+      <color>E7E7E7</color>
+    </category>
+    <value>
+      <tick_length>19</tick_length>
+      <width>1</width>
+      <color>E7E7E7</color>
+    </value>
+  </axes>
+  <values>
+    <value>
+      <min>0</min>
+    </value>
+  </values>
+  <balloon>
+    <color>8DB53B</color>
+    <border_width>1</border_width>
+    <border_color>FFFFFF</border_color>
+  </balloon>
+  <column>
+    <width>85</width>
+    <balloon_text>{title}: {value} downloads</balloon_text>
+    <grow_time>3</grow_time>
+    <grow_effect>regular</grow_effect>
+  </column>
+  <line>
+    <width>0</width>
+  </line>
+  <graphs>
+    <graph gid="0">
+      <title>Stock</title>
+      <color>ADD981</color>
+    </graph>
+    <graph gid="1">
+      <title>Column</title>
+      <color>7F8DA9</color>
+    </graph>
+    <graph gid="2">
+      <title>Line</title>
+      <color>FEC514</color>
+    </graph>
+  </graphs>
+  <labels>
+    <label lid="0">
+      <text><![CDATA[<b>Daily downloads</b>]]></text>
+      <y>18</y>
+      <text_color>000000</text_color>
+      <text_size>13</text_size>
+      <align>center</align>
+    </label>
+  </labels>
+  <guides>
+    <guide gid="1"/>
+  </guides>
+</settings>
