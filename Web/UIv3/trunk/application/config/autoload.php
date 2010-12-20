@@ -51,7 +51,7 @@ $autoload['libraries'] = array('database','user_agent','parser','firephp','curl'
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url', 'form');
+$autoload['helper'] = array('url', 'form','cookie');
 
 
 /*

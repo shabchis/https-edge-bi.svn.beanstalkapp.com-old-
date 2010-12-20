@@ -56,15 +56,25 @@ $data["json2"]=$json2;
 
 //echo $json;
 	//echo $json2;
-	//$this->load->view('includes/template',$data);		
-	$this->load->view('includes/tmpl',$data);		
- 
-	
-	
+	$this->load->view('includes/template',$data);		
+//$this->load->view('includes/tmpl');		
 
- 
+	
+	    $this->firephp->log(json_decode($data["json"]));
+
+$cookie = array(
+'name' => 'Uiv3',
+'value' => 'yes',
+'expire' => '86500',
+'domain' => 'localhost',
+'prefix' => 'manu_'
+
+);
+
+set_cookie($cookie);
    
-    
+	 
+	 get_cookie();
   }
 
 function getmenus(){
@@ -85,6 +95,18 @@ $data["json2"]=$json2;
 	
 	
 	
+}
+
+function getFavicon(){
+
+$linkurl = $_GET['url'];
+
+$linkurl = str_replace("http://",'',$linkurl); // remove protocol from the domain
+
+$imgurl = "http://www.google.com/s2/favicons?domain=" . $linkurl;
+
+echo '<img src="' . $imgurl . '" width="16" height="16" />';
+
 }
 
 }
