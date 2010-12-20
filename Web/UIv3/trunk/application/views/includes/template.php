@@ -9,8 +9,7 @@
 		<link rel="stylesheet" href="<?php base_url(); ?>assets/css/960.css" type="text/css" media="screen" />
 		<!--[if IE]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-		<script type="text/javascript" src="http://fbug.googlecode.com/svn/lite/branches/firebug1.4/content/firebug-lite-dev.js"></script>
-
+		<meta http-equiv="X-UA-Compatible" content="IE=9" />
 		<![endif]-->
 
 		<script src="<?php base_url();?>assets/js/jquery-1.4.4.js"></script>  
@@ -18,6 +17,7 @@
 		<script src="<?php base_url();?>assets/js/jquery.dropshadow.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.tmpl.js"></script>
 			<script src="<?php base_url();?>assets/js/jquery.tmplPlus.js"></script>
+			<script src="<?php base_url();?>assets/js/modernizr-1.6.min.js"></script>
 		<script src="<?php base_url();?>assets/js/DD_roundies_0.0.2a.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.ba-hashchange.js"></script>
 		<script src="<?php base_url();?>assets/js/animatetoselector.jquery.js"></script>
@@ -26,6 +26,52 @@
 
 	<body>
 		<div id="container" >
+		
+		<script id="tmpl"  type="text/x-jquery-tmpl">
+		 {{if Name != "TOPBAR"}}
+		<h2 class="trigger"><span> ${Name} </span></h2>
+	<div class='toggle_container'>
+  		<div class='block'>
+		{{if ChildMenues}} 
+		 <ul class="list">
+		 	
+	{{each ChildMenues}}
+		 	<li class="menuheader" {{if MetaData}}{{each key}}data-url="${MetaData}"{{/each}}{{/if}}><a href="${Path}">${Name}</a>
+		 	  {{if ChildMenues != ""}}
+		 	 <ul data-name ="${Name}" class="parent"> 
+ 			{{each ChildMenues}} 
+	 	 	<li class="menuitem" {{if Key}}data-url="${Key}"{{/if}}><a href="${Path}">${Name} </a>
+		 	 		{{if ChildMenues }}
+		 	 	
+		 	 		<ul data-name ="${Name}">  	
+		 	 			  {{each ChildMenues}}
+		 	 			<li class="menuitem" {{if Key}}data-url="${Key}"{{/if}}><a href="${Path}">${Name}</a> </li>
+		 	 		 {{/each}}
+		 	 			 </ul>
+		 	 			
+        	</li>
+        	{{/if}}
+ 			 {{/each}}
+        
+        		</ul>
+			{{/if}}
+        		
+        			</li>
+			{{/each}}
+        			</ul>
+		 
+		 </ul>
+		   {{/if}}
+		</div>
+		
+		</div>
+  		
+ 		{{/if}}
+	
+ 		
+			
+			
+	</script>
 		<script id="menuitems" type="text/x-jquery-tmpl">
 
     {{if Name != "TOPBAR"}}
@@ -46,7 +92,7 @@
       			<ul data-name ="${Name}">  	
            	  {{each ChildMenues}}
            	  
-           	  	<li class="menuitem"><a href="${Path}">${Name}</a>
+           	  	<li class="menuitem"><a href="${Path}">${Name}</a></li>
         	  {{/each}}
         	  </ul>
         	</li>
@@ -64,7 +110,7 @@
             {{/if}}
 	</div>
  		</div>
-			</div>
+			
 			 {{/if}}
 	</script>
 			<script id="topmenu" type ="text/x-jquery-tmpl">
@@ -82,7 +128,7 @@
 			<img src="<?php base_url();?>assets/img/logo_01.png" id="logo" />
 			<div id="login">
 				<div id="user">
-				<span>Doron</span> <span id="loginout"><a href="login">(Log Out)</a> </span>
+				<span>Doron</span>&nbsp; <span id="loginout"><a href="login">(Log Out)</a> </span>
 				</div>
 				
 				<div id="top"></div>
@@ -133,17 +179,22 @@
 	</ul>
 	</script>
 	<script type="text/javascript">
+	
+	
+
+
 	$(function(){
 	$("#accounts").delegate("li","click",function(){
-  
-  var url = "ynet";
-  //console.log(url);
-  
-  });
+	
+		var fav = $("#selected").text();
+	console.log(fav);
+	});
+    	
+	
 	});
 	  
 	</script>
-	<div id="slider"><span><img src="<?php base_url();?>assets/img/arrows_04.png" /></span><div id="caption">Hide</div></div>
+	<div id="slider"><span><a href="#"><img src="<?php base_url();?>assets/img/arrows_04.png" /></a></span><div id="caption">Hide</div></div>
 		<div id="menu">
 			<div id="accounts" class="folded">	
 			<div id="head">
@@ -162,7 +213,7 @@
 
 <script type="text/javascript">
 
-$(function(){
+
 
 
 	var menudata = jQuery.parseJSON('<?php echo $json; ?>');
@@ -170,15 +221,13 @@ $(function(){
  	if(menudata){
  		
  	
- 	//console.log(menudata);
- 		
- 			$("#menuitems").tmpl(menudata).appendTo("#sub");
+ 
+ 			$("#tmpl").tmpl(menudata).appendTo("#sub");
 		$("#topmenu").tmpl(menudata).appendTo("#top");
 			
  		}
-			
 
-
+ 		
 		$("#accountbar").tmpl(account).appendTo("#accounts");
 	
 //	$.ajax({
@@ -189,7 +238,7 @@ $(function(){
     
   //}
 //});
-});
+
 
 
 
