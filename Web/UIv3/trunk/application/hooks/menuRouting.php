@@ -17,7 +17,7 @@ class menuRouting{
 	
 		$routesArray = array();
 		$menuItems = json_decode($menujson);
-		$this->addRoutesFromMenuItems($routesArray,$menuItems);
+	//	$this->addRoutesFromMenuItems($routesArray,$menuItems);
 		$MENU_ROUTES = $routesArray;
 		//var_dump($routesArray);
 	}

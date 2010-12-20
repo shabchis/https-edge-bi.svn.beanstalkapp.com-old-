@@ -9,12 +9,15 @@
 		<link rel="stylesheet" href="<?php base_url(); ?>assets/css/960.css" type="text/css" media="screen" />
 		<!--[if IE]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<script type="text/javascript" src="http://fbug.googlecode.com/svn/lite/branches/firebug1.4/content/firebug-lite-dev.js"></script>
+
 		<![endif]-->
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>  
+		<script src="<?php base_url();?>assets/js/jquery-1.4.4.js"></script>  
 		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.dropshadow.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.tmpl.js"></script>
+			<script src="<?php base_url();?>assets/js/jquery.tmplPlus.js"></script>
 		<script src="<?php base_url();?>assets/js/DD_roundies_0.0.2a.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.ba-hashchange.js"></script>
 		<script src="<?php base_url();?>assets/js/animatetoselector.jquery.js"></script>
@@ -23,55 +26,25 @@
 
 	<body>
 		<div id="container" >
-			<script id="topmenu" type ="text/x-jquery-tmpl">
-			 {{if Name == "TOPBAR"}}
-			 	 <ul>
-			 	{{each ChildMenues}}
-					<li>| <a href="#">${Name}</a></li>
-			  {{/each}}
-          		 </ul>
-			 {{/if}}
-			</script>
-		<header>
-			<img src="<?php base_url();?>assets/img/logo_01.png" id="logo" />
-			<div id="login">
-				<div id="user">
-				<span>Doron</span> <span id="loginout"><a href="login">(Log Out)</a> </span>
-				</div>
-				
-				<div id="top"></div>
-				
-				
-				<div id="ajaxloader">
-					<img src="<?php base_url(); ?>assets/img/loading_bar.gif" id="ajax" />
-				</div>
-			</div>
-			<div id="breadcrumbs">
-			
-			</div>
-			
- 		</header>
- 		<div class="clear"></div>
-
 		<script id="menuitems" type="text/x-jquery-tmpl">
 
     {{if Name != "TOPBAR"}}
 	<h2 class="trigger"><span> ${Name} </span></h2>
 	<div class='toggle_container'>
   		<div class='block'>
-  		{{if ChildItems }}
+ 	{{if ChildMenues}} 
   		    <ul class="list">
 			
-		   	{{each ChildItems}}
+		 		{{each ChildMenues}}
       		<li class="menuheader"><a href="${Path}">${Name}</a>
-        {{if ChildItems != ""}}
+        {{if ChildMenues != ""}}
 			 <ul data-name ="${Name}" class="parent"> 
 		 
-		  {{each ChildItems}} 
+		  {{each ChildMenues}} 
         	<li class="menuitem"><a href="${Path}">${Name}</a>
-        	{{if ChildItems }}
+        	{{if ChildMenues }}
       			<ul data-name ="${Name}">  	
-           	  {{each ChildItems}}
+           	  {{each ChildMenues}}
            	  
            	  	<li class="menuitem"><a href="${Path}">${Name}</a>
         	  {{/each}}
@@ -94,10 +67,42 @@
 			</div>
 			 {{/if}}
 	</script>
+			<script id="topmenu" type ="text/x-jquery-tmpl">
+			
+			 {{if Name == "TOPBAR"}}
+			 	 <ul>
+			 	{{each ChildMenues}}
+					<li>| <a href="#">${Name}</a></li>
+			  {{/each}}
+          		 </ul>
+			 {{/if}}
+			
+			</script>
+		<header>
+			<img src="<?php base_url();?>assets/img/logo_01.png" id="logo" />
+			<div id="login">
+				<div id="user">
+				<span>Doron</span> <span id="loginout"><a href="login">(Log Out)</a> </span>
+				</div>
+				
+				<div id="top"></div>
+				
+				
+				<div id="ajaxloader">
+					<img src="<?php base_url(); ?>assets/img/loading_bar.gif" id="ajax" />
+				</div>
+			</div>
+			<div id="breadcrumbs">
+			
+			</div>
+			
+ 		</header>
+ 		<div class="clear"></div>
+
+		
 	
 	<script id="accountbar"  type="text/x-jquery-tmpl">
 		
-			
 		{{if Name }}
 	<ul>
 		<li class="campaign"><span>${ Name }</span>
@@ -156,19 +161,39 @@
  
 
 <script type="text/javascript">
-/*get url for favicon, must be here*/
+
+$(function(){
 
 
-
-	var menudata = jQuery.parseJSON('<?php echo $menu; ?>');
-		var account = 	jQuery.parseJSON('<?php echo $account; ?>');
- 		var menu =		$("#menuitems").tmpl(menudata);
-			$("#sub").html(menu);
+	var menudata = jQuery.parseJSON('<?php echo $json; ?>');
+	var account = 	jQuery.parseJSON('<?php echo $json2; ?>');
+ 	if(menudata){
+ 		
+ 	
+ 	//console.log(menudata);
+ 		
+ 			$("#menuitems").tmpl(menudata).appendTo("#sub");
 		$("#topmenu").tmpl(menudata).appendTo("#top");
+			
+ 		}
+			
 
 
 		$("#accountbar").tmpl(account).appendTo("#accounts");
+	
+//	$.ajax({
+  //url: "",
+  //data
+  //success: function(data) {
+   			
+    
+  //}
+//});
+});
 
+
+
+		
 </script>
   <div id="main">
   main content --- 
