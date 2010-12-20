@@ -8,7 +8,7 @@ class Main extends Controller {
        }
 	function index()
 	{
-			
+	/*		
 		$data = array(
 		"session"=>$this->input->post('session')
 		
@@ -40,21 +40,24 @@ class Main extends Controller {
 		"account"=>$accounts
 		);
 	//	
+*/
 
-//	$this->firephp->log($data); 
-//$mainurl = EDGE_API_URL.'/menu';
- //	 $json =  file_get_contents($mainurl);
-//$accounturl = EDGE_API_URL.'/accounts';
-	//$json2 =     file_get_contents($accounturl);
-
+$mainurl = 'http://alonya-pc/API/EdgeBIAPIService.svc/menu';
+$json =  file_get_contents($mainurl);
+$accounturl = 'http://alonya-pc/API/EdgeBIAPIService.svc/accounts';
+$json2 =     file_get_contents($accounturl);
+//$json = '';
 //$testurl = 'http://AlonYa-PC:53448/WcfHttpLearning/menu';
+//$json2 ='';
 //$json3 =  file_get_contents($testurl);
- //$data["json"]=$json;    
- //$data["json2"]=$json2;    
-	  //$data["json3"]=$json3;
-$this->firephp->log($data);
-	
-	$this->load->view('includes/template',$data);		
+$data["json"]=$json;    
+$data["json2"]=$json2;    
+//$data["json3"]=$json3;
+
+//echo $json;
+	//echo $json2;
+	//$this->load->view('includes/template',$data);		
+	$this->load->view('includes/tmpl',$data);		
  
 	
 	
@@ -63,6 +66,26 @@ $this->firephp->log($data);
    
     
   }
+
+function getmenus(){
+	$mainurl = 'http://alonya-pc/API/EdgeBIAPIService.svc/menu';
+$json =  file_get_contents($mainurl);
+$accounturl = 'http://alonya-pc/API/EdgeBIAPIService.svc/accounts';
+$json2 =     file_get_contents($accounturl);
+//$json = '';
+//$testurl = 'http://AlonYa-PC:53448/WcfHttpLearning/menu';
+//$json2 ='';
+//$json3 =  file_get_contents($testurl);
+$data["json"]=$json;    
+$data["json2"]=$json2;    
+//$data["json3"]=$json3;
+	
+	
+	echo $data["json"];
+	
+	
+	
+}
 
 }
 
