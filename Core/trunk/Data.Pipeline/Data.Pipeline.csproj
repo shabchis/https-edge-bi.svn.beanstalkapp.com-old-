@@ -8,8 +8,8 @@
     <ProjectGuid>{53391A99-E8CA-4262-A8E0-5F05A1CC6608}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Edge.Data.Pipeline</RootNamespace>
-    <AssemblyName>Edge.Data.Pipeline</AssemblyName>
+    <RootNamespace>EdgeBI.Data.Pipeline</RootNamespace>
+    <AssemblyName>EdgeBI.Data.Pipeline</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -48,8 +48,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Content Include="Example.txt" />
+    <Content Include="Example\ad_stats.xml" />
+    <Compile Include="Example\ExampleReader.cs" />
+    <Compile Include="Objects\Delivery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Readers\Interface1.cs" />
+    <Compile Include="Readers\IRowReader.cs" />
+    <Compile Include="Readers\XPathRowReader.cs" />
+    <Compile Include="Readers\XmlRowReader.cs" />
+    <Compile Include="Readers\RowReader.cs" />
+    <Compile Include="Example\ExampleProcessorService.cs" />
+    <Compile Include="Example\ExampleRetrieverService.cs" />
+    <Compile Include="ThirdParty\XPathReader\arraymanager.cs" />
+    <Compile Include="ThirdParty\XPathReader\astnode.cs" />
+    <Compile Include="ThirdParty\XPathReader\axis.cs" />
+    <Compile Include="ThirdParty\XPathReader\AxisQuery.cs" />
+    <Compile Include="ThirdParty\XPathReader\BaseQuery.cs" />
+    <Compile Include="ThirdParty\XPathReader\ExprQuery.cs" />
+    <Compile Include="ThirdParty\XPathReader\filter.cs" />
+    <Compile Include="ThirdParty\XPathReader\FilterQuery.cs" />
+    <Compile Include="ThirdParty\XPathReader\function.cs" />
+    <Compile Include="ThirdParty\XPathReader\FunctionQuery.cs" />
+    <Compile Include="ThirdParty\XPathReader\group.cs" />
+    <Compile Include="ThirdParty\XPathReader\IQuery.cs" />
+    <Compile Include="ThirdParty\XPathReader\operand.cs" />
+    <Compile Include="ThirdParty\XPathReader\OperandQuery.cs" />
+    <Compile Include="ThirdParty\XPathReader\operator.cs" />
+    <Compile Include="ThirdParty\XPathReader\queryBuilder.cs" />
+    <Compile Include="ThirdParty\XPathReader\root.cs" />
+    <Compile Include="ThirdParty\XPathReader\variable.cs" />
+    <Compile Include="ThirdParty\XPathReader\xmlchartype.cs" />
+    <Compile Include="ThirdParty\XPathReader\XPathCollection.cs" />
+    <Compile Include="ThirdParty\XPathReader\xpathexpr.cs" />
+    <Compile Include="ThirdParty\XPathReader\xpathnodetype.cs" />
+    <Compile Include="ThirdParty\XPathReader\xpathparser.cs" />
+    <Compile Include="ThirdParty\XPathReader\xpathreader.cs" />
+    <Compile Include="ThirdParty\XPathReader\XPathReaderException.cs" />
+    <Compile Include="ThirdParty\XPathReader\xpathscanner.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
