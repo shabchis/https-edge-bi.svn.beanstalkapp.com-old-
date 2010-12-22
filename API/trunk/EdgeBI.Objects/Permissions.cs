@@ -25,7 +25,6 @@ namespace EdgeBI.Objects
 	}
 	public class CalculatedPermission
 	{
-
 		[DataMember]
 		[FieldMap("AccountID")]
 		public int AccountID;
