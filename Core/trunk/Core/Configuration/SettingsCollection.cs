@@ -158,7 +158,7 @@ namespace Easynet.Edge.Core
 			}
 		}
 
-		public void Merge(SettingsCollection otherCollection)
+		public void Merge(Dictionary<string,string> otherCollection)
 		{
 			foreach (KeyValuePair<string,string> entry in otherCollection)
 			{
