@@ -45,6 +45,7 @@ namespace Easynet.Edge.Core.Services
 		List<EvaluatorVariable> _globalConditionVars;
 
 		System.Timers.Timer _executionTimer;
+		System.Timers.Timer _healthSignalTimer;
 
 		object _stopLock = new object();
 
