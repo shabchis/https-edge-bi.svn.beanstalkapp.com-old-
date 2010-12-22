@@ -50,6 +50,7 @@
   <ItemGroup>
     <Content Include="Example.txt" />
     <Content Include="Example\ad_stats.xml" />
+    <Compile Include="Example\example1.cs" />
     <Compile Include="Example\ExampleReader.cs" />
     <Compile Include="Objects\Delivery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

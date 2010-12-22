@@ -69,8 +69,12 @@ namespace EdgeBI.Data.Pipeline
 						}
 					}
 
+					file.HandledByServices.Add(this.Instance.InstanceID);
+					file.Save();
+
 					DataManager.Current.CommitTransaction();
 				}
+
 			}
 		}
 

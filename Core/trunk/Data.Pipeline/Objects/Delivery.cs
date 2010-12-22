@@ -24,8 +24,7 @@ namespace EdgeBI.Data.Pipeline
 		public int DeliveryID;
 		public string FilePath;
 		public DateTime TargetDateTime;
-		public int RetrieverInstanceID;
-		public int ProcessorInstanceID;
+		public List<int> HandledByServices;
 		public Type ReaderType;
 		public Dictionary<string, string> Parameters;
 		public DateTime DateCreated;
