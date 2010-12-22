@@ -8,6 +8,7 @@ namespace EdgeBI.Data.Pipeline
 	public interface IRowReader: IDisposable
 	{
 		object CurrentRow { get; }
+
 		bool Read();
 	}
 }

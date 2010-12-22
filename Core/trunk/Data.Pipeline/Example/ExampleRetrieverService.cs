@@ -13,7 +13,7 @@ namespace EdgeBI.Data.Pipeline
 		protected override ServiceOutcome DoWork()
 		{
 			// Create a new delivery with a description
-			Delivery delivery = new Delivery { Description = "Adwords Creative delivery for 888 split accounts [95] 2010/08/10" };
+			Delivery delivery = new Delivery();
 
 			// Assign this delivery to an account/client/scope
 			delivery.AccountID = Instance.AccountID;
@@ -26,9 +26,19 @@ namespace EdgeBI.Data.Pipeline
 			{
 				Url = "http://wwww.chunk.com?file=1",
 				ReaderType = typeof(ExampleReader), // this is optional, depending on processor type
-				Parameters = new Settings() // parameters for the reader
+				Parameters = new SettingsCollection() // parameters for the reader
 				{
 					{"FilterCampaigns", "Casino*"},
+					{"UseAccoutHeader", true}
+				}
+			});
+			delivery.Files.Add(new DeliveryFile
+			{
+				Url = "http://wwww.chunk.com?file=1",
+				ReaderType = typeof(ExampleReader), // this is optional, depending on processor type
+				Parameters = new Settings() // parameters for the reader
+				{
+					{"FilterCampaigns", "Poker*"},
 					{"UseAccoutHeader", true}
 				}
 			});
