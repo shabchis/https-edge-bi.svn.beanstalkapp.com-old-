@@ -57,8 +57,6 @@ namespace EdgeBI.Objects
 		[DictionaryMap(DictionaryKey = "AccountID", IsStoredProcedure = true, Command = "User_GetAllPermissions(@UserID:Int)")]
 		public Dictionary<int, List<CalculatedPermission>> CalculatedPermission = new Dictionary<int, List<CalculatedPermission>>();
 
-
-
 		public static User GetUserByID(int id)
 		{
 			User user=null;

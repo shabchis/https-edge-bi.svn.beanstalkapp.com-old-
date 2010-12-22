@@ -44,7 +44,7 @@ namespace EdgeBI.Objects
 		public List<Menu> ChildItems = new List<Menu>();
 
 
-		public static List<Menu> GetMenuByParentID(string path)
+		public static List<Menu> GetMenuByParentID(string path,int userId)
 		{
 			
 			Stack<Menu> stackMenu = new Stack<Menu>();
@@ -57,8 +57,9 @@ namespace EdgeBI.Objects
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
 			using (DataManager.Current.OpenConnection())
 			{
-				SqlCommand sqlCommand = DataManager.CreateCommand("select [ID],[Name],[Path],[MetaData],[Ordinal] FROM [API_Menus] WHERE [Path] LIKE @Path:NVarChar ORDER BY Path");
-				sqlCommand.Parameters["@Path"].Value = newPath;
+				SqlCommand sqlCommand = DataManager.CreateCommand("MenuesBy_UserPermission_MenuPath(@userID:Int,@menuPath:NvarChar)",CommandType.StoredProcedure);			
+				sqlCommand.Parameters["@menuPath"].Value = newPath;
+				sqlCommand.Parameters["@userID"].Value = userId;
 
 				thingReader = new ThingReader<Menu>(sqlCommand.ExecuteReader(), CustomApply);
 				List<Menu> currrentList = null;

@@ -15,6 +15,7 @@ using System.Data.SqlClient;
 using Easynet.Edge.Core.Configuration;
 using System.ServiceModel.Channels;
 using System.Net;
+using Microsoft.ServiceModel.Dispatcher;
 
 /// <summary>
 /// Summary description for Json
@@ -24,9 +25,7 @@ namespace EdgeBI.API.Web
 {
 	public class JsonNetProcessor : MediaTypeProcessor
 	{
-		private const string KeyEncrypt = "5c51374e366f41297356413c71677220386c534c394742234947567840";
-		private const string SessionHeader = "x-edgebi-session";
-		private const string LogInMessageAdress = "http://localhost:54796/EdgeBIAPIService.svc/sessions";
+		
 
 		private Type parameterType;
 
@@ -96,33 +95,33 @@ namespace EdgeBI.API.Web
 			return base.OnExecute(input);
 		}
 		
-		private bool IsSessionValid(string session)
-		{
-			bool isValid = false;
-			int sessionID = 0;
-			DateTime lastModified;
+		//private bool IsSessionValid(string session)
+		//{
+		//    bool isValid = false;
+		//    int sessionID = 0;
+		//    DateTime lastModified;
 
-			Encryptor encryptor = new Encryptor(KeyEncrypt);
-
-
-			sessionID = int.Parse(encryptor.Decrypt(session));
-			using (DataManager.Current.OpenConnection())
-			{
-				using (SqlCommand sqlCommand = DataManager.CreateCommand("Session_ValidateSession(@SessionID:Int)", System.Data.CommandType.StoredProcedure))
-				{
-					sqlCommand.Parameters["@SessionID"].Value = sessionID;
-					isValid = System.Convert.ToBoolean(sqlCommand.ExecuteScalar());
+		//    Encryptor encryptor = new Encryptor(KeyEncrypt);
 
 
-				}
+		//    sessionID = int.Parse(encryptor.Decrypt(session));
+		//    using (DataManager.Current.OpenConnection())
+		//    {
+		//        using (SqlCommand sqlCommand = DataManager.CreateCommand("Session_ValidateSession(@SessionID:Int)", System.Data.CommandType.StoredProcedure))
+		//        {
+		//            sqlCommand.Parameters["@SessionID"].Value = sessionID;
+		//            isValid = System.Convert.ToBoolean(sqlCommand.ExecuteScalar());
 
-			}
+
+		//        }
+
+		//    }
 
 
 
-			return isValid;
+		//    return isValid;
 
-		}
+		//}
 
 	}
 	public class BsonProcessor : MediaTypeProcessor
@@ -187,8 +186,84 @@ namespace EdgeBI.API.Web
 			}
 
 		}
+		protected override IEnumerable<ProcessorArgument> OnGetOutArguments()
+		{
+			var args = new List<ProcessorArgument>();
+
+			args.Add(new ProcessorArgument(HttpPipelineFormatter.ArgumentHttpResponseMessage, typeof(HttpResponseMessage)));
+			return args;
+			
+		}
+		protected override IEnumerable<ProcessorArgument> OnGetInArguments()
+		{
+			var args = new List<ProcessorArgument>();
+
+
+			args.Add(new ProcessorArgument(HttpPipelineFormatter.ArgumentHttpRequestMessage, typeof(HttpRequestMessage)));
+
+			return args;
+		} 
 
 	}
+	public class SessionProcessor : Processor
+	{
+		
+
+		
+		protected override ProcessorResult OnExecute(object[] input)
+		{
+			HttpRequestMessage req;
+			if (input.Length > 0 && input[0] is HttpRequestMessage)
+			{
+				req = (HttpRequestMessage)input[0];
+				HttpResponseMessage res = req.CreateResponse(HttpStatusCode.Forbidden);
+				
+				return new ProcessorResult() { Output = new object[] { res }, Status = ProcessorStatus.Error,Error=new Exception("aa") };
+
+			}
+			else
+				return new ProcessorResult();
+
+
+		}
+
+		protected override IEnumerable<ProcessorArgument> OnGetInArguments()
+		{
+
+			var args = new List<ProcessorArgument>();
+			
+
+			args.Add(new ProcessorArgument(HttpPipelineFormatter.ArgumentHttpRequestMessage, typeof(HttpRequestMessage)));	
+			
+			return args;
+		}
+
+		protected override IEnumerable<ProcessorArgument> OnGetOutArguments()
+		{
+			var args = new List<ProcessorArgument>();
+			
+			args.Add(new ProcessorArgument(HttpPipelineFormatter.ArgumentHttpResponseMessage, typeof(HttpResponseMessage)));
+			return args;
+
+		}
+	}
+	public class HttpMessageInspector : IDispatchMessageInspector
+	{
+		#region IDispatchMessageInspector Members
+
+		public object AfterReceiveRequest(ref Message request, System.ServiceModel.IClientChannel channel, System.ServiceModel.InstanceContext instanceContext)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void BeforeSendReply(ref Message reply, object correlationState)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
 
 	public class MyResourceConfiguration : HostConfiguration
 	{
@@ -196,22 +271,18 @@ namespace EdgeBI.API.Web
 	
 		public override void RegisterRequestProcessorsForOperation(HttpOperationDescription operation, IList<Processor> processors, MediaTypeProcessorMode mode)
 		{
-
-			
+			processors.Add(new SessionProcessor());
 			processors.Add(new JsonNetProcessor(operation, mode));
 
-			processors.Add(new BsonProcessor(operation, mode));
-			
+			//processors.Add(new BsonProcessor(operation, mode));			
 
 		}
 
 		public override void RegisterResponseProcessorsForOperation(HttpOperationDescription operation, IList<Processor> processors, MediaTypeProcessorMode mode)
 		{
-
 			processors.Add(new JsonNetProcessor(operation, mode));
 
-			processors.Add(new BsonProcessor(operation, mode));
-
+			//processors.Add(new BsonProcessor(operation, mode));
 		}
 		
 

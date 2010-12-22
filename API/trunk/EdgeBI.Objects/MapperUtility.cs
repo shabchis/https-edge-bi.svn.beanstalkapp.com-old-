@@ -47,9 +47,7 @@ namespace EdgeBI.Objects
 					}
 					else
 						fieldInfo.SetValue(returnObject, val);
-
 				}
-
 			}
 			return returnObject;
 
@@ -60,9 +58,6 @@ namespace EdgeBI.Objects
 			T returnObject = (T)o;
 			string dictionaryKey = string.Empty;
 			SqlCommand sqlCommand;
-
-
-
 
 			foreach (FieldInfo fieldInfo in returnObject.GetType().GetFields())
 			{
@@ -78,13 +73,9 @@ namespace EdgeBI.Objects
 						foreach (SqlParameter param in sqlCommand.Parameters)
 						{
 							string fieldName = param.ParameterName.Substring(1); //without the "@"
-							param.Value = returnObject.GetType().GetField(fieldName).GetValue(returnObject);
-
-							
+							param.Value = returnObject.GetType().GetField(fieldName).GetValue(returnObject);						
 
 						}
-
-
 
 						fieldInfo.SetValue(returnObject, GetDictionryObject(fieldInfo, sqlCommand.ExecuteReader()));
 					}
@@ -121,14 +112,11 @@ namespace EdgeBI.Objects
 			}
 			else
 				throw new Exception("This is not generic type");
-
-
 			//Create query
 			//Table
 
 
 			List<FieldInfo> regularMapedFields = new List<FieldInfo>();
-
 			foreach (FieldInfo fieldInfo in typeElement.GetFields())
 			{
 
@@ -177,9 +165,6 @@ namespace EdgeBI.Objects
 
 								if (Attribute.IsDefined(fieldInfo, typeof(FieldMapAttribute)))
 								{
-
-
-
 									FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(FieldMapAttribute));
 									object val;
 									if (fieldMapAttribute.UseApplyFunction && onApplyValue != null)
@@ -194,10 +179,7 @@ namespace EdgeBI.Objects
 									{
 										fieldInfo.SetValue(currentItem, val);
 									}
-
 								}
-
-
 							}
 							returnObject.Add(currentItem);
 						}
@@ -226,20 +208,15 @@ namespace EdgeBI.Objects
 						if (Attribute.IsDefined(fieldInfo, typeof(HasChildOfTheSameAttribute)))
 							childsField = fieldInfo;
 
-
-
 					}
 					if (recursiveLookupValue != null)
 					{
 						if (childsField != null)
 							childsField.SetValue(currentItem, GetMenus<T>(recursiveLookupValue, recursive, onApplyValue));
-
 					}
-
 				}
 			}
 			return returnObject;
-
 
 		}
 		//public static object GetListObjectByKey(FieldInfo fieldInfo, object primeryKey)
@@ -342,16 +319,8 @@ namespace EdgeBI.Objects
 			if (!fieldInfo.FieldType.IsGenericType || fieldInfo.FieldType.GetGenericTypeDefinition() == typeof(IList))
 				throw new Exception("This is not generic list");
 			Type typeElement = fieldInfo.FieldType.GetGenericArguments()[0];
-
-
-
-
-
-
 			IList returnObject = (IList)Activator.CreateInstance(fieldInfo.GetType());
 			//Get the inner type
-
-
 
 			while (sqlDataReader.Read())
 			{
@@ -368,32 +337,24 @@ namespace EdgeBI.Objects
 									}
 									else
 										f.SetValue(currentItem, val);
-
 					}
-
 				}
 				returnObject.Add(currentItem);
-
 			}
 			return returnObject;
-
 		}
 		public static IDictionary GetDictionryObject(FieldInfo fieldInfo, IDataReader sqlDataReader)
 		{
-
-
 			string dictionaryKey = string.Empty;
 			if (!fieldInfo.FieldType.IsGenericType || fieldInfo.FieldType.GetGenericTypeDefinition() == typeof(IDictionary))
 				throw new Exception("This is not generic Dictionary");
 
 			Type keyElement = fieldInfo.FieldType.GetGenericArguments()[0];
-			Type typeElement = fieldInfo.FieldType.GetGenericArguments()[1];			
-
+			Type typeElement = fieldInfo.FieldType.GetGenericArguments()[1];	
 
 			if (Attribute.IsDefined(fieldInfo, typeof(DictionaryMapAttribute)))
 			{
 				DictionaryMapAttribute dictionaryMapAttribute = (DictionaryMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(DictionaryMapAttribute));
-
 				dictionaryKey = dictionaryMapAttribute.DictionaryKey;
 			}
 			else
@@ -404,13 +365,9 @@ namespace EdgeBI.Objects
 			if (typeElement.IsGenericType)
 			{
 				IList list = (IList)Activator.CreateInstance(typeElement);
-
-
-
 				int? lastAccountId = null;
 				while (sqlDataReader.Read())
 				{
-
 					object currentItem = Activator.CreateInstance(typeElement.GetGenericArguments()[0]);
 					if (lastAccountId != null)
 					{
@@ -442,21 +399,15 @@ namespace EdgeBI.Objects
 				{
 					returnObject.Add(lastAccountId, list);
 				}
-
-
 			}
-
 			return returnObject;
-
 		}
 
 		#endregion
 		#region Private Methods
-
 		private static string CreateSelectList(List<FieldInfo> RegularMapedFields)
 		{
 			StringBuilder selectClause = new StringBuilder();
-
 			FieldMapAttribute fieldMapAttribute;
 			foreach (FieldInfo fieldInfo in RegularMapedFields)
 			{
@@ -467,20 +418,15 @@ namespace EdgeBI.Objects
 						selectClause.Append("DISTINCT ");
 					if (string.IsNullOrEmpty(fieldMapAttribute.Cast))
 					{
-
 						selectClause.Append(string.Format("{0},", fieldMapAttribute.FieldName));
 					}
 					else
 					{
 						selectClause.Append(string.Format("{0},", fieldMapAttribute.Cast));
 					}
-
-
 				}
-
 			}
 			//Clean last ','
-
 			selectClause = selectClause.Remove(selectClause.Length - 1, 1);
 			return selectClause.ToString();
 		}
@@ -521,16 +467,10 @@ namespace EdgeBI.Objects
 	}
 	[AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = false)]
 	sealed class DictionaryMapAttribute : Attribute
-	{
-		
+	{		
 		public string Command { get; set; }
 		public string DictionaryKey { get; set; }
 		public bool IsStoredProcedure { get; set; }
-		
-
-
-
-
 
 	}
 	[AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
