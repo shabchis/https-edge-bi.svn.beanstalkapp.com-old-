@@ -46,7 +46,10 @@ $route['scaffolding_trigger'] = "";
 global $MENU_ROUTES;
 if(!empty($MENU_ROUTES)) $route = array_merge($route,$MENU_ROUTES);
 
+
+/*
 $route['Intelligence/Dashboard']= "iframe_controller";
+$route['login']= "login";
 $route[':any']= "Home";
 /*
 $route['Intelligence/:any']= "Home";

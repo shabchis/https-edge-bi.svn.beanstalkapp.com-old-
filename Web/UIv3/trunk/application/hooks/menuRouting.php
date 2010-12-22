@@ -3,7 +3,7 @@
 class menuRouting{
 	
 	function index(){
-		
+		//$CI =& get_instance();
 		global $MENU_ROUTES;
 		
 		
@@ -17,26 +17,44 @@ class menuRouting{
 	
 		$routesArray = array();
 		$menuItems = json_decode($menujson);
-	//	$this->addRoutesFromMenuItems($routesArray,$menuItems);
-		$MENU_ROUTES = $routesArray;
+		$this->addRoutesFromMenuItems($routesArray,$menuItems);
+		
 		//var_dump($routesArray);
+		$MENU_ROUTES = $routesArray;
+		//$MENU_ROUTES = $routes;
+		//var_dump($routes);
 	}
 	
-	function addRoutesFromMenuItems($routesArray, $menuItems) {
+	function addRoutesFromMenuItems(&$routesArray, &$menuItems) {
 		
 		foreach($menuItems as $item) {
-	//var_dump($item->MetaData);
+			//	print_r($item->ChildItems);
 			if (isset($item->MetaData->Controller)) 
 			{
 				
 				$routesArray[$item->Path] = $item->MetaData->Controller;
+			
 			}
 			
-			if (isset($item->MetaData->ChildItems))
-				 addRoutesFromMenuItems($routesArray, $item->MetaData->ChildItems);
-		}
+			if (isset($item->ChildItems)){
+				$this->addRoutesFromMenuItems($routesArray, $item->ChildItems);
+				
+			}
+				
+		
+	//	if isset(($item->MetaData->Controller == "iframe_controller")){
+			 //var_dump($routesArray[$item->Path]);
+			//iFrameURL =$routesArray[$item->Path];
+			
+		//}
+			
+			
+			
+		
 		
 	}
 	
+		
+	}
 	
 }

@@ -32,20 +32,28 @@
 		<h2 class="trigger"><span> ${Name} </span></h2>
 	<div class='toggle_container'>
   		<div class='block'>
-		{{if ChildMenues}} 
+		{{if ChildItems}} 
 		 <ul class="list">
 		 	
-	{{each ChildMenues}}
-		 	<li class="menuheader" {{if MetaData}}{{each key}}data-url="${MetaData}"{{/each}}{{/if}}><a href="${Path}">${Name}</a>
-		 	  {{if ChildMenues != ""}}
+	{{each ChildItems}}
+	{{if MetaData}}
+	
+		 	<li class="menuheader" data-url="${MetaData.iFrameURL}"><a href="${Path}">${Name}</a>
+		 	
+		 	{{/if}}
+		 	  {{if ChildItems != ""}}
 		 	 <ul data-name ="${Name}" class="parent"> 
- 			{{each ChildMenues}} 
-	 	 	<li class="menuitem" {{if Key}}data-url="${Key}"{{/if}}><a href="${Path}">${Name} </a>
-		 	 		{{if ChildMenues }}
+ 			{{each ChildItems}} 
+ 		
+	 	 	<li class="menuitem"  data-url="${MetaData.iFrameURL}"><a href="${Path}">${Name} </a>
+	 	 	
+		 	 		{{if ChildItems }}
 		 	 	
 		 	 		<ul data-name ="${Name}">  	
-		 	 			  {{each ChildMenues}}
-		 	 			<li class="menuitem" {{if Key}}data-url="${Key}"{{/if}}><a href="${Path}">${Name}</a> </li>
+		 	 			  {{each ChildItems}}
+		 	 			  
+		 	 			<li class="menuitem" data-url="${MetaData.iFrameURL}"><a href="${Path}">${Name}</a> </li>
+		 	 			
 		 	 		 {{/each}}
 		 	 			 </ul>
 		 	 			
@@ -72,52 +80,12 @@
 			
 			
 	</script>
-		<script id="menuitems" type="text/x-jquery-tmpl">
 
-    {{if Name != "TOPBAR"}}
-	<h2 class="trigger"><span> ${Name} </span></h2>
-	<div class='toggle_container'>
-  		<div class='block'>
- 	{{if ChildMenues}} 
-  		    <ul class="list">
-			
-		 		{{each ChildMenues}}
-      		<li class="menuheader"><a href="${Path}">${Name}</a>
-        {{if ChildMenues != ""}}
-			 <ul data-name ="${Name}" class="parent"> 
-		 
-		  {{each ChildMenues}} 
-        	<li class="menuitem"><a href="${Path}">${Name}</a>
-        	{{if ChildMenues }}
-      			<ul data-name ="${Name}">  	
-           	  {{each ChildMenues}}
-           	  
-           	  	<li class="menuitem"><a href="${Path}">${Name}</a></li>
-        	  {{/each}}
-        	  </ul>
-        	</li>
-        	{{/if}}
-         {{/each}}
-          		
-          	</ul>
-			{{/if}}
-			  
-			</li>
-			{{/each}}
-        	
-			</ul>
-      		
-            {{/if}}
-	</div>
- 		</div>
-			
-			 {{/if}}
-	</script>
 			<script id="topmenu" type ="text/x-jquery-tmpl">
 			
 			 {{if Name == "TOPBAR"}}
 			 	 <ul>
-			 	{{each ChildMenues}}
+			 	{{each ChildItems}}
 					<li>| <a href="#">${Name}</a></li>
 			  {{/each}}
           		 </ul>
@@ -216,12 +184,12 @@
 
 
 
-	var menudata = jQuery.parseJSON('<?php echo $json; ?>');
-	var account = 	jQuery.parseJSON('<?php echo $json2; ?>');
+	var menudata = jQuery.parseJSON('<?php echo $menu; ?>');
+	var account = 	jQuery.parseJSON('<?php echo $account; ?>');
  	if(menudata){
  		
  	
- 
+
  			$("#tmpl").tmpl(menudata).appendTo("#sub");
 		$("#topmenu").tmpl(menudata).appendTo("#top");
 			
