@@ -8,7 +8,7 @@ class Main extends Controller {
        }
 	function index()
 	{
-	/*		
+		
 		$data = array(
 		"session"=>$this->input->post('session')
 		
@@ -40,8 +40,8 @@ class Main extends Controller {
 		"account"=>$accounts
 		);
 	//	
-*/
 
+/*
 $mainurl = 'http://alonya-pc/API/EdgeBIAPIService.svc/menu';
 $json =  file_get_contents($mainurl);
 $accounturl = 'http://alonya-pc/API/EdgeBIAPIService.svc/accounts';
@@ -55,12 +55,15 @@ $data["json2"]=$json2;
 //$data["json3"]=$json3;
 
 //echo $json;
-	//echo $json2;
+	//echo $json2
+ * 
+ /*
+ */
 	$this->load->view('includes/template',$data);		
 //$this->load->view('includes/tmpl');		
 
 	
-	    $this->firephp->log(json_decode($data["json"]));
+	   // $this->firephp->log(json_decode($data["account"]));
 
 $cookie = array(
 'name' => 'Uiv3',

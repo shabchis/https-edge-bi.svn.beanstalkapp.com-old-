@@ -19,7 +19,7 @@ $hook['post_controller_constructor'] = array(
                                 
                                 );
 
-/*
+
 $hook['pre_system'] = array(
                                 'class'    => 'menuRouting',
                                 'function' => 'index',
@@ -27,6 +27,6 @@ $hook['pre_system'] = array(
                                 'filepath' => 'hooks'
                                 
                                 );
-*/
+
 /* End of file hooks.php */
 /* Location: ./system/application/config/hooks.php */

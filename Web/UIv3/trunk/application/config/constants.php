@@ -42,3 +42,4 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 // Define Ajax Request
 define('IS_AJAX', isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 define('EDGE_API_URL','http://AlonYa-PC/API2');
+//define('iFrameURL','""');
