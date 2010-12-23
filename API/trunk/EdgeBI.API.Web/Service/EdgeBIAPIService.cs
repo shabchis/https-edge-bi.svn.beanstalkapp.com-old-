@@ -12,7 +12,8 @@ using Easynet.Edge.Core.Utilities;
 using System.Data.SqlClient;
 using Microsoft.ServiceModel.Http;
 using Microsoft.Http;
-
+using System.IO;
+using Newtonsoft.Json;
 
 /// <summary>
 /// Summary description for AlonService
@@ -67,19 +68,26 @@ namespace EdgeBI.API.Web
 			return acc;
 		}
 
-		[WebInvoke(Method = "POST", UriTemplate = "sessions")]
-		public string LogIN(string email, string password)
+		[WebInvoke(Method = "POST", UriTemplate = "sessions")]		
+		public string LogIN(SessionOperationData sessionData)
 		{
+			//using (StreamReader reader=new StreamReader(HttpContext.Current.Request.InputStream))
+			//{
+			//     sessionData = Newtonsoft.Json.JsonConvert.DeserializeObject<SessionData>(reader.ReadToEnd());
+				
+			//}
 			string session = "-1";
-
+			
+			//string email = sessionData.email;
+			//string password = sessionData.password;
 
 			using (DataManager.Current.OpenConnection())
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT UserID 
-																					FROM User_GUI_User
+																				FROM User_GUI_User
 																					WHERE Email=@Email:NVarchar AND Password=@Password:NVarchar");
-				sqlCommand.Parameters["@Email"].Value = email;
-				sqlCommand.Parameters["@Password"].Value = password;
+				sqlCommand.Parameters["@Email"].Value = sessionData.Email;
+				sqlCommand.Parameters["@Password"].Value = sessionData.Password;
 
 				int? id = (int?)sqlCommand.ExecuteScalar();
 				if (id != null)

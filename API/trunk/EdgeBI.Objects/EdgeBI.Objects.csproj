@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\Users\alonya\Downloads\Json35r8\Bin\DotNet\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -46,6 +49,7 @@
     <Compile Include="Menu.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="MapperUtility.cs" />
+    <Compile Include="SessionData.cs" />
     <Compile Include="Things.cs" />
     <Compile Include="ThingT.cs" />
     <Compile Include="User.cs" />
