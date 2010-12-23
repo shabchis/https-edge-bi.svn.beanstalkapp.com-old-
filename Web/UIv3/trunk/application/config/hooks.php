@@ -11,20 +11,25 @@
 */
 
 
-$hook['post_controller_constructor'] = array(
-                                'class'    => 'MYlogin',
-                                'function' => 'userlogin',
-                                'filename' => 'Mylogin.php',
+global $REQUEST_PATH;
+
+// Find the path after the application root (in relation to index.php of CodeIgniter)
+$applicationRoot = str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
+$REQUEST_PATH = str_replace($applicationRoot, '', $_SERVER['REQUEST_URI']);
+
+
+$hook['pre_system'][] = array(
+                                'class'    => 'sessionValidation',
+                                'function' => 'index',
+                                'filename' => 'sessionValidation.php',
                                 'filepath' => 'hooks'
-                                
                                 );
-$hook['pre_system'] = array(
-//$hook['post_system']=array(
+
+$hook['pre_system'][] = array(
                                 'class'    => 'menuRouting',
                                 'function' => 'index',
                                 'filename' => 'menuRouting.php',
                                 'filepath' => 'hooks'
-                                
                                 );
 
 /* End of file hooks.php */

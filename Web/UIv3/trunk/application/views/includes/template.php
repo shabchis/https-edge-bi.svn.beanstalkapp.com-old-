@@ -10,13 +10,13 @@
 		<!--[if IE]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<meta http-equiv="X-UA-Compatible" content="IE=9" />
+			<script src="<?php base_url();?>assets/js/modernizr-1.6.min.js"></script>
 		<![endif]-->
 
 		<script src="<?php base_url();?>assets/js/jquery-1.4.4.js"></script>  
 		<script src="<?php base_url();?>assets/js/jquery.dropshadow.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.tmpl.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.tmplPlus.js"></script>
-		<script src="<?php base_url();?>assets/js/modernizr-1.6.min.js"></script>
 		<script src="<?php base_url();?>assets/js/DD_roundies_0.0.2a.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.ba-hashchange.js"></script>
 		<script src="<?php base_url();?>assets/js/animatetoselector.jquery.js"></script>
@@ -26,6 +26,11 @@
 
 	<body>
 		<div id="container" >
+		
+			<script id="usertmpl"  type="text/x-jquery-tmpl">
+			<span id="${UserID}">${Name}</span>
+			
+			</script>
 		
 		<script id="tmpl"  type="text/x-jquery-tmpl">
 		 {{if Name != "TOPBAR"}}
@@ -86,7 +91,7 @@
 			 {{if Name == "TOPBAR"}}
 			 	 <ul>
 			 	{{each ChildItems}}
-					<li>| <a href="#">${Name}</a></li>
+					<li>| <a href="http://${MetaData.External}">${Name}</a></li>
 			  {{/each}}
           		 </ul>
 			 {{/if}}
@@ -96,7 +101,7 @@
 			<img src="<?php base_url();?>assets/img/logo_01.png" id="logo" />
 			<div id="login">
 				<div id="user">
-				<span>Doron</span>&nbsp; <span id="loginout"><a href="login">(Log Out)</a> </span>
+				&nbsp; <span id="loginout"><a href="login/logout">(Log Out)</a> </span>
 				</div>
 				
 				<div id="top"></div>
@@ -147,19 +152,16 @@
 	</ul>
 	</script>
 	<script type="text/javascript">
+		$(function(){	
+		
+	$("#top ul li a").attr("target","_blank");
 	
 	
-
-
-	$(function(){
-	$("#accounts").delegate("li","click",function(){
-	
-		var fav = $("#selected").text();
-	console.log(fav);
-	});
-    	
 	
 	});
+
+
+	
 	  
 	</script>
 	<div id="slider"><span><a href="#"><img src="<?php base_url();?>assets/img/arrows_04.png" /></a></span><div id="caption">Hide</div></div>
@@ -186,30 +188,29 @@
 
 	var menudata = jQuery.parseJSON('<?php echo $menu; ?>');
 	var account = 	jQuery.parseJSON('<?php echo $account; ?>');
+	var user = jQuery.parseJSON('<?php echo $user; ?>');
  	if(menudata){
  		
  	
 
  			$("#tmpl").tmpl(menudata).appendTo("#sub");
 		$("#topmenu").tmpl(menudata).appendTo("#top");
-			
+			$("#usertmpl").tmpl(user).prependTo("#user");
  		}
 
- 		
+ 		 console.log(menudata);
 		$("#accountbar").tmpl(account).appendTo("#accounts");
+		
+		
 	
-//	$.ajax({
-  //url: "",
-  //data
-  //success: function(data) {
-   			
-    
-  //}
-//});
+$(function(){
+		
+	$("#accounts").delegate("li","click",function(){
+		
+			
+});
 
-
-
-
+});
 		
 </script>
   <div id="main">

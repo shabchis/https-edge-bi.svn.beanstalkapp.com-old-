@@ -47,20 +47,5 @@ global $MENU_ROUTES;
 if(!empty($MENU_ROUTES)) $route = array_merge($route,$MENU_ROUTES);
 
 
-/*
-$route['Intelligence/Dashboard']= "iframe_controller";
-$route['login']= "login";
-$route[':any']= "Home";
-/*
-$route['Intelligence/:any']= "Home";
-$route['Intelligence/Dashboard/Test1']= "dashboard";
-$route['Intelligence/Dashboard/Test2']="dashboard";
-$route['Intelligence/Dashboard/Test1/1']="dashboard";
-$route['Intelligence/Dashboard/:any/:any']= "dashboard";
-$route['Intelligence/Dashboard/:any']= "dashboard";
-*/
-
-
-
 /* End of file routes.php */
 /* Location: ./system/application/config/routes.php */

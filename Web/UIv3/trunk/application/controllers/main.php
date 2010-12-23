@@ -10,76 +10,53 @@ class Main extends Controller {
 	{
 		
 		$data = array(
-		"session"=>$this->input->post('session')
+		"session"=>get_cookie('edgebi_session'),
+		"id"=>get_cookie('edgebi_user')
 		
 		);
+		   $this->firephp->log($data);
 	
-		$curl_handle = curl_init();  
-		curl_setopt($curl_handle, CURLOPT_URL, EDGE_API_URL.'/menu');  
+	$curl_handle = curl_init();  
+		curl_setopt($curl_handle, CURLOPT_URL, EDGE_API_URL.'/users/'.$data["id"]);  
 		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);  
-		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('x-edgebi-session:'.$data["session"].''));
-		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('accept: application/json'));
+		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array(
+			'accept: application/json',
+			'x-edgebi-session:'.$_COOKIE['edgebi_session']
+		));
 		
 			
-		$menu = curl_exec($curl_handle);  
+		$user = curl_exec($curl_handle);  
 		curl_close($curl_handle);  
-   
+		
+
+		global $MENU_JSON;
+		$menu = $MENU_JSON;
 		
 		$curl_handle = curl_init();  
 		curl_setopt($curl_handle, CURLOPT_URL, EDGE_API_URL.'/accounts');  
 		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);  
-		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('x-edgebi-session:'.$data["session"].''));
-		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('accept: application/json'));
-		
+		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array(
+			'accept: application/json',
+			'x-edgebi-session:'.$_COOKIE['edgebi_session']
+		));		
 			
 		$accounts = curl_exec($curl_handle);  
 		curl_close($curl_handle);  
 	
 		$data = array(
 		"menu"=>$menu,
-		"account"=>$accounts
+		"account"=>$accounts,
+		"user"=>$user
 		);
 	//	
 
 
- 	   // $this->firephp->log(json_decode($data["account"]));
-	$this->load->view('includes/template',$data);		
+ 	    $this->firephp->log(json_decode($data["user"]));
+		$this->load->view('includes/template',$data);		
 	
 
 
   }
-
-function getmenus(){
-	$mainurl = 'http://alonya-pc/API/EdgeBIAPIService.svc/menu';
-$json =  file_get_contents($mainurl);
-$accounturl = 'http://alonya-pc/API/EdgeBIAPIService.svc/accounts';
-$json2 =     file_get_contents($accounturl);
-//$json = '';
-//$testurl = 'http://AlonYa-PC:53448/WcfHttpLearning/menu';
-//$json2 ='';
-//$json3 =  file_get_contents($testurl);
-$data["json"]=$json;    
-$data["json2"]=$json2;    
-//$data["json3"]=$json3;
-	
-	
-	echo $data["json"];
-	
-	
-	
-}
-
-function getFavicon(){
-
-$linkurl = $_GET['url'];
-
-$linkurl = str_replace("http://",'',$linkurl); // remove protocol from the domain
-
-$imgurl = "http://www.google.com/s2/favicons?domain=" . $linkurl;
-
-echo '<img src="' . $imgurl . '" width="16" height="16" />';
-
-}
 
 }
 
