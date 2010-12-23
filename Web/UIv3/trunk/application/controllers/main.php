@@ -41,43 +41,12 @@ class Main extends Controller {
 		);
 	//	
 
-/*
-$mainurl = 'http://alonya-pc/API/EdgeBIAPIService.svc/menu';
-$json =  file_get_contents($mainurl);
-$accounturl = 'http://alonya-pc/API/EdgeBIAPIService.svc/accounts';
-$json2 =     file_get_contents($accounturl);
-//$json = '';
-//$testurl = 'http://AlonYa-PC:53448/WcfHttpLearning/menu';
-//$json2 ='';
-//$json3 =  file_get_contents($testurl);
-$data["json"]=$json;    
-$data["json2"]=$json2;    
-//$data["json3"]=$json3;
 
-//echo $json;
-	//echo $json2
- * 
- /*
- */
+ 	   // $this->firephp->log(json_decode($data["account"]));
 	$this->load->view('includes/template',$data);		
-//$this->load->view('includes/tmpl');		
-
 	
-	   // $this->firephp->log(json_decode($data["account"]));
 
-$cookie = array(
-'name' => 'Uiv3',
-'value' => 'yes',
-'expire' => '86500',
-'domain' => 'localhost',
-'prefix' => 'manu_'
 
-);
-
-set_cookie($cookie);
-   
-	 
-	 get_cookie();
   }
 
 function getmenus(){

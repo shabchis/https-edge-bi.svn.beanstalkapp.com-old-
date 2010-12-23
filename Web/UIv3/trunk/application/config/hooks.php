@@ -18,9 +18,8 @@ $hook['post_controller_constructor'] = array(
                                 'filepath' => 'hooks'
                                 
                                 );
-
-
 $hook['pre_system'] = array(
+//$hook['post_system']=array(
                                 'class'    => 'menuRouting',
                                 'function' => 'index',
                                 'filename' => 'menuRouting.php',
