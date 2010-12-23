@@ -42,9 +42,9 @@ namespace EdgeBI.API.Web
 		public List<Menu> GetMenu(string menuID)
 		{
 			int currentUser;
-			currentUser =System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			
-			List<Menu> m = Menu.GetMenuByParentID(menuID,currentUser);
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+
+			List<Menu> m = Menu.GetMenuByParentID(menuID, currentUser);
 			if (m == null || m.Count == 0)
 				WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.NotFound;
 			return m;
@@ -54,50 +54,72 @@ namespace EdgeBI.API.Web
 		[OperationContract(Name = "GetAccountByID")]
 		public List<Account> GetAccount(string accountID)
 		{
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 			int? accId = int.Parse(accountID);
-			List<Account> acc = Account.GetAccount(accId, true);
+			List<Account> acc = Account.GetAccount(accId, true, currentUser);
 			return acc;
 		}
 
 		[WebGet(UriTemplate = "Accounts", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
 		public List<Account> GetAccount()
 		{
-			List<Account> acc = Account.GetAccount(null, true);
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			List<Account> acc = Account.GetAccount(null, true, currentUser);
 			return acc;
 		}
 
 		[WebInvoke(Method = "POST", UriTemplate = "sessions")]
 		public SessionOperationData LogIn(SessionOperationData sessionData)
 		{
-
-			SessionOperationData returnsessionData = new SessionOperationData() { Session = "-1", Email = sessionData.Email };				
-
+			SqlCommand sqlCommand;
+			int unEncrypterSession;
+			SessionOperationData returnsessionData = new SessionOperationData() { Session = "-1", Email = sessionData.Email };
+			int? id;
 			using (DataManager.Current.OpenConnection())
 			{
-				SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT UserID 
+				Encryptor encryptor = new Encryptor(KeyEncrypt);
+				if (sessionData.ID==null && string.IsNullOrEmpty(sessionData.Session)) //login with email and password
+				{
+					 sqlCommand = DataManager.CreateCommand(@"SELECT UserID 
 																				FROM User_GUI_User
 																					WHERE Email=@Email:NVarchar AND Password=@Password:NVarchar");
-				sqlCommand.Parameters["@Email"].Value = sessionData.Email;
-				sqlCommand.Parameters["@Password"].Value = sessionData.Password;
+					sqlCommand.Parameters["@Email"].Value = sessionData.Email;
+					sqlCommand.Parameters["@Password"].Value = sessionData.Password;
 
-				int? id = (int?)sqlCommand.ExecuteScalar();
+					id = (int?)sqlCommand.ExecuteScalar();
+				}
+				else //login with session and id
+				{
+					unEncrypterSession =int.Parse(encryptor.Decrypt(sessionData.Session));
+					 sqlCommand = DataManager.CreateCommand(@"SELECT UserID 
+																				FROM User_GUI_Session
+																					WHERE UserID=@UserID:Int AND SessionID=@SessionID:Int");
+					sqlCommand.Parameters["@UserID"].Value = sessionData.ID;
+					sqlCommand.Parameters["@SessionID"].Value = unEncrypterSession;
+
+					id = (int?)sqlCommand.ExecuteScalar();
+
+
+				}
 				if (id != null)
 				{
-					returnsessionData.ID = id.ToString();
+					returnsessionData.ID = id;
 					sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_GUI_Session
 																			(UserID)
 																			VALUES(@UserID:Int);SELECT @@IDENTITY");
 					sqlCommand.Parameters["@UserID"].Value = id;
 					returnsessionData.Session = sqlCommand.ExecuteScalar().ToString();
-					Encryptor encryptor = new Encryptor(KeyEncrypt);
+					
 					returnsessionData.Session = encryptor.Encrypt(returnsessionData.Session);
 
 				}
 				else
 				{
 					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "User Name/Password is wrong!");
-					
-					
+
+
 				}
 			}
 			return returnsessionData;

@@ -22,8 +22,12 @@ namespace EdgeBI.Objects
 		[FieldMap("Name")]
 		public string Name;
 
+
 		[FieldMap("Parent_ID")]
 		public int? ParentID;
+
+		[DataMember(Order=4)]
+		public List<string> CalculatedPermission;
 
 		[DataMember(Order = 3)]
 		public List<Account> ChildAccounts = new List<Account>();
@@ -33,20 +37,35 @@ namespace EdgeBI.Objects
 			throw new NotImplementedException();
 		}
 
-		public static List<Account> GetAccount(int? id, bool firstTime)
+		public static List<Account> GetAccount(int? id, bool firstTime,int userId)
 		{
-			ThingReader<Account> thingReader;
+			ThingReader<Account> accountReader;
+			ThingReader<CalculatedPermission> calculatedPermissionReader;
+			List<CalculatedPermission> calculatedPermissionList = new List<CalculatedPermission>();
+			List<CalculatedPermission> tempCalculatedPermission;
 			List<Account> returnObject = new List<Account>();
 			Dictionary<int?, Account> parents = new Dictionary<int?, Account>();
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
 			using (DataManager.Current.OpenConnection())
 			{
 				SqlCommand sqlCommand = null;
-				sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID FROM [V_User_GUI_Accounts]   ORDER BY Parent_ID", CommandType.Text);
-				thingReader = new ThingReader<Account>(sqlCommand.ExecuteReader(), CustomApply);
-				while (thingReader.Read())
+				sqlCommand = DataManager.CreateCommand("User_GetAllPermissions(@UserID:Int)", CommandType.StoredProcedure);
+				sqlCommand.Parameters["@UserID"].Value = userId;
+				calculatedPermissionReader = new ThingReader<CalculatedPermission>(sqlCommand.ExecuteReader(), customApply);
+				while (calculatedPermissionReader.Read())
 				{
-					Account account = thingReader.Current;
+					calculatedPermissionList.Add(calculatedPermissionReader.Current);					
+				}
+				calculatedPermissionReader.Dispose();
+
+				sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID FROM [V_User_GUI_Accounts]   ORDER BY Parent_ID", CommandType.Text);
+				accountReader = new ThingReader<Account>(sqlCommand.ExecuteReader(), CustomApply);
+				while (accountReader.Read())
+				{
+					Account account = accountReader.Current;
+					account.CalculatedPermission = calculatedPermissionList.FindAll(calculatedPermission => calculatedPermission.AccountID == account.ID).Select(calc=>calc.Path).ToList();
+					
+					
 					if (account.ParentID == null || !parents.ContainsKey(account.ParentID))
 						returnObject.Add(account);
 					else					
@@ -58,6 +77,9 @@ namespace EdgeBI.Objects
 			}
 			return returnObject;
 		}
+		
+
+
 	}
 	[DataContract]
 	public class ChildAccount
