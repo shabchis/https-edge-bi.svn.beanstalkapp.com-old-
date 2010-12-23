@@ -27,7 +27,7 @@ namespace EdgeBI.Objects
 		public int? ParentID;
 
 		[DataMember(Order=4)]
-		public List<string> CalculatedPermission;
+		public List<string> Permissions;
 
 		[DataMember(Order = 3)]
 		public List<Account> ChildAccounts = new List<Account>();
@@ -63,7 +63,7 @@ namespace EdgeBI.Objects
 				while (accountReader.Read())
 				{
 					Account account = accountReader.Current;
-					account.CalculatedPermission = calculatedPermissionList.FindAll(calculatedPermission => calculatedPermission.AccountID == account.ID).Select(calc=>calc.Path).ToList();
+					account.Permissions = calculatedPermissionList.FindAll(calculatedPermission => calculatedPermission.AccountID == account.ID).Select(calc=>calc.Path).ToList();
 					
 					
 					if (account.ParentID == null || !parents.ContainsKey(account.ParentID))
