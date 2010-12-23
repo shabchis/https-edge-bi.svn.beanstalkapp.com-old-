@@ -3,68 +3,58 @@
 class menuRouting{
 	
 	function index(){
-		// $CI =& get_instance();
-		//var_dump($CI);
-//require_once('config_constants.php');
+		
+		// If not session, we can't load the menu yet
+		global $REQUEST_PATH;
+		if($REQUEST_PATH == 'login')
+			return;
 		
 		global $MENU_ROUTES;
-	//	global $iframeurl;
+		global $MENU_IFRAME_URLS;
 		
 		$curl_handle = curl_init();  
 		curl_setopt($curl_handle, CURLOPT_URL, EDGE_API_URL.'/menu');  
 		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);  
-		//curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('x-edgebi-session:'.$data["session"].''));
-		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('accept: application/json'));
+		
+		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('accept: application/json','x-edgebi-session:'.$_COOKIE['edgebi_session']));
 		$menujson = curl_exec($curl_handle);  
 		curl_close($curl_handle);  
+
+		// Save menu for later
+		global $MENU_JSON;
+		$MENU_JSON = $menujson;
 	
-		$routesArray = array();
 		$menuItems = json_decode($menujson);
+		
+		$routesArray = array();
+		$MENU_IFRAME_URLS = array();
+			
 		$this->addRoutesFromMenuItems($routesArray,$menuItems);
 		
-		//var_dump($routesArray);
 		$MENU_ROUTES = $routesArray;
-		//$MENU_ROUTES = $routes;
-		//var_dump($routes);
 	}
 	
-	function addRoutesFromMenuItems(&$routesArray, &$menuItems) {
-		    		
-			
-		foreach($menuItems as $item) {
-			//	print_r($item->ChildItems);
+	function addRoutesFromMenuItems(&$routesArray, &$menuItems)
+	{
+			global $MENU_IFRAME_URLS;
+		foreach($menuItems as $item)
+		{
 			if (isset($item->MetaData->Controller)) 
 			{
-				
-				$routesArray[$item->Path] = $item->MetaData->Controller;
+				$routesArray[$item->Path] = $item->MetaData->Controller;			
+
+				if(isset($item->MetaData->iFrameURL)){
+					$MENU_IFRAME_URLS[$item->Path] = $item->MetaData->iFrameURL;
+					
 			
+					
+				}
+					
 			}
 			
-			if (isset($item->ChildItems)){
+			if (isset($item->ChildItems))
 				$this->addRoutesFromMenuItems($routesArray, $item->ChildItems);
-				
-			}
-				
-		
-		if (isset($item->MetaData->Controller)){
-			if($item->MetaData->Controller == 'iframe_controller'){
-				//$iframeurl["Path"] =$routesArray[$item->MetaData->iFrameURL];
-				//var_dump($routesArray[$item->MetaData->iFrameURL]);
-			//	$this->CI->config->set_item('path', $routesArray[$item->MetaData->iFrameURL]);
-			}
-			
-	
-			
-			
 		}
-			
-			
-			
-		
-		
-	}
-	
-		
 	}
 	
 }

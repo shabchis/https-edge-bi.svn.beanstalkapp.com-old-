@@ -3,83 +3,67 @@
 class Login extends Controller {
 		
 		
-	function index(){
+	function index()
+	{
 		
-		$this->load->view('login');
-		
-	}
-	
-	function validate_credentials()
-	{		
+				
+		// Get login parameters from form
 		$data = array(
-		"email" =>  $this->input->post('email'),
-		"password"=>$this->input->post('password')
-		
+			"operationType" => 'New',
+			"email" =>  $this->input->post('email'),
+			"password"=>$this->input->post('password')		
 		);
+		
+		//$this->firephp->log($data);
+		
+		// Check if valid parameters
+		if (!isset($data["email"]) || $data["email"] == '' ||
+			!isset($data["password"]) || $data["password"] == ''
+			)
+		{
+			
+		//	header('HTTP/1.0 400 Bad Request');
+		//	$this->output->set_header("HTTP/1.0 400 Bad Request");
+			//$this->output->set_header("Status: 400 Bad Request");
+			
+			echo "Invalid login details.";
+		}
+			
 		$curl_handle = curl_init();  
-		curl_setopt($curl_handle, CURLOPT_URL, 'http://AlonYa-PC/API/EdgeBIAPIService.svc/sessions');  
+		curl_setopt($curl_handle, CURLOPT_URL, EDGE_API_URL.'/sessions');  
 		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);  
 		curl_setopt($curl_handle, CURLOPT_POST, 1);  
-		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('Content-Type: application/json'));
-		//curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('x-edgebi-session'));
+		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('Content-Type: application/json','accept: application/json'));
 		curl_setopt($curl_handle, CURLOPT_POSTFIELDS, json_encode($data));  
-		$buffer = curl_exec($curl_handle);  
+		$info = curl_getinfo($curl_handle);
+		$result = curl_exec($curl_handle);  
+		
 		curl_close($curl_handle);  
-   
-		$result = json_decode($buffer); 
-		$this->firephp->log($buffer); 
-		//$this->firephp->log(json_encode($data)); 
-		
-	
- 		if(($result ==json_decode('{"LogINResult":-1}'))  )
+		$this->firephp->log($result);
+ 	//	$this->output->set_header("Status: ".$info['http_code']);
+		if(IS_AJAX)
 		{
-	 	
-	 	
-	 	echo json_decode('{"LogINResult":-1}');
-		}  
-  
-		else  
+			echo $result;
+		}
+		else
 		{
-			$this->firephp->log($result); 
-			echo json_encode($result);
-
- 		}  	
-		
-		
-		
+			//header('HTTP/1.0 400 Bad Request');
+			//$this->output->set_header("HTTP/1.0 400 Bad Request");
+			//$this->output->set_header("Status: 400 Bad Request");
+			
+ 			echo 'Please enable JavaScript.';
+ 		}
 	}	 
 	
-	
-	function sendsession(){
+	function logout(){
 		
-		$data = array(
-		"session"=>$this->input->post('session')
+		delete_cookie("edgebi_session");
+		delete_cookie("edgebi_user");
+		delete_cookie("edgebi_child_account");
+		delete_cookie("edgebi_parent_account");
 		
-		);
-	
-		$curl_handle = curl_init();  
-		curl_setopt($curl_handle, CURLOPT_URL, 'http://AlonYa-PC/API/EdgeBIAPIService.svc/menu');  
-		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);  
-		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('x-edgebi-session:'.$data["session"].''));
-			
-		$menu = curl_exec($curl_handle);  
-		curl_close($curl_handle);  
-   
 		
-		$curl_handle = curl_init();  
-		curl_setopt($curl_handle, CURLOPT_URL, 'http://AlonYa-PC/API/EdgeBIAPIService.svc/accounts');  
-		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);  
-		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('x-edgebi-session:'.$data["session"].''));
-			
-		$accounts = curl_exec($curl_handle);  
-		curl_close($curl_handle);  
-	
-		$data = array(
-		"menu"=>$menu,
-		"account"=>$accounts
-		);
-		$this->load->view('includes/template',$data);
-	
+		redirect("http://localhost/projects/login/");
 	}
-	
+
 }
