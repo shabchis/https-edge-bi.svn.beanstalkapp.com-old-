@@ -96,6 +96,10 @@ namespace EdgeBI.Objects
 				}
 			}
 			//stackMenu.Pop();
+			while (stackMenu.Count > 1)
+			{
+				stackMenu.Pop();
+			}
 			returnObject.Add(stackMenu.Pop());
 			returnObject = Order(returnObject);
 			return returnObject;
