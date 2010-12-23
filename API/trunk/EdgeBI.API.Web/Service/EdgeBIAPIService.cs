@@ -71,16 +71,16 @@ namespace EdgeBI.API.Web
 		}
 
 		[WebInvoke(Method = "POST", UriTemplate = "sessions")]
-		public SessionOperationData LogIn(SessionOperationData sessionData)
+		public SessionResponseData LogIn(SessionRequestData sessionData)
 		{
 			SqlCommand sqlCommand;
 			int unEncrypterSession;
-			SessionOperationData returnsessionData = new SessionOperationData() { Session = "-1", Email = sessionData.Email };
-			int? id;
+			SessionResponseData returnsessionData =new SessionResponseData();
+			int? id=null;
 			using (DataManager.Current.OpenConnection())
 			{
 				Encryptor encryptor = new Encryptor(KeyEncrypt);
-				if (sessionData.ID==null && string.IsNullOrEmpty(sessionData.Session)) //login with email and password
+				if (sessionData.OperationType== OperationTypeEnum.New) //login with email and password
 				{
 					 sqlCommand = DataManager.CreateCommand(@"SELECT UserID 
 																				FROM User_GUI_User
@@ -92,20 +92,20 @@ namespace EdgeBI.API.Web
 				}
 				else //login with session and id
 				{
-					unEncrypterSession =int.Parse(encryptor.Decrypt(sessionData.Session));
-					 sqlCommand = DataManager.CreateCommand(@"SELECT UserID 
+					unEncrypterSession = int.Parse(encryptor.Decrypt(sessionData.Session));
+					sqlCommand = DataManager.CreateCommand(@"SELECT UserID 
 																				FROM User_GUI_Session
 																					WHERE UserID=@UserID:Int AND SessionID=@SessionID:Int");
-					sqlCommand.Parameters["@UserID"].Value = sessionData.ID;
+					sqlCommand.Parameters["@UserID"].Value = sessionData.UserID;
 					sqlCommand.Parameters["@SessionID"].Value = unEncrypterSession;
 
 					id = (int?)sqlCommand.ExecuteScalar();
 
-
 				}
+				
 				if (id != null)
 				{
-					returnsessionData.ID = id;
+					returnsessionData.UserID = id.Value;
 					sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_GUI_Session
 																			(UserID)
 																			VALUES(@UserID:Int);SELECT @@IDENTITY");

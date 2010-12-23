@@ -7,11 +7,27 @@ using Newtonsoft.Json;
 namespace EdgeBI.Objects
 {
 	
-	public class SessionOperationData
+	public class SessionRequestData
 	{
-		public int? ID { get; set; }
+		public OperationTypeEnum OperationType;
+		public int? UserID { get; set; }
 		public string Email { get; set; }		
 		public string Password { get; set; }
 		public string Session { get; set; }
+		
+	}
+	public class SessionResponseData
+	{
+
+		public int UserID { get; set; }		
+		public string Session { get; set; }
+
+	}
+
+	public enum OperationTypeEnum
+	{
+		New,
+		ReNew
+
 	}
 }
