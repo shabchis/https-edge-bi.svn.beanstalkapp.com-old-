@@ -13,14 +13,14 @@
 		<![endif]-->
 
 		<script src="<?php base_url();?>assets/js/jquery-1.4.4.js"></script>  
-		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.dropshadow.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.tmpl.js"></script>
-			<script src="<?php base_url();?>assets/js/jquery.tmplPlus.js"></script>
-			<script src="<?php base_url();?>assets/js/modernizr-1.6.min.js"></script>
+		<script src="<?php base_url();?>assets/js/jquery.tmplPlus.js"></script>
+		<script src="<?php base_url();?>assets/js/modernizr-1.6.min.js"></script>
 		<script src="<?php base_url();?>assets/js/DD_roundies_0.0.2a.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.ba-hashchange.js"></script>
 		<script src="<?php base_url();?>assets/js/animatetoselector.jquery.js"></script>
+		<script src="<?php base_url();?>assets/js/jquery.cookie.js"></script>
 		<script src="<?php base_url();?>assets/js/scripts.js"></script>
 	</head>
 
@@ -119,22 +119,22 @@
 		
 		{{if Name }}
 	<ul>
-		<li class="campaign"><span>${ Name }</span>
+		<li id="${ID}" class="campaign"><span>${ Name }</span>
 		{{if ChildAccounts}}
 		
 		{{each ChildAccounts}}
 			{{if ChildAccounts}}
-		<li class="parent"><a href="#">${ Name }</a>
+		<li id="${ID}" class="parent"><a href="#">${ Name }</a>
 			{{if ChildAccounts}}
 		<ul>
 		{{each ChildAccounts}}
-		<li><a href="#">${Name}</a></li>
+		<li id="${ID}"><a href="#">${Name}</a></li>
 		{{/each}}
 		</ul>
 			{{/if}}
 		</li>
 		{{else}}
-			<li><a href="#">${Name}</a></li>
+			<li id="${ID}"><a href="#">${Name}</a></li>
 		
 		{{/if}}
 		{{/each}}
@@ -167,7 +167,7 @@
 			<div id="accounts" class="folded">	
 			<div id="head">
 				<div id="favicon"><img src='<?php base_url();?>assets/img/favicon4.ico'></img></div>	
-				<div id="selected"></div>
+				<div  id="selected"></div>
 				<div id="arrow" class="regular">&nbsp;</div>
 			</div>
 			<div class="clear"></div>
@@ -218,7 +218,7 @@
   <div class="clear"></div>
 
 	<footer>
-      footer
+   
     </footer>
 
   </div>

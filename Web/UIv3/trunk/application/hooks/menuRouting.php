@@ -3,9 +3,12 @@
 class menuRouting{
 	
 	function index(){
-		//$CI =& get_instance();
-		global $MENU_ROUTES;
+		// $CI =& get_instance();
+		//var_dump($CI);
+//require_once('config_constants.php');
 		
+		global $MENU_ROUTES;
+	//	global $iframeurl;
 		
 		$curl_handle = curl_init();  
 		curl_setopt($curl_handle, CURLOPT_URL, EDGE_API_URL.'/menu');  
@@ -26,7 +29,8 @@ class menuRouting{
 	}
 	
 	function addRoutesFromMenuItems(&$routesArray, &$menuItems) {
-		
+		    		
+			
 		foreach($menuItems as $item) {
 			//	print_r($item->ChildItems);
 			if (isset($item->MetaData->Controller)) 
@@ -42,11 +46,17 @@ class menuRouting{
 			}
 				
 		
-	//	if isset(($item->MetaData->Controller == "iframe_controller")){
-			 //var_dump($routesArray[$item->Path]);
-			//iFrameURL =$routesArray[$item->Path];
+		if (isset($item->MetaData->Controller)){
+			if($item->MetaData->Controller == 'iframe_controller'){
+				//$iframeurl["Path"] =$routesArray[$item->MetaData->iFrameURL];
+				//var_dump($routesArray[$item->MetaData->iFrameURL]);
+			//	$this->CI->config->set_item('path', $routesArray[$item->MetaData->iFrameURL]);
+			}
 			
-		//}
+	
+			
+			
+		}
 			
 			
 			
