@@ -23,10 +23,8 @@ namespace EdgeBI.API.Web
 {
 	[ServiceContract]
 	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-	public class EdgeBIAPIService
+	public class EdgeApiService
 	{
-
-
 		private const string KeyEncrypt = "5c51374e366f41297356413c71677220386c534c394742234947567840";
 		/// <summary>
 		/// Get user
@@ -44,8 +42,8 @@ namespace EdgeBI.API.Web
 		public List<Menu> GetMenu(string menuID)
 		{
 			int currentUser;
-			//currentUser =int.Parse( WebOperationContext.Current.IncomingRequest.Headers["user"]);
-			currentUser = 8;
+			currentUser =System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			
 			List<Menu> m = Menu.GetMenuByParentID(menuID,currentUser);
 			if (m == null || m.Count == 0)
 				WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.NotFound;
@@ -68,18 +66,11 @@ namespace EdgeBI.API.Web
 			return acc;
 		}
 
-		[WebInvoke(Method = "POST", UriTemplate = "sessions")]		
-		public string LogIN(SessionOperationData sessionData)
+		[WebInvoke(Method = "POST", UriTemplate = "sessions")]
+		public SessionOperationData LogIn(SessionOperationData sessionData)
 		{
-			//using (StreamReader reader=new StreamReader(HttpContext.Current.Request.InputStream))
-			//{
-			//     sessionData = Newtonsoft.Json.JsonConvert.DeserializeObject<SessionData>(reader.ReadToEnd());
-				
-			//}
-			string session = "-1";
-			
-			//string email = sessionData.email;
-			//string password = sessionData.password;
+
+			SessionOperationData returnsessionData = new SessionOperationData() { Session = "-1", Email = sessionData.Email };				
 
 			using (DataManager.Current.OpenConnection())
 			{
@@ -92,23 +83,24 @@ namespace EdgeBI.API.Web
 				int? id = (int?)sqlCommand.ExecuteScalar();
 				if (id != null)
 				{
+					returnsessionData.ID = id.ToString();
 					sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_GUI_Session
 																			(UserID)
 																			VALUES(@UserID:Int);SELECT @@IDENTITY");
 					sqlCommand.Parameters["@UserID"].Value = id;
-					session = sqlCommand.ExecuteScalar().ToString();
+					returnsessionData.Session = sqlCommand.ExecuteScalar().ToString();
 					Encryptor encryptor = new Encryptor(KeyEncrypt);
-					session = encryptor.Encrypt(session);
+					returnsessionData.Session = encryptor.Encrypt(returnsessionData.Session);
 
 				}
 				else
 				{
-					WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.Unauthorized;
-					WebOperationContext.Current.OutgoingResponse.StatusDescription = "Wrong user name/password";
-
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "User Name/Password is wrong!");
+					
+					
 				}
 			}
-			return session;
+			return returnsessionData;
 		}
 
 
