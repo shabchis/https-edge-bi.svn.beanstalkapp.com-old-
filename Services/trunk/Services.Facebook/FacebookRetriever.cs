@@ -189,15 +189,15 @@ namespace Easynet.Edge.Services.Facebook
                 
 
                 listOfFaceBookRows = new List<FacebookRow>();
-         
-                    foreach (System.Xml.XmlNode node in getAdGroupStatsXmlDoc.DocumentElement.SelectNodes("//fb:Ads_getAdGroupStats_response_elt_elt_elt", xpathManager))
+
+				foreach (System.Xml.XmlNode node in getAdGroupStatsXmlDoc.DocumentElement.SelectNodes("//fb:ads_stats", xpathManager))
                     {
                       //  getAdGroupStatsXmlDoc.Load(@"c:\dt.txt");
                         Easynet.Edge.Services.Facebook.FacebookRow newRow = new FacebookRow();
 
-						foreach (System.Xml.XmlElement innerChild in node.SelectNodes("fb:Ads_getAdGroupStats_response_elt_elt_elt_elt", xpathManager))
+						foreach (System.Xml.XmlElement innerChild in node.ChildNodes)
                         {
-							string fieldName = innerChild.GetAttribute("key"); // FB changed this from simply the element name
+							string fieldName = innerChild.LocalName;
 							if (fieldName.Equals("id"))
                             {
                                 adGroupID = innerChild.InnerText;

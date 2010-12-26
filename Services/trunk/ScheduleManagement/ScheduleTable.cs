@@ -32,8 +32,6 @@ namespace Easynet.Edge.Services.ScheduleManagement
 		private bool _systemServicesRunning = false;
 		//private Dictionary<int, int> _accountList = new Dictionary<int, int>();
 		private static Semaphore _runTaskSync;
-		private DateTime _keepAliveLastTime;
-		private int _keepAliveCheckTime; // in Minutes
 		private string _scheduleServiceName = string.Empty;
 		private long _serviceInstanceID = -1;
 
@@ -88,18 +86,7 @@ namespace Easynet.Edge.Services.ScheduleManagement
 		
 			_runTaskSync = new Semaphore(1, 1);
 
-			_keepAliveLastTime = DateTime.Now;
-			_keepAliveCheckTime = 5; // minutes
-			rawValue = AppSettings.Get(this, "KeepAliveCheckTime", false);
-
-			try
-			{
-				if (rawValue != null)
-					int.TryParse(rawValue, out _keepAliveCheckTime);
-			}
-			catch
-			{
-			}
+/
 		}
 
 		/*=========================*/
@@ -188,8 +175,6 @@ namespace Easynet.Edge.Services.ScheduleManagement
 
 			_runTaskSync.WaitOne();
 
-			WriteKeepAlive();
-
 			//_timer.Enabled = false;
 			// Loop on service lists in schedule table.
 			foreach (string serviceName in this.Keys.ToArray())
@@ -245,64 +230,6 @@ namespace Easynet.Edge.Services.ScheduleManagement
 			
 			//_timer.Enabled = true;
 			_runTaskSync.Release();
-		}
-
-		private void WriteKeepAlive()
-		{
-			// Write each keepAliveCheckTime  minutes to the DB the current time.
-			if (DateTime.Now.AddMinutes(-1 * _keepAliveCheckTime) > _keepAliveLastTime)
-			{
-				using (DataManager.Current.OpenConnection())
-				{
-					try
-					{
-						// Check if there is a row with the service name in the DB.
-						SqlCommand selectCommand = DataManager.CreateCommand(@"
-							select KeepAlive_Time from source.dbo.KeepAlive
-							WHERE InstanceID = @InstanceID:BigInt",
-							CommandType.Text);
-
-						selectCommand.CommandTimeout = 120;
-						selectCommand.Parameters["@InstanceID"].Value = _serviceInstanceID;
-						object result = selectCommand.ExecuteScalar();
-
-						if (result == null)
-						{
-							// Initalize update command.
-							SqlCommand insertCommand = DataManager.CreateCommand(@"
-								insert INTO source.dbo.KeepAlive
-									   (KeepAlive_Time,ServiceName,InstanceID)
-								Values (@Day_Code:DateTime,@ServiceName:varchar,@InstanceID:BigInt)",						
-								CommandType.Text);
-
-							insertCommand.CommandTimeout = 120;
-							insertCommand.Parameters["@Day_Code"].Value = DateTime.Now;
-							insertCommand.Parameters["@ServiceName"].Value = _scheduleServiceName;
-							insertCommand.Parameters["@InstanceID"].Value = _serviceInstanceID;
-							insertCommand.ExecuteNonQuery();
-						}
-						else
-						{
-							// Initalize update command.
-							SqlCommand updateCommand = DataManager.CreateCommand(@"
-								UPDATE source.dbo.KeepAlive
-								SET KeepAlive_Time = @Day_Code:DateTime
-								WHERE InstanceID = @InstanceID:BigInt",
-								CommandType.Text);
-
-							updateCommand.CommandTimeout = 120;
-							updateCommand.Parameters["@Day_Code"].Value = DateTime.Now;
-							updateCommand.Parameters["@InstanceID"].Value = _serviceInstanceID;
-							updateCommand.ExecuteNonQuery();
-						}
-						_keepAliveLastTime = DateTime.Now;
-					}
-					catch (Exception ex)
-					{
-						Log.Write("Failed to write keepalive time to DB.", ex);
-					}
-				}
-			}
 		}
 
 		/// <summary>

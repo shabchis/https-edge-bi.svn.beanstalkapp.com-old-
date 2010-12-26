@@ -172,8 +172,8 @@ namespace Easynet.Edge.Services.DataRetrieval
 				_fileExtension
 				);
 
-			// Remove the inavlid file char ':'
-			fileName = fileName.Remove(fileName.LastIndexOf(':'), 1);
+			// Remove the inavlid file char ':' - WHAT THE FUCK WHO DID THIS
+			//fileName = fileName.Remove(fileName.LastIndexOf(':'), 1);
 			return fileName;
 		}
 
