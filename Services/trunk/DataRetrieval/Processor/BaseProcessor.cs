@@ -617,6 +617,31 @@ namespace Easynet.Edge.Services.DataRetrieval.Processor
 		/// <param name="sectionName">The section name from the configuration to load.</param>
 		protected virtual void InitalizeGatewayNameMapping(Dictionary<string, string> fields, string sectionName)
 		{
+			//***************************
+			// ANTI-YANIV HACK
+			if (sectionName == "GatewayName")
+			{
+				string trackerParamsRaw = Instance.Configuration.Options["TrackingParameters"];
+				if (trackerParamsRaw != null)
+				{
+					string[] trackerParamPairs = trackerParamsRaw.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+					foreach (string trackerParamPair in trackerParamPairs)
+					{
+						string[] pair = trackerParamPair.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+						if (pair.Length < 2)
+							continue;
+						else
+							fields.Add(pair[0], pair[1]);
+					}
+
+					// If we found anything ignore the rest of this horrible function
+					if (fields.Count > 1)
+						return;
+				}
+			}
+			// ANTI-YANIV HACK
+			//***************************
+
 			try
 			{
 				// Load the proper report paramters by the report name.
@@ -628,7 +653,7 @@ namespace Easynet.Edge.Services.DataRetrieval.Processor
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Error get configuration Data from GatewayName section.", ex);
+				throw new Exception(String.Format("Error get configuration Data from {0} section.", sectionName), ex);
 			}		
 		}
 

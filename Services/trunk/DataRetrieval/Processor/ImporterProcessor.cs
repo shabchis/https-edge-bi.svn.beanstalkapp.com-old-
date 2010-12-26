@@ -74,13 +74,7 @@ namespace Easynet.Edge.Services.DataRetrieval.Processor
 			return base.DoWork();
 		}
 
-		protected override void InitalizeProcessData(out FieldElementSection rawDataFields, out FieldElementSection metaDataFields, out SqlCommand insertCommand, out Dictionary<string, string> gatewayNameFields)
-		{
-			base.InitalizeProcessData(out rawDataFields, out metaDataFields, out insertCommand, out gatewayNameFields);
-		}
-
-
-
+		
 		protected override void ReadFile(string filePath, string defaultErrorSubDirPath, bool hasBackOffice, ref bool xmlFileEmpty, FieldElementSection rawDataFields, FieldElementSection metaDataFields, SqlCommand insertCommand, Dictionary<string, string> gatewayNameFields)
 		{
 			// Initalzie headers Dictionaries.

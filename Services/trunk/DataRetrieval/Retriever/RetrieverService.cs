@@ -587,16 +587,20 @@ namespace Easynet.Edge.Services.DataRetrieval.Retriever
 			if (File.Exists(inputPath))
 			{
 				string fileName = InitalizeFileName(inputPath, retrieveDate, suffix,directory);
+				
 				try
 				{
 					Directory.Move(inputPath, fileName);
 				}
 				catch (IOException ex) // file already exist
 				{
-					// TODO: fix patch
-					fileName += "b";
+					Log.Write("Could move file, trying different name...", ex, LogMessageType.Warning);
+
+					fileName += " DUPLICATE";
 					Directory.Move(inputPath, fileName);
 				}
+
+				Log.Write("Successfully moved file " + fileName, LogMessageType.Information);
 				return fileName;
 			}
 			else

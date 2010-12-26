@@ -38,7 +38,7 @@ namespace Easynet.Edge.Services.FileImport
 						Path.GetFileName(file)
 						);
 
-					File.Copy(file, Path.Combine(directUploadPath, saveFileName));
+					File.Copy(file, Path.Combine(directUploadPath, saveFileName), true);
 				}
 			}
 			else
