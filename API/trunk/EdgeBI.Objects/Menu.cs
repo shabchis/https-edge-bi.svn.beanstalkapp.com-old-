@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
 
+
 namespace EdgeBI.Objects
 {
 	[DataContract]
@@ -44,9 +45,9 @@ namespace EdgeBI.Objects
 		public List<Menu> ChildItems = new List<Menu>();
 
 
-		public static List<Menu> GetMenuByParentID(string path,int userId)
+		public static List<Menu> GetMenuByParentID(string path, int userId)
 		{
-			
+
 			Stack<Menu> stackMenu = new Stack<Menu>();
 
 			string newPath = string.Format("{0}%", path);
@@ -57,7 +58,7 @@ namespace EdgeBI.Objects
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
 			using (DataManager.Current.OpenConnection())
 			{
-				SqlCommand sqlCommand = DataManager.CreateCommand("MenuesBy_UserPermission_MenuPath(@userID:Int,@menuPath:NvarChar)",CommandType.StoredProcedure);			
+				SqlCommand sqlCommand = DataManager.CreateCommand("MenuesBy_UserPermission_MenuPath(@userID:Int,@menuPath:NvarChar)", CommandType.StoredProcedure);
 				sqlCommand.Parameters["@menuPath"].Value = newPath;
 				sqlCommand.Parameters["@userID"].Value = userId;
 
@@ -100,24 +101,27 @@ namespace EdgeBI.Objects
 			{
 				stackMenu.Pop();
 			}
-			returnObject.Add(stackMenu.Pop());
+			if (returnObject.Count > 0)
+				returnObject.Add(stackMenu.Pop());
+
 			returnObject = Order(returnObject);
+			
 			return returnObject;
 
 		}
 
 		private static List<Menu> Order(List<Menu> returnObject)
 		{
-			if (returnObject != null && returnObject.Count>0)
+			if (returnObject != null && returnObject.Count > 0)
 			{
 				IEnumerable<Menu> menues = returnObject.OrderBy(menu => menu.Ordinal);
-			
+
 				foreach (Menu menu in menues)
 				{
 					menu.ChildItems = Order(menu.ChildItems);
 				}
 				returnObject = menues.ToList();
-			}				
+			}
 			return returnObject;
 		}
 		private static Dictionary<string, string> CustomApply(FieldInfo info, IDataRecord reader)

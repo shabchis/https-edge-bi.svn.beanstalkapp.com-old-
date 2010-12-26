@@ -46,7 +46,7 @@ namespace EdgeBI.API.Web
 
 			List<Menu> m = Menu.GetMenuByParentID(menuID, currentUser);
 			if (m == null || m.Count == 0)
-				WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.NotFound;
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound,string.Format("No menu found for userId {0} ",currentUser));
 			return m;
 		}
 
