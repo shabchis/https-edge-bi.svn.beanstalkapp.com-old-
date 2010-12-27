@@ -15,13 +15,15 @@ namespace Easynet.Edge.Core.Utilities
 
 	public class Encryptor
 	{
+		#region Static methods
+		//==============================
 		const string _key = "8666094D1EC7452A4B209A9360233E2BCA35380216BE3037A375DEA50CFFD9B4";
-		static Symmetric _symmetricEncryptor;
+		static Symmetric _globalEncryptor;
 
 		static Encryptor()
 		{
-			_symmetricEncryptor = new Symmetric(Symmetric.Provider.Rijndael, true);
-			_symmetricEncryptor.Key = new Easynet.Edge.Core.Encryption.Data(_key);
+			_globalEncryptor = new Symmetric(Symmetric.Provider.Rijndael, true);
+			_globalEncryptor.Key = new Easynet.Edge.Core.Encryption.Data(_key);
 		}
 
 		/// <summary>
@@ -30,10 +32,10 @@ namespace Easynet.Edge.Core.Utilities
 		/// <param name="str"></param>
 		/// <param name="offsets"></param>
 		/// <returns></returns>
-		public static string Encrypt(string str)
+		public static string Enc(string str)
 		{
 			Easynet.Edge.Core.Encryption.Data raw = new Easynet.Edge.Core.Encryption.Data(str);
-			Easynet.Edge.Core.Encryption.Data encrypted = _symmetricEncryptor.Encrypt(raw);
+			Easynet.Edge.Core.Encryption.Data encrypted = _globalEncryptor.Encrypt(raw);
 
 			return encrypted.ToHex();
 		}
@@ -41,41 +43,50 @@ namespace Easynet.Edge.Core.Utilities
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="str"></param>
-		/// <param name="notInUse">For backwards compatibility only.</param>
-		/// <returns></returns>
-		[Obsolete]
-		public static string Encrypt(string str, string notInUse)
-		{
-			return Encrypt(str);
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
 		/// <param name="encodedStr"></param>
 		/// <returns></returns>
-		public static string Decrypt(string encodedStr)
+		public static string Dec(string encodedStr)
 		{
 			Easynet.Edge.Core.Encryption.Data encrypted = new Easynet.Edge.Core.Encryption.Data();
 			encrypted.Hex = encodedStr;
 
-			Easynet.Edge.Core.Encryption.Data decrypted = _symmetricEncryptor.Decrypt(encrypted);
+			Easynet.Edge.Core.Encryption.Data decrypted = _globalEncryptor.Decrypt(encrypted);
 			return decrypted.ToString();
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="str"></param>
-		/// <param name="notInUse">For backwards compatibility only.</param>
-		/// <returns></returns>
-		[Obsolete]
-		public static string Decrypt(string str, string notInUse)
+		//==============================
+		#endregion
+
+		#region Instance methods
+		//==============================
+
+		Symmetric _instanceEncryptor;
+
+		public Encryptor(string key)
 		{
-			return Decrypt(str);
+			_instanceEncryptor = new Symmetric(Symmetric.Provider.Rijndael, true);
+			_instanceEncryptor.Key = new Easynet.Edge.Core.Encryption.Data(key);
 		}
 
+		public string Encrypt(string str)
+		{
+			Easynet.Edge.Core.Encryption.Data raw = new Easynet.Edge.Core.Encryption.Data(str);
+			Easynet.Edge.Core.Encryption.Data encrypted = _instanceEncryptor.Encrypt(raw);
+
+			return encrypted.ToHex();
+		}
+
+		public string Decrypt(string encodedStr)
+		{
+			Easynet.Edge.Core.Encryption.Data encrypted = new Easynet.Edge.Core.Encryption.Data();
+			encrypted.Hex = encodedStr;
+
+			Easynet.Edge.Core.Encryption.Data decrypted = _instanceEncryptor.Decrypt(encrypted);
+			return decrypted.ToString();
+		}
+
+		//==============================
+		#endregion
 	}
 }
 
