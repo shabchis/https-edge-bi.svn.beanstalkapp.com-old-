@@ -101,7 +101,7 @@ namespace EdgeBI.Objects
 			{
 				stackMenu.Pop();
 			}
-			if (returnObject.Count > 0)
+			if (stackMenu.Count > 0)
 				returnObject.Add(stackMenu.Pop());
 
 			returnObject = Order(returnObject);
@@ -126,36 +126,15 @@ namespace EdgeBI.Objects
 		}
 		private static Dictionary<string, string> CustomApply(FieldInfo info, IDataRecord reader)
 		{
-			Dictionary<string, string> metadata = new Dictionary<string, string>();
-			Regex settingParser = new Regex(@"\b[A-Za-z]+[A-Za-z0-9-_/=\+]*\s*:[^;:]*");
-			Regex keyParser = new Regex(@"^\b[A-Za-z]+[A-Za-z0-9-_/=\+]*");
-			Regex valueParser = new Regex(@"[^;:]*$");
 
-			//SettingsCollection settings = null;
+			SettingsCollection settings=null;
+			
 			try
 			{
 				if (reader != null)
 				{
-					//settings = new SettingsCollection(reader[info.Name].ToString());
-					foreach (Match setting in settingParser.Matches(reader[info.Name].ToString()))
-					{
-						string key, val;
-						Match keyMatch = keyParser.Match(setting.Value);
-						if (keyMatch.Success)
-							key = keyMatch.Value.Trim();
-						else
-							continue;
-
-						// Extract the value
-						Match valMatch = valueParser.Match(setting.Value);
-						if (valMatch.Success)
-							val = valMatch.Value.Trim();
-						else
-							continue;
-
-						metadata.Add(key, val);
-
-					}
+					settings = new SettingsCollection(reader[info.Name].ToString());
+					
 				}
 
 			}
@@ -164,7 +143,7 @@ namespace EdgeBI.Objects
 
 				throw;
 			}
-			return metadata;
+			return settings.ToDictionary();
 		}
 
 		//System.Data.SqlClient.SqlCommand cmd = Easynet.Edge.Core.Data.DataManager.CreateCommand("User_GetAllPermissions(@userID:int)");

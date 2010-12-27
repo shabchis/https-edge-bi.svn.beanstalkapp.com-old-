@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 namespace EdgeBI.API.Web
 {
 	[ServiceContract]
+	[ServiceBehavior(IncludeExceptionDetailInFaults=true)]
 	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
 	public class EdgeApiService
 	{
@@ -58,6 +59,8 @@ namespace EdgeBI.API.Web
 			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 			int? accId = int.Parse(accountID);
 			List<Account> acc = Account.GetAccount(accId, true, currentUser);
+			if (acc.Count == 0)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, String.Format("No account with permission found for user {0}", currentUser));
 			return acc;
 		}
 
@@ -67,6 +70,8 @@ namespace EdgeBI.API.Web
 			int currentUser;
 			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 			List<Account> acc = Account.GetAccount(null, true, currentUser);
+			if (acc.Count == 0)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, String.Format("No account with permission found for user {0}", currentUser));
 			return acc;
 		}
 

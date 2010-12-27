@@ -14,7 +14,7 @@ namespace EdgeBI.API.Web
 	public abstract class MessageInterceptor
 	{
 		public abstract void ProcessResponse(ref System.ServiceModel.Channels.Message request, ref System.ServiceModel.Channels.Message response);
-		public abstract void ProcessRequest(ref System.ServiceModel.Channels.Message request);
+		public abstract void ProcessRequest(ref System.ServiceModel.Channels.Message request );
 	}
 
 	public class MessageInspector : IDispatchMessageInspector, IServiceBehavior

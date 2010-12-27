@@ -51,6 +51,7 @@ namespace EdgeBI.API.Web
 			}
 
 		}
+		
 	
 		
 		public override void WriteToStream(object instance, Stream stream, HttpRequestMessage request)
@@ -65,6 +66,7 @@ namespace EdgeBI.API.Web
 				}
 			}
 		}
+		
 
 		public override object ReadFromStream(Stream stream, HttpRequestMessage request)
 		{
@@ -82,4 +84,7 @@ namespace EdgeBI.API.Web
 		}
 
 	}
+	
+	
+
 }
