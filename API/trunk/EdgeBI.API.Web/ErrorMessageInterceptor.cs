@@ -12,6 +12,9 @@ using System.ServiceModel;
 using Microsoft.ServiceModel.Dispatcher;
 using System.ServiceModel.Web;
 using System.Net;
+using System.Xml;
+using System.IO;
+using EdgeBI.Objects;
 
 namespace EdgeBI.API.Web
 {
@@ -24,6 +27,7 @@ namespace EdgeBI.API.Web
 		{
 			OperationContext.Current.OutgoingMessageProperties[StatusCodeProperty] = statusCode;
 			OperationContext.Current.OutgoingMessageProperties[ErrorObjectProperty] = error;
+			
 			throw new WebFaultException(statusCode);
 		}
 
@@ -38,8 +42,22 @@ namespace EdgeBI.API.Web
 
 			// TODO: add text message to output
 			HttpResponseMessage responseMessage = request.ToHttpRequestMessage().CreateResponse(statusCode);
+
+			
+			
+
+			
+			responseMessage.Content = HttpContent.Create( OperationContext.Current.OutgoingMessageProperties[ErrorObjectProperty].ToString() , "application/json");
 			response = responseMessage.ToMessage();
+			
+
+			
+		 
+		
+		
+			
 		}
+	
 
 
 		public override void ProcessRequest(ref Message request)
