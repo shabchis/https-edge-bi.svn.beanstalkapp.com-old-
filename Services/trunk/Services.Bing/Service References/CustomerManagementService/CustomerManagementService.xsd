@@ -1,0 +1,1017 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="https://adcenter.microsoft.com/api/customermanagement/Entities" elementFormDefault="qualified" targetNamespace="https://adcenter.microsoft.com/api/customermanagement/Entities" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="https://sharedservices.adcenterapi.microsoft.com/Api/CustomerManagement/v7/CustomerManagementService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="ArrayOfAccountInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AccountInfo" nillable="true" type="tns:AccountInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfAccountInfo" nillable="true" type="tns:ArrayOfAccountInfo" />
+  <xs:complexType name="AccountInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:long" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Number" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Status" type="tns:AccountLifeCycleStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AccountInfo" nillable="true" type="tns:AccountInfo" />
+  <xs:simpleType name="AccountLifeCycleStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Draft" />
+      <xs:enumeration value="Active" />
+      <xs:enumeration value="Inactive" />
+      <xs:enumeration value="Pause" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="AccountLifeCycleStatus" nillable="true" type="tns:AccountLifeCycleStatus" />
+  <xs:complexType name="Account">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AccountType" type="tns:AccountType" />
+      <xs:element minOccurs="0" name="BillToCustomerId" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="CountryCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CurrencyType" nillable="true" type="tns:CurrencyType" />
+      <xs:element minOccurs="0" name="FinancialStatus" nillable="true" type="tns:AccountFinancialStatus" />
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="Language" nillable="true" type="tns:LanguageType" />
+      <xs:element minOccurs="0" name="LastModifiedByUserId" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="LastModifiedTime" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Number" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ParentCustomerId" type="xs:long" />
+      <xs:element minOccurs="0" name="PaymentMethodId" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="PaymentMethodType" nillable="true" type="tns:PaymentMethodType" />
+      <xs:element minOccurs="0" name="PrimaryUserId" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="Status" nillable="true" type="tns:AccountLifeCycleStatus" />
+      <xs:element minOccurs="0" name="TimeStamp" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="TimeZone" nillable="true" type="tns:TimeZoneType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Account" nillable="true" type="tns:Account" />
+  <xs:simpleType name="AccountType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Advertiser" />
+      <xs:enumeration value="Publisher" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="AccountType" nillable="true" type="tns:AccountType" />
+  <xs:simpleType name="CurrencyType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AlgerianDinar" />
+      <xs:enumeration value="ArgentinePeso" />
+      <xs:enumeration value="ArmenianDram" />
+      <xs:enumeration value="AustralianDollar" />
+      <xs:enumeration value="AzerbaijanianManat" />
+      <xs:enumeration value="BahrainiDinar" />
+      <xs:enumeration value="Baht" />
+      <xs:enumeration value="Balboa" />
+      <xs:enumeration value="BelarussianRuble" />
+      <xs:enumeration value="BelizeDollar" />
+      <xs:enumeration value="Bolivar" />
+      <xs:enumeration value="Boliviano" />
+      <xs:enumeration value="BrazilianReal" />
+      <xs:enumeration value="BruneiDollar" />
+      <xs:enumeration value="CanadianDollar" />
+      <xs:enumeration value="ChileanPeso" />
+      <xs:enumeration value="ColombianPeso" />
+      <xs:enumeration value="CordobaOro" />
+      <xs:enumeration value="CostaRicanColon" />
+      <xs:enumeration value="Croatiankuna" />
+      <xs:enumeration value="CzechKoruna" />
+      <xs:enumeration value="DanishKrone" />
+      <xs:enumeration value="Denar" />
+      <xs:enumeration value="DominicanPeso" />
+      <xs:enumeration value="Dong" />
+      <xs:enumeration value="EgyptianPound" />
+      <xs:enumeration value="Euro" />
+      <xs:enumeration value="Forint" />
+      <xs:enumeration value="Guarani" />
+      <xs:enumeration value="HongKongDollar" />
+      <xs:enumeration value="Hryvnia" />
+      <xs:enumeration value="IcelandKrona" />
+      <xs:enumeration value="IndianRupee" />
+      <xs:enumeration value="IranianRial" />
+      <xs:enumeration value="IraqiDinar" />
+      <xs:enumeration value="JamaicanDollar" />
+      <xs:enumeration value="JapaneseYen" />
+      <xs:enumeration value="JordanianDinar" />
+      <xs:enumeration value="KenyanShilling" />
+      <xs:enumeration value="Kroon" />
+      <xs:enumeration value="KuwaitiDinar" />
+      <xs:enumeration value="Lari" />
+      <xs:enumeration value="LatvianLats" />
+      <xs:enumeration value="LebanesePound" />
+      <xs:enumeration value="Lek" />
+      <xs:enumeration value="Lempira" />
+      <xs:enumeration value="Leu" />
+      <xs:enumeration value="Lev" />
+      <xs:enumeration value="LibyanDinar" />
+      <xs:enumeration value="LithuanianLitus" />
+      <xs:enumeration value="MalaysianRinggit" />
+      <xs:enumeration value="MexicanPeso" />
+      <xs:enumeration value="MoroccanDirham" />
+      <xs:enumeration value="NewIsraeliSheqel" />
+      <xs:enumeration value="NewTaiwanDollar" />
+      <xs:enumeration value="NewZealandDollar" />
+      <xs:enumeration value="NorwegianKrone" />
+      <xs:enumeration value="NuevoSol" />
+      <xs:enumeration value="PakistanRupee" />
+      <xs:enumeration value="Pataca" />
+      <xs:enumeration value="PesoUruguayo" />
+      <xs:enumeration value="PhilippinePeso" />
+      <xs:enumeration value="QatariRial" />
+      <xs:enumeration value="Quetzal" />
+      <xs:enumeration value="RialOmani" />
+      <xs:enumeration value="Rufiyaa" />
+      <xs:enumeration value="Rupiah" />
+      <xs:enumeration value="RussianRuble" />
+      <xs:enumeration value="SaudiRiyal" />
+      <xs:enumeration value="SingaporeDollar" />
+      <xs:enumeration value="SlovakKoruna" />
+      <xs:enumeration value="Som" />
+      <xs:enumeration value="SouthAfricanRand" />
+      <xs:enumeration value="SwedishKrona" />
+      <xs:enumeration value="SwissFranc" />
+      <xs:enumeration value="SyrianPound" />
+      <xs:enumeration value="Tenge" />
+      <xs:enumeration value="Tolar" />
+      <xs:enumeration value="TrinidadandTobagoDollar" />
+      <xs:enumeration value="Tugrik" />
+      <xs:enumeration value="TunisianDinar" />
+      <xs:enumeration value="TurkishLira" />
+      <xs:enumeration value="UAEDirham" />
+      <xs:enumeration value="UKPound" />
+      <xs:enumeration value="USDollar" />
+      <xs:enumeration value="UzbekistanSum" />
+      <xs:enumeration value="Won" />
+      <xs:enumeration value="YemeniRial" />
+      <xs:enumeration value="YuanRenminbi" />
+      <xs:enumeration value="YugoslavianNewDinar" />
+      <xs:enumeration value="ZimbabweDollar" />
+      <xs:enumeration value="Zloty" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="CurrencyType" nillable="true" type="tns:CurrencyType" />
+  <xs:simpleType name="AccountFinancialStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Proposed" />
+      <xs:enumeration value="PendingCreditCheck" />
+      <xs:enumeration value="ClearFinancialStatus" />
+      <xs:enumeration value="SoldToOnly" />
+      <xs:enumeration value="CreditWarning" />
+      <xs:enumeration value="Hold" />
+      <xs:enumeration value="WriteOff" />
+      <xs:enumeration value="TaxOnHold" />
+      <xs:enumeration value="UserHold" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="AccountFinancialStatus" nillable="true" type="tns:AccountFinancialStatus" />
+  <xs:simpleType name="LanguageType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Danish" />
+      <xs:enumeration value="Dutch" />
+      <xs:enumeration value="English" />
+      <xs:enumeration value="Finnish" />
+      <xs:enumeration value="French" />
+      <xs:enumeration value="German" />
+      <xs:enumeration value="Italian" />
+      <xs:enumeration value="Japanese" />
+      <xs:enumeration value="Norwegian" />
+      <xs:enumeration value="Portuguese" />
+      <xs:enumeration value="Swedish" />
+      <xs:enumeration value="Spanish" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="LanguageType" nillable="true" type="tns:LanguageType" />
+  <xs:simpleType name="PaymentMethodType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="CreditCard" />
+      <xs:enumeration value="Invoice" />
+      <xs:enumeration value="Check" />
+      <xs:enumeration value="ElectronicFundsTransfer" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="PaymentMethodType" nillable="true" type="tns:PaymentMethodType" />
+  <xs:simpleType name="TimeZoneType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AbuDhabiMuscat">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">32</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Adelaide">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">11</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Alaska">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">72</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AlmatyNovosibirsk">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">25</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AmsterdamBerlinBernRomeStockholmVienna">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">48</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Arizona">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">68</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AstanaDhaka">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">24</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AthensBuckarestIstanbul">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">43</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AtlanticTimeCanada">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">58</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AucklandWellington">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Azores">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">51</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Baghdad">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">37</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BakuTbilisiYerevan">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">31</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BangkokHanoiJakarta">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">21</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BeijingChongqingHongKongUrumqi">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">19</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BelgradeBratislavaBudapestLjubljanaPrague">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">47</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BogotaLimaQuito">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">61</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Brasilia">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">54</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Brisbane">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">9</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BrusselsCopenhagenMadridParis">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">46</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Bucharest">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">42</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BuenosAiresGeorgetown">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">55</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Cairo">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">41</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CanberraMelbourneSydney">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">8</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CapeVerdeIsland">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">52</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CaracasLaPaz">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">59</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CasablancaMonrovia">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">49</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CentralAmerica">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">64</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CentralTimeUSCanada">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">65</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ChennaiKolkataMumbaiNewDelhi">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">27</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ChihuahuaLaPazMazatlan">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">69</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Darwin">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">10</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EasternTimeUSCanada">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">62</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Ekaterinburg">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">29</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FijiKamchatkaMarshallIsland">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Greenland">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">56</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="GreenwichMeanTimeDublinEdinburghLisbonLondon">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">50</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="GuadalajaraMexicoCityMonterrey">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">66</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="GuamPortMoresby">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">7</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="HararePretoria">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">40</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Hawaii">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">73</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="HelsinkiKyivRigaSofiaTallinnVilnius">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">39</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Hobart">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">6</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="IndianaEast">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">63</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="InternationalDatelineWest">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">75</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="IrkutskUlaanBataar">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">18</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="IslamabadKarachiTashkent">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">28</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Jerusalem">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">38</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Kabul">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">30</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Kathmandu">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">26</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Krasnoyarsk">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">20</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="KualaLumpurSingapore">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">17</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="KuwaitRiyadh">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">36</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="MagadanSolomonIslandNewCaledonia">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">4</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="MidAtlantic">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">53</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="MidwayIslandAndSamoa">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">74</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="MoscowStPetersburgVolgograd">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">35</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="MountainTimeUSCanada">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">70</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Nairobi">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">34</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Newfoundland">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">57</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Nukualofa">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="OsakaSapporoTokyo">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">14</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PacificTimeUSCanadaTijuana">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">71</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Perth">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">16</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Rangoon">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">22</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Santiago">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">60</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SarajevoSkopjeWarsawZagreb">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">45</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Saskatchewan" />
+      <xs:enumeration value="Seoul">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">13</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SriJayawardenepura">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">23</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Taipei">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">15</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Tehran">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">33</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Vladivostok">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">5</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="WestCentralAfrica">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">44</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Yakutsk">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">12</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="TimeZoneType" nillable="true" type="tns:TimeZoneType" />
+  <xs:complexType name="PublisherAccount">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Account">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PublisherAccount" nillable="true" type="tns:PublisherAccount" />
+  <xs:complexType name="AdvertiserAccount">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Account">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AgencyContactName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="AgencyCustomerId" nillable="true" type="xs:long" />
+          <xs:element minOccurs="0" name="SalesHouseCustomerId" nillable="true" type="xs:long" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AdvertiserAccount" nillable="true" type="tns:AdvertiserAccount" />
+  <xs:complexType name="Customer">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CustomerAddress" nillable="true" type="tns:Address" />
+      <xs:element minOccurs="0" name="FinancialStatus" nillable="true" type="tns:CustomerFinancialStatus" />
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="Industry" nillable="true" type="tns:Industry" />
+      <xs:element minOccurs="0" name="LastModifiedByUserId" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="LastModifiedTime" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Market" nillable="true" type="tns:Market" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ServiceLevel" nillable="true" type="tns:ServiceLevel" />
+      <xs:element minOccurs="0" name="Status" nillable="true" type="tns:CustomerLifeCycleStatus" />
+      <xs:element minOccurs="0" name="TimeStamp" nillable="true" type="xs:base64Binary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Customer" nillable="true" type="tns:Customer" />
+  <xs:complexType name="Address">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="City" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CountryCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="Line1" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Line2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Line3" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Line4" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PostalCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StateOrProvince" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TimeStamp" nillable="true" type="xs:base64Binary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Address" nillable="true" type="tns:Address" />
+  <xs:simpleType name="CustomerFinancialStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ProposalsOnly" />
+      <xs:enumeration value="PendingCreditCheck" />
+      <xs:enumeration value="ClearFinancialStatus" />
+      <xs:enumeration value="SoldToOnly" />
+      <xs:enumeration value="CreditHold" />
+      <xs:enumeration value="CreditWarning" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="CustomerFinancialStatus" nillable="true" type="tns:CustomerFinancialStatus" />
+  <xs:simpleType name="Industry">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NA" />
+      <xs:enumeration value="AgencySalesHouse" />
+      <xs:enumeration value="Automotive" />
+      <xs:enumeration value="ConsumerPackagedGoods" />
+      <xs:enumeration value="Education" />
+      <xs:enumeration value="Entertainment" />
+      <xs:enumeration value="FinancialServices" />
+      <xs:enumeration value="FoodServices" />
+      <xs:enumeration value="Gaming" />
+      <xs:enumeration value="GovernmentNonprofitPolitical" />
+      <xs:enumeration value="Healthcare" />
+      <xs:enumeration value="Internal" />
+      <xs:enumeration value="PublishingAndWebMedia" />
+      <xs:enumeration value="RealEstate" />
+      <xs:enumeration value="Retail" />
+      <xs:enumeration value="Services" />
+      <xs:enumeration value="Technology" />
+      <xs:enumeration value="Telecommunications" />
+      <xs:enumeration value="TravelHospitality" />
+      <xs:enumeration value="Other" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="Industry" nillable="true" type="tns:Industry" />
+  <xs:simpleType name="Market">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Undefined" />
+      <xs:enumeration value="France" />
+      <xs:enumeration value="Singapore" />
+      <xs:enumeration value="US" />
+      <xs:enumeration value="UK" />
+      <xs:enumeration value="CanadaFR" />
+      <xs:enumeration value="CanadaEN" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="Market" nillable="true" type="tns:Market" />
+  <xs:simpleType name="ServiceLevel">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SelfServe" />
+      <xs:enumeration value="SelfServeTrusted" />
+      <xs:enumeration value="Premium" />
+      <xs:enumeration value="Internal" />
+      <xs:enumeration value="Select" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ServiceLevel" nillable="true" type="tns:ServiceLevel" />
+  <xs:simpleType name="CustomerLifeCycleStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Active" />
+      <xs:enumeration value="Inactive" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="CustomerLifeCycleStatus" nillable="true" type="tns:CustomerLifeCycleStatus" />
+  <xs:complexType name="User">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ContactInfo" nillable="true" type="tns:ContactInfo" />
+      <xs:element minOccurs="0" name="CustomerAppScope" nillable="true" type="tns:ApplicationType" />
+      <xs:element minOccurs="0" name="CustomerId" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="JobTitle" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="LastModifiedByUserId" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="LastModifiedTime" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Lcid" nillable="true" type="tns:LCID" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="tns:PersonName" />
+      <xs:element minOccurs="0" name="Password" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SecretAnswer" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SecretQuestion" type="tns:SecretQuestion" />
+      <xs:element minOccurs="0" name="Status" nillable="true" type="tns:UserStatus" />
+      <xs:element minOccurs="0" name="TimeStamp" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="UserName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="User" nillable="true" type="tns:User" />
+  <xs:complexType name="ContactInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Address" nillable="true" type="tns:Address" />
+      <xs:element minOccurs="0" name="ContactByPhone" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ContactByPostalMail" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Email" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EmailFormat" nillable="true" type="tns:EmailFormat" />
+      <xs:element minOccurs="0" name="Fax" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="HomePhone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="Mobile" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Phone1" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Phone2" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ContactInfo" nillable="true" type="tns:ContactInfo" />
+  <xs:simpleType name="EmailFormat">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Html">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Text">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="EmailFormat" nillable="true" type="tns:EmailFormat" />
+  <xs:simpleType name="ApplicationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Advertiser" />
+      <xs:enumeration value="Publisher" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ApplicationType" nillable="true" type="tns:ApplicationType" />
+  <xs:simpleType name="LCID">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="EnglishUS">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1033</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FrenchFrance">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1036</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EnglishUK">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2057</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FrenchCanada">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3084</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EnglishCanada">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">4105</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EnglishSingapore">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">18441</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="LCID" nillable="true" type="tns:LCID" />
+  <xs:complexType name="PersonName">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FirstName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="LastName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MiddleInitial" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PersonName" nillable="true" type="tns:PersonName" />
+  <xs:simpleType name="SecretQuestion">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="FavoritePetsName" />
+      <xs:enumeration value="FavoriteMovie" />
+      <xs:enumeration value="Anniversary" />
+      <xs:enumeration value="FatherMiddleName" />
+      <xs:enumeration value="SpouseMiddleName" />
+      <xs:enumeration value="FirstChildMiddleName" />
+      <xs:enumeration value="HighSchoolName" />
+      <xs:enumeration value="FavoriteTeacherName" />
+      <xs:enumeration value="FavoriteSportsTeam" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SecretQuestion" nillable="true" type="tns:SecretQuestion" />
+  <xs:simpleType name="UserStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="New" />
+      <xs:enumeration value="Active" />
+      <xs:enumeration value="Inactive" />
+      <xs:enumeration value="Deleted" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="UserStatus" nillable="true" type="tns:UserStatus" />
+  <xs:complexType name="ArrayOfCustomerInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CustomerInfo" nillable="true" type="tns:CustomerInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCustomerInfo" nillable="true" type="tns:ArrayOfCustomerInfo" />
+  <xs:complexType name="CustomerInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CustomerInfo" nillable="true" type="tns:CustomerInfo" />
+  <xs:simpleType name="UserRole">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AdvertiserCampaignManager" />
+      <xs:enumeration value="SuperAdmin" />
+      <xs:enumeration value="ClientViewer" />
+      <xs:enumeration value="ClientManager" />
+      <xs:enumeration value="PublisherAdmin" />
+      <xs:enumeration value="PublisherAccountManager" />
+      <xs:enumeration value="PublisherReportUser" />
+      <xs:enumeration value="PublisherListManager" />
+      <xs:enumeration value="PublisherAdViewer" />
+      <xs:enumeration value="ClientAdmin" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="UserRole" nillable="true" type="tns:UserRole" />
+  <xs:complexType name="ArrayOfUserInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="UserInfo" nillable="true" type="tns:UserInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfUserInfo" nillable="true" type="tns:ArrayOfUserInfo" />
+  <xs:complexType name="UserInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:long" />
+      <xs:element minOccurs="0" name="UserName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="UserInfo" nillable="true" type="tns:UserInfo" />
+</xs:schema>

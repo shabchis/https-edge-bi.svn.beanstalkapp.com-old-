@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="37a7287f-0545-417b-a029-d37c6af39889" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://sharedservices.adcenterapi.microsoft.com/Api/CustomerManagement/v7/CustomerManagementService.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="CustomerManagementService.xsd" MetadataType="Schema" ID="8c4d80a1-2002-4c65-b508-4534d1d4a061" SourceId="1" SourceUrl="https://sharedservices.adcenterapi.microsoft.com/Api/CustomerManagement/v7/CustomerManagementService.svc?xsd=xsd2" />
+    <MetadataFile FileName="CustomerManagementService1.xsd" MetadataType="Schema" ID="c25f0edb-0637-45cb-9cf9-365ec60fc934" SourceId="1" SourceUrl="https://sharedservices.adcenterapi.microsoft.com/Api/CustomerManagement/v7/CustomerManagementService.svc?xsd=xsd1" />
+    <MetadataFile FileName="CustomerManagementService2.xsd" MetadataType="Schema" ID="242e496a-7e3c-458c-811c-ab2441ab0458" SourceId="1" SourceUrl="https://sharedservices.adcenterapi.microsoft.com/Api/CustomerManagement/v7/CustomerManagementService.svc?xsd=xsd0" />
+    <MetadataFile FileName="CustomerManagementService.wsdl" MetadataType="Wsdl" ID="3b272e47-d8a2-4a4d-b09d-25c086aaeff4" SourceId="1" SourceUrl="https://sharedservices.adcenterapi.microsoft.com/Api/CustomerManagement/v7/CustomerManagementService.svc?wsdl" />
+    <MetadataFile FileName="CustomerManagementService3.xsd" MetadataType="Schema" ID="065779b4-1c59-42a6-a339-614b2964012c" SourceId="1" SourceUrl="https://sharedservices.adcenterapi.microsoft.com/Api/CustomerManagement/v7/CustomerManagementService.svc?xsd=xsd5" />
+    <MetadataFile FileName="CustomerManagementService4.xsd" MetadataType="Schema" ID="abaa2734-3ea4-4d83-bdee-f830520791d6" SourceId="1" SourceUrl="https://sharedservices.adcenterapi.microsoft.com/Api/CustomerManagement/v7/CustomerManagementService.svc?xsd=xsd4" />
+    <MetadataFile FileName="CustomerManagementService5.xsd" MetadataType="Schema" ID="c1b64b03-47f6-40af-887c-5e68bd708f2a" SourceId="1" SourceUrl="https://sharedservices.adcenterapi.microsoft.com/Api/CustomerManagement/v7/CustomerManagementService.svc?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

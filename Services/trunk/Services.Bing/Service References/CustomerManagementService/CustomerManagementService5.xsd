@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="https://adcenter.microsoft.com/api/customermanagement/Exception" elementFormDefault="qualified" targetNamespace="https://adcenter.microsoft.com/api/customermanagement/Exception" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="https://sharedservices.adcenterapi.microsoft.com/Api/CustomerManagement/v7/CustomerManagementService.svc?xsd=xsd4" namespace="https://adapi.microsoft.com" />
+  <xs:complexType name="ApiFault">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q1="https://adapi.microsoft.com" base="q1:ApplicationFault">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OperationErrors" nillable="true" type="tns:ArrayOfOperationError" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ApiFault" nillable="true" type="tns:ApiFault" />
+  <xs:complexType name="ArrayOfOperationError">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="OperationError" nillable="true" type="tns:OperationError" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfOperationError" nillable="true" type="tns:ArrayOfOperationError" />
+  <xs:complexType name="OperationError">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" type="xs:int" />
+      <xs:element minOccurs="0" name="Details" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OperationError" nillable="true" type="tns:OperationError" />
+</xs:schema>
