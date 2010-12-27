@@ -18,9 +18,9 @@
 			<RowDefinition Height="20"/>
 		</Grid.RowDefinitions>
 
-		<ScrollContentPresenter x:Name="_currentPageViewer" Grid.Column="1" Grid.Row="1" IsEnabled="{Binding ElementName=FloatingDialogMask, Path=Visibility, Converter={StaticResource InvisibleToBoolConverter}}" Margin="15,0,0,0"/>
+		<ScrollContentPresenter x:Name="_currentPageViewer" Grid.Column="0" Grid.Row="0" IsEnabled="{Binding ElementName=FloatingDialogMask, Path=Visibility, Converter={StaticResource InvisibleToBoolConverter}}" Margin="15,0,0,0"/>
 
-		<Label x:Name="_version" Grid.Row="2" FontSize="8" Foreground="#bbb"/>
+		<Label x:Name="_version" Grid.Row="1" FontSize="8" Foreground="#bbb" HorizontalAlignment="Left"/>
 
 		<!-- ================================= -->
 		<!-- MASKS-->
