@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="73f316a6-a942-4616-b195-0512ee11b613" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://adcenterapi.microsoft.com/Api/Advertiser/v6/Reporting/ReportingService.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ReportingService.xsd" MetadataType="Schema" ID="20b8ea2a-b857-42e1-aa63-079575847b14" SourceId="1" SourceUrl="https://adcenterapi.microsoft.com/Api/Advertiser/V6/Reporting/ReportingService.svc?xsd=xsd1" />
+    <MetadataFile FileName="ReportingService1.xsd" MetadataType="Schema" ID="79929ea8-d248-4080-9aca-00b96923292d" SourceId="1" SourceUrl="https://adcenterapi.microsoft.com/Api/Advertiser/V6/Reporting/ReportingService.svc?xsd=xsd2" />
+    <MetadataFile FileName="ReportingService.wsdl" MetadataType="Wsdl" ID="f0dca987-8e3c-4e24-8bea-46da1a2980f5" SourceId="1" SourceUrl="https://adcenterapi.microsoft.com/Api/Advertiser/v6/Reporting/ReportingService.svc?wsdl" />
+    <MetadataFile FileName="ReportingService2.xsd" MetadataType="Schema" ID="4c79f91c-da26-4d6e-876b-ab139d7e5873" SourceId="1" SourceUrl="https://adcenterapi.microsoft.com/Api/Advertiser/V6/Reporting/ReportingService.svc?xsd=xsd0" />
+    <MetadataFile FileName="ReportingService3.xsd" MetadataType="Schema" ID="ac5a6b9d-30e6-495c-b5a4-a88bb494c4a9" SourceId="1" SourceUrl="https://adcenterapi.microsoft.com/Api/Advertiser/V6/Reporting/ReportingService.svc?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Microsoft.AdCenter.Advertiser.CampaignManagement.Api.DataContracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Microsoft.AdCenter.Advertiser.CampaignManagement.Api.DataContracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="https://adcenterapi.microsoft.com/Api/Advertiser/V7/CampaignManagement/CampaignManagementService.svc?xsd=xsd1" namespace="https://adcenter.microsoft.com/v7" />
+  <xs:simpleType name="AdComponent">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="Keyword" />
+      <xs:enumeration value="KeywordParam1" />
+      <xs:enumeration value="KeywordParam2" />
+      <xs:enumeration value="KeywordParam3" />
+      <xs:enumeration value="AdTitleDescription" />
+      <xs:enumeration value="AdTitle" />
+      <xs:enumeration value="AdDescription" />
+      <xs:enumeration value="DisplayUrl" />
+      <xs:enumeration value="DestinationUrl" />
+      <xs:enumeration value="LandingUrl" />
+      <xs:enumeration value="SiteDomain" />
+      <xs:enumeration value="BusinessName" />
+      <xs:enumeration value="PhoneNumber" />
+      <xs:enumeration value="CashbackTextParam" />
+      <xs:enumeration value="AltText" />
+      <xs:enumeration value="Audio" />
+      <xs:enumeration value="Video" />
+      <xs:enumeration value="Flash" />
+      <xs:enumeration value="CAsset" />
+      <xs:enumeration value="Image" />
+      <xs:enumeration value="Destination" />
+      <xs:enumeration value="Asset" />
+      <xs:enumeration value="Ad" />
+      <xs:enumeration value="Order" />
+      <xs:enumeration value="BiddingKeyword" />
+      <xs:enumeration value="Association" />
+      <xs:enumeration value="Script" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="AdComponent" nillable="true" type="tns:AdComponent" />
+  <xs:complexType name="ArrayOfAdGroupNetwork">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AdGroupNetwork" nillable="true" type="tns:AdGroupNetwork" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfAdGroupNetwork" nillable="true" type="tns:ArrayOfAdGroupNetwork" />
+  <xs:complexType name="AdGroupNetwork">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AdGroupId" type="xs:long" />
+      <xs:element xmlns:q1="https://adcenter.microsoft.com/v7" minOccurs="0" name="Network" nillable="true" type="q1:Network" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AdGroupNetwork" nillable="true" type="tns:AdGroupNetwork" />
+</xs:schema>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="https://adcenter.microsoft.com/api/customermanagement" elementFormDefault="qualified" targetNamespace="https://adcenter.microsoft.com/api/customermanagement" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="https://sharedservices.adcenterapi.microsoft.com/Api/CustomerManagement/v7/CustomerManagementService.svc?xsd=xsd2" namespace="https://adcenter.microsoft.com/api/customermanagement/Entities" />
+  <xs:import schemaLocation="https://sharedservices.adcenterapi.microsoft.com/Api/CustomerManagement/v7/CustomerManagementService.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:element name="GetAccountsInfoRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CustomerId" nillable="true" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ApplicationToken" nillable="true" type="xs:string" />
+  <xs:element name="DeveloperToken" nillable="true" type="xs:string" />
+  <xs:element name="Password" nillable="true" type="xs:string" />
+  <xs:element name="UserName" nillable="true" type="xs:string" />
+  <xs:element name="GetAccountsInfoResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="AccountsInfo" nillable="true" type="q1:ArrayOfAccountInfo" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TrackingId" nillable="true" type="xs:string" />
+  <xs:element name="AddAccountRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="Account" nillable="true" type="q2:Account" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddAccountResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="AccountId" type="xs:long" />
+        <xs:element minOccurs="0" name="AccountNumber" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="CreateTime" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateAccountRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="Account" nillable="true" type="q3:Account" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateAccountResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="LastModifiedTime" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCustomerRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CustomerId" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCustomerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="Customer" nillable="true" type="q4:Customer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateCustomerRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="Customer" nillable="true" type="q5:Customer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateCustomerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="LastModifiedTime" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SignupCustomerRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="Customer" nillable="true" type="q6:Customer" />
+        <xs:element xmlns:q7="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="User" nillable="true" type="q7:User" />
+        <xs:element xmlns:q8="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="Account" nillable="true" type="q8:Account" />
+        <xs:element minOccurs="0" name="ParentCustomerId" nillable="true" type="xs:long" />
+        <xs:element xmlns:q9="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="ApplicationScope" type="q9:ApplicationType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SignupCustomerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CustomerId" type="xs:long" />
+        <xs:element minOccurs="0" name="CustomerNumber" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="UserId" type="xs:long" />
+        <xs:element minOccurs="0" name="AccountId" nillable="true" type="xs:long" />
+        <xs:element minOccurs="0" name="AccountNumber" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="CreateTime" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAccountRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="AccountId" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAccountResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q10="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="Account" nillable="true" type="q10:Account" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCustomersInfoRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CustomerNameFilter" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="TopN" type="xs:int" />
+        <xs:element xmlns:q11="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="ApplicationScope" type="q11:ApplicationType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCustomersInfoResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q12="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="CustomersInfo" nillable="true" type="q12:ArrayOfCustomerInfo" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddUserRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q13="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="User" nillable="true" type="q13:User" />
+        <xs:element xmlns:q14="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="Role" type="q14:UserRole" />
+        <xs:element xmlns:q15="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="AccountIds" nillable="true" type="q15:ArrayOflong" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddUserResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Id" type="xs:long" />
+        <xs:element minOccurs="0" name="CreateTime" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteAccountRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="AccountId" type="xs:long" />
+        <xs:element minOccurs="0" name="TimeStamp" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteAccountResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteCustomerRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CustomerId" type="xs:long" />
+        <xs:element minOccurs="0" name="TimeStamp" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteCustomerResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateUserRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q16="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="User" nillable="true" type="q16:User" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateUserResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="LastModifiedTime" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateUserRolesRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CustomerId" type="xs:long" />
+        <xs:element minOccurs="0" name="UserId" type="xs:long" />
+        <xs:element minOccurs="0" name="NewRoleId" nillable="true" type="xs:int" />
+        <xs:element xmlns:q17="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="NewAccountIds" nillable="true" type="q17:ArrayOflong" />
+        <xs:element xmlns:q18="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="NewCustomerIds" nillable="true" type="q18:ArrayOflong" />
+        <xs:element minOccurs="0" name="DeleteRoleId" nillable="true" type="xs:int" />
+        <xs:element xmlns:q19="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="DeleteAccountIds" nillable="true" type="q19:ArrayOflong" />
+        <xs:element xmlns:q20="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="DeleteCustomerIds" nillable="true" type="q20:ArrayOflong" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateUserRolesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="LastModifiedTime" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetUserRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="UserId" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetUserResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q21="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="User" nillable="true" type="q21:User" />
+        <xs:element xmlns:q22="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Roles" nillable="true" type="q22:ArrayOfint" />
+        <xs:element xmlns:q23="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Accounts" nillable="true" type="q23:ArrayOflong" />
+        <xs:element xmlns:q24="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Customers" nillable="true" type="q24:ArrayOflong" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteUserRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="UserId" type="xs:long" />
+        <xs:element minOccurs="0" name="TimeStamp" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteUserResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetUsersInfoRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CustomerId" type="xs:long" />
+        <xs:element xmlns:q25="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="StatusFilter" nillable="true" type="q25:UserStatus" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetUsersInfoResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q26="https://adcenter.microsoft.com/api/customermanagement/Entities" minOccurs="0" name="UsersInfo" nillable="true" type="q26:ArrayOfUserInfo" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCustomerPilotFeatureRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CustomerId" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCustomerPilotFeatureResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q27="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="FeaturePilotFlags" nillable="true" type="q27:ArrayOfint" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
