@@ -23,6 +23,8 @@ using System.Collections.Specialized;
 using System.Web;
 using System.Net;
 using Easynet.Edge.Core.Configuration;
+using System.IO;
+using System.Diagnostics;
 
 namespace Easynet.Edge.UI.Client
 {
@@ -34,7 +36,7 @@ namespace Easynet.Edge.UI.Client
 		#region Fields
 		/*=========================*/
 		public static string AssemblyAddressRoot;
-		public static string AssemblyDownloadPath;
+		public static string AssemblyDownloadPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
 		private Oltp.AccountDataTable _accountsTable = null;
 		private Oltp.AccountRow _currentAccount = null;
@@ -45,7 +47,17 @@ namespace Easynet.Edge.UI.Client
 		#endregion
 
 		#region Start + Login
-		/*=========================*/		
+		/*=========================*/
+
+		static MainWindow()
+		{
+			// Required for some reason
+			AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(delegate(object sender, ResolveEventArgs args)
+			{
+				Debugger.Break();
+				return Assembly.LoadFrom(new Uri(new Uri(AssemblyAddressRoot), args.Name + ".dll").ToString());
+			});
+		}
 
 		/// <summary>
 		/// 
@@ -82,7 +94,14 @@ namespace Easynet.Edge.UI.Client
 
 			// Settings we should get from the deployment URL
 			int accountID;
-			int menuItemID;
+			string menuItemPath;
+			string sessionID;
+
+			#if DEBUG
+			accountID = 7;
+			sessionID = "C6F95CF10558DEB8AAC8118B027F40CE";
+			menuItemPath = "management/campaigns";
+			#endif
 
 			// Normal producion
 			if (ApplicationDeployment.IsNetworkDeployed)
@@ -105,51 +124,26 @@ namespace Easynet.Edge.UI.Client
 				}
 
 				// Log in from session param
-				string sessionID = urlParams["session"];
-				bool allowedAccess = false;
-				if (sessionID != null)
+				sessionID = urlParams["session"];
+				if (String.IsNullOrEmpty(sessionID))
 				{
-					try
-					{
-						OltpProxy.SessionStart(sessionID);
-						allowedAccess = true;
-					}
-					catch { }
-				}
-
-				// Check access
-				if (!allowedAccess)
-				{
-					HidePageContents("Your session has expired. Please refresh the page.");
+					HidePageContents("Invalid session specified. Try logging out and logging back in.");
 					return;
 				}
-				CurrentUser = OltpProxy.CurrentUser;
 
-
-				string menuItemParam = urlParams["page"];
-				if (String.IsNullOrEmpty(menuItemParam))
+				menuItemPath = urlParams["path"];
+				if (String.IsNullOrEmpty(menuItemPath))
 				{
-					HidePageContents("No page specified. Please select an item from the menu.");
-					return;
-				}
-				if (!int.TryParse(menuItemParam, out menuItemID))
-				{
-					HidePageContents("Invalid page specified. Please select an item from the menu.");
+					HidePageContents("Invalid menu path specified. Please select an item from the menu.");
 					return;
 				}
 			}
 			else
 			{
-				#if DEBUG
+				#if !DEBUG
 				{
-					// Local debug scenario
-					OltpProxy.SessionStart(null);
-					accountID = 7;
-					menuItemID = 7;
-				}
-				#else
-				{
-					throw new InvalidOperationException("This page must be accessed via the Edge.BI interface.");
+					HidePageContents("This page must be accessed via the Edge.BI interface.");
+					return;
 				}
 				#endif
 			}
@@ -159,20 +153,22 @@ namespace Easynet.Edge.UI.Client
 			// Get user settings
 			AsyncOperation(delegate()
 			{
+				OltpProxy.SessionStart(sessionID);
 				using (OltpProxy proxy = new OltpProxy())
 				{
 					_accountsTable = proxy.Service.Account_Get();
 					_userPermissions = proxy.Service.User_GetAllPermissions();
-					menuItem = proxy.Service.ApiMenuItem_GetByID(menuItemID);
+					menuItem = proxy.Service.ApiMenuItem_GetByPath(menuItemPath);
 				}
 			},
 			delegate(Exception ex)
 			{
-				MessageBoxError("Failed to load user settings.", ex);
+				HidePageContents(null, ex);
 				return false;
 			},
 			delegate()
 			{
+				CurrentUser = OltpProxy.CurrentUser;
 				DataRow[] rs = _accountsTable.Select("ID = " + accountID.ToString());
 				if (rs.Length < 1)
 				{
@@ -198,13 +194,6 @@ namespace Easynet.Edge.UI.Client
 					return;
 			}
 
-			string className;
-			if (!menuItem.Metadata.TryGetValue("WPF-class", out className))
-			{
-				HidePageContents("This menu item cannot be loaded in WPF.");
-				return;
-			}
-
 			// Kill all async wait handles
 			foreach (System.Threading.AutoResetEvent handle in _asyncHandles.Values)
 			{
@@ -212,17 +201,38 @@ namespace Easynet.Edge.UI.Client
 			}
 			_asyncHandles.Clear();
 
+			DataRow[] permissions = _userPermissions.Select(String.Format("PermissionType = '{0}' and (AccountID = -1 or AccountID = {1})", menuItem.Path, CurrentAccount.ID));
+			if (permissions.Length < 1)
+			{
+				HidePageContents("You don't have permission to view this page for the current account.");
+				return;
+			}
+
+			string className;
+			if (!menuItem.Metadata.TryGetValue("WpfClass", out className))
+			{
+				HidePageContents("This menu item cannot be loaded in WPF.");
+				return;
+			}
+			
+			// Try to get the class
+			Type newPageType = Type.GetType(className, false);
+			bool displayRightAway = true;
 
 			#region DisplayPage()
+
 			// This is performed after we load the target DLL
 			Action displayPageDelegate = delegate()
 			{
 				// Try to get the target page type
-				Type newPageType = Type.GetType(className, false);
 				if (newPageType == null)
 				{
-					HidePageContents("Could not load the requested page - class not found.");
-					return;
+					try { newPageType = Type.GetType(className, true); }
+					catch(Exception ex)
+					{
+						HidePageContents("Could not load the requested page.", ex);
+						return;
+					}
 				}
 
 				try
@@ -232,7 +242,7 @@ namespace Easynet.Edge.UI.Client
 				catch (Exception ex)
 				{
 					CurrentPage = null;
-					HidePageContents(ex);
+					HidePageContents("Failed to load page.", ex);
 				}
 
 				CurrentPage.PageData = menuItem;
@@ -258,30 +268,42 @@ namespace Easynet.Edge.UI.Client
 			};
 			#endregion
 
-			// Resolve the class reference
-			string assemblyAddress = menuItem.Metadata["WPF-assembly"];
-			if (String.IsNullOrEmpty(assemblyAddress))
+			/*
+			if (newPageType == null)
 			{
-				HidePageContents("Could not load the requested page - DLL not specified.");
-				return;
-			}
+				// Resolve the class reference
+				string assemblyAddress;
+				if (!menuItem.Metadata.TryGetValue("WpfAssembly", out assemblyAddress) || String.IsNullOrEmpty(assemblyAddress))
+				{
+					HidePageContents("Could not load the requested page - DLL not specified.");
+					return;
+				}
 
-			if (t)
-			{
-				AsyncOperation(
-					delegate()
-					{
-						Uri downloadUri = new Uri(new Uri(AssemblyAddressRoot), assemblyAddress);
-						string downloadTarget = System.IO.Path.Combine(AssemblyDownloadPath, System.IO.Path.GetFileName(downloadUri.LocalPath));
-						using (WebClient client = new WebClient())
+				Uri downloadUri = new Uri(new Uri(AssemblyAddressRoot), assemblyAddress);
+				string downloadTarget = System.IO.Path.Combine(AssemblyDownloadPath, System.IO.Path.GetFileName(downloadUri.LocalPath));
+				if (!File.Exists(downloadTarget))
+				{
+					displayRightAway = false;
+					AsyncOperation(
+						delegate()
 						{
-							client.DownloadFile(downloadUri, downloadTarget);
-						}
-					},
-					HidePageContents,
-					displayPageDelegate);
+							using (WebClient client = new WebClient())
+							{
+								client.DownloadFile(downloadUri, downloadTarget);
+							}
+							GC.Collect();
+						},
+						delegate(Exception ex)
+						{
+							HidePageContents(String.Format("Failed to download page from {0}", downloadUri), ex);
+							return false;
+						},
+						displayPageDelegate);
+				}
 			}
-			else
+			*/
+			
+			if (displayRightAway)
 			{
 				displayPageDelegate();
 			}
@@ -558,30 +580,55 @@ namespace Easynet.Edge.UI.Client
 		#region Full page messages
 		/*=========================*/
 
-		public void HidePageContents(string message)
+		public bool HidePageContents(string message, Exception ex)
 		{
+			StackPanel body = new StackPanel();
+			body.Orientation = Orientation.Vertical;
+
 			TextBlock msg = new TextBlock();
 			msg.FontSize = 14;
 			msg.Foreground = Brushes.Red;
 			msg.FontWeight = FontWeights.Bold;
-			msg.Text = message;
-			_currentPageViewer.Content = msg;
+			msg.Text = message ?? (ex != null ? ex.Message : "Sorry, an unexpected error has occured.");
+			msg.Margin = new Thickness(0, 0, 0, 20);
+			body.Children.Add(msg);
+
+			if (ex != null)
+			{
+				TextBox exception = new TextBox();
+				exception.FontSize = 10;
+				exception.Text = ex.ToString();
+				exception.IsReadOnly = true;
+				exception.Visibility = Visibility.Collapsed;
+
+				Button button = new Button();
+				button.Content = "Details";
+				button.Style = (Style) App.Current.Resources["Link"];
+				button.Margin = new Thickness(0, 0, 0, 10);
+				button.Click += new RoutedEventHandler(delegate(object sender, RoutedEventArgs e)
+					{
+						exception.Visibility = exception.Visibility == Visibility.Collapsed ?
+							Visibility.Visible :
+							Visibility.Collapsed;
+					});
+				
+				body.Children.Add(button);
+				body.Children.Add(exception);
+			}
+
+			_currentPageViewer.Content = body;
+			return false;
+		}
+
+
+		public bool HidePageContents(string message)
+		{
+			return HidePageContents(message, null);
 		}
 
 		public bool HidePageContents(Exception ex)
 		{
-			string error =
-						String.Format("Failed to load page. \n\n {0} ({1})", ex.Message, ex.GetType().FullName);
-
-			Exception innerEx = ex.InnerException;
-			while (innerEx != null)
-			{
-				error += String.Format("\n {0} ({1})", innerEx.Message, innerEx.GetType().FullName);
-				innerEx = innerEx.InnerException;
-			}
-
-			_currentPageViewer.Content = error;
-			return false;
+			return HidePageContents(null, ex);
 		}
 
 		public void RestorePageContents()

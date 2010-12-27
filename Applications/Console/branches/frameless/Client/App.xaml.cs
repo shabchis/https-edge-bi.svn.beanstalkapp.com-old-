@@ -38,7 +38,8 @@ namespace Easynet.Edge.UI.Client
 
 		private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
-			CurrentPage.Window.HidePageContents(e.Exception);
+			//CurrentPage.Window.HidePageContents(null, e.Exception);
+			Easynet.Edge.UI.Client.MainWindow.MessageBoxError("Sorry, an unexpected error occured.", e.Exception);
 			e.Handled = true;
 		}
 	}

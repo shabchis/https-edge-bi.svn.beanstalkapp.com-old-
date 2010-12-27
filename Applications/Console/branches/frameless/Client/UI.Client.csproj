@@ -37,26 +37,25 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <PublishUrl>Publish\seperia.edge-bi.com\</PublishUrl>
+    <PublishUrl>\\testing\c%24\inetpub\wwwroot\wpf\</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Web</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://console.edge-bi.com/seperia/</InstallUrl>
-    <SupportUrl>https://console.edge-bi.com/seperia/install.html</SupportUrl>
+    <InstallUrl>http://testing/wpf/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ProductName>Edge.BI Management Console [debug]</ProductName>
+    <ProductName>Edge.BI Management Pages [QA]</ProductName>
     <PublisherName>Edge.BI</PublisherName>
     <WebPage>install.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <TrustUrlParameters>true</TrustUrlParameters>
-    <ApplicationRevision>137</ApplicationRevision>
-    <ApplicationVersion>2.5.0.137</ApplicationVersion>
+    <ApplicationRevision>18</ApplicationRevision>
+    <ApplicationVersion>2.8.1.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -70,10 +69,27 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ProductName>Edge.BI Management Console [debug]</ProductName>
+    <ProductName>Edge.BI Management Pages [debug]</ProductName>
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
     <None Include="Configuration\Debug\app.config">
+      <Link>app.config</Link>
+    </None>
+  </ItemGroup>
+  <!-- Testing configuration -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'QA' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\QA\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PublishUrl>Publish\QA\</PublishUrl>
+    <ProductName>Edge.BI Management Pages [QA]</ProductName>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'QA' ">
+    <None Include="Configuration\qa\app.config">
       <Link>app.config</Link>
     </None>
   </ItemGroup>
@@ -88,7 +104,7 @@
     <PublishUrl>Publish\console.edge-bi.com\</PublishUrl>
     <InstallUrl>https://console.edge-bi.com/</InstallUrl>
     <SupportUrl>https://console.edge-bi.com/install.html</SupportUrl>
-    <ProductName>Edge.BI Management Console</ProductName>
+    <ProductName>Edge.BI Management Pages</ProductName>
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Production' ">
     <None Include="Configuration\Production\app.config">
@@ -106,7 +122,7 @@
     <PublishUrl>Publish\seperia.edge-bi.com\</PublishUrl>
     <InstallUrl>https://console.edge-bi.com/seperia/</InstallUrl>
     <SupportUrl>https://console.edge-bi.com/seperia/install.html</SupportUrl>
-    <ProductName>Edge.BI Management Console [Seperia]</ProductName>
+    <ProductName>Edge.BI Management Pages [Seperia]</ProductName>
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Seperia' ">
     <None Include="Configuration\Seperia\app.config">
