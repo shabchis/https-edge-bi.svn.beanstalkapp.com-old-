@@ -14,6 +14,7 @@ using Microsoft.ServiceModel.Http;
 using Microsoft.Http;
 using System.IO;
 using Newtonsoft.Json;
+using System.Data;
 
 /// <summary>
 /// Summary description for AlonService
@@ -22,7 +23,7 @@ using Newtonsoft.Json;
 namespace EdgeBI.API.Web
 {
 	[ServiceContract]
-	[ServiceBehavior(IncludeExceptionDetailInFaults=true)]
+	[ServiceBehavior(IncludeExceptionDetailInFaults = true)]
 	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
 	public class EdgeApiService
 	{
@@ -32,26 +33,34 @@ namespace EdgeBI.API.Web
 		/// </summary>
 		/// <param name="ID">The User Primery Key</param>
 		/// <returns></returns>
-		[WebGet(UriTemplate = "users/{ID}", BodyStyle = WebMessageBodyStyle.Wrapped, ResponseFormat = WebMessageFormat.Json)]
+		[WebGet(UriTemplate = "users/{ID}")]
 		public User GetUserByID(string ID)
 		{
-			int id = int.Parse(ID);
-			return User.GetUserByID(id);
+			int currentUser;
+			currentUser = currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			int userID = int.Parse(ID);
+			if (userID != currentUser)
+			{
+				User user = User.GetUserByID(currentUser);
+				if (user.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+			}
+			return User.GetUserByID(userID);
 		}
 
-		[WebGet(UriTemplate = "menu?Path={parentID}", BodyStyle = WebMessageBodyStyle.Wrapped, ResponseFormat = WebMessageFormat.Json)]
-		public List<Menu> GetMenu(string menuID)
+		[WebGet(UriTemplate = "menu")]
+		public List<Menu> GetMenu()
 		{
 			int currentUser;
 			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 
-			List<Menu> m = Menu.GetMenuByParentID(menuID, currentUser);
+			List<Menu> m = Menu.GetMenu(currentUser);
 			if (m == null || m.Count == 0)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound,string.Format("No menu found for userId {0} ",currentUser));
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, string.Format("No menu found for userId {0} ", currentUser));
 			return m;
 		}
 
-		[WebGet(UriTemplate = "Accounts/{accountID}", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
+		[WebGet(UriTemplate = "Accounts/{accountID}")]
 		[OperationContract(Name = "GetAccountByID")]
 		public List<Account> GetAccount(string accountID)
 		{
@@ -64,7 +73,7 @@ namespace EdgeBI.API.Web
 			return acc;
 		}
 
-		[WebGet(UriTemplate = "Accounts", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
+		[WebGet(UriTemplate = "Accounts")]
 		public List<Account> GetAccount()
 		{
 			int currentUser;
@@ -75,19 +84,56 @@ namespace EdgeBI.API.Web
 			return acc;
 		}
 
+		[WebInvoke(Method = "POST",UriTemplate = "permissions")]
+		public bool GetSpecificPermissionValue(PermissionRequest permissionRequest)
+		{
+
+			
+				bool hasPermission = false;
+				int currentUser;
+				ThingReader<CalculatedPermission> calculatedPermissionReader;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				List<CalculatedPermission> calculatedPermissionList = new List<CalculatedPermission>();
+				using (DataManager.Current.OpenConnection())
+				{
+					SqlCommand sqlCommand = DataManager.CreateCommand("User_CalculatePermissions(@UserID:Int)", CommandType.StoredProcedure);
+					sqlCommand.Parameters["@UserID"].Value = currentUser;
+					calculatedPermissionReader = new ThingReader<CalculatedPermission>(sqlCommand.ExecuteReader(), null);
+					while (calculatedPermissionReader.Read())
+					{
+						calculatedPermissionList.Add(calculatedPermissionReader.Current);
+					}
+					calculatedPermissionReader.Dispose();
+
+
+				}
+				if (calculatedPermissionList != null && calculatedPermissionList.Count > 0)
+				{
+					CalculatedPermission CalculatedPermission = calculatedPermissionList.Find(calculatedPermission => calculatedPermission.AccountID == permissionRequest.AccountID && calculatedPermission.Path.Trim().ToUpper() == permissionRequest.Path.Trim().ToUpper());
+					if (CalculatedPermission != null)
+						hasPermission = true;
+
+				}
+			
+			
+
+
+			return hasPermission;
+		}
+		
 		[WebInvoke(Method = "POST", UriTemplate = "sessions")]
 		public SessionResponseData LogIn(SessionRequestData sessionData)
 		{
 			SqlCommand sqlCommand;
 			int unEncrypterSession;
-			SessionResponseData returnsessionData =new SessionResponseData();
-			int? id=null;
+			SessionResponseData returnsessionData = new SessionResponseData();
+			int? id = null;
 			using (DataManager.Current.OpenConnection())
 			{
 				Encryptor encryptor = new Encryptor(KeyEncrypt);
-				if (sessionData.OperationType== OperationTypeEnum.New) //login with email and password
+				if (sessionData.OperationType == OperationTypeEnum.New) //login with email and password
 				{
-					 sqlCommand = DataManager.CreateCommand(@"SELECT UserID 
+					sqlCommand = DataManager.CreateCommand(@"SELECT UserID 
 																				FROM User_GUI_User
 																					WHERE Email=@Email:NVarchar AND Password=@Password:NVarchar");
 					sqlCommand.Parameters["@Email"].Value = sessionData.Email;
@@ -107,7 +153,7 @@ namespace EdgeBI.API.Web
 					id = (int?)sqlCommand.ExecuteScalar();
 
 				}
-				
+
 				if (id != null)
 				{
 					returnsessionData.UserID = id.Value;
@@ -116,7 +162,7 @@ namespace EdgeBI.API.Web
 																			VALUES(@UserID:Int);SELECT @@IDENTITY");
 					sqlCommand.Parameters["@UserID"].Value = id;
 					returnsessionData.Session = sqlCommand.ExecuteScalar().ToString();
-					
+
 					returnsessionData.Session = encryptor.Encrypt(returnsessionData.Session);
 
 				}
