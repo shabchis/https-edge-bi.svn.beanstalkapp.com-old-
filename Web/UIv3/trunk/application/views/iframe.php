@@ -1,20 +1,11 @@
 
 
- <iframe src ="<?php echo  $iframeurl ;?>"/>
+ <iframe frameborder="0" src ="<?php echo  $iframeurl ;?>"/>
+
+<?php
+ $this->firephp->log($iframeurl);
 
 
+?>
 
 
-
-
-<script type="text/javascript">
-/*
-$(function(){
-
-    $("#ajaxloader").fadeIn();
- $('#main').load("external/dashboard2/dashboard.php?account_id=7");
-$("#ajaxloader").fadeOut();
- });
- 
- 
- </script>

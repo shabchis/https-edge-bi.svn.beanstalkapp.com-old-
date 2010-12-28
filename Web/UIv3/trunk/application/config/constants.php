@@ -41,6 +41,7 @@ define('EDGE_API_URL','http://AlonYa-PC/API2');
 $iframeurl = array();
 $iframeurl["Path"] ="";
 
+define('LOGIN_PAGE', "http://localhost/projects/login/");
 
 /* End of file constants.php */
 /* Location: ./system/application/config/constants.php */
