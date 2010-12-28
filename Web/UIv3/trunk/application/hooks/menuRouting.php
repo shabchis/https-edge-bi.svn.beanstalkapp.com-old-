@@ -1,7 +1,14 @@
 <?php 
 
+require_once ('application/libraries/EdgeApi.php');
+
 class menuRouting{
-	
+
+	var $edgeapi;
+	function __construct(){
+		$this->edgeapi = new EdgeApi(); 
+	}
+
 	function index(){
 		
 		// If not session, we can't load the menu yet
@@ -11,49 +18,34 @@ class menuRouting{
 		
 		global $MENU_ROUTES;
 		global $MENU_IFRAME_URLS;
-		
-		$curl_handle = curl_init();  
-		curl_setopt($curl_handle, CURLOPT_URL, EDGE_API_URL.'/menu');  
-		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);  
-		
-		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,array('accept: application/json','x-edgebi-session:'.$_COOKIE['edgebi_session']));
-		$menujson = curl_exec($curl_handle);  
-		curl_close($curl_handle);  
-
-		// Save menu for later
 		global $MENU_JSON;
-		$MENU_JSON = $menujson;
 	
-		$menuItems = json_decode($menujson);
-		
-		$routesArray = array();
+		// Save menu for later
+		$MENU_JSON = $this->edgeapi->Request('/menu');
+		$MENU_ROUTES = array();
 		$MENU_IFRAME_URLS = array();
-			
-		$this->addRoutesFromMenuItems($routesArray,$menuItems);
 		
-		$MENU_ROUTES = $routesArray;
+		$menuItems = json_decode($MENU_JSON);	
+		$this->addRoutesFromMenuItems($menuItems);
 	}
 	
-	function addRoutesFromMenuItems(&$routesArray, &$menuItems)
+	function addRoutesFromMenuItems(&$menuItems)
 	{
-			global $MENU_IFRAME_URLS;
+		global $MENU_IFRAME_URLS;
+		global $MENU_ROUTES;
+		
 		foreach($menuItems as $item)
 		{
 			if (isset($item->MetaData->Controller)) 
 			{
-				$routesArray[$item->Path] = $item->MetaData->Controller;			
+				$MENU_ROUTES[$item->Path] = $item->MetaData->Controller;			
 
-				if(isset($item->MetaData->iFrameURL)){
+				if(isset($item->MetaData->iFrameURL))
 					$MENU_IFRAME_URLS[$item->Path] = $item->MetaData->iFrameURL;
-					
-			
-					
-				}
-					
 			}
 			
 			if (isset($item->ChildItems))
-				$this->addRoutesFromMenuItems($routesArray, $item->ChildItems);
+				$this->addRoutesFromMenuItems($item->ChildItems);
 		}
 	}
 	

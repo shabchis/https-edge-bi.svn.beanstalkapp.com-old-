@@ -12,11 +12,11 @@
 
 
 global $REQUEST_PATH;
+global $APPLICATION_ROOT;
 
 // Find the path after the application root (in relation to index.php of CodeIgniter)
-$applicationRoot = str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
-$REQUEST_PATH = str_replace($applicationRoot, '', $_SERVER['REQUEST_URI']);
-
+$APPLICATION_ROOT = str_ireplace('index.php', '', $_SERVER['SCRIPT_NAME']);
+$REQUEST_PATH = str_ireplace($APPLICATION_ROOT, '', $_SERVER['REQUEST_URI']);
 
 $hook['pre_system'][] = array(
                                 'class'    => 'sessionValidation',

@@ -9,11 +9,12 @@
 		<link rel="stylesheet" href="<?php base_url(); ?>assets/css/960.css" type="text/css" media="screen" />
 		<!--[if IE]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-		<meta http-equiv="X-UA-Compatible" content="IE=9" />
+		<meta http-equiv="X-UA-Compatible" content="IE=8" />
 			<script src="<?php base_url();?>assets/js/modernizr-1.6.min.js"></script>
 		<![endif]-->
 
 		<script src="<?php base_url();?>assets/js/jquery-1.4.4.js"></script>  
+		<script src="<?php base_url();?>assets/js/selectivizr.js"></script>  
 		<script src="<?php base_url();?>assets/js/jquery.dropshadow.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.tmpl.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.tmplPlus.js"></script>
@@ -124,22 +125,22 @@
 		
 		{{if Name }}
 	<ul>
-		<li id="${ID}" class="campaign"><span>${ Name }</span>
+		<li id="${ID}" class="campaign"  {{if Permissions}}data-Permissions=${Permissions} {{else}} data-Permissions="none" {{/if}}><span>${ Name }</span>
 		{{if ChildAccounts}}
 		
 		{{each ChildAccounts}}
 			{{if ChildAccounts}}
-		<li id="${ID}" class="parent"><a href="#">${ Name }</a>
+		<li id="${ID}" class="parent" {{if Permissions}}data-Permissions=${Permissions} {{else}} data-Permissions="none" {{/if}}><a href="#">${ Name }</a>
 			{{if ChildAccounts}}
 		<ul>
 		{{each ChildAccounts}}
-		<li id="${ID}"><a href="#">${Name}</a></li>
+		<li id="${ID}"{{if Permissions}}data-Permissions=${Permissions} {{else}} data-Permissions="none" {{/if}}><a href="#" >${Name}</a></li>
 		{{/each}}
 		</ul>
 			{{/if}}
 		</li>
 		{{else}}
-			<li id="${ID}"><a href="#">${Name}</a></li>
+			<li id="${ID}" {{if Permissions}} data-Permissions=${Permissions} {{else}} data-Permissions="none" {{/if}}><a href="#">${Name}</a></li>
 		
 		{{/if}}
 		{{/each}}
@@ -151,19 +152,7 @@
 		{{/if}}
 	</ul>
 	</script>
-	<script type="text/javascript">
-		$(function(){	
-		
-	$("#top ul li a").attr("target","_blank");
 	
-	
-	
-	});
-
-
-	
-	  
-	</script>
 	<div id="slider"><span><a href="#"><img src="<?php base_url();?>assets/img/arrows_04.png" /></a></span><div id="caption">Hide</div></div>
 		<div id="menu">
 			<div id="accounts" class="folded">	
@@ -193,20 +182,55 @@
  		
  	
 
- 			$("#tmpl").tmpl(menudata).appendTo("#sub");
+		$("#tmpl").tmpl(menudata).appendTo("#sub");
 		$("#topmenu").tmpl(menudata).appendTo("#top");
-			$("#usertmpl").tmpl(user).prependTo("#user");
+		$("#usertmpl").tmpl(user).prependTo("#user");
  		}
 
- 		 console.log(menudata);
-		$("#accountbar").tmpl(account).appendTo("#accounts");
+ 	if(account){
+		
+
+ 	$("#accountbar").tmpl(account).appendTo("#accounts");
+		
+		}
+		
+
+$(function(){
+$("#sub a").click(function(){
+	
+	if($("#Campaign").size()<1){
+	
+	alert("please choose an account");
+	}
+		
+	});
+var i ="";
+$("#top ul li a").attr("target","_blank");
+	$("#accounts li").click(function(){
+		
+	var permission = $(this).attr("data-Permissions");
+			var permissionsplted = permission.split(",");
+		$.each(permissionsplted,function(i){
+				var data ={"url":permissionsplted};
+			 						 
+			console.log(permissionsplted[i]);
+		$("#sub a[href="+permissionsplted[i]+"]").addClass('disabled');
+		
+		 $("a").not("[href="+permissionsplted[i]+"]").addClass('disabled');
+		 
+		  console.log($("a").not("[href="+permissionsplted[i]+"]").attr("href") +" ->"+$("a").not("[href="+permissionsplted[i]+"]").attr("href"));
+		
+	});
+	
+	
 		
 		
 	
-$(function(){
-		
-	$("#accounts").delegate("li","click",function(){
-		
+	
+  
+   
+
+
 			
 });
 
