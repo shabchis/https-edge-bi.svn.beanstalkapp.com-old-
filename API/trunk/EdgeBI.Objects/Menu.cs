@@ -90,7 +90,7 @@ namespace EdgeBI.Objects
 						else
 						{
 							stackMenu.Peek().ChildItems.Add(menu);
-							//stackMenu.Push(menu);
+							stackMenu.Push(menu);
 						}
 					}
 				}
