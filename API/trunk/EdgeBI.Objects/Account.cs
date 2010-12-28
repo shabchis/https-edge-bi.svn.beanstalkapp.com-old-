@@ -67,8 +67,7 @@ namespace EdgeBI.Objects
 		{
 			ThingReader<Account> accountReader;
 			ThingReader<CalculatedPermission> calculatedPermissionReader;
-			List<CalculatedPermission> calculatedPermissionList = new List<CalculatedPermission>();
-			List<CalculatedPermission> tempCalculatedPermission;
+			List<CalculatedPermission> calculatedPermissionList = new List<CalculatedPermission>();			
 			List<Account> returnObject = new List<Account>();
 			Dictionary<int?, Account> parents = new Dictionary<int?, Account>();
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
@@ -90,9 +89,10 @@ namespace EdgeBI.Objects
 				{
 					Account account = accountReader.Current;
 					account.Permissions = calculatedPermissionList.FindAll(calculatedPermission => calculatedPermission.AccountID == account.ID).Select(calc => calc.Path).ToList();
-					if (account.Permissions.Count > 0)
-					{
 
+
+					if (account.Permissions!=null && account.Permissions.Count > 0)
+					{
 						if (account.ParentID == null || !parents.ContainsKey(account.ParentID)) //If has no parent or parentid==null(is main father)
 							returnObject.Add(account);
 						else
@@ -101,6 +101,7 @@ namespace EdgeBI.Objects
 						if (!parents.ContainsKey(account.ID)) //always add it to the parents
 							parents.Add(account.ID, account);
 					}
+					
 				}
 
 				

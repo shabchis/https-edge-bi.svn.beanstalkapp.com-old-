@@ -54,6 +54,7 @@ namespace EdgeBI.API.Web
 		{
 			processors.Add(new JsonNetProcessor(operation, mode));
 			
+			
 		}
 
 		public override void RegisterResponseProcessorsForOperation(HttpOperationDescription operation, IList<Processor> processors, MediaTypeProcessorMode mode)

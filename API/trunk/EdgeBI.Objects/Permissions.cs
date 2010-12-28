@@ -33,6 +33,11 @@ namespace EdgeBI.Objects
 		public string Path;
 
 	}
+	public class PermissionRequest
+	{
+		public int AccountID { get; set; }
+		public string Path { get; set; }	
+	}
 
 	public enum PermissionAssignmentType
 	{

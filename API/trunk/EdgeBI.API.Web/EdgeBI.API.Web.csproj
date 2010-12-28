@@ -60,10 +60,7 @@
       <HintPath>C:\Users\alonya\Downloads\codeplex\build\Debug\Http\bin\Microsoft.Runtime.Serialization.Json.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ServiceModel.Http">
-      <HintPath>C:\Users\alonya\Downloads\WCF HTTP Preview 1\build\Debug\Http\bin\Microsoft.ServiceModel.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.ServiceModel.Http.Client">
-      <HintPath>C:\Users\alonya\Downloads\WCF HTTP Preview 1\build\Debug\Http\bin\Microsoft.ServiceModel.Http.Client.dll</HintPath>
+      <HintPath>C:\Users\alonya\Desktop\codeplex\build\Debug\Http\bin\Microsoft.ServiceModel.Http.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ServiceModel.Web">
       <HintPath>C:\Users\alonya\Documents\Visual Studio 2010\WebSites\WcfHttpLearning\Bin\Microsoft.ServiceModel.Web.dll</HintPath>
@@ -71,8 +68,9 @@
     <Reference Include="Microsoft.ServiceModel.Web.jQuery">
       <HintPath>C:\Users\alonya\Downloads\codeplex\build\Debug\Http\bin\Microsoft.ServiceModel.Web.jQuery.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ServiceModel.WebHttp">
-      <HintPath>C:\Users\alonya\Documents\Visual Studio 2010\WebSites\WcfHttpLearning\Bin\Microsoft.ServiceModel.WebHttp.dll</HintPath>
+    <Reference Include="Microsoft.ServiceModel.WebHttp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\alonya\Downloads\codeplex\build\Debug\Http\bin\Microsoft.ServiceModel.WebHttp.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>C:\Users\alonya\Downloads\Json35r8\Bin\DotNet\Newtonsoft.Json.dll</HintPath>

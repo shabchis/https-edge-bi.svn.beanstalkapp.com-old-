@@ -45,13 +45,12 @@ namespace EdgeBI.Objects
 		public List<Menu> ChildItems = new List<Menu>();
 
 
-		public static List<Menu> GetMenuByParentID(string path, int userId)
+		public static List<Menu> GetMenu(int userId)
 		{
 
 			Stack<Menu> stackMenu = new Stack<Menu>();
 
-			string newPath = string.Format("{0}%", path);
-			int level = -1;
+			string newPath = string.Format("{0}%", string.Empty); //for future get specific menu and sub menu			
 			ThingReader<Menu> thingReader;
 			List<Menu> returnObject = new List<Menu>();
 			Dictionary<int, List<Menu>> menuesByLevel = new Dictionary<int, List<Menu>>();

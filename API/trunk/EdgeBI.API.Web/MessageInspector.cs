@@ -33,29 +33,35 @@ namespace EdgeBI.API.Web
 		{
 			_request = request;
 
-			if (_msgReqInterceptors != null)
-			{
-
-				foreach (var msgInterceptor in _msgReqInterceptors)
+			
+				if (_msgReqInterceptors != null)
 				{
-					
-					msgInterceptor.ProcessRequest(ref request);
 
+					foreach (var msgInterceptor in _msgReqInterceptors)
+					{
+
+						msgInterceptor.ProcessRequest(ref request);
+
+					}
 				}
-			}
+				
+			
 			return null;
 
 		}
 
 		public void BeforeSendReply(ref System.ServiceModel.Channels.Message reply, object correlationState)
 		{
-			if (_msgResInterceptors != null)
-			{
-				foreach (var msgInterceptor in _msgResInterceptors)
+
+			
+				if (_msgResInterceptors != null)
 				{
-					msgInterceptor.ProcessResponse(ref this._request, ref reply);
+					foreach (var msgInterceptor in _msgResInterceptors)
+					{
+						msgInterceptor.ProcessResponse(ref this._request, ref reply);
+					}
 				}
-			}
+			
 		}
 
 		#endregion
