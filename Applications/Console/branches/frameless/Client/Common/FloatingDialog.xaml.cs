@@ -109,16 +109,18 @@ namespace Easynet.Edge.UI.Client
 
 					// Play a fade in animation
 					this.BeginAnimation(OpacityProperty, NewFadeAnim(1.0, null), HandoffBehavior.SnapshotAndReplace);
-					App.CurrentPage.Window.FloatingDialogMask.BeginAnimation(OpacityProperty, NewFadeAnim(0.45, null), HandoffBehavior.SnapshotAndReplace);
+					//App.CurrentPage.Window.FloatingDialogMask.BeginAnimation(OpacityProperty, NewFadeAnim(0.45, null), HandoffBehavior.SnapshotAndReplace);
 
 					// Set keyboard
 					Keyboard.Focus(this);
 				}
 				else
 				{
+					App.CurrentPage.Window.FloatingDialogMask.Visibility = Visibility.Collapsed;
+
 					// Play a fade out animation
 					this.BeginAnimation(OpacityProperty, NewFadeAnim(0, new EventHandler(FadeOutAnim_CompletedDialog)), HandoffBehavior.SnapshotAndReplace);
-					App.CurrentPage.Window.FloatingDialogMask.BeginAnimation(OpacityProperty, NewFadeAnim(0, new EventHandler(FadeOutAnim_CompletedMask)), HandoffBehavior.SnapshotAndReplace);
+					//App.CurrentPage.Window.FloatingDialogMask.BeginAnimation(OpacityProperty, NewFadeAnim(0, new EventHandler(FadeOutAnim_CompletedMask)), HandoffBehavior.SnapshotAndReplace);
 				}
 
 				_buttonOk.IsEnabled = value;

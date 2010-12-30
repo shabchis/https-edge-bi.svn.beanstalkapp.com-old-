@@ -24,11 +24,8 @@
 
 		<!-- ================================= -->
 		<!-- MASKS-->
-		<Rectangle x:FieldModifier="public" x:Name="FloatingDialogMask" Grid.ColumnSpan="2" Grid.RowSpan="3" Opacity="0" Visibility="Collapsed">
-			<Rectangle.Fill>
-				<SolidColorBrush Color="#000"/>
-			</Rectangle.Fill>
-		</Rectangle>
+		<Rectangle x:FieldModifier="public" x:Name="FloatingDialogMask" Grid.ColumnSpan="2" Grid.RowSpan="3" Visibility="Collapsed" Fill="Transparent"/>
+
 		<Grid x:FieldModifier="public" x:Name="FloatingDialogContainer" Grid.ColumnSpan="2" Grid.RowSpan="3"/>
 
 		<this:AsyncMask x:Name="AsyncOperationMask" Grid.ColumnSpan="2" Grid.RowSpan="3" Visibility="Collapsed">

@@ -49,21 +49,57 @@ namespace Easynet.Edge.UI.Server
 		#region User
 		/*=========================*/
 
-		public Oltp.UserDataTable User_LoginBySessionID(string sessionID)
+		static Encryptor _decryptor = new Encryptor("5c51374e366f41297356413c71677220386c534c394742234947567840");
+		public Oltp.UserDataTable User_LoginBySessionID(string sessionIDString)
 		{
-			// implement login system
-			#if DEBUG
-			//-----------------------
-			Oltp.UserDataTable table = From<UserTableAdapter>().GetByEmail("doron@edge.bi", "asdfhjkl");
-			if (table.Rows.Count < 1)
-				throw new AuthenticationException("Incorrect user/password.");
+			int sessionID;
+			try { sessionID = Int32.Parse(_decryptor.Dec(sessionIDString)); }
+			catch (Exception ex)
+			{
+				throw new ArgumentException("Invalid session.", ex);
+			}
 
-			CurrentUser = (Oltp.UserRow)table.Rows[0];
-			return table;
-			//-----------------------
-			#else
-			throw new NotImplementedException();
-			#endif
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetAbsolute("AlonConnectionString")))
+			{
+				conn.Open();
+				SqlCommand cmd = DataManager.CreateCommand("Session_ValidateSession(@sessionID:int)", CommandType.StoredProcedure);
+				cmd.Connection = conn;
+				cmd.Parameters["@sessionID"].Value = sessionID;
+
+				int userID;
+				using (SqlDataReader reader = cmd.ExecuteReader())
+				{
+					if (!reader.Read())
+						throw new ArgumentException("Session not found.");
+					userID = (int)reader["UserID"];
+					if (userID <= 0)
+						throw new ArgumentException("Session has expired.");
+				}
+
+				SqlCommand usrCmd = DataManager.CreateCommand(@"User_GetByID(@userID:int)", CommandType.StoredProcedure);
+				usrCmd.Connection = conn;
+				usrCmd.Parameters["@userID"].Value = userID;
+
+				using (SqlDataReader reader = usrCmd.ExecuteReader())
+				{
+					if (!reader.Read())
+						throw new Exception("User no longer exists.");
+
+					// Import the table
+					Oltp.UserDataTable table = new Oltp.UserDataTable();
+					CurrentUser = table.NewUserRow();
+					CurrentUser[table.IDColumn] = reader["UserID"];
+					CurrentUser[table.NameColumn] = reader["Name"];
+					CurrentUser[table.EmailColumn] = reader["Email"];
+					CurrentUser[table.AccountAdminColumn] = reader["AccountAdmin"];
+					CurrentUser[table.UserAdminColumn] = false;
+					CurrentUser[table.PasswordColumn] = null;
+					CurrentUser.IsActive = true;
+					table.AddUserRow(CurrentUser);
+					table.AcceptChanges();
+					return table;
+				}
+			}
 		}
 
 		public Oltp.UserDataTable User_GetByGroup(int groupID)
@@ -83,11 +119,12 @@ namespace Easynet.Edge.UI.Server
 
 		public DataTable User_GetAllPermissions()
 		{
-			string cmdText = @"User_GetAllPermissions(@userID:Int)";
+			string cmdText = @"User_CalculatePermissions(@userID:Int)";
 
 			DataTable tbl = new DataTable("UserPermissions");
 			
 			GatewayTableAdapter tempAdapter = From<GatewayTableAdapter>();
+			tempAdapter.CurrentConnection.ConnectionString = AppSettings.GetAbsolute("AlonConnectionString");
 			tempAdapter.CurrentConnection.Open();
 			DataManager.Current.OpenConnection(tempAdapter.CurrentConnection);
 
@@ -1794,80 +1831,61 @@ namespace Easynet.Edge.UI.Server
 		public ApiMenuItem[] ApiMenuItem_GetAll()
 		{
 			List<ApiMenuItem> list = new List<ApiMenuItem>();
-			
-			////////////////
-			string prevConnString = DataManager.ConnectionString;
-			DataManager.ConnectionString = AppSettings.GetAbsolute("AlonConnectionString");
-			////////////////
-			try
-			{
-				using (DataManager.Current.OpenConnection())
-				{
-					SqlCommand cmd = DataManager.CreateCommand("select * from [API_Menus] order by Path");
 
-					using (SqlDataReader reader = cmd.ExecuteReader())
+
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetAbsolute("AlonConnectionString")))
+			{
+				conn.Open();
+				SqlCommand cmd = DataManager.CreateCommand("select * from [Constant_Menu] order by Path");
+				cmd.Connection = conn;
+
+				using (SqlDataReader reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
 					{
-						while (reader.Read())
+						list.Add(new ApiMenuItem()
 						{
-							list.Add(new ApiMenuItem()
-							{
-								ID = reader.GetInt32(reader.GetOrdinal("ID")),
-								Name = reader.GetString(reader.GetOrdinal("Name")),
-								Path = reader.GetString(reader.GetOrdinal("Path")),
-								Metadata = new SettingsCollection(reader.GetString(reader.GetOrdinal("Metadata")))
-							});
-						}
+							ID = reader.GetInt32(reader.GetOrdinal("ID")),
+							Name = reader.GetString(reader.GetOrdinal("Name")),
+							Path = reader.GetString(reader.GetOrdinal("Path")),
+							Metadata = new SettingsCollection(reader.GetString(reader.GetOrdinal("Metadata")))
+						});
 					}
 				}
 			}
-			finally
-			{
-				////////////////
-				DataManager.ConnectionString = prevConnString;
-				////////////////
-			}
+			
 
 			return list.ToArray();
 		}
 
-		public ApiMenuItem ApiMenuItem_GetByID(int id)
+		public ApiMenuItem ApiMenuItem_GetByPath(string path)
 		{
-			////////////////
-			string prevConnString = DataManager.ConnectionString;
-			DataManager.ConnectionString = AppSettings.GetAbsolute("AlonConnectionString");
-			////////////////
-			try
+			
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetAbsolute("AlonConnectionString")))
 			{
-				using (DataManager.Current.OpenConnection())
-				{
-					SqlCommand cmd = DataManager.CreateCommand("select * from [API_Menus] where ID = @id:int");
-					cmd.Parameters["@id"].Value = id;
+				conn.Open();
+				SqlCommand cmd = DataManager.CreateCommand("select * from [Constant_Menu] where Path = @path:NVarChar");
+				cmd.Parameters["@path"].Value = path;
+				cmd.Connection = conn;
 
-					using (SqlDataReader reader = cmd.ExecuteReader())
+				using (SqlDataReader reader = cmd.ExecuteReader())
+				{
+					if (reader.Read())
 					{
-						if (reader.Read())
+						return new ApiMenuItem()
 						{
-							return new ApiMenuItem()
-							{
-								ID = reader.GetInt32(reader.GetOrdinal("ID")),
-								Name = reader.GetString(reader.GetOrdinal("Name")),
-								Path = reader.GetString(reader.GetOrdinal("Path")),
-								Metadata = new SettingsCollection(reader.GetString(reader.GetOrdinal("Metadata"))).ToDictionary()
-									
-							};
-						}
-						else
-						{
-							return null;
-						}
+							ID = reader.GetInt32(reader.GetOrdinal("ID")),
+							Name = reader.GetString(reader.GetOrdinal("Name")),
+							Path = reader.GetString(reader.GetOrdinal("Path")),
+							Metadata = new SettingsCollection(reader.GetString(reader.GetOrdinal("Metadata"))).ToDictionary()
+
+						};
+					}
+					else
+					{
+						return null;
 					}
 				}
-			}
-			finally
-			{
-				////////////////
-				DataManager.ConnectionString = prevConnString;
-				////////////////
 			}
 		}
 
