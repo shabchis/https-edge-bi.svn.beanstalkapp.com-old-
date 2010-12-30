@@ -971,10 +971,11 @@ namespace Easynet.Edge.UI.Client.Pages
 			}
 			else
 			{
-				throw new NotImplementedException("BATCH");
+				MessageBox.Show("Sorry, only one item can be edited at a time. Batch edit will be possible in the near future.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+				return;
 				//row = Campaign_GetBatchRow(_listTable.ListView.SelectedItems);
-				if (row == null)
-					return;
+				//if (row == null)
+				//	return;
 			}
 
 			// Update the segments tab if it is selected
@@ -1161,27 +1162,35 @@ namespace Easynet.Edge.UI.Client.Pages
 							tempCampaign,
 							segmentsHaveChanged);
 
-						// Save (or update) targets
-						Window.AsyncOperation(delegate()
+						if (tempCampaign.Targets == null || tempCampaign.Targets.InnerRow.RowState == DataRowState.Unchanged)
 						{
-							if (_targetsEnabled)
+							Campaign_dialog.EndApplyChanges(e);
+						}
+						else
+						{
+							// Save (or update) targets
+							Window.AsyncOperation(delegate()
 							{
-								if (tempCampaign.Targets.InnerRow.RowState != DataRowState.Unchanged)
+
+								if (_targetsEnabled)
 								{
+
 									// Since this row was borrowed from the full target data table, apply changes to it
 									foreach (Measure m in _measures)
 										targetCampaign.Targets[m.FieldName] = tempCampaign.Targets[m.FieldName];
 								}
-							}
-							else
+								else
+								{
+									Targets_Save(false, tempCampaign.Targets.InnerRow.Table);
+								}
+
+							},
+							delegate()
 							{
-								Targets_Save(false, tempCampaign.Targets.InnerRow.Table);
-							}
-						},
-						delegate()
-						{
-							Campaign_dialog.EndApplyChanges(e);
-						});
+								Campaign_dialog.EndApplyChanges(e);
+							});
+						}
+
 					}
 				);
 			}
@@ -1460,7 +1469,19 @@ namespace Easynet.Edge.UI.Client.Pages
 		{
 			// Set campaign as current item
 			ListViewItem currentItem = _listTable.GetParentListViewItem(e.OriginalSource as FrameworkElement);
-			Oltp.AdgroupRow row = currentItem.Content as Oltp.AdgroupRow;
+			bool batch = _listTable.ListView.SelectedItems.Count > 1;
+
+			Oltp.AdgroupRow row;
+			if (!batch)
+			{
+				// Set campaign as current item
+				row = currentItem.Content as Oltp.AdgroupRow;
+			}
+			else
+			{
+				MessageBox.Show("Sorry, only one item can be edited at a time. Batch edit will be possible in the near future.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+				return;
+			}
 
 			// Show the dialog
 			Adgroup_dialog.Title = row.Name;

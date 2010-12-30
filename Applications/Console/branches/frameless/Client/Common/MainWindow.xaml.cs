@@ -36,7 +36,6 @@ namespace Easynet.Edge.UI.Client
 		#region Fields
 		/*=========================*/
 		public static string AssemblyAddressRoot;
-		public static string AssemblyDownloadPath = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
 		private Oltp.AccountDataTable _accountsTable = null;
 		private Oltp.AccountRow _currentAccount = null;
@@ -51,10 +50,9 @@ namespace Easynet.Edge.UI.Client
 
 		static MainWindow()
 		{
-			// Required for some reason
+			// Required in order to load DLLs from the server
 			AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(delegate(object sender, ResolveEventArgs args)
 			{
-				Debugger.Break();
 				return Assembly.LoadFrom(new Uri(new Uri(AssemblyAddressRoot), args.Name + ".dll").ToString());
 			});
 		}
@@ -98,8 +96,8 @@ namespace Easynet.Edge.UI.Client
 			string sessionID;
 
 			#if DEBUG
-			accountID = 7;
-			sessionID = "C6F95CF10558DEB8AAC8118B027F40CE";
+			accountID = 520;
+			sessionID = "560E4660CF182CAEFD68AE8C275BA3F3";
 			menuItemPath = "management/campaigns";
 			#endif
 
@@ -217,96 +215,48 @@ namespace Easynet.Edge.UI.Client
 			
 			// Try to get the class
 			Type newPageType = Type.GetType(className, false);
-			bool displayRightAway = true;
-
-			#region DisplayPage()
-
-			// This is performed after we load the target DLL
-			Action displayPageDelegate = delegate()
-			{
-				// Try to get the target page type
-				if (newPageType == null)
-				{
-					try { newPageType = Type.GetType(className, true); }
-					catch(Exception ex)
-					{
-						HidePageContents("Could not load the requested page.", ex);
-						return;
-					}
-				}
-
-				try
-				{
-					CurrentPage = (PageBase)Activator.CreateInstance(newPageType);
-				}
-				catch (Exception ex)
-				{
-					CurrentPage = null;
-					HidePageContents("Failed to load page.", ex);
-				}
-
-				CurrentPage.PageData = menuItem;
-				_currentPageViewer.Content = CurrentPage;
-
-				if (newPageType.GetCustomAttributes(typeof(AccountDependentPageAttribute), false).Length > 0)
-				{
-					if (CurrentAccount != null)
-					{
-						// Tell the page to load the account
-						CurrentPage.OnAccountChanged();
-					}
-					else
-					{
-						// Tell the page to hide the account
-						HidePageContents("You do not have permission to view this page for the selected account.");
-					}
-				}
-
-				// Force garbage collection
-				this.FloatingDialogContainer.Children.Clear();
-				GC.Collect();
-			};
-			#endregion
-
-			/*
 			if (newPageType == null)
 			{
-				// Resolve the class reference
-				string assemblyAddress;
-				if (!menuItem.Metadata.TryGetValue("WpfAssembly", out assemblyAddress) || String.IsNullOrEmpty(assemblyAddress))
+				try { newPageType = Type.GetType(className, true); }
+				catch(Exception ex)
 				{
-					HidePageContents("Could not load the requested page - DLL not specified.");
+					HidePageContents("Could not load the requested page.", ex);
 					return;
 				}
+			}
 
-				Uri downloadUri = new Uri(new Uri(AssemblyAddressRoot), assemblyAddress);
-				string downloadTarget = System.IO.Path.Combine(AssemblyDownloadPath, System.IO.Path.GetFileName(downloadUri.LocalPath));
-				if (!File.Exists(downloadTarget))
+			// Try loading the class
+			try
+			{
+				CurrentPage = (PageBase)Activator.CreateInstance(newPageType);
+			}
+			catch (Exception ex)
+			{
+				CurrentPage = null;
+				HidePageContents("Failed to load page.", ex);
+			}
+
+			CurrentPage.PageData = menuItem;
+			_currentPageViewer.Content = CurrentPage;
+
+			if (newPageType.GetCustomAttributes(typeof(AccountDependentPageAttribute), false).Length > 0)
+			{
+				if (CurrentAccount != null)
 				{
-					displayRightAway = false;
-					AsyncOperation(
-						delegate()
-						{
-							using (WebClient client = new WebClient())
-							{
-								client.DownloadFile(downloadUri, downloadTarget);
-							}
-							GC.Collect();
-						},
-						delegate(Exception ex)
-						{
-							HidePageContents(String.Format("Failed to download page from {0}", downloadUri), ex);
-							return false;
-						},
-						displayPageDelegate);
+					// Tell the page to load the account
+					CurrentPage.OnAccountChanged();
+				}
+				else
+				{
+					// Tell the page to hide the account
+					HidePageContents("You do not have permission to view this page for the selected account.");
 				}
 			}
-			*/
-			
-			if (displayRightAway)
-			{
-				displayPageDelegate();
-			}
+
+			// Force garbage collection
+			this.FloatingDialogContainer.Children.Clear();
+			GC.Collect();
+		
 
 		}
 

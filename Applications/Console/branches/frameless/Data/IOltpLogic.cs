@@ -261,7 +261,7 @@ namespace Easynet.Edge.UI.Server
 		Oltp.SegmentValueDataTable SegmentValue_Save(Oltp.SegmentValueDataTable table);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
-		ApiMenuItem ApiMenuItem_GetByID(int i);
+		ApiMenuItem ApiMenuItem_GetByPath(string path);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
 		ApiMenuItem[] ApiMenuItem_GetAll();
