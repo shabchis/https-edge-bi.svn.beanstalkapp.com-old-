@@ -62,7 +62,7 @@ namespace EdgeBI.API.Web
 
 		[WebGet(UriTemplate = "Accounts/{accountID}")]
 		[OperationContract(Name = "GetAccountByID")]
-		public List<Account> GetAccount(string accountID)
+		public Account GetAccount(string accountID)
 		{
 			int currentUser;
 			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
@@ -70,7 +70,7 @@ namespace EdgeBI.API.Web
 			List<Account> acc = Account.GetAccount(accId, true, currentUser);
 			if (acc.Count == 0)
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, String.Format("No account with permission found for user {0}", currentUser));
-			return acc;
+			return acc[0];
 		}
 
 		[WebGet(UriTemplate = "Accounts")]

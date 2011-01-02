@@ -51,12 +51,7 @@ namespace EdgeBI.WCFService
 				if (requestContext == null || requestContext.RequestMessage == null)
 				{
 					return;
-				}
-				
-				
-
-
-				
+				}				
 				NameValueCollection queryParams = HttpUtility.ParseQueryString(requestProp.QueryString);
 				if (request.Properties.Via.LocalPath.ToUpper() != LogInMessageAdress.ToUpper())
 				{
