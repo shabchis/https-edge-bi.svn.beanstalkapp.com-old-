@@ -17,7 +17,7 @@ using System.Data.SqlClient;
 namespace EdgeBI.Objects
 {
 	[DataContract]
-	[TableMap("API_Menus")]
+	[TableMap("Constant_Menu")]
 	public class Menu
 	{
 		[DataMember(Order = 1)]
@@ -57,7 +57,7 @@ namespace EdgeBI.Objects
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
 			using (DataManager.Current.OpenConnection())
 			{
-				SqlCommand sqlCommand = DataManager.CreateCommand("MenuesBy_UserPermission_MenuPath(@userID:Int,@menuPath:NvarChar)", CommandType.StoredProcedure);
+				SqlCommand sqlCommand = DataManager.CreateCommand("Menu_GetMenuByUserPermission(@userID:Int,@menuPath:NvarChar)", CommandType.StoredProcedure);
 				sqlCommand.Parameters["@menuPath"].Value = newPath;
 				sqlCommand.Parameters["@userID"].Value = userId;
 

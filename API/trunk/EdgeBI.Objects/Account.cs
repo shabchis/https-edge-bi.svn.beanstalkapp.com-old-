@@ -36,8 +36,8 @@ namespace EdgeBI.Objects
 		public int Level;
 
 		[DataMember(Order = 5)]
-		[FieldMap("AccountSettings", UseApplyFunction = true)] 
-		public Dictionary<string, string> AccountSettings;
+		[FieldMap("AccountSettings", UseApplyFunction = true)]
+		public Dictionary<string, string> MetaData;
 
 		[DataMember(Order = 6)]
 		public List<Account> ChildAccounts = new List<Account>();
@@ -45,12 +45,12 @@ namespace EdgeBI.Objects
 		private static object CustomApply(FieldInfo info, IDataRecord reader)
 		{
 			SettingsCollection settings = null;
-
+			FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(info, typeof(FieldMapAttribute));
 			try
 			{
 				if (reader != null)
 				{
-					settings = new SettingsCollection(reader[info.Name].ToString());
+					settings = new SettingsCollection(reader[fieldMapAttribute.FieldName].ToString());
 
 				}
 
@@ -82,8 +82,13 @@ namespace EdgeBI.Objects
 					calculatedPermissionList.Add(calculatedPermissionReader.Current);
 				}
 				calculatedPermissionReader.Dispose();
-
-				sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID,AccountSettings,Level FROM [V_User_GUI_Accounts]   ORDER BY Parent_ID", CommandType.Text);
+				if (id == null)
+					sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID,AccountSettings,Level FROM [V_User_GUI_Accounts]   ORDER BY Parent_ID", CommandType.Text);
+				else
+				{
+					sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID,AccountSettings,Level FROM [V_User_GUI_Accounts] WHERE ID=@ID:Int ORDER BY Parent_ID", CommandType.Text);
+					sqlCommand.Parameters["@ID"].Value = id;
+				}
 				accountReader = new ThingReader<Account>(sqlCommand.ExecuteReader(), CustomApply);
 				while (accountReader.Read())
 				{

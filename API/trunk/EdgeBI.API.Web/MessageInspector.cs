@@ -79,6 +79,7 @@ namespace EdgeBI.API.Web
 				foreach (EndpointDispatcher endPointDispatcher in channelDispatcher.Endpoints)
 				{
 					endPointDispatcher.DispatchRuntime.MessageInspectors.Add(this);
+					
 				}
 			}
 		}
