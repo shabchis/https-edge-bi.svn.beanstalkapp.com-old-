@@ -45,6 +45,10 @@ namespace EdgeBI.Objects
 		[FieldMap("Email")]
 		public string Email;
 
+		[DataMember]
+		[FieldMap("Password",Show=false)]
+		public string Password;
+
 		//TODO: Remember to change back to 1 the TargetIsGroup
 		//[DataMember(Order=6)]
 		//[DictionaryMap("User_GUI_AccountPermission", "AccountID", WhereClause = "TargetIsGroup = 1 and TargetID = @PrimeryKey:Int", OrderBy = " AccountID", AdditionalFields = "AccountID")] 
@@ -85,5 +89,42 @@ namespace EdgeBI.Objects
 			throw new NotImplementedException();
 		}
 
+
+		public static List<User> GetAllUsers()
+		{
+			List<User> users=new List<User>();
+			ThingReader<User> thingReader;
+			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;			
+			using (DataManager.Current.OpenConnection())
+			{
+				SqlCommand sqlCommand = DataManager.CreateCommand("SELECT UserID,Name,AccountAdmin,Email FROM User_GUI_User ORDER BY UserID");
+				
+
+				thingReader = new ThingReader<User>(sqlCommand.ExecuteReader(), CustomApply);
+				while (thingReader.Read())
+				{
+					users.Add((User)thingReader.Current);
+				}
+			}
+			if (users != null && users.Count > 0)
+			{
+				for (int i = 0; i < users.Count; i++)
+				{
+					users[i] = MapperUtility.ExpandObject<User>(users[i], customApply);
+				}				
+			}
+			return users;
+		}
+
+		public static void AddNewUser(User user)
+		{
+			string command = @"INSERT INTO User_GUI_User
+								(Name,IsActive,AccountAdmin,Email,Password)
+								VALUES (@Name:NvarChar,1,@AccountAdmin:bit,@Email:NvarChar,@Password:NvarChar)";
+			if (MapperUtility.InsertSimpleObject<User>(command, user) < 1)
+				throw new Exception("No Rows afected");
+
+			
+		}
 	}
 }

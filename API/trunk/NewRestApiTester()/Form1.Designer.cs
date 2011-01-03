@@ -55,7 +55,6 @@
 			this.label9 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
 			this.ResponseHeaderTextBox = new System.Windows.Forms.TextBox();
-			this.label8 = new System.Windows.Forms.Label();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -101,6 +100,7 @@
 			this.ServiceAddressComboBox.Name = "ServiceAddressComboBox";
 			this.ServiceAddressComboBox.Size = new System.Drawing.Size(164, 21);
 			this.ServiceAddressComboBox.TabIndex = 5;
+			this.ServiceAddressComboBox.SelectedIndexChanged += new System.EventHandler(this.ServiceAddressComboBox_SelectedIndexChanged);
 			this.ServiceAddressComboBox.Validated += new System.EventHandler(this.ServiceAddressComboBox_Validated);
 			// 
 			// SetButton
@@ -218,7 +218,7 @@
 			// 
 			// ClearButton
 			// 
-			this.ClearButton.Location = new System.Drawing.Point(327, 170);
+			this.ClearButton.Location = new System.Drawing.Point(327, 117);
 			this.ClearButton.Name = "ClearButton";
 			this.ClearButton.Size = new System.Drawing.Size(75, 23);
 			this.ClearButton.TabIndex = 17;
@@ -228,7 +228,7 @@
 			// 
 			// removeButton
 			// 
-			this.removeButton.Location = new System.Drawing.Point(327, 138);
+			this.removeButton.Location = new System.Drawing.Point(327, 88);
 			this.removeButton.Name = "removeButton";
 			this.removeButton.Size = new System.Drawing.Size(75, 23);
 			this.removeButton.TabIndex = 18;
@@ -244,9 +244,9 @@
 			this.panel1.Controls.Add(this.label9);
 			this.panel1.Controls.Add(this.label7);
 			this.panel1.Controls.Add(this.ResponseHeaderTextBox);
-			this.panel1.Location = new System.Drawing.Point(408, 114);
+			this.panel1.Location = new System.Drawing.Point(346, 147);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(328, 397);
+			this.panel1.Size = new System.Drawing.Size(390, 364);
 			this.panel1.TabIndex = 19;
 			// 
 			// ResponseBodyRichTextBox
@@ -293,9 +293,9 @@
 			this.label7.AutoSize = true;
 			this.label7.Location = new System.Drawing.Point(6, 10);
 			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(45, 13);
+			this.label7.Size = new System.Drawing.Size(96, 13);
 			this.label7.TabIndex = 1;
-			this.label7.Text = "Header:";
+			this.label7.Text = "Response Header:";
 			// 
 			// ResponseHeaderTextBox
 			// 
@@ -307,21 +307,11 @@
 			this.ResponseHeaderTextBox.Size = new System.Drawing.Size(313, 57);
 			this.ResponseHeaderTextBox.TabIndex = 0;
 			// 
-			// label8
-			// 
-			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(424, 95);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(53, 13);
-			this.label8.TabIndex = 20;
-			this.label8.Text = "Respond:";
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(748, 563);
-			this.Controls.Add(this.label8);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.removeButton);
 			this.Controls.Add(this.ClearButton);
@@ -379,7 +369,6 @@
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.TextBox ResponseHeaderTextBox;
-		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.RichTextBox ResponseBodyRichTextBox;
 	}
 }

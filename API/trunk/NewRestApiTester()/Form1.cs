@@ -108,7 +108,7 @@ namespace NewRestApiTester__
 
 			HttpClient client = new HttpClient();
 			HttpRequestMessage request = new HttpRequestMessage(requestType, fullAddress);
-			Microsoft.Http.Headers.Connection conn = new Microsoft.Http.Headers.Connection() { Close = false };
+			//Microsoft.Http.Headers.Connection conn = new Microsoft.Http.Headers.Connection() { Close = false };
 			request.Headers.Accept.Add(new Microsoft.Http.Headers.StringWithOptionalQuality("application/json"));
 
 
@@ -155,8 +155,11 @@ namespace NewRestApiTester__
 
 
 				}
-				HeaderslistView.Items["x-edgebi-session"].SubItems[1].Text = sessionResponseData.Session;
-				Registry.CurrentUser.OpenSubKey("Software", true).CreateSubKey("WcfRestTester").CreateSubKey("LastSession").SetValue("LastSession", sessionResponseData.Session);
+				if (sessionResponseData != null)
+				{
+					HeaderslistView.Items["x-edgebi-session"].SubItems[1].Text = sessionResponseData.Session;
+					Registry.CurrentUser.OpenSubKey("Software", true).CreateSubKey("WcfRestTester").CreateSubKey("LastSession").SetValue("LastSession", sessionResponseData.Session);
+				}
 			}
 
 		}
@@ -171,6 +174,8 @@ namespace NewRestApiTester__
 		{
 			if (ServiceAddressComboBox.Text.ToLower().Contains("sessions") && string.IsNullOrEmpty(BodyTextBox.Text.Trim()))
 				BodyTextBox.Text = Properties.Settings.Default.BodyLogInJson;
+			else if (ServiceAddressComboBox.Text.ToLower().Contains("permissions") && string.IsNullOrEmpty(BodyTextBox.Text.Trim()))
+				BodyTextBox.Text = Properties.Settings.Default.BodyGetSpecificPermission;
 		}
 
 		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -282,6 +287,11 @@ namespace NewRestApiTester__
 		private void ClearButton_Click(object sender, EventArgs e)
 		{
 			HeaderslistView.Clear();
+		}
+
+		private void ServiceAddressComboBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

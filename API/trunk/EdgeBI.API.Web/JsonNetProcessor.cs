@@ -25,6 +25,7 @@ namespace EdgeBI.API.Web
 {
 	public class JsonNetProcessor : MediaTypeProcessor
 	{
+		static bool JsonFormating = (bool.Parse(AppSettings.GetAbsolute("JsonFormatting")));
 		private Type parameterType;
 
 		/// <summary>
@@ -62,9 +63,12 @@ namespace EdgeBI.API.Web
 			{
 				using (JsonTextWriter writer = new JsonTextWriter(sw))
 				{
-					writer.Formatting = Formatting.Indented;
-					writer.Indentation = 1;
-					writer.IndentChar = '\t';
+					if (JsonFormating)
+					{
+						writer.Formatting = Formatting.Indented;
+						writer.Indentation = 1;
+						writer.IndentChar = '\t'; 
+					}
 					serializer.Serialize(writer, instance);
 				}
 			}
