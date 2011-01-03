@@ -59,11 +59,9 @@ namespace Easynet.Edge.UI.Server
 				throw new ArgumentException("Invalid session.", ex);
 			}
 
-			using (SqlConnection conn = new SqlConnection(AppSettings.GetAbsolute("AlonConnectionString")))
+			using (DataManager.Current.OpenConnection())
 			{
-				conn.Open();
 				SqlCommand cmd = DataManager.CreateCommand("Session_ValidateSession(@sessionID:int)", CommandType.StoredProcedure);
-				cmd.Connection = conn;
 				cmd.Parameters["@sessionID"].Value = sessionID;
 
 				int userID;
@@ -77,7 +75,6 @@ namespace Easynet.Edge.UI.Server
 				}
 
 				SqlCommand usrCmd = DataManager.CreateCommand(@"User_GetByID(@userID:int)", CommandType.StoredProcedure);
-				usrCmd.Connection = conn;
 				usrCmd.Parameters["@userID"].Value = userID;
 
 				using (SqlDataReader reader = usrCmd.ExecuteReader())
@@ -120,15 +117,9 @@ namespace Easynet.Edge.UI.Server
 		public DataTable User_GetAllPermissions()
 		{
 			string cmdText = @"User_CalculatePermissions(@userID:Int)";
-
 			DataTable tbl = new DataTable("UserPermissions");
-			
-			GatewayTableAdapter tempAdapter = From<GatewayTableAdapter>();
-			tempAdapter.CurrentConnection.ConnectionString = AppSettings.GetAbsolute("AlonConnectionString");
-			tempAdapter.CurrentConnection.Open();
-			DataManager.Current.OpenConnection(tempAdapter.CurrentConnection);
 
-			using (tempAdapter.CurrentConnection)
+			using (DataManager.Current.OpenConnection())
 			{
 				SqlCommand cmd = DataManager.CreateCommand(cmdText, CommandType.StoredProcedure);
 				cmd.Parameters["@userID"].Value = CurrentUser.ID;
@@ -1833,11 +1824,9 @@ namespace Easynet.Edge.UI.Server
 			List<ApiMenuItem> list = new List<ApiMenuItem>();
 
 
-			using (SqlConnection conn = new SqlConnection(AppSettings.GetAbsolute("AlonConnectionString")))
+			using (DataManager.Current.OpenConnection())
 			{
-				conn.Open();
 				SqlCommand cmd = DataManager.CreateCommand("select * from [Constant_Menu] order by Path");
-				cmd.Connection = conn;
 
 				using (SqlDataReader reader = cmd.ExecuteReader())
 				{
@@ -1860,13 +1849,10 @@ namespace Easynet.Edge.UI.Server
 
 		public ApiMenuItem ApiMenuItem_GetByPath(string path)
 		{
-			
-			using (SqlConnection conn = new SqlConnection(AppSettings.GetAbsolute("AlonConnectionString")))
+			using (DataManager.Current.OpenConnection())
 			{
-				conn.Open();
 				SqlCommand cmd = DataManager.CreateCommand("select * from [Constant_Menu] where Path = @path:NVarChar");
 				cmd.Parameters["@path"].Value = path;
-				cmd.Connection = conn;
 
 				using (SqlDataReader reader = cmd.ExecuteReader())
 				{
