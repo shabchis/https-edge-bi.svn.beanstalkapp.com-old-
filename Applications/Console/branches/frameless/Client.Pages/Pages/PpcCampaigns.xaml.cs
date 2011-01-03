@@ -1197,6 +1197,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			// BATCH CAMPAIGN SAVE
 			else
 			{
+				MainWindow.MessageBoxError("Sorry, batch editing is not supported yet.", null);
 			}
 		}
 
@@ -1213,7 +1214,8 @@ namespace Easynet.Edge.UI.Client.Pages
 					for (int j = 0; j < segmentsHaveChanged.Length; j++)
 					{
 						string field = String.Format("Segment{0}", j + 1);
-						if (segmentsHaveChanged[j]) _items[j][field] = tempCampaign[field];
+						if (segmentsHaveChanged[j])
+							_items[i][field] = tempCampaign[field];
 					}
 
 					_items[i].AcceptChanges();

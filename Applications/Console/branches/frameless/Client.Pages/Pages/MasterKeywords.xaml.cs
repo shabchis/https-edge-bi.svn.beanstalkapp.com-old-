@@ -262,28 +262,22 @@ namespace Easynet.Edge.UI.Client.Pages
 			int currentAccountID = this.Window.CurrentAccount.ID;
 			string keywordValueFieldText = _keywordValueField.Text;
 			Oltp.KeywordDataTable tbl = null;
+			bool added = (Keyword_dialog.Content as Oltp.KeywordRow).RowState == DataRowState.Added;
 
 			Window.AsyncOperation(delegate()
 			{
 				// When adding a new keyword, make sure it is unique
-				if ((Keyword_dialog.Content as Oltp.KeywordRow).RowState == DataRowState.Added)
+				if (added)
 				{
 					using (OltpProxy proxy = new OltpProxy())
 					{
 						tbl = proxy.Service.Keyword_Get(currentAccountID, false, keywordValueFieldText, true);
 					}
-
-					if (tbl.Rows.Count > 0)
-					{
-						MainWindow.MessageBoxError("Keyword already exists.", null);
-						e.Cancel = true;
-						return;
-					}
 				}
 			},
 			delegate()
 			{
-				if (tbl.Rows.Count > 0)
+				if (tbl != null && tbl.Rows.Count > 0)
 				{
 					MainWindow.MessageBoxError("Keyword already exists.", null);
 					e.Cancel = true;
