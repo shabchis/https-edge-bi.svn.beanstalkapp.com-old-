@@ -37,19 +37,54 @@ namespace EdgeBI.Objects
 				{
 					FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(FieldMapAttribute));
 
-					if (fieldMapAttribute.UseApplyFunction && onApplyValue != null)
-						val = onApplyValue(fieldInfo, sqlDataReader);
-					else
-						val = sqlDataReader[fieldMapAttribute.FieldName];
-					if (val is DBNull)
+					if (fieldMapAttribute.Show)
 					{
-						fieldInfo.SetValue(returnObject, null);
+						if (fieldMapAttribute.UseApplyFunction && onApplyValue != null)
+							val = onApplyValue(fieldInfo, sqlDataReader);
+						else
+							val = sqlDataReader[fieldMapAttribute.FieldName];
+						if (val is DBNull)
+						{
+							fieldInfo.SetValue(returnObject, null);
+						}
+						else
+							fieldInfo.SetValue(returnObject, val); 
 					}
-					else
-						fieldInfo.SetValue(returnObject, val);
 				}
 			}
 			return returnObject;
+
+		}
+		public static int InsertSimpleObject<T>(string Command, object objectToInsert) where T : class, new()
+		{
+			int rowsAfected = 0;
+			Type t = typeof(T);
+			string tableName;
+			
+
+			using (DataManager.Current.OpenConnection())
+			{
+
+				using (SqlCommand sqlCommand = DataManager.CreateCommand(Command))
+				{
+					foreach (FieldInfo fieldInfo in objectToInsert.GetType().GetFields())
+					{
+						if (Attribute.IsDefined(fieldInfo, typeof(FieldMapAttribute)))
+						{
+							FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(FieldMapAttribute));
+							if (sqlCommand.Parameters.Contains(string.Format("@{0}", fieldMapAttribute.FieldName)))
+							{
+								if (fieldInfo.GetValue(objectToInsert) != null)
+									sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = fieldInfo.GetValue(objectToInsert);								
+								else
+									sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = DBNull.Value;
+							}
+						}
+					}
+					rowsAfected = sqlCommand.ExecuteNonQuery();
+				}
+			}
+			return rowsAfected;
 
 		}
 		public static T ExpandObject<T>(object o, Func<FieldInfo, IDataRecord, object> customApply) where T : class , new()
@@ -73,7 +108,7 @@ namespace EdgeBI.Objects
 						foreach (SqlParameter param in sqlCommand.Parameters)
 						{
 							string fieldName = param.ParameterName.Substring(1); //without the "@"
-							param.Value = returnObject.GetType().GetField(fieldName).GetValue(returnObject);						
+							param.Value = returnObject.GetType().GetField(fieldName).GetValue(returnObject);
 
 						}
 
@@ -314,7 +349,7 @@ namespace EdgeBI.Objects
 
 		//    return returnObject;
 		//}
-		public static IList GetListObject(FieldInfo fieldInfo, IDataReader sqlDataReader) 
+		public static IList GetListObject(FieldInfo fieldInfo, IDataReader sqlDataReader)
 		{
 			if (!fieldInfo.FieldType.IsGenericType || fieldInfo.FieldType.GetGenericTypeDefinition() == typeof(IList))
 				throw new Exception("This is not generic list");
@@ -331,12 +366,12 @@ namespace EdgeBI.Objects
 					{
 						FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(f, typeof(FieldMapAttribute));
 						object val = sqlDataReader[fieldMapAttribute.FieldName];
-									if (val is DBNull)
-									{
-										f.SetValue(currentItem, null);
-									}
-									else
-										f.SetValue(currentItem, val);
+						if (val is DBNull)
+						{
+							f.SetValue(currentItem, null);
+						}
+						else
+							f.SetValue(currentItem, val);
 					}
 				}
 				returnObject.Add(currentItem);
@@ -350,7 +385,7 @@ namespace EdgeBI.Objects
 				throw new Exception("This is not generic Dictionary");
 
 			Type keyElement = fieldInfo.FieldType.GetGenericArguments()[0];
-			Type typeElement = fieldInfo.FieldType.GetGenericArguments()[1];	
+			Type typeElement = fieldInfo.FieldType.GetGenericArguments()[1];
 
 			if (Attribute.IsDefined(fieldInfo, typeof(DictionaryMapAttribute)))
 			{
@@ -441,6 +476,7 @@ namespace EdgeBI.Objects
 		public readonly string FieldName;
 		public string Cast { get; set; }
 		public bool IsKey { get; set; }
+		public bool Show = true;
 		public bool UseApplyFunction { get; set; }
 		public bool RecursiveLookupField { get; set; }
 		public bool IsDistinct { get; set; }
@@ -449,6 +485,7 @@ namespace EdgeBI.Objects
 		public FieldMapAttribute(string fieldName)
 		{
 			this.FieldName = fieldName;
+			
 		}
 	}
 
@@ -467,7 +504,7 @@ namespace EdgeBI.Objects
 	}
 	[AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = false)]
 	sealed class DictionaryMapAttribute : Attribute
-	{		
+	{
 		public string Command { get; set; }
 		public string DictionaryKey { get; set; }
 		public bool IsStoredProcedure { get; set; }

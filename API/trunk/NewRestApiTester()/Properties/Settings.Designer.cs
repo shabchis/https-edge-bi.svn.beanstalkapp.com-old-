@@ -25,18 +25,6 @@ namespace NewRestApiTester__.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("users/{0},Menu,Accounts,Accounts/{0},permissions,Sessions")]
-        public string Services {
-            get {
-                return ((string)(this["Services"]));
-            }
-            set {
-                this["Services"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("localhost:28383")]
         public string LocalAdress {
             get {
@@ -61,7 +49,32 @@ namespace NewRestApiTester__.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Accept:application/json,Content-Type:application/json,x-edgebi-session:{0}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"OperationType\":\"New\",\"email\":\"amir@seperia.com\",\"Password\":\"123456\",\r\n\"UserID\":" +
+            "\"8\",\"Session\":\"0EB3BAD4D3FB3F64FE2EE9EC27B54752\"}")]
+        public string BodyLogInJson {
+            get {
+                return ((string)(this["BodyLogInJson"]));
+            }
+            set {
+                this["BodyLogInJson"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("users/{0},Menu,accounts,accounts/{0},permissions,Sessions")]
+        public string Services {
+            get {
+                return ((string)(this["Services"]));
+            }
+            set {
+                this["Services"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("x-edgebi-session:{0}")]
         public string DefaultHeaders {
             get {
                 return ((string)(this["DefaultHeaders"]));
@@ -73,14 +86,13 @@ namespace NewRestApiTester__.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{\"OperationType\":\"New\",\"email\":\"amir@seperia.com\",\"Password\":\"123456\",\r\n\"UserID\":" +
-            "\"8\",\"Session\":\"0EB3BAD4D3FB3F64FE2EE9EC27B54752\"}")]
-        public string BodyLogInJson {
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"AccountID\":\"7\",\"Path\":\"management\"}")]
+        public string BodyGetSpecificPermission {
             get {
-                return ((string)(this["BodyLogInJson"]));
+                return ((string)(this["BodyGetSpecificPermission"]));
             }
             set {
-                this["BodyLogInJson"] = value;
+                this["BodyGetSpecificPermission"] = value;
             }
         }
     }

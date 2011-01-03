@@ -33,20 +33,63 @@ namespace EdgeBI.API.Web
 		/// </summary>
 		/// <param name="ID">The User Primery Key</param>
 		/// <returns></returns>
+		/// 
+		#region Users and groups
 		[WebGet(UriTemplate = "users/{ID}")]
 		public User GetUserByID(string ID)
 		{
 			int currentUser;
-			currentUser = currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			currentUser =  System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 			int userID = int.Parse(ID);
 			if (userID != currentUser)
 			{
 				User user = User.GetUserByID(currentUser);
 				if (user.IsAcountAdmin != true)
 					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+
 			}
 			return User.GetUserByID(userID);
 		}
+
+		[WebGet(UriTemplate = "users")]
+		public List<User> GetAllUsers()
+		{
+			List<User> users=null;
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			User user = User.GetUserByID(currentUser);
+			if (user.IsAcountAdmin != true)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+			users = User.GetAllUsers();
+
+			return users;
+		}
+
+		[WebInvoke(Method="POST",UriTemplate="users")]
+		public void AddNewUser(User user)
+		{
+
+			//todo: dont forget on production to change the userID field to auto increment
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User activeUser = User.GetUserByID(currentUser);
+				if (activeUser.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+				User.AddNewUser(user);
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, ex.Message);
+			}
+
+		}
+
+
+
+		#endregion
 
 		[WebGet(UriTemplate = "menu")]
 		public List<Menu> GetMenu()
