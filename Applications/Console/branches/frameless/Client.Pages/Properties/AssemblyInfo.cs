@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Edge.BI")]
-[assembly: AssemblyProduct("Edge.UI.Client.Pages")]
+[assembly: AssemblyProduct("Edge.BI Management Pages")]
 [assembly: AssemblyCopyright("Copyright © Edge.BI 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
