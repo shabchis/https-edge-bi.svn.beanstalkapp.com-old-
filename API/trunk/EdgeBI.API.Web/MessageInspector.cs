@@ -31,37 +31,25 @@ namespace EdgeBI.API.Web
 
 		public object AfterReceiveRequest(ref System.ServiceModel.Channels.Message request, System.ServiceModel.IClientChannel channel, System.ServiceModel.InstanceContext instanceContext)
 		{
-			_request = request;
-
-			
+			_request = request;			
 				if (_msgReqInterceptors != null)
 				{
-
 					foreach (var msgInterceptor in _msgReqInterceptors)
 					{
-
 						msgInterceptor.ProcessRequest(ref request);
-
 					}
-				}
-				
-			
+				}		
 			return null;
-
 		}
-
 		public void BeforeSendReply(ref System.ServiceModel.Channels.Message reply, object correlationState)
-		{
-
-			
+		{			
 				if (_msgResInterceptors != null)
 				{
 					foreach (var msgInterceptor in _msgResInterceptors)
 					{
 						msgInterceptor.ProcessResponse(ref this._request, ref reply);
 					}
-				}
-			
+				}		
 		}
 
 		#endregion
