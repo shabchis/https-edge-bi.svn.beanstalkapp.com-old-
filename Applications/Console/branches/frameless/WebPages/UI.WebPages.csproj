@@ -105,32 +105,25 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Alerts.aspx.cs">
-      <DependentUpon>Alerts.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\Alerts.aspx.designer.cs">
-      <DependentUpon>Alerts.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\AdTest.aspx.cs">
-      <DependentUpon>AdTest.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\AdTest.aspx.designer.cs">
-      <DependentUpon>AdTest.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Classes\Convertors\BOConvertorManager.cs" />
     <Compile Include="Classes\Convertors\FacebookConvertor.cs" />
     <Compile Include="Classes\Convertors\MSNConvertor.cs" />
     <Compile Include="Classes\Convertors\YahooConvertor.cs" />
     <Compile Include="Classes\Convertors\888Convertor.cs" />
     <Compile Include="Classes\Convertors\BaseConvertor.cs" />
-    <Compile Include="Pages\graph.aspx.cs">
-      <DependentUpon>graph.aspx</DependentUpon>
+    <Compile Include="Pages\Organic-Graph.aspx.cs">
+      <DependentUpon>Organic-Graph.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Pages\graph.aspx.designer.cs">
-      <DependentUpon>graph.aspx</DependentUpon>
+    <Compile Include="Pages\Organic-Graph.aspx.designer.cs">
+      <DependentUpon>Organic-Graph.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Organic.aspx.cs">
+      <DependentUpon>Organic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Organic.aspx.designer.cs">
+      <DependentUpon>Organic.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\WebImporter.aspx.cs">
       <DependentUpon>WebImporter.aspx</DependentUpon>
@@ -145,13 +138,6 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\RunConvertor.aspx.cs">
-      <DependentUpon>RunConvertor.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Pages\RunConvertor.aspx.designer.cs">
-      <DependentUpon>RunConvertor.aspx</DependentUpon>
     </Compile>
     <Compile Include="Web References\CurrencyConvertor\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -178,9 +164,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Pages\RunConvertor.aspx" />
-  </ItemGroup>
-  <ItemGroup>
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
@@ -190,11 +173,8 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <Content Include="Global.asax" />
-    <Content Include="Pages\BU-Intelligence.aspx" />
-    <Content Include="Pages\AdTest.aspx" />
-    <Content Include="Pages\Alerts.aspx" />
-    <Content Include="Pages\graph.aspx" />
-    <Content Include="Pages\Intelligence.aspx" />
+    <Content Include="Pages\Organic-Graph.aspx" />
+    <Content Include="Pages\Organic.aspx" />
     <Content Include="Pages\Scripts\AdTest.js" />
     <Content Include="Pages\WebImporter.aspx" />
     <None Include="Web References\CurrencyConvertor\CurrencyConvertor.wsdl" />
