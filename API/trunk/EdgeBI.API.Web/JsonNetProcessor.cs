@@ -62,6 +62,9 @@ namespace EdgeBI.API.Web
 			{
 				using (JsonTextWriter writer = new JsonTextWriter(sw))
 				{
+					writer.Formatting = Formatting.Indented;
+					writer.Indentation = 1;
+					writer.IndentChar = '\t';
 					serializer.Serialize(writer, instance);
 				}
 			}

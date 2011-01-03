@@ -109,9 +109,21 @@ namespace EdgeBI.API.Web
 				}
 				if (calculatedPermissionList != null && calculatedPermissionList.Count > 0)
 				{
-					CalculatedPermission CalculatedPermission = calculatedPermissionList.Find(calculatedPermission => calculatedPermission.AccountID == permissionRequest.AccountID && calculatedPermission.Path.Trim().ToUpper() == permissionRequest.Path.Trim().ToUpper());
-					if (CalculatedPermission != null)
-						hasPermission = true;
+					if (string.IsNullOrEmpty(permissionRequest.Path))
+					{
+						if (calculatedPermissionList.Count > 0)
+						{
+							CalculatedPermission calculatedPermissions = calculatedPermissionList.Find(calculatedPermission => calculatedPermission.AccountID == permissionRequest.AccountID);
+							if (calculatedPermissions != null)
+								hasPermission = true;
+						}
+					}
+					else
+					{
+						CalculatedPermission calculatedPermissions = calculatedPermissionList.Find(calculatedPermission => calculatedPermission.AccountID == permissionRequest.AccountID && calculatedPermission.Path.Trim().ToUpper() == permissionRequest.Path.Trim().ToUpper());
+						if (calculatedPermissions != null)
+							hasPermission = true;
+					}
 
 				}
 			
