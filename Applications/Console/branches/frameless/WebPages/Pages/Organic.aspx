@@ -93,27 +93,96 @@
 
 <asp:Content ContentPlaceHolderID="ResultsPlaceHolder" runat="server">
 
-	<asp:Repeater runat="server" ID="_profileSearchEngineRepeater">
+	<asp:Repeater runat="server" ID="Repeater1">
 		<HeaderTemplate>
 			<h1><%# _profileName %></h1>
 		</HeaderTemplate>
 		<ItemTemplate>
-			<h2><%# ((System.Data.DataTable)Container.DataItem).TableName  %></h2>
-			<asp:DataGrid runat="server" ID="dataGrid"
-				DataSource="<%# Container.DataItem %>"
-				EnableViewState="false"
-				CellPadding="4"
-				ForeColor="#333333" 
-				GridLines="Both"
-				BorderColor="Silver"
-				Width="<%# Unit.Percentage(100) %>"
-			>
-				<HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-				<AlternatingItemStyle BackColor="White" />
-				<ItemStyle BackColor="#E3EAEB" VerticalAlign="Top" HorizontalAlign="Left"/>
-			</asp:DataGrid>
+			<h2><%# RankingTable(Container).SearchEngineName  %></h2>
+			<table>
+				<thead>
+					<tr>
+						<th colspan="2">Keyword</th>
+						<asp:Repeater runat="server" DataSource="<%# RankingTable(Container).Columns %>">
+							<ItemTemplate>
+								<th><%# Container.DataItem as string %></th>
+							</ItemTemplate>
+						</asp:Repeater>
+					</tr>
+				</thead>
+				<tbody>
+					<asp:Repeater runat="server" DataSource="<%# RankingTable(Container).Rows %>">
+						<ItemTemplate>
+							<tr>
+								<!-- Keyword -->
+								<td>
+									<asp:PlaceHolder runat="server" Visible="<%# RankingTable(Container.Parent.Parent).SearchEngineUrl != null %>">
+										<a href='<%# Server.HtmlEncode(RankingTable(Container.Parent.Parent).SearchEngineUrl) %>' target='_blank'><i><%# Server.HtmlEncode(RankingRow(Container).Keyword)%></i></a>
+									</asp:PlaceHolder>
+									<asp:PlaceHolder runat="server" Visible="<%# RankingTable(Container.Parent.Parent).SearchEngineUrl == null %>">
+										<i><%# Server.HtmlEncode(RankingRow(Container).Keyword) %></i>
+									</asp:PlaceHolder>
+								</td>
+								<td>
+									<asp:PlaceHolder runat="server" Visible="<%# RankingRow(Container).ClientItem != null %>">
+										<zed:ZedGraphWeb runat="server" Width="105" Height="40"/>
+									</asp:PlaceHolder>
+								</td>
+								
+								<!-- Client rankings -->
+								<asp:Repeater DataSource="<%# RankingRow(Container).ClientItem.Rankings %>" runat="server">
+									<HeaderTemplate>
+										<td>
+											<table cellpadding='1'>
+									</HeaderTemplate>
+									<ItemTemplate>
+										<tr>
+											<td><b><%# Ranking(Container).Rank %></b></td>
+											<td style='width: 30px'>
+												<asp:PlaceHolder runat="server" Visible="<%# Ranking(Container).RankDiff == 0 %>">
+													&nbsp;
+												</asp:PlaceHolder>
+												<asp:PlaceHolder runat="server" Visible="<%# Ranking(Container).RankDiff > 0 %>">
+													<span style='color: green'>(+<%# Ranking(Container).RankDiff%>)</span>
+												</asp:PlaceHolder>
+												<asp:PlaceHolder runat="server" Visible="<%# Ranking(Container).RankDiff < 0 %>">
+													<span style='color: red'>(<%# Ranking(Container).RankDiff%>)</span>
+												</asp:PlaceHolder>
+											</td>
+											<td>
+												<a href='<%# Server.HtmlEncode(Ranking(Container).Url) %>' target='_blank'><%#
+													Server.HtmlEncode(Ranking(Container).Url.Length <= 40 ? Ranking(Container).Url : Ranking(Container).Url.Substring(0, 40) + "...")%></a>
+											</td>
+										</tr>
+									</ItemTemplate>
+									<FooterTemplate>
+											</table>
+										</td>
+									</FooterTemplate>
+								</asp:Repeater>
+								
+								<!-- Competitor rankings -->
+								<asp:Repeater runat="server" DataSource="<%# RankingTable(Container.Parent.Parent).Columns %>">
+									
+									<ItemTemplate>
+										<td>
+											<asp:PlaceHolder runat="server" Visible="<%# Ranking(Container).RankDiff == 0 %>">
+												<a href='<%# Server.HtmlEncode(Ranking(Container).Url) %>' target='_blank'>Ranking(Container).Rank</a>
+												<asp:PlaceHolder ID="PlaceHolder1"  runat="server" Visible="<%# Ranking(Container).RankDiff != 0 %>">
+													<span style='color: #999; font-size: 8px'>(<%# Ranking(Container).RankDiff.ToString() %>)</span>
+												</asp:PlaceHolder>
+											</asp:PlaceHolder>
+										</td>
+									</ItemTemplate>
+								</asp:Repeater>
+							</tr>
+						</ItemTemplate>
+					</asp:Repeater>
+				</tbody>
+			</table>
 		</ItemTemplate>
 	</asp:Repeater>
+
 	
 
 	<%-- ---------------------------------------------------------------------- --%>
@@ -130,7 +199,7 @@
 					</asp:PlaceHolder>
 				</td>
 				<td>
-					<asp:PlaceHolder runat="server" Visible="<%# Output.Rank > 0 %>">
+					<asp:PlaceHolder runat="server" Visible="<%# Output.Rankings.Count > 0 %>">
 						<a href="">
 							<zed:ZedGraphWeb runat="server" Width="105" Height="40"/>
 						</a>
