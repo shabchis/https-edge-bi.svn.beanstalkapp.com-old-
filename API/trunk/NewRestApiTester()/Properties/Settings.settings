@@ -12,14 +12,14 @@
       <Value Profile="(Default)">{"OperationType":"New","email":"amir@seperia.com","Password":"123456",
 "UserID":"8","Session":"0EB3BAD4D3FB3F64FE2EE9EC27B54752"}</Value>
     </Setting>
-    <Setting Name="Services" Type="System.String" Scope="User">
-      <Value Profile="(Default)">users/{0},Menu,accounts,accounts/{0},permissions,Sessions</Value>
-    </Setting>
     <Setting Name="DefaultHeaders" Type="System.String" Scope="User">
       <Value Profile="(Default)">x-edgebi-session:{0}</Value>
     </Setting>
     <Setting Name="BodyGetSpecificPermission" Type="System.String" Scope="User">
       <Value Profile="(Default)">{"AccountID":"7","Path":"management"}</Value>
+    </Setting>
+    <Setting Name="Services" Type="System.String" Scope="User">
+      <Value Profile="(Default)">users/{0},users,Menu,accounts,accounts/{0},permissions,Sessions,groups,groups/{0}</Value>
     </Setting>
   </Settings>
 </SettingsFile>

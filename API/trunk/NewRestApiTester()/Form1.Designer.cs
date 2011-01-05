@@ -55,6 +55,7 @@
 			this.label9 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
 			this.ResponseHeaderTextBox = new System.Windows.Forms.TextBox();
+			this.DeleteButton = new System.Windows.Forms.Button();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -115,7 +116,7 @@
 			// 
 			// GetButton
 			// 
-			this.GetButton.Location = new System.Drawing.Point(569, 528);
+			this.GetButton.Location = new System.Drawing.Point(578, 528);
 			this.GetButton.Name = "GetButton";
 			this.GetButton.Size = new System.Drawing.Size(75, 23);
 			this.GetButton.TabIndex = 7;
@@ -307,11 +308,22 @@
 			this.ResponseHeaderTextBox.Size = new System.Drawing.Size(313, 57);
 			this.ResponseHeaderTextBox.TabIndex = 0;
 			// 
+			// DeleteButton
+			// 
+			this.DeleteButton.Location = new System.Drawing.Point(496, 528);
+			this.DeleteButton.Name = "DeleteButton";
+			this.DeleteButton.Size = new System.Drawing.Size(75, 23);
+			this.DeleteButton.TabIndex = 20;
+			this.DeleteButton.Text = "DELETE";
+			this.DeleteButton.UseVisualStyleBackColor = true;
+			this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(748, 563);
+			this.Controls.Add(this.DeleteButton);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.removeButton);
 			this.Controls.Add(this.ClearButton);
@@ -370,6 +382,7 @@
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.TextBox ResponseHeaderTextBox;
 		private System.Windows.Forms.RichTextBox ResponseBodyRichTextBox;
+		private System.Windows.Forms.Button DeleteButton;
 	}
 }
 
