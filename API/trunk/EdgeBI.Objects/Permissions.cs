@@ -22,6 +22,8 @@ namespace EdgeBI.Objects
 		[FieldMap("Value",Cast="cast (Value  as int) AS 'Value' ")]
 		public PermissionAssignmentType Assignment;
 
+		 
+
 	}
 	public class CalculatedPermission
 	{
@@ -38,11 +40,27 @@ namespace EdgeBI.Objects
 		public int AccountID { get; set; }
 		public string Path { get; set; }	
 	}
-
 	public enum PermissionAssignmentType
 	{
 		Allow = 1,
 		Deny = 0
 	}
+	public class AssignedPermissionData
+	{
+		public PermissionOperation permissionOperation;
+		public Dictionary<int,List<AssignedPermission>> AssignedPermissions;
+
+
+
+	}
+
+	public enum PermissionOperation
+	{
+		Add=1,
+		Update=2,
+		Delete=3
+	}
+
+	
 
 }
