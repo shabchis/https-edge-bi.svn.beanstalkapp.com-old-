@@ -199,16 +199,6 @@ namespace EdgeBI.API.Web
 			Group.DeleteGroup(int.Parse(ID));
 
 		}
-
-
-
-		
-
-
-		
-
-
-
 		#endregion
 
 		#region Menus
@@ -331,6 +321,37 @@ namespace EdgeBI.API.Web
 			}
 			return permissions;
 
+
+		}
+
+		[WebInvoke(Method="POST", UriTemplate="users/{userID}/permissions")]
+		public void InsertUpdateAddPermission(string userID,AssignedPermissionData assignedPermissions)
+		{
+			
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			User user = User.GetUserByID(currentUser);
+			if (user.IsAcountAdmin != true)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can edit permissions");
+
+			switch (assignedPermissions.permissionOperation)
+			{
+				case PermissionOperation.Add:
+					{
+						
+						break;
+					}
+				case PermissionOperation.Update:
+					{
+
+						break;
+					}
+				case PermissionOperation.Delete:
+					{
+						break;
+					}
+				
+			}
 
 		}
 
