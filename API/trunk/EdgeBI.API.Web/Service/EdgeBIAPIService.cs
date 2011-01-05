@@ -39,7 +39,7 @@ namespace EdgeBI.API.Web
 		public User GetUserByID(string ID)
 		{
 			int currentUser;
-			currentUser =  System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 			int userID = int.Parse(ID);
 			if (userID != currentUser)
 			{
@@ -54,7 +54,7 @@ namespace EdgeBI.API.Web
 		[WebGet(UriTemplate = "users")]
 		public List<User> GetAllUsers()
 		{
-			List<User> users=null;
+			List<User> users = null;
 			int currentUser;
 			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 			User user = User.GetUserByID(currentUser);
@@ -65,7 +65,7 @@ namespace EdgeBI.API.Web
 			return users;
 		}
 
-		[WebInvoke(Method="POST",UriTemplate="users")]
+		[WebInvoke(Method = "POST", UriTemplate = "users")]
 		public void AddNewUser(User user)
 		{
 
@@ -76,7 +76,7 @@ namespace EdgeBI.API.Web
 				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 				User activeUser = User.GetUserByID(currentUser);
 				if (activeUser.IsAcountAdmin != true)
-					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can add users ");
 				User.AddNewUser(user);
 			}
 			catch (Exception ex)
@@ -87,10 +87,131 @@ namespace EdgeBI.API.Web
 
 		}
 
+		[WebInvoke(Method = "POST", UriTemplate = "users/{ID}")]
+		public void UpdateUser(string ID, User user)
+		{
+			if (ID.Trim() != user.UserID.ToString())
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Updated userId is different from ID");
+
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			User activeUser = User.GetUserByID(currentUser);
+			if (activeUser.IsAcountAdmin != true)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
+
+			User.UpdateUser(user);
+
+
+
+		}
+
+		[WebInvoke(Method = "DELETE", UriTemplate = "users/{ID}")]
+		public void DeleteUser(string ID)
+		{
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			User activeUser = User.GetUserByID(currentUser);
+			if (activeUser.IsAcountAdmin != true)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
+			User.DeleteUser(int.Parse(ID));
+
+		}
+
+		[WebGet(UriTemplate = "groups/{ID}")]
+		public Group GetGroupByID(string ID)
+		{
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			int groupID = int.Parse(ID);
+
+			User user = User.GetUserByID(currentUser);
+			if (user.IsAcountAdmin != true)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+
+
+			return Group.GetGroupByID(groupID);
+
+		}
+
+		[WebGet(UriTemplate = "groups")]
+		public List<Group> GetAllGroups()
+		{
+			List<Group> groups = null;
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			User user = User.GetUserByID(currentUser);
+			if (user.IsAcountAdmin != true)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get the list of all groups");
+			groups = Group.GetAllGroups();
+
+			return groups;
+
+		}
+
+		[WebInvoke(Method = "POST", UriTemplate = "groups")]
+		public void AddNewGroup(Group group)
+		{
+
+			//todo: dont forget on production to change the userID field to auto increment
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User activeUser = User.GetUserByID(currentUser);
+				if (activeUser.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can add group ");
+				Group.AddNewGroup(group);
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, ex.Message);
+			}
+
+		}
+
+		[WebInvoke(Method = "POST", UriTemplate = "groups/{ID}")]
+		public void UpdateGroup(string ID, Group group)
+		{
+
+			if (ID.Trim() != group.GroupID.ToString())
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Updated groupID is different from ID");
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			User activeUser = User.GetUserByID(currentUser);
+			if (activeUser.IsAcountAdmin != true)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
+
+			Group.UpdateGroup(group);
+
+
+
+		}
+
+		[WebInvoke(Method = "DELETE", UriTemplate = "groups/{ID}")]
+		public void DeleteGroup(string ID)
+		{
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			User activeUser = User.GetUserByID(currentUser);
+			if (activeUser.IsAcountAdmin != true)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
+			Group.DeleteGroup(int.Parse(ID));
+
+		}
+
+
+
+		
+
+
+		
+
 
 
 		#endregion
 
+		#region Menus
 		[WebGet(UriTemplate = "menu")]
 		public List<Menu> GetMenu()
 		{
@@ -102,6 +223,9 @@ namespace EdgeBI.API.Web
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, string.Format("No menu found for userId {0} ", currentUser));
 			return m;
 		}
+		#endregion
+
+		#region Accounts
 
 		[WebGet(UriTemplate = "Accounts/{accountID}")]
 		[OperationContract(Name = "GetAccountByID")]
@@ -126,56 +250,93 @@ namespace EdgeBI.API.Web
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, String.Format("No account with permission found for user {0}", currentUser));
 			return acc;
 		}
+		#endregion
 
-		[WebInvoke(Method = "POST",UriTemplate = "permissions")]
+		#region permissions
+		[WebInvoke(Method = "POST", UriTemplate = "permissions")]
 		public bool GetSpecificPermissionValue(PermissionRequest permissionRequest)
 		{
 
-			
-				bool hasPermission = false;
-				int currentUser;
-				ThingReader<CalculatedPermission> calculatedPermissionReader;
-				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-				List<CalculatedPermission> calculatedPermissionList = new List<CalculatedPermission>();
-				using (DataManager.Current.OpenConnection())
+
+			bool hasPermission = false;
+			int currentUser;
+			ThingReader<CalculatedPermission> calculatedPermissionReader;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			List<CalculatedPermission> calculatedPermissionList = new List<CalculatedPermission>();
+			using (DataManager.Current.OpenConnection())
+			{
+				SqlCommand sqlCommand = DataManager.CreateCommand("User_CalculatePermissions(@UserID:Int)", CommandType.StoredProcedure);
+				sqlCommand.Parameters["@UserID"].Value = currentUser;
+				calculatedPermissionReader = new ThingReader<CalculatedPermission>(sqlCommand.ExecuteReader(), null);
+				while (calculatedPermissionReader.Read())
 				{
-					SqlCommand sqlCommand = DataManager.CreateCommand("User_CalculatePermissions(@UserID:Int)", CommandType.StoredProcedure);
-					sqlCommand.Parameters["@UserID"].Value = currentUser;
-					calculatedPermissionReader = new ThingReader<CalculatedPermission>(sqlCommand.ExecuteReader(), null);
-					while (calculatedPermissionReader.Read())
-					{
-						calculatedPermissionList.Add(calculatedPermissionReader.Current);
-					}
-					calculatedPermissionReader.Dispose();
-
-
+					calculatedPermissionList.Add(calculatedPermissionReader.Current);
 				}
-				if (calculatedPermissionList != null && calculatedPermissionList.Count > 0)
+				calculatedPermissionReader.Dispose();
+
+
+			}
+			if (calculatedPermissionList != null && calculatedPermissionList.Count > 0)
+			{
+				if (string.IsNullOrEmpty(permissionRequest.Path))
 				{
-					if (string.IsNullOrEmpty(permissionRequest.Path))
+					if (calculatedPermissionList.Count > 0)
 					{
-						if (calculatedPermissionList.Count > 0)
-						{
-							CalculatedPermission calculatedPermissions = calculatedPermissionList.Find(calculatedPermission => calculatedPermission.AccountID == permissionRequest.AccountID);
-							if (calculatedPermissions != null)
-								hasPermission = true;
-						}
-					}
-					else
-					{
-						CalculatedPermission calculatedPermissions = calculatedPermissionList.Find(calculatedPermission => calculatedPermission.AccountID == permissionRequest.AccountID && calculatedPermission.Path.Trim().ToUpper() == permissionRequest.Path.Trim().ToUpper());
+						CalculatedPermission calculatedPermissions = calculatedPermissionList.Find(calculatedPermission => calculatedPermission.AccountID == permissionRequest.AccountID);
 						if (calculatedPermissions != null)
 							hasPermission = true;
 					}
-
 				}
-			
-			
+				else
+				{
+					CalculatedPermission calculatedPermissions = calculatedPermissionList.Find(calculatedPermission => calculatedPermission.AccountID == permissionRequest.AccountID && calculatedPermission.Path.Trim().ToUpper() == permissionRequest.Path.Trim().ToUpper());
+					if (calculatedPermissions != null)
+						hasPermission = true;
+				}
+
+			}
+
+
 
 
 			return hasPermission;
 		}
-		
+
+		[WebGet(UriTemplate = "permissions")]
+		public List<string> GetListOfAllPermissionType()
+		{
+			List<string> permissions = new List<string>();
+			//TODO: MAYBE ONLY FOR ADMIN USER NOT SURE ASK DORON AND YARON
+			//int currentUser;
+			//currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+
+			//User user = User.GetUserByID(currentUser);
+			//if (user.IsAcountAdmin != true)
+			//    ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+
+			using (DataManager.Current.OpenConnection())
+			{
+				using (SqlCommand sqlCommand = DataManager.CreateCommand("SELECT Path FROM Constant_PermissionType ORDER BY Path"))
+				{
+					using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
+					{
+						while (sqlDataReader.Read())
+						{
+							permissions.Add(sqlDataReader[0].ToString());
+						}
+					}
+
+				}
+
+			}
+			return permissions;
+
+
+		}
+
+		#endregion
+
+		#region Login
 		[WebInvoke(Method = "POST", UriTemplate = "sessions")]
 		public SessionResponseData LogIn(SessionRequestData sessionData)
 		{
@@ -231,6 +392,7 @@ namespace EdgeBI.API.Web
 			return returnsessionData;
 		}
 
+		#endregion
 
 
 

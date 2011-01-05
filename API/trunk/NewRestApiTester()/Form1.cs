@@ -293,5 +293,11 @@ namespace NewRestApiTester__
 		{
 
 		}
+
+		private void DeleteButton_Click(object sender, EventArgs e)
+		{
+			CreateRequest("DELETE");
+
+		}
 	}
 }

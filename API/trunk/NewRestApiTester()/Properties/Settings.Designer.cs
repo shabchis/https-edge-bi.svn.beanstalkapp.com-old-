@@ -62,18 +62,6 @@ namespace NewRestApiTester__.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("users/{0},Menu,accounts,accounts/{0},permissions,Sessions")]
-        public string Services {
-            get {
-                return ((string)(this["Services"]));
-            }
-            set {
-                this["Services"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("x-edgebi-session:{0}")]
         public string DefaultHeaders {
             get {
@@ -93,6 +81,19 @@ namespace NewRestApiTester__.Properties {
             }
             set {
                 this["BodyGetSpecificPermission"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("users/{0},users,Menu,accounts,accounts/{0},permissions,Sessions,groups,groups/{0}" +
+            "")]
+        public string Services {
+            get {
+                return ((string)(this["Services"]));
+            }
+            set {
+                this["Services"] = value;
             }
         }
     }

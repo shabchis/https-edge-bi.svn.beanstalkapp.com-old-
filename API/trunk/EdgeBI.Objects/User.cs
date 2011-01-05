@@ -30,7 +30,8 @@ namespace EdgeBI.Objects
 		[FieldMap("Name")]
 		public string Name;
 
-		[DataMember(Order = 2)]		
+		
+		[FieldMap("IsActive", Show = false)]
 		public bool IsActive=true;
 
 		[DataMember(Order = 3)]
@@ -121,10 +122,32 @@ namespace EdgeBI.Objects
 			string command = @"INSERT INTO User_GUI_User
 								(Name,IsActive,AccountAdmin,Email,Password)
 								VALUES (@Name:NvarChar,1,@AccountAdmin:bit,@Email:NvarChar,@Password:NvarChar)";
-			if (MapperUtility.InsertSimpleObject<User>(command, user) < 1)
+			if (MapperUtility.SaveOrRemoveSimpleObject<User>(command, user) < 1)
 				throw new Exception("No Rows afected");
 
 			
+		}
+
+		public static void UpdateUser(User user)
+		{
+			string command = @"UPDATE User_GUI_User
+								SET Name=@Name:NvarChar,
+									IsActive=@IsActive:bit,
+									AccountAdmin=@AccountAdmin:bit,
+									Email=@Email:NvarChar,
+									Password=@Password:NvarChar
+									WHERE UserID=@UserID:Int";
+			if (MapperUtility.SaveOrRemoveSimpleObject<User>(command, user) < 1)
+				throw new Exception("No Rows afected");
+		}
+
+		public static void DeleteUser(int userID)
+		{
+			string command = @"DELETE FROM User_GUI_User
+								WHERE UserID =@UserID:Int";
+			User user = new User() { UserID = userID };
+			if (MapperUtility.SaveOrRemoveSimpleObject<User>(command, user) < 1)
+				throw new Exception("No Rows afected");
 		}
 	}
 }

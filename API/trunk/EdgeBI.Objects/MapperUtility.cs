@@ -55,11 +55,11 @@ namespace EdgeBI.Objects
 			return returnObject;
 
 		}
-		public static int InsertSimpleObject<T>(string Command, object objectToInsert) where T : class, new()
+		public static int SaveOrRemoveSimpleObject<T>(string Command, object objectToInsert) where T : class, new()
 		{
 			int rowsAfected = 0;
 			Type t = typeof(T);
-			string tableName;
+			
 			
 
 			using (DataManager.Current.OpenConnection())
@@ -466,6 +466,8 @@ namespace EdgeBI.Objects
 			return selectClause.ToString();
 		}
 		#endregion
+
+		
 	}
 	#region AtrributesClass
 	[AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = false)]
