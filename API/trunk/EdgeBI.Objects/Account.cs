@@ -112,7 +112,21 @@ namespace EdgeBI.Objects
 				
 					
 			}
-			
+			returnObject=Order(returnObject);
+			return returnObject;
+		}
+
+		private static List<Account> Order(List<Account> returnObject)
+		{
+			if (returnObject != null && returnObject.Count > 0)
+			{
+				IEnumerable<Account> accounts = returnObject.OrderBy(account => account.Name);
+				foreach (Account account in accounts)
+				{
+					account.ChildAccounts = Order(account.ChildAccounts);
+				}
+				returnObject = accounts.ToList();
+			}
 			return returnObject;
 		}
 
