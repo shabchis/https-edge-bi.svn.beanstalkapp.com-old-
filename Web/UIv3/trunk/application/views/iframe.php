@@ -1,9 +1,9 @@
 
 
- <iframe frameborder="0" src ="<?php echo  $iframeurl ;?>"/>
+ <iframe frameborder="0" class="autoHeight" src ="<?php echo  $iframeurl ;?>"/>
 
 <?php
- $this->firephp->log($iframeurl);
+ //$this->firephp->log($iframeurl);
 
 
 ?>

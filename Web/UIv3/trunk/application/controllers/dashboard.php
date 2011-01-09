@@ -1,7 +1,7 @@
 <?php
 class Dashboard extends Controller {
   
-  function index()
+  function index($accountID)
   {
     
     if (strpos($this->agent->referrer(), base_url()) !== 0 )
