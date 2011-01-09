@@ -27,6 +27,7 @@
 		<script src="<?php base_url();?>assets/js/jquery.dropshadow.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.jscrollpane.min.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.mousewheel.js"></script>
+	<!--	<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>-->
 		<script type="text/javascript">
 			var _menudata = jQuery.parseJSON('<?php echo $menu; ?>');
 			var _accountdata = 	jQuery.parseJSON('<?php echo $account; ?>');
@@ -154,7 +155,7 @@
 
 	<div id="slider">
 		<span><a href="#"><img src="<?php base_url();?>assets/img/arrows_04.png" /></a></span>
-		<div id="caption">Hide</div>
+		<div id="caption"></div>
 	</div>
 
 	<div id="inner">	
