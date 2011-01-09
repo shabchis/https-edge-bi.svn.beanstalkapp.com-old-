@@ -2,13 +2,13 @@
 
 class Errors
 {
-	function ThrowEx($msg, $statusCode, $data = null, $redirect = false )
+	function ThrowEx($msg, $statusCode, $data = null, $redirect = false, $preferJson = true )
 	{
-		if (IS_AJAX)
+		if (IS_AJAX && $preferJson)
 		{
 			if (!$data)
 				$data = array();
-			if (!$msg)
+			if ($msg)
 				$data['message'] = $msg;
 			if ($redirect)
 				$data['redirect'] = LOGIN_PAGE;
@@ -25,5 +25,12 @@ class Errors
 			else
 				show_error($msg, $statusCode);
 		}
+	}
+	
+	function Redirect($statusCode, $url)
+	{
+		header('HTTP/1.1 '. $statusCode);
+		header( 'Location: '.$url) ;
+		exit();
 	}
 }

@@ -29,7 +29,12 @@ class EdgeApi
 			$headers = array();
 		array_push($headers, 'Accept: application/json');
 		if ($includeSession)
-			array_push($headers, 'x-edgebi-session:'.$_COOKIE['edgebi_session']);
+		{
+			if (isset($_COOKIE['edgebi_session']))
+				array_push($headers, 'x-edgebi-session:'.$_COOKIE['edgebi_session']);
+			else
+				$this->errors->ThrowEx('Please log in.', 403, null, true);
+		}
 		
 		curl_setopt($curl_handle, CURLOPT_HTTPHEADER,$headers);
 		
@@ -74,6 +79,8 @@ class EdgeApi
 		$response = json_decode($result);
 		if ($setCookies)
 		{
+			delete_cookie("edgebi_child_account");
+			delete_cookie("edgebi_parent_account");
 			setcookie("edgebi_session", $response->Session, 0, '/');
 			setcookie("edgebi_user", $response->UserID, time()+60*60*24*14, '/');
 		}

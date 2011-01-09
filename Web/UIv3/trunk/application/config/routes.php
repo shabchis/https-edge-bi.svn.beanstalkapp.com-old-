@@ -41,11 +41,11 @@
 */
 $route['default_controller'] = "main";
 $route['scaffolding_trigger'] = "";
+$route['panorama/(:num)']="panorama/index/$1";
 
 // Merge controller names from menu
 global $MENU_ROUTES;
 if(!empty($MENU_ROUTES)) $route = array_merge($route,$MENU_ROUTES);
-
 
 /* End of file routes.php */
 /* Location: ./system/application/config/routes.php */

@@ -25,6 +25,7 @@ $hook['pre_system'][] = array(
                                 'filepath' => 'hooks'
                                 );
 
+
 $hook['pre_system'][] = array(
                                 'class'    => 'menuRouting',
                                 'function' => 'index',
