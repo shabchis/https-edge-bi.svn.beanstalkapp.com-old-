@@ -155,7 +155,7 @@ namespace NewRestApiTester__
 
 
 				}
-				if (sessionResponseData != null)
+				if (sessionResponseData != null && !string.IsNullOrEmpty( sessionResponseData.Session))
 				{
 					HeaderslistView.Items["x-edgebi-session"].SubItems[1].Text = sessionResponseData.Session;
 					Registry.CurrentUser.OpenSubKey("Software", true).CreateSubKey("WcfRestTester").CreateSubKey("LastSession").SetValue("LastSession", sessionResponseData.Session);
