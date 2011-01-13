@@ -15,6 +15,9 @@ using System.Net;
 using System.Xml;
 using System.IO;
 using EdgeBI.Objects;
+using Microsoft.ServiceModel.Description;
+using System.ServiceModel.Dispatcher;
+using Microsoft.ServiceModel.Http;
 
 namespace EdgeBI.API.Web
 {
@@ -43,8 +46,33 @@ namespace EdgeBI.API.Web
 			// TODO: add text message to output
 			HttpResponseMessage responseMessage = request.ToHttpRequestMessage().CreateResponse(statusCode);
 
-			
-			
+
+
+			//var httpMessageProperty = OperationContext.Current.IncomingMessageProperties[HttpMessageProperty.Name] as HttpMessageProperty;
+			//var httpRequest = httpMessageProperty.Request as HttpRequestMessage;
+
+			//var endpoint = OperationContext.Current.Host.Description.Endpoints.Find(OperationContext.Current.EndpointDispatcher.EndpointAddress.Uri);
+			//var uriMatch = httpRequest.Properties.First(p => p.GetType() == typeof(UriTemplateMatch)) as UriTemplateMatch;
+			//var dispatchOperation = OperationContext.Current.EndpointDispatcher.DispatchRuntime.Operations.Where(op => op.Name == uriMatch.Data).First();
+			//var operationDescription = endpoint.Contract.Operations.Find(dispatchOperation.Name);
+			//var httpBehavoir = endpoint.Behaviors.Find<HttpEndpointBehavior>();
+			//var processors = httpBehavoir.GetResponseProcessors(operationDescription.ToHttpOperationDescription()).ToList<Processor>();
+
+			//foreach (var processor in processors)
+			//{
+			//    var mediaTypeProcessor = processor as MediaTypeProcessor;
+			//    if (mediaTypeProcessor == null)
+			//        continue;
+
+			//    if (mediaTypeProcessor.SupportedMediaTypes.Contains<string>("application/json"))
+			//    {
+			//        Exception e = new Exception(OperationContext.Current.OutgoingMessageProperties[ErrorObjectProperty].ToString());
+
+			//        responseMessage.Content = HttpContent.Create(s => mediaTypeProcessor.WriteToStream(e, s, httpRequest));
+			//        break;
+			//    }
+			//}
+
 
 			
 			responseMessage.Content = HttpContent.Create( OperationContext.Current.OutgoingMessageProperties[ErrorObjectProperty].ToString() , "application/json");

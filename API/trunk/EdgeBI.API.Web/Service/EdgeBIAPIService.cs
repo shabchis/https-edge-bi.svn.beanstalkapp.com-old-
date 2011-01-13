@@ -324,8 +324,40 @@ namespace EdgeBI.API.Web
 
 		}
 
+		[WebInvoke(Method = "POST", UriTemplate = "groups/{groupID}/permissions")]
+		public void InsertUpdateRemovePermissionForGroup(string groupID, AssignedPermissionData assignedPermissions)
+		{
+
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			User user = User.GetUserByID(currentUser);
+			if (user.IsAcountAdmin != true)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can edit permissions");
+
+			switch (assignedPermissions.permissionOperation)
+			{
+				case PermissionOperation.Add:
+					{
+						AssignedPermissionData.AddPermissions(int.Parse(groupID), assignedPermissions.accountsPermissionsData,true);
+						break;
+					}
+				case PermissionOperation.Update:
+					{
+						AssignedPermissionData.UpdatePermissions(int.Parse(groupID), assignedPermissions.accountsPermissionsData,true);
+						break;
+					}
+				case PermissionOperation.Delete:
+					{
+						AssignedPermissionData.RemovePermmissions(int.Parse(groupID), assignedPermissions.accountsPermissionsData,true);
+						break;
+					}
+
+			}
+
+		}
+
 		[WebInvoke(Method="POST", UriTemplate="users/{userID}/permissions")]
-		public void InsertUpdateAddPermission(string userID,AssignedPermissionData assignedPermissions)
+		public void InsertUpdateRemovePermissionForUser(string userID,AssignedPermissionData assignedPermissions)
 		{
 			
 			int currentUser;
@@ -338,16 +370,17 @@ namespace EdgeBI.API.Web
 			{
 				case PermissionOperation.Add:
 					{
-						
+						AssignedPermissionData.AddPermissions(int.Parse(userID), assignedPermissions.accountsPermissionsData,false);
 						break;
 					}
 				case PermissionOperation.Update:
 					{
-
+						AssignedPermissionData.UpdatePermissions(int.Parse(userID), assignedPermissions.accountsPermissionsData,false);
 						break;
 					}
 				case PermissionOperation.Delete:
 					{
+						AssignedPermissionData.RemovePermmissions(int.Parse(userID), assignedPermissions.accountsPermissionsData,false);
 						break;
 					}
 				
