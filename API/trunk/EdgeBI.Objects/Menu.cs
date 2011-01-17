@@ -62,7 +62,7 @@ namespace EdgeBI.Objects
 				sqlCommand.Parameters["@userID"].Value = userId;
 
 				thingReader = new ThingReader<Menu>(sqlCommand.ExecuteReader(), CustomApply);
-				List<Menu> currrentList = null;
+				
 				while (thingReader.Read())
 				{
 

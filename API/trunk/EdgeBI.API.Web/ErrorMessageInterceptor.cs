@@ -37,8 +37,11 @@ namespace EdgeBI.API.Web
 		public override void ProcessResponse(ref System.ServiceModel.Channels.Message request, ref System.ServiceModel.Channels.Message response)
 		{
 			// Don't do anything if there was no error
+			Exception ex = null;
 			if (!OperationContext.Current.OutgoingMessageProperties.ContainsKey(StatusCodeProperty))
+			{				
 				return;
+			}
 
 			HttpStatusCode statusCode = (HttpStatusCode)OperationContext.Current.OutgoingMessageProperties[StatusCodeProperty];
 			//object error = OperationContext.Current.OutgoingMessageProperties[ErrorObjectProperty];
@@ -50,32 +53,36 @@ namespace EdgeBI.API.Web
 
 			//var httpMessageProperty = OperationContext.Current.IncomingMessageProperties[HttpMessageProperty.Name] as HttpMessageProperty;
 			//var httpRequest = httpMessageProperty.Request as HttpRequestMessage;
+			var httpRequest = request.ToHttpRequestMessage();
+			var endpoint = OperationContext.Current.Host.Description.Endpoints.Find(OperationContext.Current.EndpointDispatcher.EndpointAddress.Uri);
+			var uriMatch = httpRequest.Properties.First(p => p.GetType() == typeof(UriTemplateMatch)) as UriTemplateMatch;
+			var dispatchOperation = OperationContext.Current.EndpointDispatcher.DispatchRuntime.Operations.Where(op => op.Name == uriMatch.Data).First();
+			var operationDescription = endpoint.Contract.Operations.Find(dispatchOperation.Name);
+			var httpBehavoir = endpoint.Behaviors.Find<HttpEndpointBehavior>();
+			var processors = httpBehavoir.GetResponseProcessors(operationDescription.ToHttpOperationDescription()).ToList<Processor>();
 
-			//var endpoint = OperationContext.Current.Host.Description.Endpoints.Find(OperationContext.Current.EndpointDispatcher.EndpointAddress.Uri);
-			//var uriMatch = httpRequest.Properties.First(p => p.GetType() == typeof(UriTemplateMatch)) as UriTemplateMatch;
-			//var dispatchOperation = OperationContext.Current.EndpointDispatcher.DispatchRuntime.Operations.Where(op => op.Name == uriMatch.Data).First();
-			//var operationDescription = endpoint.Contract.Operations.Find(dispatchOperation.Name);
-			//var httpBehavoir = endpoint.Behaviors.Find<HttpEndpointBehavior>();
-			//var processors = httpBehavoir.GetResponseProcessors(operationDescription.ToHttpOperationDescription()).ToList<Processor>();
+			foreach (var processor in processors)
+			{
+				var mediaTypeProcessor = processor as MediaTypeProcessor;
+				if (mediaTypeProcessor == null)
+					continue;
 
-			//foreach (var processor in processors)
-			//{
-			//    var mediaTypeProcessor = processor as MediaTypeProcessor;
-			//    if (mediaTypeProcessor == null)
-			//        continue;
+				if (mediaTypeProcessor.SupportedMediaTypes.Contains<string>("application/json"))
+				{
+					ErrorObject errorObject = new ErrorObject() { ErrorCode =-1, Message = OperationContext.Current.OutgoingMessageProperties[ErrorObjectProperty].ToString(), StatusCode =Convert.ToInt32( OperationContext.Current.OutgoingMessageProperties[StatusCodeProperty]) };
 
-			//    if (mediaTypeProcessor.SupportedMediaTypes.Contains<string>("application/json"))
-			//    {
-			//        Exception e = new Exception(OperationContext.Current.OutgoingMessageProperties[ErrorObjectProperty].ToString());
+					if (ex != null)
+						errorObject.Ex = ex;
+					
 
-			//        responseMessage.Content = HttpContent.Create(s => mediaTypeProcessor.WriteToStream(e, s, httpRequest));
-			//        break;
-			//    }
-			//}
+					responseMessage.Content = HttpContent.Create(s => mediaTypeProcessor.WriteToStream(errorObject, s, httpRequest));
+					break;
+				}
+			}
 
 
 			
-			responseMessage.Content = HttpContent.Create( OperationContext.Current.OutgoingMessageProperties[ErrorObjectProperty].ToString() , "application/json");
+		//	responseMessage.Content = HttpContent.Create( OperationContext.Current.OutgoingMessageProperties[ErrorObjectProperty].ToString() , "application/json");
 			response = responseMessage.ToMessage();
 			
 
@@ -92,5 +99,16 @@ namespace EdgeBI.API.Web
 		{
 			//
 		}
+	}
+
+	class ErrorObject
+	{
+		public string Message;
+		 public int ErrorCode;
+		 public int StatusCode;
+
+		#if DEBUG
+		public Exception Ex;
+		#endif
 	}
 }

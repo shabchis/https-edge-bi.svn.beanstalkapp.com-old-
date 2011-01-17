@@ -86,8 +86,8 @@ namespace NewRestApiTester__.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("users/{0},users,Menu,accounts,accounts/{0},permissions,Sessions,groups,groups/{0}" +
-            "")]
+        [global::System.Configuration.DefaultSettingValueAttribute("users/{0},users,Menu,accounts,accounts/{0},permissions,permissions/list,permissio" +
+            "ns/tree,Sessions,groups,groups/{0},users/{0}/permissions,groups/{0}/permissions")]
         public string Services {
             get {
                 return ((string)(this["Services"]));

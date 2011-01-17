@@ -131,11 +131,11 @@ namespace EdgeBI.Objects
 		public static void UpdateUser(User user)
 		{
 			string command = @"UPDATE User_GUI_User
-								SET Name=@Name:NvarChar,
-									IsActive=@IsActive:bit,
-									AccountAdmin=@AccountAdmin:bit,
-									Email=@Email:NvarChar,
-									Password=@Password:NvarChar
+								SET Name=ISNULL(@Name:NvarChar,Name),
+									IsActive=ISNULL(@IsActive:bit,IsActive),
+									AccountAdmin=ISNULL(@AccountAdmin:bit,AccountAdmin),
+									Email=ISNULL(@Email:NvarChar,Email),
+									Password=ISNULL(@Password:NvarChar,Password)
 									WHERE UserID=@UserID:Int";
 			if (MapperUtility.SaveOrRemoveSimpleObject<User>(command, user) < 1)
 				throw new Exception("No Rows afected");
