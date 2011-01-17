@@ -15,9 +15,9 @@ class Login extends Controller {
 		$data = array(
 			"operationType" => 'New',
 			"email" =>  $this->input->post('email'),
-			"password"=>$this->input->post('password')		
+			"password"=>$this->input->post('password')
 		);
-		
+	
 		// Check if valid parameters
 		if (!isset($data["email"]) || $data["email"] == '' ||
 			!isset($data["password"]) || $data["password"] == '')
@@ -25,8 +25,12 @@ class Login extends Controller {
 			$this->errors->ThrowEx("Invalid login details.", 400);
 		}
 		
+		// Determines whether user/session cookies are reused later
+		$remember =  $this->input->post('remember');
+		
+		
 		// execute the login
-		$this->edgeapi->Login($data, true);
+		$this->edgeapi->Login($data, $remember, true);
 	}	 
 	
 	function logout(){
