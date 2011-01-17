@@ -3,14 +3,15 @@
 <html lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<title>Framework</title>
+		<title>Edge.BI</title>
 
 		<link rel="stylesheet" href="<?php base_url(); ?>assets/css/style.css" type="text/css" media="screen" />
 		<link rel="stylesheet" href="<?php base_url(); ?>assets/css/960.css" type="text/css" media="screen" />
 		
 	<link rel="stylesheet" href="<?php base_url(); ?>assets/css/jquery.jscrollpane.css" media="screen"/>  
 		<!--[if IE]>
-		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<script src="<?php base_url();?>assets/js/html5shiv.js"></script>
+		<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>
 		<meta http-equiv="X-UA-Compatible" content="IE=8" />
 		<script src="<?php base_url();?>assets/js/modernizr-1.6.min.js"></script>
 					
@@ -24,6 +25,7 @@
 		<script src="<?php base_url();?>assets/js/jquery.ba-hashchange.js"></script>
 		<script src="<?php base_url();?>assets/js/animatetoselector.jquery.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.cookie.js"></script>
+		<script src="<?php base_url();?>assets/js/jquery.jqplugin.1.0.2.min.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.dropshadow.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.jscrollpane.min.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.mousewheel.js"></script>
@@ -89,7 +91,7 @@
 			 {{if Name == "TOPBAR"}}
 			 	 <ul>
 			 	{{each ChildItems}}
-					<li>| <a href="${MetaData.External}">${Name}</a></li>
+					<li>| <a TARGET="_blank" href="${MetaData.External}">${Name}</a></li>
 			  {{/each}}
           		 </ul>
 			 {{/if}}
@@ -154,8 +156,8 @@
 	
 
 	<div id="slider">
-		<span><a href="#"><img src="<?php base_url();?>assets/img/arrows_04.png" /></a></span>
-		<div id="caption"></div>
+		<span><a href=""><img src="<?php base_url();?>assets/img/arrows_04.png" /></a></span>
+		<div id="caption">Hide</div>
 	</div>
 
 	<div id="inner">	
@@ -175,7 +177,7 @@
 		</div>
 
 	  	<div id="main">
-	 
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	  	</div>
 	 </div>
 	 
