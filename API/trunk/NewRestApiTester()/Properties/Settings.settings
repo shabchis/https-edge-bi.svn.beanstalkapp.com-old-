@@ -19,7 +19,7 @@
       <Value Profile="(Default)">{"AccountID":"7","Path":"management"}</Value>
     </Setting>
     <Setting Name="Services" Type="System.String" Scope="User">
-      <Value Profile="(Default)">users/{0},users,Menu,accounts,accounts/{0},permissions,Sessions,groups,groups/{0}</Value>
+      <Value Profile="(Default)">users/{0},users,Menu,accounts,accounts/{0},permissions,permissions/list,permissions/tree,Sessions,groups,groups/{0},users/{0}/permissions,groups/{0}/permissions</Value>
     </Setting>
   </Settings>
 </SettingsFile>

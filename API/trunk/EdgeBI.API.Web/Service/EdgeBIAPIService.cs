@@ -38,6 +38,7 @@ namespace EdgeBI.API.Web
 		[WebGet(UriTemplate = "users/{ID}")]
 		public User GetUserByID(string ID)
 		{
+
 			int currentUser;
 			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 			int userID = int.Parse(ID);
@@ -285,24 +286,20 @@ namespace EdgeBI.API.Web
 				}
 
 			}
-
-
-
-
 			return hasPermission;
 		}
 
-		[WebGet(UriTemplate = "permissions")]
+		[WebGet(UriTemplate = "permissions/list")]
 		public List<string> GetListOfAllPermissionType()
 		{
 			List<string> permissions = new List<string>();
-			//TODO: MAYBE ONLY FOR ADMIN USER NOT SURE ASK DORON AND YARON
-			//int currentUser;
-			//currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 
-			//User user = User.GetUserByID(currentUser);
-			//if (user.IsAcountAdmin != true)
-			//    ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+
+			User user = User.GetUserByID(currentUser);
+			if (user.IsAcountAdmin != true)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
 
 			using (DataManager.Current.OpenConnection())
 			{
@@ -324,6 +321,68 @@ namespace EdgeBI.API.Web
 
 		}
 
+		[WebGet(UriTemplate = "permissions/tree")]
+		public List<Permission> GetTreeOfAllPermissionType()
+		{
+			List<Permission> returnObject = new List<Permission>();
+			ThingReader<Permission> thingReader;
+			Stack<Permission> stackPermission = new Stack<Permission>();
+
+			int currentUser;
+			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+
+			User user = User.GetUserByID(currentUser);
+			if (user.IsAcountAdmin != true)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+
+			using (DataManager.Current.OpenConnection())
+			{
+				using (SqlCommand sqlCommand = DataManager.CreateCommand("SELECT Path FROM Constant_PermissionType ORDER BY Path"))
+				{
+					thingReader = new ThingReader<Permission>(sqlCommand.ExecuteReader(), null);
+					while (thingReader.Read())
+					{
+						Permission permission = (Permission)thingReader.Current;
+						if (stackPermission.Count == 0)
+							stackPermission.Push(permission);
+						else if (permission.Path.StartsWith(stackPermission.Peek().Path))
+						{
+							stackPermission.Peek().ChildPermissions.Add(permission);
+							stackPermission.Push(permission);
+						}
+						else
+						{
+							while (stackPermission.Count != 1 && !permission.Path.StartsWith(stackPermission.Peek().Path))
+							{
+
+								stackPermission.Pop();
+							}
+							if (!permission.Path.StartsWith(stackPermission.Peek().Path))
+							{
+								returnObject.Add(stackPermission.Pop());
+								stackPermission.Push(permission);
+							}
+							else
+							{
+								stackPermission.Peek().ChildPermissions.Add(permission);
+								stackPermission.Push(permission); 
+							}
+						}
+					}
+				}
+			}
+			while (stackPermission.Count > 1)
+			{
+				stackPermission.Pop();
+			}
+			if (stackPermission.Count > 0)
+				returnObject.Add(stackPermission.Pop());
+
+			//returnObject = Order(returnObject);
+
+			return returnObject;
+		}
+
 		[WebInvoke(Method = "POST", UriTemplate = "groups/{groupID}/permissions")]
 		public void InsertUpdateRemovePermissionForGroup(string groupID, AssignedPermissionData assignedPermissions)
 		{
@@ -338,17 +397,17 @@ namespace EdgeBI.API.Web
 			{
 				case PermissionOperation.Add:
 					{
-						AssignedPermissionData.AddPermissions(int.Parse(groupID), assignedPermissions.accountsPermissionsData,true);
+						AssignedPermissionData.AddPermissions(int.Parse(groupID), assignedPermissions.accountsPermissionsData, true);
 						break;
 					}
 				case PermissionOperation.Update:
 					{
-						AssignedPermissionData.UpdatePermissions(int.Parse(groupID), assignedPermissions.accountsPermissionsData,true);
+						AssignedPermissionData.UpdatePermissions(int.Parse(groupID), assignedPermissions.accountsPermissionsData, true);
 						break;
 					}
 				case PermissionOperation.Delete:
 					{
-						AssignedPermissionData.RemovePermmissions(int.Parse(groupID), assignedPermissions.accountsPermissionsData,true);
+						AssignedPermissionData.RemovePermmissions(int.Parse(groupID), assignedPermissions.accountsPermissionsData, true);
 						break;
 					}
 
@@ -356,10 +415,10 @@ namespace EdgeBI.API.Web
 
 		}
 
-		[WebInvoke(Method="POST", UriTemplate="users/{userID}/permissions")]
-		public void InsertUpdateRemovePermissionForUser(string userID,AssignedPermissionData assignedPermissions)
+		[WebInvoke(Method = "POST", UriTemplate = "users/{userID}/permissions")]
+		public void InsertUpdateRemovePermissionForUser(string userID, AssignedPermissionData assignedPermissions)
 		{
-			
+
 			int currentUser;
 			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 			User user = User.GetUserByID(currentUser);
@@ -370,20 +429,20 @@ namespace EdgeBI.API.Web
 			{
 				case PermissionOperation.Add:
 					{
-						AssignedPermissionData.AddPermissions(int.Parse(userID), assignedPermissions.accountsPermissionsData,false);
+						AssignedPermissionData.AddPermissions(int.Parse(userID), assignedPermissions.accountsPermissionsData, false);
 						break;
 					}
 				case PermissionOperation.Update:
 					{
-						AssignedPermissionData.UpdatePermissions(int.Parse(userID), assignedPermissions.accountsPermissionsData,false);
+						AssignedPermissionData.UpdatePermissions(int.Parse(userID), assignedPermissions.accountsPermissionsData, false);
 						break;
 					}
 				case PermissionOperation.Delete:
 					{
-						AssignedPermissionData.RemovePermmissions(int.Parse(userID), assignedPermissions.accountsPermissionsData,false);
+						AssignedPermissionData.RemovePermmissions(int.Parse(userID), assignedPermissions.accountsPermissionsData, false);
 						break;
 					}
-				
+
 			}
 
 		}

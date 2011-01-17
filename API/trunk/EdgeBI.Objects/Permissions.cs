@@ -158,6 +158,17 @@ namespace EdgeBI.Objects
 		public int AccountID;
 		public List<AssignedPermission> assignedPermissions;
 	}
+	[TableMap("Constant_PermissionType")]
+	public class Permission
+	{
+		[DataMember(Order=1)]
+		[FieldMap("Path")]
+		public string Path;
+		[DataMember(Order = 2)]
+		public List<Permission> ChildPermissions = new List<Permission>();
+
+		
+	}
 
 	public enum PermissionOperation
 	{

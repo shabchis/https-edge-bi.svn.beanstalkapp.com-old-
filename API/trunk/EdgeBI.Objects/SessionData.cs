@@ -27,7 +27,7 @@ namespace EdgeBI.Objects
 	public enum OperationTypeEnum
 	{
 		New,
-		ReNew
+		Renew
 
 	}
 }
