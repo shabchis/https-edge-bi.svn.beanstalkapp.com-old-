@@ -11,6 +11,7 @@ using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
 
 
+
 namespace EdgeBI.Objects
 {
 	//[TableMap("User_GUI_User")]
@@ -22,8 +23,8 @@ namespace EdgeBI.Objects
 		public string Path;
 
 		[DataMember]
-		[FieldMap("Value",Cast="cast (Value  as int) AS 'Value' ")]
-		public PermissionAssignmentType Assignment;		 
+		[FieldMap("Value", Cast = "cast (Value  as int) AS 'Value' ")]
+		public PermissionAssignmentType Assignment;
 
 	}
 	public class CalculatedPermission
@@ -39,7 +40,7 @@ namespace EdgeBI.Objects
 	public class PermissionRequest
 	{
 		public int AccountID { get; set; }
-		public string Path { get; set; }	
+		public string Path { get; set; }
 	}
 	public enum PermissionAssignmentType
 	{
@@ -48,110 +49,31 @@ namespace EdgeBI.Objects
 	}
 	public class AssignedPermissionData
 	{
-		public PermissionOperation permissionOperation;
+		public SqlOperation permissionOperation;
 		public List<AccountPermissionData> accountsPermissionsData;
-		public static void AddPermissions(int userID, List<AccountPermissionData> accountsPermissionsData,bool targetIsGroup)
+		public static void PermissionOperations(int userID, List<AccountPermissionData> accountsPermissionsData, bool targetIsGroup, SqlOperation sqlOperation)
 		{
 			foreach (AccountPermissionData accountPermissionData in accountsPermissionsData)
 			{
-
 				using (DataManager.Current.OpenConnection())
 				{
-					//Check if permission exisit
-
 					foreach (AssignedPermission assignedPermission in accountPermissionData.assignedPermissions)
 					{
-						SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT COUNT(PermissionType) 
-																			FROM User_GUI_AccountPermission
-																			WHERE   TargetIsGroup=@TargetIsGroup:Bit AND 
-																					AccountID=@AccountID:Int AND
-																					TargetID=@TargetID:Int AND
-																					PermissionType=@PermissionType:NvarChar");
+
+						SqlCommand sqlCommand = null;
+						sqlCommand = DataManager.CreateCommand("Permissions_Operations(@Action:Int,@AccountID:Int,@TargetID:Int,@TargetIsGroup:Bit,@PermissionType:NvarChar,@Value:Bit)", CommandType.StoredProcedure);
+						sqlCommand.Parameters["@Action"].Value = sqlOperation;
 						sqlCommand.Parameters["@AccountID"].Value = accountPermissionData.AccountID;
 						sqlCommand.Parameters["@TargetID"].Value = userID;
-						sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.Path;
 						sqlCommand.Parameters["@TargetIsGroup"].Value = targetIsGroup;
-						if (Convert.ToInt32(sqlCommand.ExecuteScalar()) == 0) //permission nt exist then add it
-						{
-							sqlCommand = DataManager.CreateCommand(@"INSERT INTO  User_GUI_AccountPermission
-																	(AccountID,TargetID,TargetIsGroup,PermissionType,Value)
-																	VALUES
-																	(@AccountID:Int,@TargetID:Int,@TargetIsGroup:Bit,@PermissionType:NvarChar,@Value:Bit)");
-							sqlCommand.Parameters["@AccountID"].Value = accountPermissionData.AccountID;
-							sqlCommand.Parameters["@TargetID"].Value = userID;
-							sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.Path;
-							sqlCommand.Parameters["@Value"].Value = assignedPermission.Assignment;
-							sqlCommand.Parameters["@TargetIsGroup"].Value = targetIsGroup;
-							sqlCommand.ExecuteNonQuery();
-						}
-
-					}
-
-				}
-
-			}
-		}
-		public static void UpdatePermissions(int userID, List<AccountPermissionData> accountsPermissionsData, bool targetIsGroup)
-		{
-			foreach (AccountPermissionData accountPermissionData in accountsPermissionsData)
-			{
-
-				using (DataManager.Current.OpenConnection())
-				{
-					//Check if permission exisit
-
-					foreach (AssignedPermission assignedPermission in accountPermissionData.assignedPermissions)
-					{
-						SqlCommand sqlCommand = DataManager.CreateCommand(@"UPDATE User_GUI_AccountPermission 
-																			SET Value=@Value:Bit
-																			WHERE   TargetIsGroup=@TargetIsGroup:Bit AND 
-																					AccountID=@AccountID:Int AND
-																					TargetID=@TargetID:Int AND
-																					PermissionType=@PermissionType:NvarChar");
-						sqlCommand.Parameters["@AccountID"].Value = accountPermissionData.AccountID;
-						sqlCommand.Parameters["@TargetID"].Value = userID;
 						sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.Path;
-						sqlCommand.Parameters["@Value"].Value = assignedPermission.Assignment;
-						sqlCommand.Parameters["@TargetIsGroup"].Value = targetIsGroup;
+						if (sqlOperation==SqlOperation.Insert || sqlOperation==SqlOperation.Update)																
+									sqlCommand.Parameters["@Value"].Value = assignedPermission.Assignment;						
 						sqlCommand.ExecuteNonQuery();
 					}
-
 				}
-
 			}
-			
 		}
-
-		public static void RemovePermmissions(int userID, List<AccountPermissionData> accountsPermissionsData, bool targetIsGroup)
-		{
-			foreach (AccountPermissionData accountPermissionData in accountsPermissionsData)
-			{
-
-				using (DataManager.Current.OpenConnection())
-				{
-					//Check if permission exisit
-
-					foreach (AssignedPermission assignedPermission in accountPermissionData.assignedPermissions)
-					{
-						SqlCommand sqlCommand = DataManager.CreateCommand(@"DELETE FROM User_GUI_AccountPermission 																			
-																			WHERE   TargetIsGroup=@TargetIsGroup:Bit AND 
-																					AccountID=@AccountID:Int AND
-																					TargetID=@TargetID:Int AND
-																					PermissionType=@PermissionType:NvarChar");
-						sqlCommand.Parameters["@AccountID"].Value = accountPermissionData.AccountID;
-						sqlCommand.Parameters["@TargetID"].Value = userID;
-						sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.Path;
-						sqlCommand.Parameters["@TargetIsGroup"].Value = targetIsGroup;
-						sqlCommand.ExecuteNonQuery();
-					}
-
-				}
-
-			}
-			
-		}
-
-
 	}
 	public class AccountPermissionData
 	{
@@ -161,22 +83,111 @@ namespace EdgeBI.Objects
 	[TableMap("Constant_PermissionType")]
 	public class Permission
 	{
-		[DataMember(Order=1)]
+		[DataMember(Order = 1)]
 		[FieldMap("Path")]
 		public string Path;
 		[DataMember(Order = 2)]
 		public List<Permission> ChildPermissions = new List<Permission>();
+		public static List<Permission> GetAllPermissionTypeTree()
+		{
+			List<Permission> returnObject = new List<Permission>();
+			ThingReader<Permission> thingReader;
+			Stack<Permission> stackPermission = new Stack<Permission>();
 
-		
+
+
+			using (DataManager.Current.OpenConnection())
+			{
+				using (SqlCommand sqlCommand = DataManager.CreateCommand("SELECT Path FROM Constant_PermissionType ORDER BY Path"))
+				{
+					thingReader = new ThingReader<Permission>(sqlCommand.ExecuteReader(), null);
+					while (thingReader.Read())
+					{
+						Permission permission = (Permission)thingReader.Current;
+						if (stackPermission.Count == 0)
+							stackPermission.Push(permission);
+						else if (permission.Path.StartsWith(stackPermission.Peek().Path))
+						{
+							stackPermission.Peek().ChildPermissions.Add(permission);
+							stackPermission.Push(permission);
+						}
+						else
+						{
+							while (stackPermission.Count != 1 && !permission.Path.StartsWith(stackPermission.Peek().Path))
+							{
+
+								stackPermission.Pop();
+							}
+							if (!permission.Path.StartsWith(stackPermission.Peek().Path))
+							{
+								returnObject.Add(stackPermission.Pop());
+								stackPermission.Push(permission);
+							}
+							else
+							{
+								stackPermission.Peek().ChildPermissions.Add(permission);
+								stackPermission.Push(permission);
+							}
+						}
+					}
+				}
+			}
+			while (stackPermission.Count > 1)
+			{
+				stackPermission.Pop();
+			}
+			if (stackPermission.Count > 0)
+				returnObject.Add(stackPermission.Pop());
+
+			returnObject = Order(returnObject);
+
+			return returnObject;
+		}
+
+		public static List<string> GetAllPermissionTypeList()
+		{
+			List<string> permissions = new List<string>();
+			using (DataManager.Current.OpenConnection())
+			{
+				using (SqlCommand sqlCommand = DataManager.CreateCommand("SELECT Path FROM Constant_PermissionType ORDER BY Path"))
+				{
+					using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
+					{
+						while (sqlDataReader.Read())
+						{
+							permissions.Add(sqlDataReader[0].ToString());
+						}
+					}
+				}
+			}
+			return permissions;
+		}
+
+		private static List<Permission> Order(List<Permission> returnObject)
+		{
+			if (returnObject != null && returnObject.Count > 0)
+			{
+				IEnumerable<Permission> permissions = returnObject.OrderBy(permission => permission.Path);
+
+				foreach (Permission permission in permissions)
+				{
+					permission.ChildPermissions = Order(permission.ChildPermissions);
+				}
+				returnObject = permissions.ToList();
+			}
+			return returnObject;
+		}
+
 	}
 
-	public enum PermissionOperation
+
+	public enum SqlOperation
 	{
-		Add=1,
-		Update=2,
-		Delete=3
+		Insert = 1,
+		Update = 2,
+		Delete = 3
 	}
 
-	
+
 
 }

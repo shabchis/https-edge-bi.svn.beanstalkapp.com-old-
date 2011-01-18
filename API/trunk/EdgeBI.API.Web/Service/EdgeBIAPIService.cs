@@ -78,11 +78,10 @@ namespace EdgeBI.API.Web
 				User activeUser = User.GetUserByID(currentUser);
 				if (activeUser.IsAcountAdmin != true)
 					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can add users ");
-				User.AddNewUser(user);
+				user.UserOperations(SqlOperation.Insert);
 			}
 			catch (Exception ex)
 			{
-
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, ex.Message);
 			}
 
@@ -100,7 +99,7 @@ namespace EdgeBI.API.Web
 			if (activeUser.IsAcountAdmin != true)
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
 
-			User.UpdateUser(user);
+			user.UserOperations(SqlOperation.Update);
 
 
 
@@ -114,7 +113,8 @@ namespace EdgeBI.API.Web
 			User activeUser = User.GetUserByID(currentUser);
 			if (activeUser.IsAcountAdmin != true)
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
-			User.DeleteUser(int.Parse(ID));
+			User user = new User() { UserID = int.Parse(ID) };
+			user.UserOperations(SqlOperation.Delete);
 
 		}
 
@@ -161,7 +161,7 @@ namespace EdgeBI.API.Web
 				User activeUser = User.GetUserByID(currentUser);
 				if (activeUser.IsAcountAdmin != true)
 					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can add group ");
-				Group.AddNewGroup(group);
+				group.GroupOperations(SqlOperation.Insert);
 			}
 			catch (Exception ex)
 			{
@@ -183,7 +183,7 @@ namespace EdgeBI.API.Web
 			if (activeUser.IsAcountAdmin != true)
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
 
-			Group.UpdateGroup(group);
+			group.GroupOperations(SqlOperation.Update);
 
 
 
@@ -197,7 +197,8 @@ namespace EdgeBI.API.Web
 			User activeUser = User.GetUserByID(currentUser);
 			if (activeUser.IsAcountAdmin != true)
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
-			Group.DeleteGroup(int.Parse(ID));
+			Group group = new Group() { GroupID = int.Parse(ID) };
+			group.GroupOperations(SqlOperation.Delete);
 
 		}
 		#endregion
@@ -301,24 +302,8 @@ namespace EdgeBI.API.Web
 			if (user.IsAcountAdmin != true)
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
 
-			using (DataManager.Current.OpenConnection())
-			{
-				using (SqlCommand sqlCommand = DataManager.CreateCommand("SELECT Path FROM Constant_PermissionType ORDER BY Path"))
-				{
-					using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
-					{
-						while (sqlDataReader.Read())
-						{
-							permissions.Add(sqlDataReader[0].ToString());
-						}
-					}
-
-				}
-
-			}
+			permissions = Permission.GetAllPermissionTypeList();
 			return permissions;
-
-
 		}
 
 		[WebGet(UriTemplate = "permissions/tree")]
@@ -334,53 +319,10 @@ namespace EdgeBI.API.Web
 			User user = User.GetUserByID(currentUser);
 			if (user.IsAcountAdmin != true)
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
-
-			using (DataManager.Current.OpenConnection())
-			{
-				using (SqlCommand sqlCommand = DataManager.CreateCommand("SELECT Path FROM Constant_PermissionType ORDER BY Path"))
-				{
-					thingReader = new ThingReader<Permission>(sqlCommand.ExecuteReader(), null);
-					while (thingReader.Read())
-					{
-						Permission permission = (Permission)thingReader.Current;
-						if (stackPermission.Count == 0)
-							stackPermission.Push(permission);
-						else if (permission.Path.StartsWith(stackPermission.Peek().Path))
-						{
-							stackPermission.Peek().ChildPermissions.Add(permission);
-							stackPermission.Push(permission);
-						}
-						else
-						{
-							while (stackPermission.Count != 1 && !permission.Path.StartsWith(stackPermission.Peek().Path))
-							{
-
-								stackPermission.Pop();
-							}
-							if (!permission.Path.StartsWith(stackPermission.Peek().Path))
-							{
-								returnObject.Add(stackPermission.Pop());
-								stackPermission.Push(permission);
-							}
-							else
-							{
-								stackPermission.Peek().ChildPermissions.Add(permission);
-								stackPermission.Push(permission); 
-							}
-						}
-					}
-				}
-			}
-			while (stackPermission.Count > 1)
-			{
-				stackPermission.Pop();
-			}
-			if (stackPermission.Count > 0)
-				returnObject.Add(stackPermission.Pop());
-
-			//returnObject = Order(returnObject);
+			returnObject = Permission.GetAllPermissionTypeTree();
 
 			return returnObject;
+
 		}
 
 		[WebInvoke(Method = "POST", UriTemplate = "groups/{groupID}/permissions")]
@@ -392,27 +334,7 @@ namespace EdgeBI.API.Web
 			User user = User.GetUserByID(currentUser);
 			if (user.IsAcountAdmin != true)
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can edit permissions");
-
-			switch (assignedPermissions.permissionOperation)
-			{
-				case PermissionOperation.Add:
-					{
-						AssignedPermissionData.AddPermissions(int.Parse(groupID), assignedPermissions.accountsPermissionsData, true);
-						break;
-					}
-				case PermissionOperation.Update:
-					{
-						AssignedPermissionData.UpdatePermissions(int.Parse(groupID), assignedPermissions.accountsPermissionsData, true);
-						break;
-					}
-				case PermissionOperation.Delete:
-					{
-						AssignedPermissionData.RemovePermmissions(int.Parse(groupID), assignedPermissions.accountsPermissionsData, true);
-						break;
-					}
-
-			}
-
+			AssignedPermissionData.PermissionOperations(int.Parse(groupID), assignedPermissions.accountsPermissionsData, true, assignedPermissions.permissionOperation);
 		}
 
 		[WebInvoke(Method = "POST", UriTemplate = "users/{userID}/permissions")]
@@ -424,27 +346,7 @@ namespace EdgeBI.API.Web
 			User user = User.GetUserByID(currentUser);
 			if (user.IsAcountAdmin != true)
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can edit permissions");
-
-			switch (assignedPermissions.permissionOperation)
-			{
-				case PermissionOperation.Add:
-					{
-						AssignedPermissionData.AddPermissions(int.Parse(userID), assignedPermissions.accountsPermissionsData, false);
-						break;
-					}
-				case PermissionOperation.Update:
-					{
-						AssignedPermissionData.UpdatePermissions(int.Parse(userID), assignedPermissions.accountsPermissionsData, false);
-						break;
-					}
-				case PermissionOperation.Delete:
-					{
-						AssignedPermissionData.RemovePermmissions(int.Parse(userID), assignedPermissions.accountsPermissionsData, false);
-						break;
-					}
-
-			}
-
+			AssignedPermissionData.PermissionOperations(int.Parse(userID), assignedPermissions.accountsPermissionsData, false, assignedPermissions.permissionOperation);
 		}
 
 		#endregion
@@ -454,54 +356,50 @@ namespace EdgeBI.API.Web
 		public SessionResponseData LogIn(SessionRequestData sessionData)
 		{
 			SqlCommand sqlCommand;
-			int unEncrypterSession;
-			SessionResponseData returnsessionData = new SessionResponseData();
-			int? id = null;
+			SessionResponseData returnsessionData = null;
+			int session;
+
 			using (DataManager.Current.OpenConnection())
 			{
 				Encryptor encryptor = new Encryptor(KeyEncrypt);
-				if (sessionData.OperationType == OperationTypeEnum.New) //login with email and password
+				sqlCommand = DataManager.CreateCommand("User_Login(@OperationType:Int,@Email:NVarchar,@Password:NVarchar,@UserID:Int,@SessionID:Int)", CommandType.StoredProcedure);
+
+
+				sqlCommand.Parameters["@OperationType"].Value = sessionData.OperationType;
+				if (sessionData.OperationType == OperationTypeEnum.New)
 				{
-					sqlCommand = DataManager.CreateCommand(@"SELECT UserID 
-																				FROM User_GUI_User
-																					WHERE Email=@Email:NVarchar AND Password=@Password:NVarchar");
 					sqlCommand.Parameters["@Email"].Value = sessionData.Email;
 					sqlCommand.Parameters["@Password"].Value = sessionData.Password;
-
-					id = (int?)sqlCommand.ExecuteScalar();
-				}
-				else //login with session and id
-				{
-					unEncrypterSession = int.Parse(encryptor.Decrypt(sessionData.Session));
-					sqlCommand = DataManager.CreateCommand(@"SELECT UserID 
-																				FROM User_GUI_Session
-																					WHERE UserID=@UserID:Int AND SessionID=@SessionID:Int");
-					sqlCommand.Parameters["@UserID"].Value = sessionData.UserID;
-					sqlCommand.Parameters["@SessionID"].Value = unEncrypterSession;
-
-					id = (int?)sqlCommand.ExecuteScalar();
-
-				}
-
-				if (id != null)
-				{
-					returnsessionData.UserID = id.Value;
-					sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_GUI_Session
-																			(UserID)
-																			VALUES(@UserID:Int);SELECT @@IDENTITY");
-					sqlCommand.Parameters["@UserID"].Value = id;
-					returnsessionData.Session = sqlCommand.ExecuteScalar().ToString();
-
-					returnsessionData.Session = encryptor.Encrypt(returnsessionData.Session);
-
 				}
 				else
 				{
-					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "User Name/Password is wrong!");
+					sqlCommand.Parameters["@UserID"].Value = sessionData.UserID;
 
+					try
+					{
+						sqlCommand.Parameters["@SessionID"].Value = encryptor.Decrypt(sessionData.Session);
+					}
+					catch (Exception ex)
+					{
+						ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Invalid Session,session could no be parse!");
 
+					}
+				}
+				SqlDataReader sqlReader = sqlCommand.ExecuteReader();
+				if (sqlReader.Read())
+				{
+					session = Convert.ToInt32(sqlReader[0]);
+					if (session > 0)
+					{
+						returnsessionData = new SessionResponseData();
+						returnsessionData.UserID = sqlReader.GetInt32(1);
+						returnsessionData.Session = encryptor.Encrypt(session.ToString());
+					}
 				}
 			}
+			if (returnsessionData == null)
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "User Name/Password is wrong!");
+
 			return returnsessionData;
 		}
 
