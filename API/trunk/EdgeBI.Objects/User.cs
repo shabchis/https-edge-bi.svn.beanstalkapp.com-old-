@@ -117,37 +117,14 @@ namespace EdgeBI.Objects
 			return users;
 		}
 
-		public static void AddNewUser(User user)
+		public void UserOperations(SqlOperation sqlOperation)
 		{
-			string command = @"INSERT INTO User_GUI_User
-								(Name,IsActive,AccountAdmin,Email,Password)
-								VALUES (@Name:NvarChar,1,@AccountAdmin:bit,@Email:NvarChar,@Password:NvarChar)";
-			if (MapperUtility.SaveOrRemoveSimpleObject<User>(command, user) < 1)
-				throw new Exception("No Rows afected");
-
-			
+			string command = @"User_Operations(@Action:Int,@UserID:Int,@Name:NvarChar,1,@AccountAdmin:bit,@Email:NvarChar,@Password:NvarChar)";
+			MapperUtility.SaveOrRemoveSimpleObject<User>(command, CommandType.StoredProcedure, sqlOperation, this);
 		}
 
-		public static void UpdateUser(User user)
-		{
-			string command = @"UPDATE User_GUI_User
-								SET Name=ISNULL(@Name:NvarChar,Name),
-									IsActive=ISNULL(@IsActive:bit,IsActive),
-									AccountAdmin=ISNULL(@AccountAdmin:bit,AccountAdmin),
-									Email=ISNULL(@Email:NvarChar,Email),
-									Password=ISNULL(@Password:NvarChar,Password)
-									WHERE UserID=@UserID:Int";
-			if (MapperUtility.SaveOrRemoveSimpleObject<User>(command, user) < 1)
-				throw new Exception("No Rows afected");
-		}
+		
 
-		public static void DeleteUser(int userID)
-		{
-			string command = @"DELETE FROM User_GUI_User
-								WHERE UserID =@UserID:Int";
-			User user = new User() { UserID = userID };
-			if (MapperUtility.SaveOrRemoveSimpleObject<User>(command, user) < 1)
-				throw new Exception("No Rows afected");
-		}
+		
 	}
 }

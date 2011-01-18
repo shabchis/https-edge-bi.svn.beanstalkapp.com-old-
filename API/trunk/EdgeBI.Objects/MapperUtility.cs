@@ -55,7 +55,7 @@ namespace EdgeBI.Objects
 			return returnObject;
 
 		}
-		public static int SaveOrRemoveSimpleObject<T>(string Command, object objectToInsert) where T : class, new()
+		public static int SaveOrRemoveSimpleObject<T>(string Command,CommandType commandType,SqlOperation sqlOperation, object objectToInsert) where T : class, new()
 		{
 			int rowsAfected = 0;
 			Type t = typeof(T);
@@ -65,8 +65,9 @@ namespace EdgeBI.Objects
 			using (DataManager.Current.OpenConnection())
 			{
 
-				using (SqlCommand sqlCommand = DataManager.CreateCommand(Command))
+				using (SqlCommand sqlCommand = DataManager.CreateCommand(Command, commandType))
 				{
+					sqlCommand.Parameters["@Action"].Value = sqlOperation;
 					foreach (FieldInfo fieldInfo in objectToInsert.GetType().GetFields())
 					{
 						if (Attribute.IsDefined(fieldInfo, typeof(FieldMapAttribute)))

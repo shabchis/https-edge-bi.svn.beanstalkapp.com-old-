@@ -92,32 +92,12 @@ namespace EdgeBI.Objects
 			return group;
 		}
 
-		public static void AddNewGroup(Group group)
+		public  void GroupOperations(SqlOperation sqlOperation)
 		{
-			string command = @"INSERT INTO User_GUI_UserGroup
-								(Name,IsActive,AccountAdmin)
-								VALUES (@Name:NvarChar,1,@AccountAdmin:bit)";
-			if (MapperUtility.SaveOrRemoveSimpleObject<Group>(command, group) < 1)
-				throw new Exception("No Rows afected");
+			string command = @"Group_Operations(@Action:Int,@Name:NvarChar,@AccountAdmin:bit,1,@GroupID:Int)";
+			MapperUtility.SaveOrRemoveSimpleObject<Group>(command, CommandType.StoredProcedure, sqlOperation, this); 
+				
 		}
-		public static void UpdateGroup(Group group)
-		{
-			string command = @"UPDATE User_GUI_UserGroup
-								SET Name=@Name:NvarChar,
-									IsActive=@IsActive:bit,
-									AccountAdmin=@AccountAdmin:bit									
-									WHERE GroupID=@GroupID:Int";
-			if (MapperUtility.SaveOrRemoveSimpleObject<Group>(command, group) < 1)
-				throw new Exception("No Rows afected");
-		}
-
-		public static void DeleteGroup(int groupID)
-		{
-			string command = @"DELETE FROM User_GUI_UserGroup
-								WHERE GroupID =@GroupID:Int";
-			Group group = new Group() { GroupID = groupID };
-			if (MapperUtility.SaveOrRemoveSimpleObject<Group>(command, group) < 1)
-				throw new Exception("No Rows afected");
-		}
+		
 	}
 }
