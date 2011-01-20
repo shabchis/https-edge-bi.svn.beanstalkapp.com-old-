@@ -15,9 +15,12 @@ class sessionValidation{
 			
 		global $APPLICATION_ROOT;
 		global $REQUEST_PATH;
+		global $SESSION_ID;
+		
+		$SESSION_ID = isset($_COOKIE['edgebi_session']) ? $_COOKIE['edgebi_session'] : null;
 		
 		// Check if there is a valid session
-		if($REQUEST_PATH != 'login' && !isset($_COOKIE['edgebi_session']))
+		if($REQUEST_PATH != 'login' && !isset($SESSION_ID))
 		{
 			$this->errors->ThrowEx('Please log in.', 403, null, true);	
 		}
@@ -40,14 +43,8 @@ class sessionValidation{
 				"Path"=>$path
 			);
 			
-			$curl_handle = curl_init();    
-			curl_setopt($curl_handle, CURLOPT_POST, 1); 
-			curl_setopt($curl_handle, CURLOPT_POSTFIELDS, json_encode($data));  
-			
 			// exec the request and get status
-			$result = $this->edgeapi->Request('/permissions', $curl_handle, true, array('Content-Type: application/json'));
-
-			curl_close($curl_handle);
+			$result = $this->edgeapi->Request('/permissions', true, array('Content-Type: application/json'), $data);
 			
 			if ($result != 'true')
 			{

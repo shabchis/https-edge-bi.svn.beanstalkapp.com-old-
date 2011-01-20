@@ -13,9 +13,10 @@ color:				#000;
 }
 
 #content  {
+color:				#333;
 border:				#999 1px solid;
 background-color:	#fff;
-padding:			20px 20px 12px 20px;
+padding:			17px 380px 0px 90px;
 }
 
 h1 {
@@ -32,7 +33,7 @@ padding-bottom:10px;
 		<h1>Edge.BI Error</h1>
 		<h2><?php echo $heading; ?></h2>
 		<?php echo $message; ?>
-
+	</div>
 
 <?php else: ?>
 
@@ -59,9 +60,9 @@ padding-bottom:10px;
 	border-bottom:1px solid #B1B1B1;
 	}
 	</style>
-	
+	<div id="content">
 	<h1>Edge.BI Error</h1>
 <h2><?php echo $heading; ?></h2>
 	<?php echo $message; ?>
-		
+		</div>
 	<?php endif; ?>	
