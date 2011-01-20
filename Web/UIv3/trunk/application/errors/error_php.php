@@ -9,10 +9,9 @@ color:				#000;
 }
 
 #content  {
-border:				#999 1px solid;
+color:				#333;
 background-color:	#fff;
-padding:			20px 20px 12px 20px;
-}
+padding:			17px 380px 0px 90px;
 
 h1 {
 font-weight:		bold;
@@ -24,7 +23,7 @@ padding-bottom:5px;
 }
 </style>
 
-<div >
+<div id="content">
 	<h1>Edge.BI Error</h1>
 	<h4>A PHP Error was encountered</h4>
 	

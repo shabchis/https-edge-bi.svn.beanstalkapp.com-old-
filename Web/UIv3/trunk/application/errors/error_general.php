@@ -13,9 +13,10 @@ color:				#000;
 }
 
 #content  {
+color:				#333;
 border:				#999 1px solid;
 background-color:	#fff;
-padding:			20px 20px 12px 20px;
+padding:			17px 380px 0px 90px;
 }
 
 h1 {
@@ -50,7 +51,7 @@ background-color:	#fff;
 padding:			25px 20px 12px 20px;
 }
 
-h1 {
+#content h1 {
 font-weight:		bold;
 font-size:			18px;
 color:				red;

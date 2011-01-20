@@ -7,8 +7,8 @@
 
 		<link rel="stylesheet" href="<?php base_url(); ?>assets/css/style.css" type="text/css" media="screen" />
 		<link rel="stylesheet" href="<?php base_url(); ?>assets/css/960.css" type="text/css" media="screen" />
-		
-	<link rel="stylesheet" href="<?php base_url(); ?>assets/css/jquery.jscrollpane.css" media="screen"/>  
+		<link rel="stylesheet" href="<?php base_url(); ?>assets/css/jquery.jscrollpane.css" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php base_url(); ?>assets/css/jquery-ui-1.8.8.custom.css" media="screen"/>  
 		<!--[if IE]>
 		<script src="<?php base_url();?>assets/js/html5shiv.js"></script>
 		<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>
@@ -29,6 +29,7 @@
 		<script src="<?php base_url();?>assets/js/jquery.dropshadow.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.jscrollpane.min.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.mousewheel.js"></script>
+		<script src="<?php base_url();?>assets/js/jquery-ui-1.8.8.custom.min.js"></script>
 	<!--	<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>-->
 		<script type="text/javascript">
 			var _menudata = jQuery.parseJSON('<?php echo $menu; ?>');
@@ -40,7 +41,7 @@
 
 	<body>
 		<div id="container" >
-		
+		<div id="modal"></div>
 			<script id="usertmpl"  type="text/x-jquery-tmpl">
 				<span id="${UserID}">${Name}</span>
 			</script>

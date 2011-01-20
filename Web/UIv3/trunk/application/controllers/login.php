@@ -39,6 +39,7 @@ class Login extends Controller {
 		delete_cookie("edgebi_user");
 		delete_cookie("edgebi_child_account");
 		delete_cookie("edgebi_parent_account");
+		delete_cookie("edgebi_remember");
 		
 		redirect(LOGIN_PAGE);
 	}
