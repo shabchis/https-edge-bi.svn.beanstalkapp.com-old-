@@ -25,7 +25,7 @@ namespace EdgeBI.API.Web
 	[ServiceContract]
 	[ServiceBehavior(IncludeExceptionDetailInFaults = true)]
 	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-	public class EdgeApiService
+	public class EdgeApiCore
 	{
 		private const string KeyEncrypt = "5c51374e366f41297356413c71677220386c534c394742234947567840";
 		/// <summary>

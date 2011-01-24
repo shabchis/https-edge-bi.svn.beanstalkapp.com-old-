@@ -48,26 +48,29 @@ namespace EdgeBI.Objects
 							fieldInfo.SetValue(returnObject, null);
 						}
 						else
-							fieldInfo.SetValue(returnObject, val); 
+							fieldInfo.SetValue(returnObject, val);
 					}
 				}
 			}
 			return returnObject;
 
 		}
-		public static int SaveOrRemoveSimpleObject<T>(string Command,CommandType commandType,SqlOperation sqlOperation, object objectToInsert) where T : class, new()
+		public static int SaveOrRemoveSimpleObject<T>(string Command, CommandType commandType, SqlOperation sqlOperation, object objectToInsert, string connectionString) where T : class, new()
 		{
 			int rowsAfected = 0;
 			Type t = typeof(T);
 			
-			
+
+			if (!string.IsNullOrEmpty(connectionString))
+				DataManager.ConnectionString = connectionString;
+
 
 			using (DataManager.Current.OpenConnection())
 			{
-
 				using (SqlCommand sqlCommand = DataManager.CreateCommand(Command, commandType))
 				{
-					sqlCommand.Parameters["@Action"].Value = sqlOperation;
+					if (sqlCommand.Parameters.Contains("@Action"))
+						sqlCommand.Parameters["@Action"].Value = sqlOperation;
 					foreach (FieldInfo fieldInfo in objectToInsert.GetType().GetFields())
 					{
 						if (Attribute.IsDefined(fieldInfo, typeof(FieldMapAttribute)))
@@ -76,7 +79,7 @@ namespace EdgeBI.Objects
 							if (sqlCommand.Parameters.Contains(string.Format("@{0}", fieldMapAttribute.FieldName)))
 							{
 								if (fieldInfo.GetValue(objectToInsert) != null)
-									sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = fieldInfo.GetValue(objectToInsert);								
+									sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = fieldInfo.GetValue(objectToInsert);
 								else
 									sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = DBNull.Value;
 							}
@@ -468,7 +471,7 @@ namespace EdgeBI.Objects
 		}
 		#endregion
 
-		
+
 	}
 	#region AtrributesClass
 	[AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = false)]
@@ -488,7 +491,7 @@ namespace EdgeBI.Objects
 		public FieldMapAttribute(string fieldName)
 		{
 			this.FieldName = fieldName;
-			
+
 		}
 	}
 

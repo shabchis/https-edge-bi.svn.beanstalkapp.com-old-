@@ -50,6 +50,7 @@
     <Compile Include="Menu.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="MapperUtility.cs" />
+    <Compile Include="Refund.cs" />
     <Compile Include="SessionData.cs" />
     <Compile Include="Things.cs" />
     <Compile Include="ThingT.cs" />

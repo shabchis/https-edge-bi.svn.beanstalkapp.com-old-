@@ -120,7 +120,7 @@ namespace EdgeBI.Objects
 		public void UserOperations(SqlOperation sqlOperation)
 		{
 			string command = @"User_Operations(@Action:Int,@UserID:Int,@Name:NvarChar,1,@AccountAdmin:bit,@Email:NvarChar,@Password:NvarChar)";
-			MapperUtility.SaveOrRemoveSimpleObject<User>(command, CommandType.StoredProcedure, sqlOperation, this);
+			MapperUtility.SaveOrRemoveSimpleObject<User>(command, CommandType.StoredProcedure, sqlOperation, this,string.Empty);
 		}
 
 		
