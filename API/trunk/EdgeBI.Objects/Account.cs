@@ -35,11 +35,15 @@ namespace EdgeBI.Objects
 		[FieldMap("Level")]
 		public int Level;
 
-		[DataMember(Order = 5)]
+		[DataMember(Order = 2)]
+		[FieldMap("SiteURL")]
+		public string SiteURL;
+
+		[DataMember(Order = 6)]
 		[FieldMap("AccountSettings", UseApplyFunction = true)]
 		public Dictionary<string, string> MetaData;
 
-		[DataMember(Order = 6)]
+		[DataMember(Order = 7)]
 		public List<Account> ChildAccounts = new List<Account>();
 
 		private static object CustomApply(FieldInfo info, IDataRecord reader)
@@ -83,10 +87,10 @@ namespace EdgeBI.Objects
 				}
 				calculatedPermissionReader.Dispose();
 				if (id == null)
-					sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID,AccountSettings,Level FROM [V_User_GUI_Accounts]   ORDER BY Parent_ID", CommandType.Text);
+					sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID,AccountSettings,Level,SiteURL FROM [V_User_GUI_Accounts]   ORDER BY Parent_ID", CommandType.Text);
 				else
 				{
-					sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID,AccountSettings,Level FROM [V_User_GUI_Accounts] WHERE ID=@ID:Int ORDER BY Parent_ID", CommandType.Text);
+					sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID,AccountSettings,Level,SiteURL FROM [V_User_GUI_Accounts] WHERE ID=@ID:Int ORDER BY Parent_ID", CommandType.Text);
 					sqlCommand.Parameters["@ID"].Value = id;
 				}
 				accountReader = new ThingReader<Account>(sqlCommand.ExecuteReader(), CustomApply);
