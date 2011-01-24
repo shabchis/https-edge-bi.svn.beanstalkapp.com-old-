@@ -41,7 +41,11 @@ namespace EdgeBI.Objects
 		[FieldMap("MetaData", UseApplyFunction = true)]  //todo change to true and get as dictionary
 		public Dictionary<string, string> MetaData;
 
-		[DataMember(Order = 6)]
+		[DataMember(Order=6)]
+		[FieldMap("IsOpen")]
+		public bool IsOpen;
+
+		[DataMember(Order = 7)]
 		public List<Menu> ChildItems = new List<Menu>();
 
 

@@ -121,7 +121,7 @@ namespace NewRestApiTester__
 				request.Headers.Add(item.Text, item.SubItems[1].Text);
 
 			}
-			if (requestType == "POST")
+			if (requestType == "POST" || requestType=="DELETE")
 			{
 				request.Headers.ContentType = "application/json";
 				if (!string.IsNullOrEmpty(BodyTextBox.Text))

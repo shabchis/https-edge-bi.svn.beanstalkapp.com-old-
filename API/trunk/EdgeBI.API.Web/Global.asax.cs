@@ -16,9 +16,11 @@ namespace JsonValueSample
         protected void Application_Start(object sender, EventArgs e)
         {
 			//RouteTable.Routes.AddServiceRoute<EdgeBIAPIService>("", new MyResourceConfiguration());
-
-			var route = new ServiceRoute("", new EdgeApiServiceHostFactory(new EdgeApiServiceConfiguration()), typeof(EdgeApiService));
-			RouteTable.Routes.Add(route);
+			var route1 = new ServiceRoute("Tools", new EdgeApiServiceHostFactory(new EdgeApiServiceConfiguration()), typeof(EdgeApiTools));
+			RouteTable.Routes.Add(route1);
+			var route2 = new ServiceRoute("", new EdgeApiServiceHostFactory(new EdgeApiServiceConfiguration()), typeof(EdgeApiCore));
+			RouteTable.Routes.Add(route2);
+		
 
         }
     }
