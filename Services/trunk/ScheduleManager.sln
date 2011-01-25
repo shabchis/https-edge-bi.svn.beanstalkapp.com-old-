@@ -67,7 +67,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Checksum", "Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Facebook", "Services.Facebook\Services.Facebook.csproj", "{AF533D46-A3EB-4BA3-9732-5270CE28FAD2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Utilities.ExecuteStoredProcedureService", "Services.Utilities.ExecuteStoredProcedureService\Services.Utilities.ExecuteStoredProcedureService.csproj", "{68C9A510-FC7C-4EE8-9230-5FA497203706}"
+EndProject
 Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -152,6 +158,10 @@ Global
 		{AF533D46-A3EB-4BA3-9732-5270CE28FAD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF533D46-A3EB-4BA3-9732-5270CE28FAD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF533D46-A3EB-4BA3-9732-5270CE28FAD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68C9A510-FC7C-4EE8-9230-5FA497203706}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68C9A510-FC7C-4EE8-9230-5FA497203706}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68C9A510-FC7C-4EE8-9230-5FA497203706}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68C9A510-FC7C-4EE8-9230-5FA497203706}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -169,6 +179,7 @@ Global
 		{A6BBD648-D98C-47E1-8FA9-E0553D99068A} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
 		{5FE6904A-BFB8-4EFC-B018-6172ED070A2F} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
 		{AF533D46-A3EB-4BA3-9732-5270CE28FAD2} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
+		{68C9A510-FC7C-4EE8-9230-5FA497203706} = {2DD0446D-19E6-4FDE-8BE6-A933A408B57C}
 		{E46EFEA0-AC7A-4667-A49D-CAB9C8EA1D0D} = {0FF79382-D361-4F56-8051-1C4C1E59503F}
 		{7B211CFF-583D-49C8-A10B-0734F2EEC523} = {0FF79382-D361-4F56-8051-1C4C1E59503F}
 		{55FDA59A-B271-4A19-9ACE-94A81B5F9132} = {0FF79382-D361-4F56-8051-1C4C1E59503F}
@@ -187,9 +198,5 @@ Global
 		{7015CD2F-FC66-4549-B381-8B218A0D5159} = {5FE6904A-BFB8-4EFC-B018-6172ED070A2F}
 		{A972EDAB-F563-462A-A489-6494C96509E0} = {5FE6904A-BFB8-4EFC-B018-6172ED070A2F}
 		{00EB9CB1-A44B-48A1-B4CB-178C80587E2C} = {EA0D9612-7EFD-48C9-B0AD-ED21E314A003}
-	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal
