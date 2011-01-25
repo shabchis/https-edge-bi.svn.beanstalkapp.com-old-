@@ -16,6 +16,11 @@ namespace Easynet.Edge.Core.Services
 		{
 		}
 
+        public ServiceClient(string endpointConfigurationName) :
+            base(endpointConfigurationName)
+        {
+        }
+
 		public ServiceClient(string endpointConfigurationName, string remoteAddress) :
 			base(endpointConfigurationName, remoteAddress)
 		{
