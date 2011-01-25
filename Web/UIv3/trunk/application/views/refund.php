@@ -1,54 +1,81 @@
-
-
-	<h1>Add Refund</h1>
 <form action="#" method="post">
-    <fieldset>
-    <label for="channel">Channel</label>
+   
+    <div id="topfield">
+    <label for="channel">Channel </label>
     <select>
         <option value="1">Google</option>
     </select>
-    <label for="startDate">Date :</label>
-    <input name="startDate" id="startDate" class="date-picker" />
+    
+    </div>
+    <div id="bottomfield">
+    <label for="refund">Refund </label>
+    <input name="refund" id="refund"  autocomplete="off" />
+    <label for="startDate">Date </label>
+    <input name="startDate" id="startDate" class="date-picker" autocomplete="off" />
+    </div>
 	<input type="submit" value="Submit" id="submit"/>
-      </fieldset>  
+    
 </form>
-
+<div id="success"></div>
 <style>
-h1{
-text-align:center;
-color:#616161;
+
+ .ui-datepicker-calendar{
+ display: none;
+ }
+   
+.ui-datepicker-title{
+
+	font-family: verdana;
+	font-size: 12px;
 
 }
-    .ui-datepicker-calendar {
-        display: none;
-        }
-        
-       select,input{
-            display:block;
-             margin-bottom: 5px;
-        
-           
 
+      
+form{
+	width:500px;
+	margin:0 auto;
+	font-family: verdana;
+	font-size: 12px;
+	color: #616161;
+	padding: 10px;
         }
-
-        label{
-            display:block;
-            margin-bottom: 5px;
+input[type=submit]{
+		margin-top:3px; 
+        }
+#topfield{
+    width: 50%;
+     float: left;
+        }
+#bottomfield{
+   margin-top:5px;
+   width: 51%;
+   float: left;
+        }
         
-            
-        }
-
-        form{
-            width:500px;
-            margin:0 auto;
-        }
-        input[type=submit]{
-            margin-top:10px;
-        }
-        
-        select,input:focus{
-        border:1px solid #92B743;
-        }
+    label{
+    display: block;
+    float:left;
+    width: 53px;
+    margin-right: 10px;
+    }
+    label[for=startDate],#startDate{
+    margin-top: 5px;
+    }
+    select,input{
+    display: block;
+    width:150px;
+    float: left;
+    margin-left: 5px;
+    }
+    select{
+    width: 154px;
+    }
+    #success{
+     width:500px;
+    color:#9BBD53;
+    text-align: center;
+    margin:80px auto;
+    }
     </style>
     
 <script type="text/javascript">
@@ -58,38 +85,53 @@ color:#616161;
         $('.date-picker').datepicker( {
             changeMonth: true,
             changeYear: true,
-            showButtonPanel: true,
-            dateFormat: 'mm/dd/yy',
-            onClose: function(dateText, inst)
-            {
-                var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-                $(this).datepicker('setDate', new Date(year, month, 1));
-            }
-            
-
-           
+               showButtonPanel: true,
+			dateFormat: 'mm/dd/yy',
+			  onClose: function(dateText, inst) {
+            var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            $(this).datepicker('setDate', new Date(year, month, 1));
+        }
+                
         });
         
-        $.ajax({
-			url: "http://localhost/projects/UIv3/login",
-			type: 'POST',
-			data: form_data,
-			success: function(result, status, request)
+      $("#submit").button();
+
+		$("#submit").click(function(){
+		
+			var form_data = {
+				"accountID": getHashSegments().accountID,
+				"refund":$("#refund").val(),
+				"date": $('#startDate').val(),
+				"channel": $('select option:selected').val()
+			};
+
+			try
 			{
-					$("#main").append("success");
-			},
-			error:function(result)
-			{
-			
-				
-				
-			},
-			complete:function(result)
-			{
+				$.ajax({
+					dataType:"json",
+					type: "POST",
+					data:form_data,
+					url:"refund/proccess",
+					success: function(data) {
+	    		
+	    				$("#success").html("Refund data added successfully").appendTo("#main");
+	    				
+	    				
+	    			},
+	    			error:function(data){
+	    			$("#success").html("Failed to add refund data").css('color','red').appendTo("#main");
+	    			
+	    			}
+	 			 });
+ 			 }
+			catch(ex) {
+				alert(ex);
 			}
+			
+			return false;
+	
 		});
+	
     });
     </script>
-    
-<?php

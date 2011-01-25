@@ -47,12 +47,12 @@ padding-bottom:10px;
 	}
 	
 	#content  {
-	border:				#999 1px solid;
+	
 	background-color:	#fff;
-	padding:			20px 20px 12px 20px;
+	padding:			17px 380px 0px 90px;
 	}
 	
-	h1 {
+	#content h1 {
 	font-weight:		normal;
 	font-size:			18px;
 	color:				red;

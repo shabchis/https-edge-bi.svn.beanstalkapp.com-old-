@@ -2,6 +2,7 @@
 
 <html lang="en">
 	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=8" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<title>Edge.BI</title>
 
@@ -18,6 +19,7 @@
 		<![endif]-->
 
 		<script src="<?php base_url();?>assets/js/jquery-1.4.4.js"></script>  
+		<script src="<?php base_url();?>assets/js/json_encoder.js"></script>  
 		<script src="<?php base_url();?>assets/js/selectivizr.js"></script>  
 		<script src="<?php base_url();?>assets/js/jquery.tmpl.js"></script>
 		<script src="<?php base_url();?>assets/js/jquery.tmplPlus.js"></script>
@@ -48,7 +50,7 @@
 		
 			<script id="tmpl"  type="text/x-jquery-tmpl">
 			 	{{if Name != "TOPBAR"}}
-					<h2 class="trigger"><span> ${Name} </span></h2>
+					<h2 class="trigger ${IsOpen}" data-state="${IsOpen}" ><span> ${Name} </span></h2>
 					<div class='toggle_container'>
 		  				<div class='block'>
 							{{if ChildItems}} 
@@ -126,7 +128,7 @@
 	
 		{{if Name }}
 		<ul>
-			<li id="${ID}" class="campaign"  {{if Permissions}}data-Permissions=${Permissions} {{else}} data-Permissions="none" {{/if}}>
+			<li id="${ID}" class="campaign" data-url="${SiteURL}" {{if Permissions}}data-Permissions=${Permissions} {{else}} data-Permissions="none" {{/if}}>
 				<span><a href="accounts/${ID}">${ Name }</a></span>
 				{{if ChildAccounts}}
 					{{each ChildAccounts}}
@@ -162,7 +164,9 @@
 	</div>
 
 	<div id="inner">	
+	
 		<div id="menu">
+		<div id="menuwrapper">
 			<div id="accounts" class="folded">	
 	
 			<div id="head">
@@ -176,7 +180,7 @@
 			</div>
 			<div id="sub"></div>
 		</div>
-
+	</div>
 	  	<div id="main">
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	  	</div>
