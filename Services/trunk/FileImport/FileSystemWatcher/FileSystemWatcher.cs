@@ -38,7 +38,7 @@ namespace Easynet.Edge.Services.FileImport
 				if (!Instance.Configuration.Options.TryGetValue("ScheduleManagerUrl", out _scheduleManagerUrl))
 					_scheduleManagerUrl = null;
 				if (!Instance.Configuration.Options.TryGetValue("ScheduleManagerConfiguration", out _scheduleManagerConfiguration))
-					_scheduleManagerConfiguration = "edgeServiceWebBinding";
+					_scheduleManagerConfiguration = null;
 
 				if (Instance.Configuration.ExtendedElements.ContainsKey("Directories"))
 				{
@@ -129,7 +129,8 @@ namespace Easynet.Edge.Services.FileImport
 			}
 
 			// Make the request to the schedule manager
-			using (ServiceClient<IScheduleManager> scheduleManager =  new ServiceClient<IScheduleManager>(_scheduleManagerConfiguration, _scheduleManagerUrl))
+            using (ServiceClient<IScheduleManager> scheduleManager = _scheduleManagerConfiguration != null && _scheduleManagerUrl != null ?
+                new ServiceClient<IScheduleManager>(_scheduleManagerConfiguration, _scheduleManagerUrl ):  new ServiceClient<IScheduleManager>())
 			{
 				SettingsCollection options = new SettingsCollection();
 				options.Add("SourceFilePath", e.FullPath);

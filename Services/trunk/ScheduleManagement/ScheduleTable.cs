@@ -86,7 +86,7 @@ namespace Easynet.Edge.Services.ScheduleManagement
 		
 			_runTaskSync = new Semaphore(1, 1);
 
-/
+
 		}
 
 		/*=========================*/

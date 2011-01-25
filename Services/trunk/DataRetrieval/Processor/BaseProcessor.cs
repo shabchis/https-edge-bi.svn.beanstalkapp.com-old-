@@ -150,7 +150,13 @@ namespace Easynet.Edge.Services.DataRetrieval.Processor
 				}
 				catch
 				{
-					DataManager.Current.RollbackTransaction();
+                    try
+                    {
+                        DataManager.Current.RollbackTransaction(); //fix by alon _transaction was null 25/1/2011
+                    }
+                    catch
+                    {              
+                    }
 					throw;
 				}
 			}
@@ -635,7 +641,7 @@ namespace Easynet.Edge.Services.DataRetrieval.Processor
 					}
 
 					// If we found anything ignore the rest of this horrible function
-					if (fields.Count > 1)
+                    if (fields.Count >= 1) //fix by alon changed from >1 to >=1 we need at least 1 25/11
 						return;
 				}
 			}
