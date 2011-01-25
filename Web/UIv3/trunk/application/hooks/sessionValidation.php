@@ -16,6 +16,7 @@ class sessionValidation{
 		global $APPLICATION_ROOT;
 		global $REQUEST_PATH;
 		global $SESSION_ID;
+		global $ACCOUNT_ID;
 		
 		$SESSION_ID = isset($_COOKIE['edgebi_session']) ? $_COOKIE['edgebi_session'] : null;
 		
@@ -29,7 +30,7 @@ class sessionValidation{
 		$segments = array();
 		if (preg_match('/accounts\/([0-9]+)(?:\/(.*))*/i', $REQUEST_PATH, $segments))
 		{
-			$accountID = $segments[1];
+			$ACCOUNT_ID =  $segments[1];
 			$path = count($segments) == 3 ? $segments[2] : '';
 			
 			if (!IS_AJAX)
@@ -39,7 +40,7 @@ class sessionValidation{
 			}
 			
 			$data =array(
-				"AccountID"=>$accountID,
+				"AccountID"=>$ACCOUNT_ID,
 				"Path"=>$path
 			);
 			

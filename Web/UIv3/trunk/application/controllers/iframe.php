@@ -14,32 +14,38 @@ class iFrame extends Controller{
 		$iframeurl = str_replace('{session}',$SESSION_ID,$iframeurl);
 		$iframeurl = str_replace('{path}',urlencode($path),$iframeurl);
 		
-	//	$IsWPFInSTR = stripos(strtolower($iframeurl), '/wpf/');
+	$IsWPFInSTR = stripos(strtolower($iframeurl), '.xbap');
 	//$this->firephp->log($IsWPFInSTR);
 	/*
 		if ($IsWPFInSTR !== false){
 			
-			if (!isset($_COOKIE['wpf'])) {
-				setcookie("wpf", true, time()+86400*365, '/');
-				$iframeurl = base_url().'install.html';
-				$this->firephp->log('install page');
+			if (!isset($_COOKIE['edgebi_wpf'])) {
+				$this->load->view('install');
 			}
-			else {
-					setcookie("wpf", true, time()+86400*365, '/');
+			else
+			 {
+				$data=array(
+					"iframeurl"=>$iframeurl
+					);		
+		
+		
+					$this->load->view('iframe',$data);
 					
 			}
-	//	$MENU_IFRAME_WPF['Wpf'] = true;
+	
 			
 		}
-		*/
+		 */
+		
 		$data=array(
-			"iframeurl"=>$iframeurl
-		);		
+					"iframeurl"=>$iframeurl
+					);		
 		
 		
-		$this->load->view('iframe',$data);
-			
+					$this->load->view('iframe',$data);	
 	}
+	 
+
 	
 	
 }

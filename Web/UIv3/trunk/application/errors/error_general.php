@@ -20,12 +20,12 @@ padding:			17px 380px 0px 90px;
 }
 
 h1 {
-font-weight:		bold;
-font-size:			18px;
-color:				red;
-margin: 			0 0 4px 0;
-border-bottom:1px solid #B1B1B1;
-padding-bottom:5px;
+	font-weight:		bold;
+	font-size:			18px;
+	color:				red;
+	margin: 			0 0 4px 0;
+	border-bottom:1px solid #B1B1B1;
+	padding-bottom:5px;
 }
 </style>
 	<div id="content">

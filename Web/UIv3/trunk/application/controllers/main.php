@@ -23,7 +23,7 @@ class Main extends Controller {
 			"account"=>	stripslashes($accounts),
 			"user"=>$user
 			);
-			
+		//$this->firephp->log(json_decode($data["account"]));
 		$this->load->view('includes/template',$data);	
 		 
 		
