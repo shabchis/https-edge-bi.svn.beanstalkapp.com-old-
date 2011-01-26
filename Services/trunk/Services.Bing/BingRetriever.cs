@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Services.Bing.ReportingService;
+using Easynet.Edge.Services.Bing.ReportingService;
 using System.Xml.Serialization;
 using System.ServiceModel;
 using Easynet.Edge.Core.Services;
@@ -15,55 +15,32 @@ using Easynet.Edge.Core;
 using Easynet.Edge.Services.DataRetrieval.Retriever;
 using System.Net;
 using System.IO;
+using Services.Data.Pipeline;
 
 
-namespace Services.Bing
+namespace Easynet.Edge.Services.Bing
 {
-    public class BingRetriever : BaseRetriever
+    public class BingRetriever : Service 
     {
-        string BingFileName;
         
         protected override ServiceOutcome DoWork()
         {
-            try
-            {
-                BingRetrieverData();
-                if (BingFileName.Length > 0)
-                {
-                    CreateDelivery();
-                    return ServiceOutcome.Success;
-
-                }
-                else
-                    throw new Exception("No file to deliver");
-
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        private void CreateDelivery()
-        {
+            string downloadUrl = null;
             // Create a new delivery with a description
-            Delivery delivery = new Delivery();
-
-            // Assign this delivery to an account/client/scope
-            delivery.AccountID = Instance.AccountID;
-
-            // Get the target datetime from the configuration
-            delivery.DateCreated = DateTime.Parse(Instance.Configuration.Options["DateTime"]).ToLocalTime();
-
-            // Add files
+            Delivery delivery = new Delivery(FilesManager.ServicesType.Creative, FilesManager.Channels.Bing, Instance.AccountID, Instance.Configuration.Options["RemoteFileServerHost"]);
+            downloadUrl=BingRetrieverData();
             delivery.Files.Add(new DeliveryFile
             {
-                FilePath = BingFileName,
-                ReaderType = typeof(BingRetriever)});
+                FileName = "Creative",
+                DownloadUrl = downloadUrl,
+                ReaderType = typeof(BingRetriever)
+            });
+            delivery.Save();
+            delivery.Download();
+            return ServiceOutcome.Success;
         }
 
-        private void BingRetrieverData()
+        private string BingRetrieverData()
         {
             //Init parameters from configuration
             int columns = Convert.ToInt32(Instance.Configuration.Options["Report_Num_Columns"]);
@@ -74,7 +51,6 @@ namespace Services.Bing
             string password = Instance.Configuration.Options["password"];
             string customerid = Instance.Configuration.Options["customerid"];
             string customeraccountid = Instance.Configuration.Options["customeraccountid"];
-            string zipFileName = Instance.Configuration.Options["zipFileName"];
 
             ReportingService.AdPerformanceReportRequest request = new ReportingService.AdPerformanceReportRequest();
             // Specify the language for the report.
@@ -86,7 +62,7 @@ namespace Services.Bing
             // Specify the columns that will be in the report.
             request.Columns = new ReportingService.AdPerformanceReportColumn[columns];
             for (int i = 0 ; i < columns; i++)
-                request.Columns[i] = (ReportingService.AdPerformanceReportColumn)Enum.Parse(typeof(ReportingService.AdPerformanceReportColumn), "ReportingService.AdPerformanceReportColumn.AccountName", true);
+                request.Columns[i] = (ReportingService.AdPerformanceReportColumn)Enum.Parse(typeof(ReportingService.AdPerformanceReportColumn), "KeywordPerformanceReportColumn_" + i , true);
 
             // Specify the scope of the report. This example goes down 
             // only to the account level, but you can request a report for any 
@@ -182,9 +158,10 @@ namespace Services.Bing
                     pollResponse.ReportRequestStatus.Status))
                 {
                     // Download the file.
-                    DownloadReport(
-                        pollResponse.ReportRequestStatus.ReportDownloadUrl,
-                        zipFileName);
+                   //Data.Pipeline.FilesManager.DownloadFile(
+                   //     pollResponse.ReportRequestStatus.ReportDownloadUrl,
+                   //     delivery.Files[0].FilePath);
+                    return pollResponse.ReportRequestStatus.ReportDownloadUrl;
                 }
             }
 
@@ -227,20 +204,10 @@ namespace Services.Bing
 
             }
 
-            // Capture exceptions on the client that are unrelated to
-            // the adCenter API. An example would be an 
-            // out-of-memory condition on the client.
-            catch (Exception e)
-            {
-                Console.WriteLine("Error '{0}' encountered.",
-                    e.Message);
-            }
             finally
             {
                 // To be sure you close the service.
                 service.Close();
-                if(File.Exists(zipFileName))
-                    BingFileName = zipFileName;
             }
         }
 
@@ -257,52 +224,6 @@ namespace Services.Bing
             return service.PollGenerateReport(pollRequest);
         }
 
-        public static void DownloadReport(string downloadUrl, string zipFileName)
-        {
-            // Open a connection to the URL where the report is available.
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(downloadUrl);
-            HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
-            Stream httpStream = response.GetResponseStream();
-
-            // Open the report file.
-            FileInfo zipFileInfo = new FileInfo(zipFileName);
-            if (!zipFileInfo.Directory.Exists)
-            {
-                zipFileInfo.Directory.Create();
-            }
-            FileStream fileStream = new FileStream(
-                zipFileInfo.FullName,
-                FileMode.Create);
-            BinaryWriter binaryWriter = new BinaryWriter(fileStream);
-            BinaryReader binaryReader = new BinaryReader(httpStream);
-            try
-            {
-                // Read the report and save it to the file.
-                int bufferSize = 100000;
-                while (true)
-                {
-                    // Read report data from API.
-                    byte[] buffer = binaryReader.ReadBytes(bufferSize);
-
-                    // Write report data to file.
-                    binaryWriter.Write(buffer);
-
-                    // If the end of the report is reached, break out of the 
-                    // loop.
-                    if (buffer.Length != bufferSize)
-                    {
-                        break;
-                    }
-                }
-            }
-            finally
-            {
-                // Clean up.
-                binaryWriter.Close();
-                binaryReader.Close();
-                fileStream.Close();
-                httpStream.Close();
-            }
-        }
+        
     }
 }
