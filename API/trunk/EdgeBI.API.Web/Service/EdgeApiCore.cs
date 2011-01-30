@@ -38,30 +38,48 @@ namespace EdgeBI.API.Web
 		[WebGet(UriTemplate = "users/{ID}")]
 		public User GetUserByID(string ID)
 		{
-
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			int userID = int.Parse(ID);
-			if (userID != currentUser)
+			int userID;
+			User returnUser = null;
+			try
 			{
-				User user = User.GetUserByID(currentUser);
-				if (user.IsAcountAdmin != true)
-					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
-
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				userID = int.Parse(ID);
+				if (userID != currentUser)
+				{
+					User user = User.GetUserByID(currentUser);
+					if (user.IsAcountAdmin != true)
+						ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+					returnUser=User.GetUserByID(userID);
+				}
 			}
-			return User.GetUserByID(userID);
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
+			return returnUser;
 		}
 
 		[WebGet(UriTemplate = "users")]
 		public List<User> GetAllUsers()
 		{
 			List<User> users = null;
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			User user = User.GetUserByID(currentUser);
-			if (user.IsAcountAdmin != true)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
-			users = User.GetAllUsers();
+			try
+			{
+				
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User user = User.GetUserByID(currentUser);
+				if (user.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+				users = User.GetAllUsers();
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 
 			return users;
 		}
@@ -90,16 +108,24 @@ namespace EdgeBI.API.Web
 		[WebInvoke(Method = "POST", UriTemplate = "users/{ID}")]
 		public void UpdateUser(string ID, User user)
 		{
-			if (ID.Trim() != user.UserID.ToString())
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Updated userId is different from ID");
+			try
+			{
+				if (ID.Trim() != user.UserID.ToString())
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Updated userId is different from ID");
 
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			User activeUser = User.GetUserByID(currentUser);
-			if (activeUser.IsAcountAdmin != true)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User activeUser = User.GetUserByID(currentUser);
+				if (activeUser.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
 
-			user.UserOperations(SqlOperation.Update);
+				user.UserOperations(SqlOperation.Update);
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 
 
 
@@ -108,29 +134,47 @@ namespace EdgeBI.API.Web
 		[WebInvoke(Method = "DELETE", UriTemplate = "users/{ID}")]
 		public void DeleteUser(string ID)
 		{
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			User activeUser = User.GetUserByID(currentUser);
-			if (activeUser.IsAcountAdmin != true)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
-			User user = new User() { UserID = int.Parse(ID) };
-			user.UserOperations(SqlOperation.Delete);
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User activeUser = User.GetUserByID(currentUser);
+				if (activeUser.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
+				User user = new User() { UserID = int.Parse(ID) };
+				user.UserOperations(SqlOperation.Delete);
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 
 		}
 
 		[WebGet(UriTemplate = "groups/{ID}")]
 		public Group GetGroupByID(string ID)
 		{
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			int groupID = int.Parse(ID);
+			int groupID;
+			Group group = null;
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				groupID = int.Parse(ID);
 
-			User user = User.GetUserByID(currentUser);
-			if (user.IsAcountAdmin != true)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+				User user = User.GetUserByID(currentUser);
+				if (user.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+				group=Group.GetGroupByID(groupID);
+			}
+			catch (Exception ex)
+			{
 
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 
-			return Group.GetGroupByID(groupID);
+			return group; 
 
 		}
 
@@ -138,12 +182,20 @@ namespace EdgeBI.API.Web
 		public List<Group> GetAllGroups()
 		{
 			List<Group> groups = null;
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			User user = User.GetUserByID(currentUser);
-			if (user.IsAcountAdmin != true)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get the list of all groups");
-			groups = Group.GetAllGroups();
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User user = User.GetUserByID(currentUser);
+				if (user.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get the list of all groups");
+				groups = Group.GetAllGroups();
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 
 			return groups;
 
@@ -175,16 +227,24 @@ namespace EdgeBI.API.Web
 		public void UpdateGroup(string ID, Group group)
 		{
 
-			if (ID.Trim() != group.GroupID.ToString())
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Updated groupID is different from ID");
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			User activeUser = User.GetUserByID(currentUser);
-			if (activeUser.IsAcountAdmin != true)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
+			try
+			{
+				if (ID.Trim() != group.GroupID.ToString())
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Updated groupID is different from ID");
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User activeUser = User.GetUserByID(currentUser);
+				if (activeUser.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
 
-			group.GroupOperations(SqlOperation.Update);
+				group.GroupOperations(SqlOperation.Update);
 
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 
 
 		}
@@ -192,13 +252,21 @@ namespace EdgeBI.API.Web
 		[WebInvoke(Method = "DELETE", UriTemplate = "groups/{ID}")]
 		public void DeleteGroup(string ID)
 		{
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			User activeUser = User.GetUserByID(currentUser);
-			if (activeUser.IsAcountAdmin != true)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
-			Group group = new Group() { GroupID = int.Parse(ID) };
-			group.GroupOperations(SqlOperation.Delete);
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User activeUser = User.GetUserByID(currentUser);
+				if (activeUser.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
+				Group group = new Group() { GroupID = int.Parse(ID) };
+				group.GroupOperations(SqlOperation.Delete);
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 
 		}
 		#endregion
@@ -207,12 +275,21 @@ namespace EdgeBI.API.Web
 		[WebGet(UriTemplate = "menu")]
 		public List<Menu> GetMenu()
 		{
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			List<Menu> m = null;
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 
-			List<Menu> m = Menu.GetMenu(currentUser);
-			if (m == null || m.Count == 0)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, string.Format("No menu found for userId {0} ", currentUser));
+				 m = Menu.GetMenu(currentUser);
+				if (m == null || m.Count == 0)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, string.Format("No menu found for userId {0} ", currentUser));
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 			return m;
 		}
 		#endregion
@@ -223,23 +300,41 @@ namespace EdgeBI.API.Web
 		[OperationContract(Name = "GetAccountByID")]
 		public Account GetAccount(string accountID)
 		{
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			int? accId = int.Parse(accountID);
-			List<Account> acc = Account.GetAccount(accId, true, currentUser);
-			if (acc.Count == 0)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, String.Format("No account with permission found for user {0}", currentUser));
+			List<Account> acc = null;
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				int? accId = int.Parse(accountID);
+				acc = Account.GetAccount(accId, true, currentUser);
+				if (acc.Count == 0)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, String.Format("No account with permission found for user {0}", currentUser));
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 			return acc[0];
 		}
 
 		[WebGet(UriTemplate = "Accounts")]
 		public List<Account> GetAccount()
 		{
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			List<Account> acc = Account.GetAccount(null, true, currentUser);
-			if (acc.Count == 0)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, String.Format("No account with permission found for user {0}", currentUser));
+			List<Account> acc = null;
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				acc = Account.GetAccount(null, true, currentUser);
+				if (acc.Count == 0)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, String.Format("No account with permission found for user {0}", currentUser));
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 			return acc;
 		}
 		#endregion
@@ -249,43 +344,51 @@ namespace EdgeBI.API.Web
 		public bool GetSpecificPermissionValue(PermissionRequest permissionRequest)
 		{
 
-
 			bool hasPermission = false;
-			int currentUser;
-			ThingReader<CalculatedPermission> calculatedPermissionReader;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			List<CalculatedPermission> calculatedPermissionList = new List<CalculatedPermission>();
-			using (DataManager.Current.OpenConnection())
+			try
 			{
-				SqlCommand sqlCommand = DataManager.CreateCommand("User_CalculatePermissions(@UserID:Int)", CommandType.StoredProcedure);
-				sqlCommand.Parameters["@UserID"].Value = currentUser;
-				calculatedPermissionReader = new ThingReader<CalculatedPermission>(sqlCommand.ExecuteReader(), null);
-				while (calculatedPermissionReader.Read())
+				
+				int currentUser;
+				ThingReader<CalculatedPermission> calculatedPermissionReader;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				List<CalculatedPermission> calculatedPermissionList = new List<CalculatedPermission>();
+				using (DataManager.Current.OpenConnection())
 				{
-					calculatedPermissionList.Add(calculatedPermissionReader.Current);
-				}
-				calculatedPermissionReader.Dispose();
-
-
-			}
-			if (calculatedPermissionList != null && calculatedPermissionList.Count > 0)
-			{
-				if (string.IsNullOrEmpty(permissionRequest.Path))
-				{
-					if (calculatedPermissionList.Count > 0)
+					SqlCommand sqlCommand = DataManager.CreateCommand("User_CalculatePermissions(@UserID:Int)", CommandType.StoredProcedure);
+					sqlCommand.Parameters["@UserID"].Value = currentUser;
+					calculatedPermissionReader = new ThingReader<CalculatedPermission>(sqlCommand.ExecuteReader(), null);
+					while (calculatedPermissionReader.Read())
 					{
-						CalculatedPermission calculatedPermissions = calculatedPermissionList.Find(calculatedPermission => calculatedPermission.AccountID == permissionRequest.AccountID);
+						calculatedPermissionList.Add(calculatedPermissionReader.Current);
+					}
+					calculatedPermissionReader.Dispose();
+
+
+				}
+				if (calculatedPermissionList != null && calculatedPermissionList.Count > 0)
+				{
+					if (string.IsNullOrEmpty(permissionRequest.Path))
+					{
+						if (calculatedPermissionList.Count > 0)
+						{
+							CalculatedPermission calculatedPermissions = calculatedPermissionList.Find(calculatedPermission => calculatedPermission.AccountID == permissionRequest.AccountID);
+							if (calculatedPermissions != null)
+								hasPermission = true;
+						}
+					}
+					else
+					{
+						CalculatedPermission calculatedPermissions = calculatedPermissionList.Find(calculatedPermission => calculatedPermission.AccountID == permissionRequest.AccountID && calculatedPermission.Path.Trim().ToUpper() == permissionRequest.Path.Trim().ToUpper());
 						if (calculatedPermissions != null)
 							hasPermission = true;
 					}
-				}
-				else
-				{
-					CalculatedPermission calculatedPermissions = calculatedPermissionList.Find(calculatedPermission => calculatedPermission.AccountID == permissionRequest.AccountID && calculatedPermission.Path.Trim().ToUpper() == permissionRequest.Path.Trim().ToUpper());
-					if (calculatedPermissions != null)
-						hasPermission = true;
-				}
 
+				}
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
 			}
 			return hasPermission;
 		}
@@ -295,14 +398,22 @@ namespace EdgeBI.API.Web
 		{
 			List<string> permissions = new List<string>();
 
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 
-			User user = User.GetUserByID(currentUser);
-			if (user.IsAcountAdmin != true)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+				User user = User.GetUserByID(currentUser);
+				if (user.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
 
-			permissions = Permission.GetAllPermissionTypeList();
+				permissions = Permission.GetAllPermissionTypeList();
+			}
+			catch (Exception ex)
+			{
+
+				throw;
+			}
 			return permissions;
 		}
 
@@ -310,16 +421,24 @@ namespace EdgeBI.API.Web
 		public List<Permission> GetTreeOfAllPermissionType()
 		{
 			List<Permission> returnObject = new List<Permission>();
-			ThingReader<Permission> thingReader;
-			Stack<Permission> stackPermission = new Stack<Permission>();
+			try
+			{
+				ThingReader<Permission> thingReader;
+				Stack<Permission> stackPermission = new Stack<Permission>();
 
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 
-			User user = User.GetUserByID(currentUser);
-			if (user.IsAcountAdmin != true)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
-			returnObject = Permission.GetAllPermissionTypeTree();
+				User user = User.GetUserByID(currentUser);
+				if (user.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+				returnObject = Permission.GetAllPermissionTypeTree();
+			}
+			catch (Exception ex)
+			{
+
+				throw;
+			}
 
 			return returnObject;
 
@@ -329,24 +448,40 @@ namespace EdgeBI.API.Web
 		public void InsertUpdateRemovePermissionForGroup(string groupID, AssignedPermissionData assignedPermissions)
 		{
 
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			User user = User.GetUserByID(currentUser);
-			if (user.IsAcountAdmin != true)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can edit permissions");
-			AssignedPermissionData.PermissionOperations(int.Parse(groupID), assignedPermissions.accountsPermissionsData, true, assignedPermissions.permissionOperation);
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User user = User.GetUserByID(currentUser);
+				if (user.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can edit permissions");
+				AssignedPermissionData.PermissionOperations(int.Parse(groupID), assignedPermissions.accountsPermissionsData, true, assignedPermissions.permissionOperation);
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 		}
 
 		[WebInvoke(Method = "POST", UriTemplate = "users/{userID}/permissions")]
 		public void InsertUpdateRemovePermissionForUser(string userID, AssignedPermissionData assignedPermissions)
 		{
 
-			int currentUser;
-			currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-			User user = User.GetUserByID(currentUser);
-			if (user.IsAcountAdmin != true)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can edit permissions");
-			AssignedPermissionData.PermissionOperations(int.Parse(userID), assignedPermissions.accountsPermissionsData, false, assignedPermissions.permissionOperation);
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User user = User.GetUserByID(currentUser);
+				if (user.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can edit permissions");
+				AssignedPermissionData.PermissionOperations(int.Parse(userID), assignedPermissions.accountsPermissionsData, false, assignedPermissions.permissionOperation);
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 		}
 
 		#endregion
@@ -359,46 +494,54 @@ namespace EdgeBI.API.Web
 			SessionResponseData returnsessionData = null;
 			int session;
 
-			using (DataManager.Current.OpenConnection())
+			try
 			{
-				Encryptor encryptor = new Encryptor(KeyEncrypt);
-				sqlCommand = DataManager.CreateCommand("User_Login(@OperationType:Int,@Email:NVarchar,@Password:NVarchar,@UserID:Int,@SessionID:Int)", CommandType.StoredProcedure);
-
-
-				sqlCommand.Parameters["@OperationType"].Value = sessionData.OperationType;
-				if (sessionData.OperationType == OperationTypeEnum.New)
+				using (DataManager.Current.OpenConnection())
 				{
-					sqlCommand.Parameters["@Email"].Value = sessionData.Email;
-					sqlCommand.Parameters["@Password"].Value = sessionData.Password;
-				}
-				else
-				{
-					sqlCommand.Parameters["@UserID"].Value = sessionData.UserID;
+					Encryptor encryptor = new Encryptor(KeyEncrypt);
+					sqlCommand = DataManager.CreateCommand("User_Login(@OperationType:Int,@Email:NVarchar,@Password:NVarchar,@UserID:Int,@SessionID:Int)", CommandType.StoredProcedure);
 
-					try
-					{
-						sqlCommand.Parameters["@SessionID"].Value = encryptor.Decrypt(sessionData.Session);
-					}
-					catch (Exception ex)
-					{
-						ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Invalid Session,session could no be parse!");
 
-					}
-				}
-				SqlDataReader sqlReader = sqlCommand.ExecuteReader();
-				if (sqlReader.Read())
-				{
-					session = Convert.ToInt32(sqlReader[0]);
-					if (session > 0)
+					sqlCommand.Parameters["@OperationType"].Value = sessionData.OperationType;
+					if (sessionData.OperationType == OperationTypeEnum.New)
 					{
-						returnsessionData = new SessionResponseData();
-						returnsessionData.UserID = sqlReader.GetInt32(1);
-						returnsessionData.Session = encryptor.Encrypt(session.ToString());
+						sqlCommand.Parameters["@Email"].Value = sessionData.Email;
+						sqlCommand.Parameters["@Password"].Value = sessionData.Password;
+					}
+					else
+					{
+						sqlCommand.Parameters["@UserID"].Value = sessionData.UserID;
+
+						try
+						{
+							sqlCommand.Parameters["@SessionID"].Value = encryptor.Decrypt(sessionData.Session);
+						}
+						catch (Exception ex)
+						{
+							ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Invalid Session,session could no be parse!");
+
+						}
+					}
+					SqlDataReader sqlReader = sqlCommand.ExecuteReader();
+					if (sqlReader.Read())
+					{
+						session = Convert.ToInt32(sqlReader[0]);
+						if (session > 0)
+						{
+							returnsessionData = new SessionResponseData();
+							returnsessionData.UserID = sqlReader.GetInt32(1);
+							returnsessionData.Session = encryptor.Encrypt(session.ToString());
+						}
 					}
 				}
+				if (returnsessionData == null)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "User Name/Password is wrong!");
 			}
-			if (returnsessionData == null)
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "User Name/Password is wrong!");
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
 
 			return returnsessionData;
 		}
