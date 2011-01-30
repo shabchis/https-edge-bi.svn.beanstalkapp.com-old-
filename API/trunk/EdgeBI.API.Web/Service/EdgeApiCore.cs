@@ -50,8 +50,9 @@ namespace EdgeBI.API.Web
 					User user = User.GetUserByID(currentUser);
 					if (user.IsAcountAdmin != true)
 						ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
-					returnUser=User.GetUserByID(userID);
+					
 				}
+				returnUser = User.GetUserByID(userID);
 			}
 			catch (Exception ex)
 			{
