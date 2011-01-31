@@ -19,7 +19,7 @@ namespace MyScheduler
 			
 			services.Add(sc12);
 
-			ServiceConfigration sc2 = new ServiceConfigration() { ID = 3, ConfigurationID = 77, Name = "service3", priority = 2, MaxConcurrentPerConfiguration = 2, MaxCuncurrentPerProfile = 2, SchedulingProfile = new Profile() { ID = 3, ProfileID = 88 }, Rule = new SchedulingRule() { time = DateTime.Now } };
+			ServiceConfigration sc2 = new ServiceConfigration() { ID = 3, ConfigurationID = 77, Name = "service3", priority = 2, MaxConcurrentPerConfiguration = 2, MaxCuncurrentPerProfile = 2, SchedulingProfile = new Profile() { ID = 3, ProfileID = 88 }, Rule = new SchedulingRule() { time = DateTime.Now.AddHours(1) } };
 			services.Add(sc2);
 			ServiceConfigration sc21 = new ServiceConfigration() { ID = 4, ConfigurationID = 77, Name = "service4", priority = 1, MaxConcurrentPerConfiguration = 2, MaxCuncurrentPerProfile = 2, SchedulingProfile = new Profile() { ID = 4, ProfileID = 88 }, Rule = new SchedulingRule() { time = DateTime.Now } };
 			services.Add(sc21);
