@@ -15,6 +15,7 @@ using Easynet.Edge.Core;
 using Easynet.Edge.Services.DataRetrieval.Retriever;
 using System.Net;
 using System.IO;
+using EdgeBI.Data.Pipeline;
 using Services.Data.Pipeline;
 
 
@@ -27,8 +28,10 @@ namespace Easynet.Edge.Services.Bing
         {
             string downloadUrl = null;
             // Create a new delivery with a description
-            Delivery delivery = new Delivery(FilesManager.ServicesType.Creative, FilesManager.Channels.Bing, Instance.AccountID, Instance.Configuration.Options["RemoteFileServerHost"]);
+            Delivery delivery = new Delivery();
             downloadUrl=BingRetrieverData();
+
+            delivery.Files = new List<DeliveryFile>();
             delivery.Files.Add(new DeliveryFile
             {
                 FileName = "Creative",
@@ -42,9 +45,10 @@ namespace Easynet.Edge.Services.Bing
 
         private string BingRetrieverData()
         {
+            string errMessage = "";
             //Init parameters from configuration
             int columns = Convert.ToInt32(Instance.Configuration.Options["Report_Num_Columns"]);
-            int[] accountIds = { Convert.ToInt32(Instance.Configuration.Options["Report_Num_Columns"]) };
+            int[] accountIds = { Convert.ToInt32(Instance.Configuration.Options["customerid"]) };
             string appToken = Instance.Configuration.Options["appToken"];
             string devToken = Instance.Configuration.Options["devToken"];
             string username = Instance.Configuration.Options["username"];
@@ -52,17 +56,19 @@ namespace Easynet.Edge.Services.Bing
             string customerid = Instance.Configuration.Options["customerid"];
             string customeraccountid = Instance.Configuration.Options["customeraccountid"];
 
-            ReportingService.AdPerformanceReportRequest request = new ReportingService.AdPerformanceReportRequest();
+            ReportingService.KeywordPerformanceReportRequest request = new ReportingService.KeywordPerformanceReportRequest();
             // Specify the language for the report.
             request.Language = ReportingService.ReportLanguage.English;
             // Specify the format of the report.
             request.Format = ReportingService.ReportFormat.Xml;
             request.ReturnOnlyCompleteData = false;
+            request.ReportName = "Ad performance - " + DateTime.Now.ToString();
+            request.Aggregation = ReportingService.ReportAggregation.Daily;
             
             // Specify the columns that will be in the report.
-            request.Columns = new ReportingService.AdPerformanceReportColumn[columns];
+            request.Columns = new ReportingService.KeywordPerformanceReportColumn[columns];
             for (int i = 0 ; i < columns; i++)
-                request.Columns[i] = (ReportingService.AdPerformanceReportColumn)Enum.Parse(typeof(ReportingService.AdPerformanceReportColumn), "KeywordPerformanceReportColumn_" + i , true);
+                request.Columns[i] = (ReportingService.KeywordPerformanceReportColumn)Enum.Parse(typeof(ReportingService.KeywordPerformanceReportColumn), Instance.Configuration.Options["KeywordPerformanceReportColumn_" + i], true);
 
             // Specify the scope of the report. This example goes down 
             // only to the account level, but you can request a report for any 
@@ -75,7 +81,7 @@ namespace Easynet.Edge.Services.Bing
             // Specify the filter for the report. This example requests 
             // only search ads that were displayed in the United States to be in 
             // the report.
-            request.Filter = new ReportingService.AdPerformanceReportFilter();
+            request.Filter = new ReportingService.KeywordPerformanceReportFilter();
             request.Filter.AdDistribution = ReportingService.AdDistributionReportFilter.Search;
             request.Filter.LanguageAndRegion = ReportingService.LanguageAndRegionReportFilter.UnitedStates;
 
@@ -87,7 +93,7 @@ namespace Easynet.Edge.Services.Bing
             {
                 // Create and initialize the QueueReportRequest object.
                 ReportingService.SubmitGenerateReportRequest submitRequest = new ReportingService.SubmitGenerateReportRequest();
-                submitRequest.ApplicationToken = appToken;
+                submitRequest.ApplicationToken = null;//appToken;
                 submitRequest.DeveloperToken = devToken;
                 submitRequest.UserName = username;
                 submitRequest.Password = password;
@@ -114,7 +120,9 @@ namespace Easynet.Edge.Services.Bing
                 // Submit the report request. This will throw an exception if 
                 // an error occurs.
                 ReportingService.SubmitGenerateReportResponse queueResponse;
-                queueResponse = service.SubmitGenerateReport(submitRequest);
+               queueResponse = service.SubmitGenerateReport(submitRequest);
+               
+
 
                 // Poll to get the status of the report until it is complete.
                 int waitMinutes = 1;
@@ -157,12 +165,10 @@ namespace Easynet.Edge.Services.Bing
                     (ReportingService.ReportRequestStatusType.Success ==
                     pollResponse.ReportRequestStatus.Status))
                 {
-                    // Download the file.
-                   //Data.Pipeline.FilesManager.DownloadFile(
-                   //     pollResponse.ReportRequestStatus.ReportDownloadUrl,
-                   //     delivery.Files[0].FilePath);
                     return pollResponse.ReportRequestStatus.ReportDownloadUrl;
                 }
+                else
+                    return "";
             }
 
             catch (FaultException<AdApiFaultDetail> fault)
@@ -172,12 +178,13 @@ namespace Easynet.Edge.Services.Bing
                 // Write the API errors.
                 foreach (ReportingService.AdApiError opError in faultDetail.Errors)
                 {
+
                     Console.WriteLine(
                         String.Format("Error {0}:", opError.Code));
                     Console.WriteLine(
                         String.Format("\tMessage: \"{0}\"", opError.Message));
                 }
-
+                throw new Exception(errMessage);
             }
 
             catch (FaultException<ApiFaultDetail> fault)
@@ -187,21 +194,16 @@ namespace Easynet.Edge.Services.Bing
                 // Display service operation error information.
                 foreach (ReportingService.OperationError opError in faultDetail.OperationErrors)
                 {
-                    Console.Write("Operation error");
-                    Console.WriteLine(" '{0}' ({1}) encountered.",
-                                      opError.Message,
-                                      opError.Code);
+                    errMessage += " Operation error-" + opError.Message + "error code" + opError.Code;
                 }
+
 
                 // Display batch error information.
                 foreach (ReportingService.BatchError batchError in faultDetail.BatchErrors)
                 {
-                    Console.Write("Batch error");
-                    Console.Write(" '{0}' ({1}) encountered",
-                                   batchError.Message,
-                                   batchError.ErrorCode);
+                    errMessage += " Batch error-" + batchError.Message + "error code" + batchError.Code;
                 }
-
+                throw new Exception(errMessage);
             }
 
             finally

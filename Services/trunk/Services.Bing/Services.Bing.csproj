@@ -76,13 +76,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Service References\ReportingService\ReportingService.wsdl" />
-    <None Include="Service References\ReportingService\ReportingService.xsd" />
-    <None Include="Service References\ReportingService\ReportingService1.xsd" />
-    <None Include="Service References\ReportingService\ReportingService2.xsd" />
-    <None Include="Service References\ReportingService\ReportingService3.xsd" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Applications\EdgeServiceHost\EdgeServiceHost.csproj">
+      <Project>{C1D17284-15C6-4CEC-AF35-D84CC8D5CCA0}</Project>
+      <Name>EdgeServiceHost</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\Core\Core.csproj">
       <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
       <Name>Core</Name>
@@ -102,12 +101,6 @@
     <WCFMetadataStorage Include="Service References\ReportingService\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ReportingService\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ReportingService\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\CustomerManagementService\CustomerManagementService.wsdl" />
     <None Include="Service References\CustomerManagementService\CustomerManagementService.xsd" />
     <None Include="Service References\CustomerManagementService\CustomerManagementService1.xsd" />
@@ -115,13 +108,6 @@
     <None Include="Service References\CustomerManagementService\CustomerManagementService3.xsd" />
     <None Include="Service References\CustomerManagementService\CustomerManagementService4.xsd" />
     <None Include="Service References\CustomerManagementService\CustomerManagementService5.xsd" />
-    <None Include="Service References\ReportingService\Easynet.Edge.Services.Bing.ReportingService.ReportRequestStatus.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ReportingService\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\CustomerManagementService\configuration91.svcinfo" />
@@ -457,6 +443,29 @@
     </None>
     <None Include="Service References\CustomerManagementService\Easynet.Edge.Services.Bing.CustomerManagementService.UpdateUserRolesResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ReportingService\ReportingService.wsdl" />
+    <None Include="Service References\ReportingService\ReportingService.xsd" />
+    <None Include="Service References\ReportingService\ReportingService1.xsd" />
+    <None Include="Service References\ReportingService\ReportingService2.xsd" />
+    <None Include="Service References\ReportingService\ReportingService3.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ReportingService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ReportingService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ReportingService\Easynet.Edge.Services.Bing.ReportingService.PollGenerateReportResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ReportingService\Easynet.Edge.Services.Bing.ReportingService.SubmitGenerateReportResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ReportingService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
