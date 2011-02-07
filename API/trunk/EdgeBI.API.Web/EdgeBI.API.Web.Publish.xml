@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <publishData>
-  <publishProfile publishUrl="localhost" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="Default Web Site/API2" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="False" msdeployMarkAsApp="True" profileName="Profile1" publishMethod="MSDeploy" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+  <publishProfile publishUrl="localhost" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="Default Web Site/API2" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="False" msdeployMarkAsApp="True" profileName="Profile1" publishMethod="MSDeploy" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="False">
     <file relUrl="bin/Microsoft.Runtime.Serialization.Json.pdb" publishTime="10/27/2010 17:07:24" />
     <file relUrl="Global.asax" publishTime="10/27/2010 17:11:10" />
     <file relUrl="bin/Microsoft.ServiceModel.Web.jQuery.pdb" publishTime="10/27/2010 17:07:26" />
@@ -15,16 +15,16 @@
     <file relUrl="bin/Microsoft.Runtime.Serialization.Json.xml" publishTime="10/27/2010 17:07:24" />
     <file relUrl="bin/Microsoft.Http.dll" publishTime="10/27/2010 17:11:10" />
     <file relUrl="bin/Microsoft.Http.Extensions.pdb" publishTime="10/27/2010 17:11:10" />
-    <file relUrl="bin/EdgeBI.Objects.dll" publishTime="01/06/2011 15:07:17" />
     <file relUrl="bin/Microsoft.ServiceModel.WebHttp.dll" publishTime="12/16/2010 14:41:49" />
     <file relUrl="bin/Microsoft.ServiceModel.Http.pdb" publishTime="01/02/2011 14:03:19" />
     <file relUrl="bin/Newtonsoft.Json.dll" publishTime="08/14/2010 14:55:22" />
     <file relUrl="bin/Newtonsoft.Json.xml" publishTime="08/14/2010 14:55:22" />
     <file relUrl="bin/Microsoft.ServiceModel.Web.jQuery.xml" publishTime="10/27/2010 17:07:26" />
     <file relUrl="bin/Microsoft.QueryComposition.pdb" publishTime="10/27/2010 17:11:08" />
-    <file relUrl="bin/Microsoft.ServiceModel.Http.dll" publishTime="01/02/2011 14:03:19" />
+    <file relUrl="bin/EdgeBI.Objects.dll" publishTime="01/06/2011 15:07:17" />
     <file relUrl="bin/EdgeBI.Objects.pdb" publishTime="01/06/2011 15:07:17" />
     <file relUrl="bin/JsonValueSample.dll" publishTime="01/06/2011 15:07:18" />
+    <file relUrl="bin/Microsoft.ServiceModel.Http.dll" publishTime="01/02/2011 14:03:19" />
     <file relUrl="Web.config" publishTime="01/06/2011 15:07:53" />
     <file relUrl="bin/Microsoft.ServiceModel.Web.pdb" publishTime="12/10/2009 09:34:44" />
     <file relUrl="bin/Microsoft.ServiceModel.WebHttp.pdb" publishTime="12/16/2010 14:41:49" />
@@ -32,7 +32,7 @@
     <file relUrl="bin/Edge.Core.pdb" publishTime="01/06/2011 15:07:16" />
   </publishProfile>
   <publishProfile publishUrl="http://testing" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="Default Web Site/api2" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="testings" publishMethod="MSDeploy" replaceMatchingFiles="True" userName="biuser" savePWD="True" userPWD="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVAsqhQsBAE6fzVPZ+hv8tAAAAAACAAAAAAADZgAAwAAAABAAAACW0Jrh3MAQdjfszZ6sgU2CAAAAAASAAACgAAAAEAAAANvxRktGe7HqWchlTOgEn0AYAAAAIewBccCsjCtFoy/b+RekuFDAQxcz08UMFAAAANMkM4qhc4ofMLQ9biU94EJC8ey2" SelectedForPublish="False" />
-  <publishProfile publishUrl="C:\Users\alonya\Desktop\api" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="ToCloud" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="False">
+  <publishProfile publishUrl="C:\Users\alonya\Desktop\api" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="ToCloud" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
     <file relUrl="bin/Microsoft.Runtime.Serialization.Json.pdb" publishTime="10/27/2010 17:07:24" />
     <file relUrl="Global.asax" publishTime="10/27/2010 17:11:10" />
     <file relUrl="bin/Microsoft.ServiceModel.Web.jQuery.pdb" publishTime="10/27/2010 17:07:26" />
@@ -40,27 +40,27 @@
     <file relUrl="bin/Newtonsoft.Json.pdb" publishTime="08/14/2010 14:55:22" />
     <file relUrl="bin/Microsoft.ServiceModel.Web.jQuery.dll" publishTime="10/27/2010 17:08:16" />
     <file relUrl="bin/Microsoft.QueryComposition.dll" publishTime="10/27/2010 17:11:08" />
-    <file relUrl="bin/Edge.Core.dll" publishTime="01/23/2011 17:34:04" />
+    <file relUrl="bin/Edge.Core.dll" publishTime="02/03/2011 16:17:03" />
     <file relUrl="bin/Microsoft.Runtime.Serialization.Json.dll" publishTime="10/27/2010 17:08:14" />
-    <file relUrl="bin/JsonValueSample.pdb" publishTime="01/23/2011 17:34:05" />
+    <file relUrl="bin/JsonValueSample.pdb" publishTime="02/03/2011 16:17:05" />
     <file relUrl="bin/Microsoft.Http.Extensions.dll" publishTime="10/27/2010 17:11:10" />
     <file relUrl="bin/Microsoft.Runtime.Serialization.Json.xml" publishTime="10/27/2010 17:07:24" />
     <file relUrl="bin/Microsoft.Http.dll" publishTime="10/27/2010 17:11:10" />
     <file relUrl="bin/Microsoft.Http.Extensions.pdb" publishTime="10/27/2010 17:11:10" />
+    <file relUrl="bin/EdgeBI.Objects.dll" publishTime="02/03/2011 16:17:04" />
     <file relUrl="bin/Microsoft.ServiceModel.WebHttp.dll" publishTime="12/16/2010 14:41:49" />
     <file relUrl="bin/Microsoft.ServiceModel.Http.pdb" publishTime="01/02/2011 14:03:19" />
     <file relUrl="bin/Newtonsoft.Json.dll" publishTime="08/14/2010 14:55:22" />
     <file relUrl="bin/Newtonsoft.Json.xml" publishTime="08/14/2010 14:55:22" />
     <file relUrl="bin/Microsoft.ServiceModel.Web.jQuery.xml" publishTime="10/27/2010 17:07:26" />
     <file relUrl="bin/Microsoft.QueryComposition.pdb" publishTime="10/27/2010 17:11:08" />
-    <file relUrl="bin/EdgeBI.Objects.dll" publishTime="01/23/2011 17:34:05" />
-    <file relUrl="bin/EdgeBI.Objects.pdb" publishTime="01/23/2011 17:34:05" />
-    <file relUrl="bin/JsonValueSample.dll" publishTime="01/23/2011 17:34:05" />
     <file relUrl="bin/Microsoft.ServiceModel.Http.dll" publishTime="01/02/2011 14:03:19" />
-    <file relUrl="Web.config" publishTime="01/23/2011 17:34:27" />
+    <file relUrl="bin/EdgeBI.Objects.pdb" publishTime="02/03/2011 16:17:04" />
+    <file relUrl="bin/JsonValueSample.dll" publishTime="02/03/2011 16:17:05" />
+    <file relUrl="Web.config" publishTime="02/03/2011 16:17:33" />
     <file relUrl="bin/Microsoft.ServiceModel.Web.pdb" publishTime="12/10/2009 09:34:44" />
     <file relUrl="bin/Microsoft.ServiceModel.WebHttp.pdb" publishTime="12/16/2010 14:41:49" />
     <file relUrl="bin/Microsoft.Http.pdb" publishTime="10/27/2010 17:11:10" />
-    <file relUrl="bin/Edge.Core.pdb" publishTime="01/23/2011 17:34:04" />
+    <file relUrl="bin/Edge.Core.pdb" publishTime="02/03/2011 16:17:03" />
   </publishProfile>
 </publishData>
