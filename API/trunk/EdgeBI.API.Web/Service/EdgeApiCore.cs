@@ -28,13 +28,14 @@ namespace EdgeBI.API.Web
 	public class EdgeApiCore
 	{
 		private const string KeyEncrypt = "5c51374e366f41297356413c71677220386c534c394742234947567840";
+		
+		#region Users and groups
 		/// <summary>
 		/// Get user
 		/// </summary>
 		/// <param name="ID">The User Primery Key</param>
 		/// <returns></returns>
 		/// 
-		#region Users and groups
 		[WebGet(UriTemplate = "users/{ID}")]
 		public User GetUserByID(string ID)
 		{
@@ -502,7 +503,7 @@ namespace EdgeBI.API.Web
 					Encryptor encryptor = new Encryptor(KeyEncrypt);
 					sqlCommand = DataManager.CreateCommand("User_Login(@OperationType:Int,@Email:NVarchar,@Password:NVarchar,@UserID:Int,@SessionID:Int)", CommandType.StoredProcedure);
 
-
+					
 					sqlCommand.Parameters["@OperationType"].Value = sessionData.OperationType;
 					if (sessionData.OperationType == OperationTypeEnum.New)
 					{
