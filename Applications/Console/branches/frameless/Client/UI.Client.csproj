@@ -29,7 +29,7 @@
     <SccProvider>
     </SccProvider>
     <SignManifests>true</SignManifests>
-    <ManifestCertificateThumbprint>D3BA6BF88BC11696D729B7F37C832A055E1A0A2C</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>6D06D21CB6059078299388B632DCB657F96C41B2</ManifestCertificateThumbprint>
     <ManifestKeyFile>Certificates\Certificate 2011.pfx</ManifestKeyFile>
     <StartupObject>
     </StartupObject>
@@ -50,7 +50,7 @@
     <InstallUrl>https://console.edge-bi.com/seperia/wpf</InstallUrl>
     <SupportUrl>https://console.edge-bi.com/seperia/wpf/install.html</SupportUrl>
     <TargetCulture>en</TargetCulture>
-    <ProductName>Edge.BI Management Pages [Seperia]</ProductName>
+    <ProductName>Edge.BI Management Pages [debug]</ProductName>
     <PublisherName>Edge.BI</PublisherName>
     <WebPage>install.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>

@@ -26,57 +26,55 @@ using ZedGraph;
 
 namespace Easynet.Edge.UI.WebPages
 {
+	#region Definitions
+
+	public class RankingTable
+	{
+		public int SearchEngineID;
+		public string SearchEngineName;
+		public List<string> Columns = new List<string>();
+		public List<RankingRow> Rows = new List<RankingRow>();
+	}
+
+	public class RankingRow
+	{
+		public string SearchEngineUrl;
+		public string Keyword;
+		public Dictionary<string, RankingItem> Items = new Dictionary<string, RankingItem>();
+		public RankingItem ClientItem
+		{
+			get { return Items.Count > 0 ? Items.First(item => item.Value.IsClient).Value : null; }
+		}
+	}
+
+	public class RankingItem
+	{
+		public bool IsClient;
+		public string TargetDomain;
+		public List<Ranking> Rankings = new List<Ranking>();
+
+	}
+	public class Ranking
+	{
+		public int Rank;
+		public int RankDiff;
+		public string Url;
+	}
+
+	#endregion
+
 	public partial class OrganicPage : PageBase
 	{
-		#region Definitions
-
-		public class RankingTable
-		{
-			public int SearchEngineID;
-			public string SearchEngineName;
-			public List<string> Columns = new List<string>();
-			public List<RankingRow> Rows = new List<RankingRow>();
-		}
-
-		public class RankingRow
-		{
-			public string SearchEngineUrl;
-			public string Keyword;
-			public Dictionary<string, RankingItem> Items = new Dictionary<string, RankingItem>();
-			public RankingItem ClientItem
-			{
-				get { return Items.Count > 0 ? Items.First(item => item.Value.IsClient) : null; }
-			}
-		}
-
-		public class RankingItem
-		{
-			public bool IsClient;
-			public string TargetDomain;
-			public List<Ranking> Rankings = new List<Ranking>();
-
-		}
-		public class Ranking
-		{
-			public int Rank;
-			public int RankDiff;
-			public string Url;
-		}
-
-
+		// Constants
 		class Const
 		{
 			public static int GraphRangeMax = Int32.Parse(AppSettings.Get(typeof(OrganicPage), "GraphRangeMax"));
 		}
 
 		// Fields
-		string _profileName;
 		List<int> _dates = new List<int>();
 		List<string> _datesKwByTime = new List<string>();
 		string[] _datesPerWord;
-
-		
-		#endregion
 
 		protected override void OnInit(EventArgs e)
 		{
@@ -152,47 +150,61 @@ namespace Easynet.Edge.UI.WebPages
 		{
 			//............................
 			// Get input vars
-			int daycode;
-			if (!Int32.TryParse(_dateSelector.SelectedValue, out daycode))
-				return;
-
 			int profileID;
 			if (!Int32.TryParse(_profileSelector.SelectedValue, out profileID))
 				return;
 
-			int previousDaycode;
-			if (!Int32.TryParse(_compareSelector.SelectedValue, out previousDaycode))
-				previousDaycode = daycode;
+			int daycode;
+			if (!Int32.TryParse(_dateSelector.SelectedValue, out daycode))
+				return;
 
+			int compareDaycode;
+            if (!Int32.TryParse(_compareSelector.SelectedValue, out compareDaycode))
+                compareDaycode = daycode;
+
+            #region Graph
+            /*
 			int graphRangeCount = _dateSelector.Items.Count > Const.GraphRangeMax ? Const.GraphRangeMax : _dateSelector.Items.Count;
 			int graphRangeDayCode;
 			if (!Int32.TryParse(_dateSelector.Items[graphRangeCount-1].Value, out graphRangeDayCode))
 				graphRangeDayCode = previousDaycode;
+            */
+            #endregion
+
+            List<RankingTable> rankingTables = GetRankingData(profileID, daycode, compareDaycode);
+
+			_profileSearchEngineRepeater.DataSource = rankingTables;
+			_profileSearchEngineRepeater.DataBind();
+		}
 
 
-			//............................
-			// Get search engine configuration
-			NameValueCollection searchEngineLinkConfig = (NameValueCollection)WebConfigurationManager.GetSection("searchEngineUrls");
-			// TODO: get search engines from DB
-			
-			//............................
-			// RUN THE COMMAND
+        public List<RankingTable> GetRankingData(int profileID, int daycode, int compareDaycode)
+        {
+            //............................
+            // Get search engine configuration
+            NameValueCollection searchEngineLinkConfig = (NameValueCollection)WebConfigurationManager.GetSection("searchEngineUrls");
+            // TODO: get search engines from DB
 
-			// Start building a list of tables, one for every search engine
-			List<RankingTable> rankingTables = new List<RankingTable>();
+            //............................
+            // RUN THE COMMAND
 
-			using (DataManager.Current.OpenConnection())
-			{
-				//............................
-				// Create graph data table
-				
+            // Start building a list of tables, one for every search engine
+            List<RankingTable> rankingTables = new List<RankingTable>();
+
+            using (DataManager.Current.OpenConnection())
+            {
+                #region Graph
+                //............................
+                // Create graph data table
+
+                /*
+				DataTable dtRank = new DataTable();
 				SqlCommand graphDataCmd = DataManager.CreateCommand(@"RankingGraphData(@profileID:Int, @fromDate:Int, @toDate:Int)", CommandType.StoredProcedure);
 				SqlDataAdapter adpater = new SqlDataAdapter(graphDataCmd);
 				graphDataCmd.Parameters["@profileID"].Value = profileID;
 				graphDataCmd.Parameters["@fromDate"].Value = graphRangeDayCode;
 				graphDataCmd.Parameters["@toDate"].Value = daycode;
 				adpater.Fill(dtRank);
-				
 
 				_datesPerWord = new string[Const.GraphRangeMax];
 				string[] datesPerWordNewFormat = new string[Const.GraphRangeMax];
@@ -201,44 +213,45 @@ namespace Easynet.Edge.UI.WebPages
 					_datesPerWord[d] = _dateSelector.Items[i].Text;
 					datesPerWordNewFormat[d] = _dateSelector.Items[i].Value;
 				}
+                */
+                #endregion
 
+                //............................
+                // Set up the command
+                SqlCommand resultsCmd = DataManager.CreateCommand(@"RankingReportCompare(@profileID:Int, @dayCode:Int, @previousDayCode:Int )", CommandType.StoredProcedure);
+                resultsCmd.Parameters["@profileID"].Value = profileID;
+                resultsCmd.Parameters["@dayCode"].Value = daycode;
+                resultsCmd.Parameters["@previousDayCode"].Value = compareDaycode;
 
-				//............................
-				// Set up the command
-				SqlCommand resultsCmd = DataManager.CreateCommand(@"RankingReportCompare(@profileID:Int, @dayCode:Int, @previousDayCode:Int )", CommandType.StoredProcedure);
-				resultsCmd.Parameters["@profileID"].Value = profileID;
-				resultsCmd.Parameters["@dayCode"].Value = daycode;
-				resultsCmd.Parameters["@previousDayCode"].Value = previousDaycode;
+                using (SqlDataReader reader = resultsCmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        // Get or create the ranking table
+                        RankingTable rankingTable;
+                        int searchEngineID = (int)reader["SearchEngineID"];
+                        if (rankingTables.Count > 0 && rankingTables[rankingTables.Count - 1].SearchEngineID == searchEngineID)
+                            rankingTable = rankingTables[rankingTables.Count - 1];
+                        else
+                            rankingTable = new RankingTable()
+                            {
+                                SearchEngineID = searchEngineID,
+                                SearchEngineName = reader["SearchEngine"] as string
+                            };
 
-				using (SqlDataReader reader = resultsCmd.ExecuteReader())
-				{
-					while (reader.Read())
-					{
-						// Get or create the ranking table
-						RankingTable rankingTable;
-						int searchEngineID = (int)reader["SearchEngineID"];
-						if (rankingTables.Count > 0 && rankingTables[rankingTables.Count-1].SearchEngineID = searchEngineID)
-							rankingTable = rankingTables[rankingTables.Count-1];
-						else
-							rankingTable = new RankingTable()
-							{
-								SearchEngineID = searchEngineID,
-								SearchEngineName = reader["SearchEngine"] as string
-							};
-
-						// Get or create a rankings row
-						RankingRow rankingRow;
-						string keyword = reader["Keyword"] as string;
-						if (rankingTable.Rows.Count > 0 && rankingTable.Rows[rankingTable.Rows.Count - 1].Keyword = keyword)
-							rankingRow = rankingTable.Rows[rankingTable.Rows.Count - 1];
-						else
-							rankingRow = new RankingRow()
-							{
-								Keyword = keyword,
-								SearchEngineUrl = GetSearchEngineQueryUrl(searchEngineID, keyword)
-							};
-							#region Render Graph
-							/*
+                        // Get or create a rankings row
+                        RankingRow rankingRow;
+                        string keyword = reader["Keyword"] as string;
+                        if (rankingTable.Rows.Count > 0 && rankingTable.Rows[rankingTable.Rows.Count - 1].Keyword == keyword)
+                            rankingRow = rankingTable.Rows[rankingTable.Rows.Count - 1];
+                        else
+                            rankingRow = new RankingRow()
+                            {
+                                Keyword = keyword,
+                                SearchEngineUrl = GetSearchEngineQueryUrl(searchEngineID, keyword)
+                            };
+                        #region Graph
+                        /*
 							if (!reader.IsDBNull("Rank"))
 							{
 								Dictionary<string, int> ranksPerWord = new Dictionary<string, int>();
@@ -357,70 +370,66 @@ namespace Easynet.Edge.UI.WebPages
 							currentTable.Rows.Add(currentRow);
 						
 							*/
-							#endregion
+                        #endregion
 
-						// Create a new column if necessary
-						string targetDomain = reader["Target"] as string;
-						if (!rankingTable.Columns.Contains(targetDomain))
-							rankingTable.Columns.Add(targetDomain);
-						
-						// Get or create a rankings item
-						RankingItem rankingItem;
-						if (!rankingRow.Items.TryGetValue(targetDomain, out rankingItem))
-							rankingRow.Items.Add(targetDomain, new RankingItem()
-							{
-								IsClient = rankingTable.Columns.IndexOf(targetDomain) < 1,
-								TargetDomain = targetDomain
-							});
+                        // Create a new column if necessary
+                        string targetDomain = reader["Target"] as string;
+                        if (!rankingTable.Columns.Contains(targetDomain))
+                            rankingTable.Columns.Add(targetDomain);
 
-						// Create the new ranking
-						Ranking ranking = new Ranking()
-						{
-							Url = reader["Url"] as string,
-							Rank = reader["Rank"] is DBNull ? 0 : (int) reader["Rank"],
-							RankDiff = reader["RankDiff"] is DBNull ? 0 : (int)reader["RankDiff"]
-						};
-						
-						// ^^^^^^^^^^^^^^^^^^^^^^ TODO ^^^^^^^^^^^^^^^^^^^^^^^66
-						string targetVal = currentRow[Output.TargetDomain] is DBNull ? string.Empty : currentRow[Output.TargetDomain] as string;
+                        // Get or create a rankings item
+                        RankingItem rankingItem;
+                        if (!rankingRow.Items.TryGetValue(targetDomain, out rankingItem))
+                            rankingRow.Items.Add(targetDomain, new RankingItem()
+                            {
+                                IsClient = rankingTable.Columns.IndexOf(targetDomain) < 1,
+                                TargetDomain = targetDomain
+                            });
 
-						// Different formatting depending on whether this target is the first (the client domain group)
-						targetVal += String.Format("{0} {1}",
+                        // Create the new ranking
+                        Ranking ranking = new Ranking()
+                        {
+                            Url = reader["Url"] as string,
+                            Rank = reader["Rank"] is DBNull ? 0 : (int)reader["Rank"],
+                            RankDiff = reader["RankDiff"] is DBNull ? 0 : (int)reader["RankDiff"]
+                        };
+                        rankingItem.Rankings.Add(ranking);
+                    }
+                }
+            }
+            return rankingTables;
+        }
 
-							targetVal.Length < 1 ?
-								(isClient ? "<table cellpadding='1'>" : string.Empty) :
-								(isClient ? string.Empty : ", "),
 
-							rank == null ?
-								"<span style='color: #999'>-</span>" :
-								String.Format(
-									isClient ?
-										"<tr><td><b>{0}</b></td><td style='width: 30px'>{1}</td><td><a href='{2}' target='_blank' title='{3} || {4} || {5}'>{3}</a></td></tr>" :
-										"<a href='{2}' target='_blank' title='{3} || {4} || {5}'>{0}</a>{1}",
-									rank,
-									rankDiff,
-									Server.HtmlEncode(url),
-									Server.HtmlEncode(url.Length <= 40 ? url : url.Substring(0, 40) + "..."),
-									Server.HtmlEncode(reader["Title"].ToString()),
-									Server.HtmlEncode(reader["Description"].ToString())
-									)
-						);
-
-						currentRow[target] = targetVal;
-						// ^^^^^^^^^^^^^^^^^^^^^^ TODO ^^^^^^^^^^^^^^^^^^^^^^^66
-
-						//currentRow["Keyword"] = TemplateBind(_template_Keyword);
-					}
-				}
-			}
-
-			_profileSearchEngineRepeater.DataSource = rankingTables;
-			_profileSearchEngineRepeater.DataBind();
+        #region Rendering helpers
+        //..............................................
+        public RankingTable RankingTable(RepeaterItem repeater)
+		{
+			return repeater.DataItem as RankingTable;
 		}
 
-		private string GetSearchEngineQueryUrl(int se, string keyword)
+		public RankingRow RankingRow(RepeaterItem repeater)
 		{
-			throw new NotImplementedException();
+			return repeater.DataItem as RankingRow;
+		}
+
+		public RankingItem RankingItem(RepeaterItem repeater)
+		{
+			if (repeater.DataItem is string)
+			{
+				// if column name, get the item matching this column from the parent
+				string col = repeater.DataItem as string;
+				return ((RankingRow)((RepeaterItem)repeater.Parent.Parent).DataItem).Items[col];
+			}
+			else
+			{
+				return repeater.DataItem as RankingItem;
+			}
+		}
+
+		public Ranking Ranking(RepeaterItem repeater)
+		{
+			return repeater.DataItem as Ranking;
 		}
 
 		private string TemplateBind(Control control)
@@ -458,11 +467,12 @@ namespace Easynet.Edge.UI.WebPages
 					cell.RenderControl(writer);
 			});
 			rows.AddAt(i, duplicate);
-		}
+        }
+        //..............................................
+        #endregion
 
-		//..............//
-		// EXPORT STUFF //
-		//..............//
+        #region EXPORT STUFF
+        //..............................................
 
 		void _export_Click(object sender, EventArgs e)
 		{
@@ -988,5 +998,8 @@ namespace Easynet.Edge.UI.WebPages
 				}
 			}
 		}
+
+		//..............................................
+		#endregion
 	}
 }
