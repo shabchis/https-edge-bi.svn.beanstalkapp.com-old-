@@ -17,6 +17,7 @@ using System.Data;
 using System.Reflection;
 using System.Xml;
 using System.ServiceModel;
+using System.Collections;
 
 
 namespace Easynet.Edge.UI.Client
@@ -55,40 +56,89 @@ namespace Easynet.Edge.UI.Client
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <typeparam name="TableType"></typeparam>
-		/// <typeparam name="RowType"></typeparam>
-		/// <param name="table"></param>
-		/// <param name="row"></param>
-		/// <returns></returns>
-		protected static RowType Dialog_MakeEditVersion<TableType, RowType>(RowType row)
-			where TableType: DataTable, new()
-			where RowType: DataRow
+		protected static RowT Dialog_MakeEditVersion<TableT, RowT>(RowT row)
+			where TableT: DataTable, new()
+			where RowT: DataRow
 		{
-			TableType editVersion = new TableType();
+			return Dialog_MakeEditVersion<TableT, RowT>(new RowT[] { row }, null);
+		}
 
-			if (row == null)
+		protected static RowT Dialog_MakeEditVersion<TableT, RowT>(RowT[] rows, Func<DataColumn,object> nullify)
+			where TableT : DataTable, new()
+			where RowT : DataRow
+		{
+			TableT tempTable = new TableT();
+			RowT controlRow = null;
+
+			if (rows == null || rows.Length < 1)
 			{
-				editVersion.Rows.Add(editVersion.NewRow());
+				// New row
+				tempTable.Rows.Add(tempTable.NewRow());
+				controlRow = tempTable.Rows[0] as RowT;
 			}
 			else
-				editVersion.ImportRow(row);
+			{
+				bool batch = rows.Length > 1;
+				Dictionary<DataColumn, object> nullified = batch ? new Dictionary<DataColumn, object>() : null;
+				Type[] numericTypes = new Type[]{typeof(int), typeof(long), typeof(double), typeof(float)};
 
-			return editVersion.Rows[0] as RowType;
+				foreach (RowT row in rows)
+				{
+					if (controlRow == null)
+					{
+						// Since we're in batch mode and we need a control row
+						tempTable.ImportRow(row);
+						controlRow = (RowT)tempTable.Rows[0];
+					}
+					else if (batch && nullified.Count < tempTable.Columns.Count)
+					{
+						// This will only happen in batch mode
+						foreach (DataColumn column in tempTable.Columns)
+						{
+							// Ignore columns already nullified
+							if (nullified.ContainsKey(column))
+								continue;
+							
+							// Get the null value from the delegate
+							object nullValue = nullify(column);
+							object valA = row[column.ColumnName] is DBNull ? column.DefaultValue : row[column.ColumnName];
+							object valB = controlRow[column] is DBNull ? column.DefaultValue : controlRow[column];
+							
+							if (nullValue != null && !Object.Equals(valA, valB))
+							{
+								if (nullValue is DBNull)
+								{
+									// special treatment
+									if (column.DataType == typeof(string))
+										nullValue = string.Empty;
+									else if (numericTypes.Contains(column.DataType))
+										nullValue = Int32.MinValue;
+								}
+
+								controlRow[column] = nullValue;
+								nullified[column] = nullValue;
+							}
+						}
+					}
+				}
+				controlRow.AcceptChanges();
+			}
+
+			return controlRow;
 		}
 
-
-		protected static void Dialog_ApplyingChanges<TableType, RowType>(TableType sourceTable, FloatingDialog dialog, MethodInfo saveMethod, CancelRoutedEventArgs e)
-			where TableType: DataTable, new()
-			where RowType: DataRow
+		protected static void Dialog_ApplyingChanges<TableT, RowT>(TableT sourceTable, FloatingDialog dialog, MethodInfo saveMethod, CancelRoutedEventArgs e)
+			where TableT : DataTable, new()
+			where RowT: DataRow
 		{
-			Dialog_ApplyingChanges<TableType, RowType>(sourceTable, dialog, saveMethod, e, null, false, null);
+			Dialog_ApplyingChanges<TableT, RowT>(sourceTable, dialog, saveMethod, e, null, false, null);
 		}
 
-		protected static void Dialog_ApplyingChanges<TableType, RowType>(TableType sourceTable, FloatingDialog dialog, MethodInfo saveMethod, CancelRoutedEventArgs e, object[] additionalArgs)
-			where TableType : DataTable, new()
-			where RowType : DataRow
+		protected static void Dialog_ApplyingChanges<TableT, RowT>(TableT sourceTable, FloatingDialog dialog, MethodInfo saveMethod, CancelRoutedEventArgs e, object[] additionalArgs)
+			where TableT : DataTable, new()
+			where RowT : DataRow
 		{
-			Dialog_ApplyingChanges<TableType, RowType>(sourceTable, dialog, saveMethod, e, additionalArgs, false, null);
+			Dialog_ApplyingChanges<TableT, RowT>(sourceTable, dialog, saveMethod, e, additionalArgs, false, null);
 		}
 
 		/// <summary>
@@ -99,9 +149,9 @@ namespace Easynet.Edge.UI.Client
 		///		If specified, this function is called after applying is complete. It is the
 		///		function's responsibility to call FloatingDialog.EndApplyChanges() in order to complete the apply cycle. 
 		/// </param>
-		protected static void Dialog_ApplyingChanges<TableType, RowType>
+		protected static void Dialog_ApplyingChanges<TableT, RowT>
 			(
-				TableType sourceTable,
+				TableT sourceTable,
 				FloatingDialog dialog,
 				MethodInfo saveMethod,
 				CancelRoutedEventArgs e,
@@ -109,11 +159,11 @@ namespace Easynet.Edge.UI.Client
 				bool async,
 				Action postApplying
 			)
-			where TableType: DataTable, new()
-			where RowType: DataRow
+			where TableT : DataTable, new()
+			where RowT : DataRow
 		{
-			RowType editVersion = dialog.Content as RowType;
-			DataTable changes = editVersion.Table.GetChanges();
+			RowT controlRow = dialog.Content as RowT;
+			DataTable changes = controlRow.Table.GetChanges();
 
 			// No changes were made, skip the apply (but don't cancel)
 			if (changes == null)
@@ -128,15 +178,40 @@ namespace Easynet.Edge.UI.Client
 				return;
 			}
 
+			if (dialog.IsBatch)
+			{
+				// Copy all target rows and apply the changed values to them
+				TableT clonedTargetTable = new TableT();
+				foreach (RowT row in (IEnumerable)dialog.TargetContent)
+					clonedTargetTable.ImportRow(row);
+				clonedTargetTable.AcceptChanges();
+				dialog.ApplyBindingsToItems(clonedTargetTable.Rows);
+				// Get these changes
+				changes = clonedTargetTable.GetChanges();
+			}
+
+			// No changes were made, skip the apply (but don't cancel)
+			if (changes == null)
+			{
+				e.Skip = true;
+
+				if (postApplying != null)
+					postApplying();
+				else
+					dialog.EndApplyChanges(e);
+
+				return;
+			}
+
 			// Remember data state
-			DataRowState state = changes.Rows[0].RowState;
+			DataRowState state = controlRow.RowState;
 
 			// Will store updated data
-			TableType savedVersion = null;
+			TableT savedVersion = null;
 
 			// Create a typed version of the changes
 			object[] actualArgs = additionalArgs != null? new object[additionalArgs.Length + 1] : new object[1];
-			actualArgs[0] = Oltp.Prepare<TableType>(changes);
+			actualArgs[0] = Oltp.Prepare<TableT>(changes);
 			if (additionalArgs != null)
 				additionalArgs.CopyTo(actualArgs, 1);
 
@@ -146,7 +221,7 @@ namespace Easynet.Edge.UI.Client
 			{
 				using (OltpProxy proxy = new OltpProxy())
 				{
-					savedVersion = (TableType)saveMethod.Invoke(proxy.Service, actualArgs);
+					savedVersion = (TableT)saveMethod.Invoke(proxy.Service, actualArgs);
 				}
 			},
 			(Func<Exception, bool>) delegate(Exception ex)
@@ -159,18 +234,18 @@ namespace Easynet.Edge.UI.Client
 			(Action) delegate()
 			{
 				// Special case when adding a new row
-				if (state == DataRowState.Added)
+				if (!dialog.IsBatch && state == DataRowState.Added)
 				{
 					// Import the saved row
 					sourceTable.ImportRow(savedVersion.Rows[0]);
 
 					// Even though nothing needs to be updated, mark it as added so AppliedChanges handled treats it properly
-					RowType newRow = sourceTable.Rows[sourceTable.Rows.Count - 1] as RowType;
+					RowT newRow = sourceTable.Rows[sourceTable.Rows.Count - 1] as RowT;
 					newRow.SetAdded();
 
 					// Set as new target content
 					dialog.TargetContent = newRow;
-					dialog.Content = Dialog_MakeEditVersion<TableType, RowType>(newRow);
+					dialog.Content = Dialog_MakeEditVersion<TableT, RowT>(newRow);
 				}
 
 				// Activate the post applying action
@@ -217,27 +292,27 @@ namespace Easynet.Edge.UI.Client
 		/// <summary>
 		/// 
 		/// </summary>
-		protected static void Dialog_AppliedChanges<RowType>(FloatingDialog dialog, string editingDialogTitle, ListView hostListView, CancelRoutedEventArgs e)
-			where RowType: DataRow
+		protected static void Dialog_AppliedChanges<RowT>(FloatingDialog dialog, string editingDialogTitle, ListView hostListView, CancelRoutedEventArgs e)
+			where RowT : DataRow
 		{
-			Dialog_AppliedChanges<RowType>(dialog, editingDialogTitle, hostListView, 0, e);
+			Dialog_AppliedChanges<RowT>(dialog, editingDialogTitle, hostListView, 0, e);
 		}
 	
 		/// <summary>
 		/// 
 		/// </summary>
-		protected static void Dialog_AppliedChanges<RowType>(FloatingDialog dialog, string editingDialogTitle, ListView hostListView, int minPosition, CancelRoutedEventArgs e)
-			where RowType: DataRow
+		protected static void Dialog_AppliedChanges<RowT>(FloatingDialog dialog, string editingDialogTitle, ListView hostListView, int minPosition, CancelRoutedEventArgs e)
+			where RowT: DataRow
 		{
 			// All went well, so just accept changes
-			RowType finalRow = dialog.TargetContent as RowType;
-			DataRowState state = finalRow.RowState;
+			RowT[] targetRows = dialog.TargetContent is RowT ? new RowT[] { dialog.TargetContent as RowT } : dialog.TargetContent as RowT[];
+			RowT finalRow = dialog.IsBatch ? null : targetRows[0];
 
-			finalRow.Table.AcceptChanges();
-			(dialog.Content as RowType).AcceptChanges();
+			targetRows[0].Table.AcceptChanges();
+			(dialog.Content as RowT).AcceptChanges();
 
 			// Add to the table
-			if (state == DataRowState.Added)
+			if (!dialog.IsBatch && finalRow.RowState == DataRowState.Added)
 			{
 				ObservableCollection<DataRow> items = hostListView.ItemsSource as ObservableCollection<DataRow>;
 
@@ -255,12 +330,14 @@ namespace Easynet.Edge.UI.Client
 				}
 			}
 
-			if (finalRow is IPropertyChangeNotifier)
+			foreach (RowT row in targetRows)
 			{
-				(finalRow as IPropertyChangeNotifier).OnAllPropertiesChanged();
+				if (row is IPropertyChangeNotifier)
+					(row as IPropertyChangeNotifier).OnAllPropertiesChanged();
 			}
 
-			dialog.Title = editingDialogTitle;
+			if (!dialog.IsBatch)
+				dialog.Title = editingDialogTitle;
 		}
 
 		protected bool IsMissingData(bool isNew, params DataTable[] tables)

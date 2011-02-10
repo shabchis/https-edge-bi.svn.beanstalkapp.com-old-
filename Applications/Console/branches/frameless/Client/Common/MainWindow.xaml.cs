@@ -51,7 +51,7 @@ namespace Easynet.Edge.UI.Client
 		static MainWindow()
 		{
 			// Required in order to load DLLs from the server
-			AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(delegate(object sender, ResolveEventArgs args)
+		 AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(delegate(object sender, ResolveEventArgs args)
 			{
 				return Assembly.LoadFrom(new Uri(new Uri(AssemblyAddressRoot), args.Name + ".dll").ToString());
 			});
@@ -96,9 +96,9 @@ namespace Easynet.Edge.UI.Client
 			string sessionID;
 
 			#if DEBUG
-			accountID = 520;
-			sessionID = "AB00C68E74E582B4A8E8964DBB492C1D";
-			menuItemPath = "find/keywords";
+			accountID = 63;
+			sessionID = "989AA6475FC4DAC58D83BF8B1B6A7BD9";
+			menuItemPath = "management/campaigns";
 			#endif
 
 			// Normal producion

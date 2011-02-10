@@ -104,31 +104,13 @@ namespace Easynet.Edge.UI.WebPages {
         protected global::System.Web.UI.WebControls.Label _processing;
         
         /// <summary>
-        /// Repeater1 control.
+        /// _profileSearchEngineRepeater control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater Repeater1;
-        
-        /// <summary>
-        /// _template_Keyword control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder _template_Keyword;
-        
-        /// <summary>
-        /// _template_Rank control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder _template_Rank;
+        protected global::System.Web.UI.WebControls.Repeater _profileSearchEngineRepeater;
         
         /// <summary>
         /// GraphsHolder control.

@@ -138,7 +138,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		#region Properties
 		/*=========================*/
 
-
+		/*
 		public bool CurrentItemHasPpcApi
 		{
 			get { return (bool) GetValue(CurrentItemHasPpcApiProperty); }
@@ -147,6 +147,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 		public static readonly DependencyProperty CurrentItemHasPpcApiProperty = 
 			DependencyProperty.Register("CurrentItemHasPpcApi", typeof(bool), typeof(PpcCampaigns), new UIPropertyMetadata(false));
+		*/
 
 		/*=========================*/
 		#endregion
@@ -886,7 +887,8 @@ namespace Easynet.Edge.UI.Client.Pages
 			TargetsRow targetsRow = null;
 			int accountID = Window.CurrentAccount.ID;
 			Oltp.CampaignRow tempCampaign = Campaign_dialog.Content as Oltp.CampaignRow;
-			Oltp.CampaignRow campaign = Campaign_dialog.TargetContent as Oltp.CampaignRow;
+			Oltp.CampaignRow targetCampaign = Campaign_dialog.TargetContent as Oltp.CampaignRow;
+			bool isBatch = Campaign_dialog.IsBatch;
 
 			Window.AsyncOperation(delegate()
 			{
@@ -894,9 +896,9 @@ namespace Easynet.Edge.UI.Client.Pages
 				{
 					// Since targets are enabled, clone the one attached to this campaign and use it as a temp row for dialog editing
 					DataTable cloned = _targetData.InnerTable.Clone();
-					cloned.ImportRow(campaign.Targets.InnerRow);
+					cloned.ImportRow(targetCampaign.Targets.InnerRow);
 					TargetsTable targetsTable = new TargetsTable(cloned);
-					targetsRow = targetsTable.GetCampaignTargets(campaign.GK);
+					targetsRow = targetsTable.GetCampaignTargets(targetCampaign.GK);
 				}
 				else
 				{
@@ -905,13 +907,15 @@ namespace Easynet.Edge.UI.Client.Pages
 					// Targets on this campaign row are not available, so get them from server
 					using (OltpProxy proxy = new OltpProxy())
 					{
+						// For batch mode, get an empty table
 						DataTable t = proxy.Service.CampaignTargets_Get(
 							accountID,
-							campaign.GK
+							isBatch ? -1 : targetCampaign.GK
 						);
 						targetsTable = new TargetsTable(t);
 					}
-					targetsRow = targetsTable.GetCampaignTargets(campaign.GK);
+					// Get a new row for batch mode
+					targetsRow = targetsTable.GetCampaignTargets(isBatch ? -1 : targetCampaign.GK);					
 				}
 				tempCampaign.Targets = targetsRow;
 			},
@@ -960,24 +964,30 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void Campaign_dialog_Open(object sender, RoutedEventArgs e)
 		{
-			ListViewItem currentItem = _listTable.GetParentListViewItem(e.OriginalSource as FrameworkElement);
+			// When a single item is clicked, select it
 			bool batch = _listTable.ListView.SelectedItems.Count > 1;
-
-			Oltp.CampaignRow row;
 			if (!batch)
 			{
-				// Set campaign as current item
-				row = currentItem.Content as Oltp.CampaignRow;
+				ListViewItem currentItem = _listTable.GetParentListViewItem(e.OriginalSource as FrameworkElement);
+				_listTable.ListView.SelectedItems.Clear();
+				currentItem.IsSelected = true;
 			}
-			else
-			{
-				MessageBox.Show("Sorry, only one item can be edited at a time. Batch edit will be possible in the near future.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+			
+			Oltp.CampaignRow[] targetRows = new Oltp.CampaignRow[_listTable.ListView.SelectedItems.Count];
+			try { _listTable.ListView.SelectedItems.CopyTo(targetRows, 0); }
+			catch (InvalidCastException){
+				MainWindow.MessageBoxError("To edit multiple items, select items of the same type.", null);
 				return;
-				//row = Campaign_GetBatchRow(_listTable.ListView.SelectedItems);
-				//if (row == null)
-				//	return;
 			}
 
+
+			Oltp.CampaignRow controlRow = Dialog_MakeEditVersion<Oltp.CampaignDataTable, Oltp.CampaignRow>(targetRows,
+					col =>
+						col.ColumnName == _campaigns.GKColumn.ColumnName ? null :
+						col.ColumnName == _campaigns.NameColumn.ColumnName ? "(multiple campaigns)" as object :
+						DBNull.Value as object
+					);
+			
 			// Update the segments tab if it is selected
 			TabControl tabs = VisualTree.GetChild<TabControl>(Campaign_dialog);
 			TabItem tabSegments = VisualTree.GetChild<TabItem>(tabs, "_tabSegments");
@@ -986,94 +996,13 @@ namespace Easynet.Edge.UI.Client.Pages
 				CampaignSegments_GotFocus(tabSegments, new RoutedEventArgs());
 
 			// Show the dialog
-			Campaign_dialog.Title = row.Name;
-			Campaign_dialog.TitleTooltip = batch ? null : "GK #" + row.GK.ToString();
-			Campaign_dialog.BeginEdit(
-				batch ?
-					row : // no need to make a duplicate, since this is already a dummy row
-					Dialog_MakeEditVersion<Oltp.CampaignDataTable, Oltp.CampaignRow>(row),
-				batch ?
-					null : // there's no target row in batch mode
-					row
-			);
+			Campaign_dialog.Title = controlRow.Name;
+			Campaign_dialog.TitleTooltip = batch ? null : "GK #" + controlRow.GK.ToString();
+			Campaign_dialog.BeginEdit(controlRow, targetRows.Length > 1 ? (object)targetRows : (object)targetRows[0]);
 
 			if (tabTargets.IsSelected)
 				CampaignTargets_GotFocus(tabTargets, new RoutedEventArgs());
 
-			// Get the current channel and see if it has an API
-			DataRow[] rs = _channelTable.Select(String.Format("ID = {0}", (Campaign_dialog.TargetContent as Oltp.CampaignRow).ChannelID));
-			SetValue(CurrentItemHasPpcApiProperty, rs.Length > 0 && (rs[0] as Oltp.ChannelRow).HasPpcApi);
-
-			// When opening, select it only if no more than one is already selected
-			if (_listTable.ListView.SelectedItems.Count < 2)
-			{
-				_listTable.ListView.SelectedItems.Clear();
-				currentItem.IsSelected = true;
-			}
-		}
-
-		/// <summary>
-		/// Builds a dummy row that aggregates campaign values.
-		/// </summary>
-		/// <param name="list"></param>
-		/// <returns></returns>
-		private Oltp.CampaignRow Campaign_GetBatchRow<RowT>(IList source)
-		{
-			Oltp.CampaignRow row = null;
-			Dictionary<DataColumn, bool> nullified = new Dictionary<DataColumn, bool>();
-			List<Oltp.CampaignRow> targetCampaigns = new List<Oltp.CampaignRow>();
-
-			foreach (DataRow selected in source)
-			{
-				if (!(selected is Oltp.CampaignRow))
-				{
-					MessageBox.Show("To edit multiple items, please select items of one type only (campaign or adgroup).", string.Empty, MessageBoxButton.OK, MessageBoxImage.None);
-					return null;
-				}
-
-				Oltp.CampaignRow current = selected as Oltp.CampaignRow;
-				targetCampaigns.Add(current);
-				
-				if (row == null)
-				{
-					// Initialize the row with the first item
-					row = Dialog_MakeEditVersion<Oltp.CampaignDataTable, Oltp.CampaignRow>(current);
-					row[_campaigns.NameColumn.ColumnName] = "(multiple campaigns)";
-				}
-				else if (nullified.Count < _campaigns.Columns.Count)
-				{
-					foreach (DataColumn column in _campaigns.Columns)
-					{
-						// Ignore the GK and Name columns
-						if (column == _campaigns.GKColumn || column == _campaigns.NameColumn)
-							continue;
-
-						// Ignore columns already nullified
-						if (nullified.ContainsKey(column))
-							continue;
-
-						if (!Object.Equals(row[column.ColumnName], current[column]))
-						{
-							if (column.AllowDBNull)
-								row[column.ColumnName] = DBNull.Value;
-							else
-							{
-								if (column.DataType == typeof(int) || column.DataType == typeof(double))
-									row[column.ColumnName] = -1; // out of range of anything known
-								else
-									row[column.ColumnName] = null;
-							}
-							nullified[column] = true;
-						}
-					}
-					//else
-					// Everything has been nullified, no need to do anything
-				}
-			}
-
-			row.Tag = targetCampaigns;
-			row.AcceptChanges();
-			return row;
 		}
 
 		/// <summary>
@@ -1081,18 +1010,15 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void Campaign_dialog_ApplyingChanges(object sender, CancelRoutedEventArgs e)
 		{
-			bool batch = _listTable.ListView.SelectedItems.Count > 1;
-			Oltp.CampaignRow tempCampaign = (Campaign_dialog.Content as Oltp.CampaignRow);
-			Oltp.CampaignRow targetCampaign = batch ?
-				null :
-				(Campaign_dialog.TargetContent as Oltp.CampaignRow);
+			Oltp.CampaignRow tempRow = (Campaign_dialog.Content as Oltp.CampaignRow);
+			Oltp.CampaignRow[] targetRows = Campaign_dialog.IsBatch ?
+				Campaign_dialog.TargetContent as Oltp.CampaignRow[] :
+				new Oltp.CampaignRow[] { (Oltp.CampaignRow)Campaign_dialog.TargetContent };
 
 			// Check whether this is a new campaign
-			bool isNew = !batch && tempCampaign.RowState == DataRowState.Added;
-
-			if (!isNew && Window.CurrentAccount.HasBackOffice && tempCampaign.RowState == DataRowState.Modified)
+			if (Window.CurrentAccount.HasBackOffice && tempRow.RowState == DataRowState.Modified)
 			{
-				MessageBoxResult result = MessageBox.Show("Applying changes will override all the segments of trackers associated with this campaign. Continue?",
+				MessageBoxResult result = MessageBox.Show("Applying changes will override all the segments of trackers associated with the selected campaigns. Continue?",
 					"Warning",
 					MessageBoxButton.OKCancel,
 					MessageBoxImage.Warning);
@@ -1105,121 +1031,118 @@ namespace Easynet.Edge.UI.Client.Pages
 				}
 			}
 
-			#region Disabled: adding new is disabled
-			/*
-			// Can't choose a channel with a PPC API
-			bool channelIDChanged = !isNew && tempCampaign.ChannelID != (Campaign_dialog.TargetContent as Oltp.CampaignRow).ChannelID;
-			if (isNew || channelIDChanged)
-			{
-				DataRow[] rs = _channelTable.Select(String.Format("{0} = {1}", _channelTable.IDColumn.ColumnName, tempCampaign.ChannelID));
-				string error = null;
-				if (rs.Length < 1)
-				{
-					error = "Please select a valid non-API channel.";
-				}
-				else if ((rs[0] as Oltp.ChannelRow).HasPpcApi)
-				{
-					error = String.Format("{0} has a PPC API and therefore cannot have any custom campaigns / adgroups.", (rs[0] as Oltp.ChannelRow).DisplayName);
-				}
-
-				if (error != null)
-				{
-					MainWindow.MessageBoxError(error, null);
-					e.Cancel = true;
-					return;
-				}
-			}
-			*/
-			#endregion
-
 			// Check which segments have changes for refresh purposes
 			bool[] segmentsHaveChanged = new bool[5];
 			for (int i = 0; i < segmentsHaveChanged.Length; i++)
 			{
 				string field = String.Format("Segment{0}", i + 1);
-				segmentsHaveChanged[i] = !tempCampaign[field, DataRowVersion.Current].Equals(tempCampaign[field, DataRowVersion.Original]);
+				segmentsHaveChanged[i] = !tempRow[field, DataRowVersion.Current].Equals(tempRow[field, DataRowVersion.Original]);
 			}
 
-			// SINGLE CAMPAIGN SAVE
-			if (!batch)
-			{
-				// Use the default dialog apply handler
-				Dialog_ApplyingChanges<Oltp.CampaignDataTable, Oltp.CampaignRow>(
-					_campaigns,
-					Campaign_dialog,
-					typeof(IOltpLogic).GetMethod("Campaign_Save"),
-					e,
-					new object[] { Window.CurrentAccount.HasBackOffice },
-					true,
+			// Use the default dialog apply handler
+			Dialog_ApplyingChanges<Oltp.CampaignDataTable, Oltp.CampaignRow>(
+				_campaigns,
+				Campaign_dialog,
+				typeof(IOltpLogic).GetMethod("Campaign_Save"),
+				e,
+				new object[] { Window.CurrentAccount.HasBackOffice },
+				true,
 
-					delegate()
+				delegate()
+				{
+					if (e.Cancel)
+						return;
+
+					Campaign_dialog_ApplyingChanges_CascadeSegments(
+						tempRow,
+						targetRows,
+						segmentsHaveChanged);
+
+					if (tempRow.Targets != null && tempRow.Targets.InnerRow == null)
+						throw new Exception("TODO: figure out how to clear targets, right now this doesn't work...");
+
+					if (tempRow.Targets == null || tempRow.Targets.InnerRow.RowState == DataRowState.Unchanged)
 					{
-						if (e.Cancel)
-							return;
-
-						Campaign_dialog_ApplyingChanges_CascadeSegments(
-							targetCampaign,
-							tempCampaign,
-							segmentsHaveChanged);
-
-						if (tempCampaign.Targets == null || tempCampaign.Targets.InnerRow.RowState == DataRowState.Unchanged)
+						Campaign_dialog.EndApplyChanges(e);
+					}
+					else
+					{
+						// Save (or update) targets
+						bool isBatch = Campaign_dialog.IsBatch;
+						int accountID = Window.CurrentAccount.ID;
+						Window.AsyncOperation(delegate()
 						{
-							Campaign_dialog.EndApplyChanges(e);
-						}
-						else
-						{
-							// Save (or update) targets
-							Window.AsyncOperation(delegate()
+
+							if (_targetsEnabled)
 							{
 
-								if (_targetsEnabled)
-								{
-
-									// Since this row was borrowed from the full target data table, apply changes to it
+								// Since this row was borrowed from the full target data table, apply changes to it
+								foreach(Oltp.CampaignRow targetCampaign in targetRows)
 									foreach (Measure m in _measures)
-										targetCampaign.Targets[m.FieldName] = tempCampaign.Targets[m.FieldName];
+										targetCampaign.Targets[m.FieldName] = tempRow.Targets[m.FieldName];
+							}
+							else
+							{
+								DataTable targetsDataToSave;
+								if (!isBatch)
+								{
+									targetsDataToSave = tempRow.Targets.InnerRow.Table;
 								}
 								else
 								{
-									Targets_Save(false, tempCampaign.Targets.InnerRow.Table);
+									// For targets in batch mode with targets disabled, use all campaign targets (slow but who gives a fuck)
+									using (OltpProxy proxy = new OltpProxy())
+									{
+										targetsDataToSave = proxy.Service.CampaignTargets_Get(accountID,null);
+									}
+									
+									TargetsTable tempTargetsTable = new TargetsTable(targetsDataToSave);
+
+									foreach (Oltp.CampaignRow targetCampaign in targetRows)
+									{
+										TargetsRow targetsRowToSave = tempTargetsTable.GetCampaignTargets(targetCampaign.GK);
+										foreach (Measure m in _measures)
+											targetsRowToSave[m.FieldName] = tempRow.Targets[m.FieldName];
+									}
 								}
 
-							},
-							delegate()
-							{
-								Campaign_dialog.EndApplyChanges(e);
-							});
-						}
+								Targets_Save(false, targetsDataToSave);
+							}
 
+						},
+						delegate()
+						{
+							Campaign_dialog.EndApplyChanges(e);
+						});
 					}
-				);
-			}
-			// BATCH CAMPAIGN SAVE
-			else
-			{
-				MainWindow.MessageBoxError("Sorry, batch editing is not supported yet.", null);
-			}
+
+				}
+			);
+			
 		}
 
-		private void Campaign_dialog_ApplyingChanges_CascadeSegments(Oltp.CampaignRow targetCampaign, Oltp.CampaignRow tempCampaign, bool[] segmentsHaveChanged)
+		private void Campaign_dialog_ApplyingChanges_CascadeSegments(Oltp.CampaignRow tempCampaign, Oltp.CampaignRow[] targetCampaigns, bool[] segmentsHaveChanged)
 		{
-			// Update any displayed adgroups under this campaign
-			int campaignIndex = _items.IndexOf(targetCampaign);
-			if (campaignIndex > -1)
+			foreach (Oltp.CampaignRow targetCampaign in targetCampaigns)
 			{
-				int i = campaignIndex + 1;
-				while(i < _items.Count && _items[i] is Oltp.AdgroupRow)
+				// Update any displayed adgroups under this campaign
+				int campaignIndex = _items.IndexOf(targetCampaign);
+				if (campaignIndex > -1)
 				{
-					(_items[i] as Oltp.AdgroupRow).ChannelID = tempCampaign.ChannelID;
-					for (int j = 0; j < segmentsHaveChanged.Length; j++)
+					int i = campaignIndex + 1;
+					while (i < _items.Count && _items[i] is Oltp.AdgroupRow)
 					{
-						string field = String.Format("Segment{0}", j + 1);
-						if (segmentsHaveChanged[j])
-							_items[i][field] = tempCampaign[field];
-					}
+						(_items[i] as Oltp.AdgroupRow).ChannelID = tempCampaign.ChannelID;
+						for (int j = 0; j < segmentsHaveChanged.Length; j++)
+						{
+							string field = String.Format("Segment{0}", j + 1);
+							if (segmentsHaveChanged[j])
+								_items[i][field] = tempCampaign[field];
+						}
 
-					_items[i].AcceptChanges();
-					i++;
+						_items[i].AcceptChanges();
+						i++;
+					}
 				}
 			}
 		}
@@ -1239,7 +1162,6 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void Campaign_dialog_Closing(object sender, CancelRoutedEventArgs e)
 		{
-			
 			// Cancel if user regrets
 			if (!e.Cancel)
 				e.Cancel = MainWindow.MessageBoxPromptForCancel(Campaign_dialog);
@@ -1247,7 +1169,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			if (!e.Cancel)
 			{
 				_campaigns.RejectChanges();
-				SetValue(CurrentItemHasPpcApiProperty, false);
+				//SetValue(CurrentItemHasPpcApiProperty, false);
 				
 				// Clear the measures source
 				if (_campaignTargetsControl != null)
@@ -1494,8 +1416,8 @@ namespace Easynet.Edge.UI.Client.Pages
 			);
 
 			// Get the current channel and see if it has an API
-			DataRow[] rs = _channelTable.Select(String.Format("ID = {0}", row.ChannelID));
-			SetValue(CurrentItemHasPpcApiProperty, rs.Length > 0 && (rs[0] as Oltp.ChannelRow).HasPpcApi);
+			//DataRow[] rs = _channelTable.Select(String.Format("ID = {0}", row.ChannelID));
+			//SetValue(CurrentItemHasPpcApiProperty, rs.Length > 0 && (rs[0] as Oltp.ChannelRow).HasPpcApi);
 
 			// Update the selected tabs
 			TabControl tabs = VisualTree.GetChild<TabControl>(Adgroup_dialog);

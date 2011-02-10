@@ -49,6 +49,7 @@ namespace Easynet.Edge.UI.Client
 			public BindingExpression Exp;
 			public DependencyObject Obj;
 			public DependencyProperty Prp;
+			public bool Changed = false;
 		}
 
 		List<BEData> _bindings = null;
@@ -121,6 +122,9 @@ namespace Easynet.Edge.UI.Client
 					// Play a fade out animation
 					this.BeginAnimation(OpacityProperty, NewFadeAnim(0, new EventHandler(FadeOutAnim_CompletedDialog)), HandoffBehavior.SnapshotAndReplace);
 					//App.CurrentPage.Window.FloatingDialogMask.BeginAnimation(OpacityProperty, NewFadeAnim(0, new EventHandler(FadeOutAnim_CompletedMask)), HandoffBehavior.SnapshotAndReplace);
+
+					// Clear any attached metadata
+					this.Tag = null;
 				}
 
 				_buttonOk.IsEnabled = value;
@@ -146,7 +150,10 @@ namespace Easynet.Edge.UI.Client
 		public static readonly DependencyProperty ApplyButtonVisibilityProperty = 
 			DependencyProperty.Register("ApplyButtonVisibility", typeof(Visibility), typeof(FloatingDialog), new UIPropertyMetadata(Visibility.Visible));
 
-
+		public bool IsBatch
+		{
+			get { return this.TargetContent is IEnumerable; }
+		}
 
 		/*=========================*/
 		#endregion
@@ -365,6 +372,7 @@ namespace Easynet.Edge.UI.Client
 
 							// If the property is valid, retrieve the attached binding expression and add it
 							BindingExpression exp = (child as FrameworkElement).GetBindingExpression(dependencyProp);
+							(child as FrameworkElement).SourceUpdated += new EventHandler<DataTransferEventArgs>(FloatingDialog_SourceUpdated);
 							_bindings.Add(new BEData(exp, child, dependencyProp));
 						}
 					}
@@ -379,6 +387,18 @@ namespace Easynet.Edge.UI.Client
 
 				GetDialogFieldBindings(child);
 			}
+		}
+
+		// Registers any controls that have changed, so that when ApplyBindingsToItems is called, only updated controls are applied
+		void FloatingDialog_SourceUpdated(object sender, DataTransferEventArgs e)
+		{
+			FrameworkElement control = (FrameworkElement)sender;
+			BindingExpression exp = control.GetBindingExpression(e.Property);
+
+			// Find the binding data and mark it as changed
+			BEData binding = _bindings.Find(bdata => bdata.Exp == exp);
+			if (binding != null)
+				binding.Changed = true;
 		}
 
 		void tab_GotFocus(object sender, RoutedEventArgs e)
@@ -411,7 +431,7 @@ namespace Easynet.Edge.UI.Client
 		/// </summary>
 		void buttonOK_Click(object sender, RoutedEventArgs e)
 		{
-			StartApplyChanges(true);
+			BeginApplyChanges(true);
 		}
 
 		/// <summary>
@@ -419,7 +439,7 @@ namespace Easynet.Edge.UI.Client
 		/// </summary>
 		void buttonApply_Click(object sender, RoutedEventArgs e)
 		{
-			StartApplyChanges(false);
+			BeginApplyChanges(false);
 		}
 
 		/// <summary>
@@ -513,7 +533,7 @@ namespace Easynet.Edge.UI.Client
 		/// <summary>
 		/// 
 		/// </summary>
-		public void StartApplyChanges(bool closeDialog)
+		public void BeginApplyChanges(bool closeDialog)
 		{
 			if (!this.IsOpen)
 				throw new InvalidOperationException("Dialog is not open");
@@ -589,22 +609,14 @@ namespace Easynet.Edge.UI.Client
 			// Update final content, if it is null it means it's already been updated
 			if (this.TargetContent != null && this._bindings != null)
 			{
-				foreach (BEData bdata in _bindings)
-				{
-					// Get current val
-					object val = bdata.Obj.GetValue(bdata.Prp);
-					object datacontext = (bdata.Obj as FrameworkElement).DataContext;
+				// If target is a list, apply changes to all of them
+				IEnumerable targetItems;
+				if (this.TargetContent is IEnumerable)
+					targetItems = this.TargetContent as IEnumerable;
+				else
+					targetItems = new object[] { this.TargetContent };
 
-					// Change the data context
-					(bdata.Obj as FrameworkElement).DataContext = this.TargetContent;
-
-					// Set the value back to the textbox, and update the permanent source
-					bdata.Obj.SetValue(bdata.Prp, val);
-					bdata.Exp.UpdateSource();
-
-					// Restore the temp. content
-					(bdata.Obj as FrameworkElement).ClearValue(FrameworkElement.DataContextProperty);
-				}
+				ApplyBindingsToItems(targetItems);
 			}
 
 			// Raise the post-apply event, this is for validations and persistence
@@ -617,6 +629,38 @@ namespace Easynet.Edge.UI.Client
 			// Close the dialog if necessary
 			if (bargs.CloseDialog && !aargs.Cancel)
 				this.Close();
+		}
+
+		public void ApplyBindingsToItems(IEnumerable targetItems)
+		{
+			int updated = 0;
+			foreach (BEData bdata in _bindings)
+			{
+				// Don't do anything if the binding has not been changed
+				if (!bdata.Changed)
+					continue;
+
+				// Get current val
+				object val = bdata.Obj.GetValue(bdata.Prp);	
+				object datacontext = (bdata.Obj as FrameworkElement).DataContext;
+
+				foreach (object target in targetItems)
+				{
+					// Change the data context
+					(bdata.Obj as FrameworkElement).DataContext = target;
+
+					// Set the value back to the textbox, and update the permanent source
+					bdata.Obj.SetValue(bdata.Prp, val);
+					bdata.Exp.UpdateSource();
+				}
+
+				// Restore the temp. content
+				(bdata.Obj as FrameworkElement).ClearValue(FrameworkElement.DataContextProperty);
+				updated++;
+			}
+
+			if (updated < 1)
+				throw new Exception("Nothing was applied. This should not happen, and could indicate a binding that was not changed to this:DialogBinding.");
 		}
 
 		/// <summary>

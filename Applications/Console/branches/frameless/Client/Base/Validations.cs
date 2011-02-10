@@ -13,12 +13,23 @@ using System.Text.RegularExpressions;
 
 namespace Easynet.Edge.UI.Client
 {
+	public class DialogBinding : Binding
+	{
+		public DialogBinding():base()
+		{
+			this.NotifyOnSourceUpdated = true;
+		}
+		public DialogBinding(string path) : base(path)
+		{
+		}
+	}
+
 	#region Validators
 
 	/// <summary>
 	/// Base class for custom validating bindings.
 	/// </summary>
-	public class ValidatingBinding<RuleType>: Binding where RuleType: ValidatingBindingRuleBase, new()
+	public class ValidatingBinding<RuleType> : DialogBinding where RuleType : ValidatingBindingRuleBase, new()
 	{
 		public ValidatingBinding(): base()
 		{
