@@ -39,16 +39,22 @@ namespace EdgeBI.Objects
 
 					if (fieldMapAttribute.Show)
 					{
-						if (fieldMapAttribute.UseApplyFunction && onApplyValue != null)
-							val = onApplyValue(fieldInfo, sqlDataReader);
-						else
-							val = sqlDataReader[fieldMapAttribute.FieldName];
-						if (val is DBNull)
+
+
+						if (sqlDataReader.FieldExists(fieldMapAttribute.FieldName))
 						{
-							fieldInfo.SetValue(returnObject, null);
+							if (fieldMapAttribute.UseApplyFunction && onApplyValue != null)
+								val = onApplyValue(fieldInfo, sqlDataReader);
+							else
+								val = sqlDataReader[fieldMapAttribute.FieldName];
+							if (val is DBNull)
+							{
+								fieldInfo.SetValue(returnObject, null);
+							}
+							else
+								fieldInfo.SetValue(returnObject, val);
 						}
-						else
-							fieldInfo.SetValue(returnObject, val);
+
 					}
 				}
 			}
@@ -62,10 +68,10 @@ namespace EdgeBI.Objects
 			
 
 			if (!string.IsNullOrEmpty(connectionString))
-				DataManager.ConnectionString = connectionString;
+				connectionString = DataManager.ConnectionString;
 
 
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection sqlConnection=new SqlConnection(connectionString)  )
 			{
 				using (SqlCommand sqlCommand = DataManager.CreateCommand(Command, commandType))
 				{
@@ -531,4 +537,12 @@ namespace EdgeBI.Objects
 	}
 
 	#endregion
+	public static class DataReaderExtensions
+	{
+		public static bool FieldExists(this IDataReader reader, string fieldName)
+		{
+			reader.GetSchemaTable().DefaultView.RowFilter = string.Format("ColumnName= '{0}'", fieldName);
+			return (reader.GetSchemaTable().DefaultView.Count > 0);
+		}
+	}
 }

@@ -122,6 +122,23 @@ namespace EdgeBI.Objects
 			string command = @"User_Operations(@Action:Int,@UserID:Int,@Name:NvarChar,1,@AccountAdmin:bit,@Email:NvarChar,@Password:NvarChar)";
 			MapperUtility.SaveOrRemoveSimpleObject<User>(command, CommandType.StoredProcedure, sqlOperation, this,string.Empty);
 		}
+		public void AssignGroup(int groupID)
+		{
+			using (DataManager.Current.OpenConnection())
+			{
+				SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_GUI_UserGroupUser
+																	(GroupID,UserID)
+																	VALUES
+																	(@GroupID,@UserID)");
+				sqlCommand.Parameters["@GroupID"].Value = groupID;
+				sqlCommand.Parameters["@UserID"].Value = this.UserID; ;
+
+				sqlCommand.ExecuteNonQuery();
+
+			}
+
+		}
+		
 
 		
 

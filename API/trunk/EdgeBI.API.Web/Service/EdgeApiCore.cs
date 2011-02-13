@@ -271,6 +271,68 @@ namespace EdgeBI.API.Web
 			}
 
 		}
+
+		[WebInvoke(Method = "POST", UriTemplate = "groups/{groupID}/users/{userID}")]
+		public void AssignUserToGroup(string groupID, string userID)
+		{
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User activeUser = User.GetUserByID(currentUser);
+				if (activeUser.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can assign users to groups ");
+				Group group = Group.GetGroupByID(int.Parse(groupID));
+				group.AssignUser(int.Parse(userID));
+			}
+			catch (Exception ex)
+			{
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, ex.Message);
+			}
+
+		}
+		[WebInvoke(Method = "POST", UriTemplate = "users/{userID}/groups/{groupID}")]
+		public void AssignGroupToUser(string userID, string groupID)
+		{
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User activeUser = User.GetUserByID(currentUser);
+				if (activeUser.IsAcountAdmin != true || activeUser.UserID == int.Parse(userID))
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can assign groups to other useres ");
+				User user = User.GetUserByID(int.Parse(userID));
+				user.AssignGroup(int.Parse(groupID));
+			}
+			catch (Exception ex)
+			{
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, ex.Message);
+			}
+
+		}
+		[WebGet(UriTemplate = "groups/{ID}/users")]
+		public List<User> GetGroupAssociateUsers(string ID)
+		{
+			List<User> users = null;
+
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User user = User.GetUserByID(currentUser);
+				if (user.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get the list of Associate groups");
+				users = Group.GetUserAssociateUsers(int.Parse(ID));
+			}
+			catch (Exception ex)
+			{
+				if (ex.Message != "Forbidden")
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
+
+			return users;
+		}
+
 		#endregion
 
 		#region Menus
