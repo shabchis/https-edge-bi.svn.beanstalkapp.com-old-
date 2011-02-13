@@ -98,7 +98,12 @@ namespace EdgeBI.Objects
 
 			using (DataManager.Current.OpenConnection())
 			{
-				using (SqlCommand sqlCommand = DataManager.CreateCommand("SELECT Path FROM Constant_PermissionType ORDER BY Path"))
+				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT Path 
+																			FROM Constant_PermissionType
+																			UNION ALL
+																			SELECT Path 
+																			FROM Constant_Menu 
+																			ORDER BY Path"))
 				{
 					thingReader = new ThingReader<Permission>(sqlCommand.ExecuteReader(), null);
 					while (thingReader.Read())

@@ -28,8 +28,168 @@ namespace EdgeBI.API.Web
 	public class EdgeApiCore
 	{
 		private const string KeyEncrypt = "5c51374e366f41297356413c71677220386c534c394742234947567840";
-		
-		#region Users and groups
+		#region Groups
+		[WebGet(UriTemplate = "groups/{ID}")]
+		public Group GetGroupByID(string ID)
+		{
+			int groupID;
+			Group group = null;
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				groupID = int.Parse(ID);
+
+				User user = User.GetUserByID(currentUser);
+				if (user.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+				group = Group.GetGroupByID(groupID);
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
+
+			return group;
+
+		}
+
+		[WebGet(UriTemplate = "groups")]
+		public List<Group> GetAllGroups()
+		{
+			List<Group> groups = null;
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User user = User.GetUserByID(currentUser);
+				if (user.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get the list of all groups");
+				groups = Group.GetAllGroups();
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
+
+			return groups;
+
+		}
+
+		[WebInvoke(Method = "POST", UriTemplate = "groups")]
+		public void AddNewGroup(Group group)
+		{
+
+			//todo: dont forget on production to change the userID field to auto increment
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User activeUser = User.GetUserByID(currentUser);
+				if (activeUser.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can add group ");
+				group.GroupOperations(SqlOperation.Insert);
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, ex.Message);
+			}
+
+		}
+
+		[WebInvoke(Method = "PUT", UriTemplate = "groups/{ID}")]
+		public void UpdateGroup(string ID, Group group)
+		{
+
+			try
+			{
+				if (ID.Trim() != group.GroupID.ToString())
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Updated groupID is different from ID");
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User activeUser = User.GetUserByID(currentUser);
+				if (activeUser.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
+
+				group.GroupOperations(SqlOperation.Update);
+
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
+
+
+		}
+
+		[WebInvoke(Method = "DELETE", UriTemplate = "groups/{ID}")]
+		public void DeleteGroup(string ID)
+		{
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User activeUser = User.GetUserByID(currentUser);
+				if (activeUser.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
+				Group group = new Group() { GroupID = int.Parse(ID) };
+				group.GroupOperations(SqlOperation.Delete);
+			}
+			catch (Exception ex)
+			{
+
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
+
+		}
+		[WebInvoke(Method = "POST", UriTemplate = "groups/{groupID}/users/{userID}")]
+		public void AssignUserToGroup(string groupID, string userID)
+		{
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User activeUser = User.GetUserByID(currentUser);
+				if (activeUser.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can assign users to groups ");
+				Group group = Group.GetGroupByID(int.Parse(groupID));
+				group.AssignUser(int.Parse(userID));
+			}
+			catch (Exception ex)
+			{
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, ex.Message);
+			}
+
+		}
+
+		[WebGet(UriTemplate = "groups/{ID}/users")]
+		public List<User> GetGroupAssociateUsers(string ID)
+		{
+			List<User> users = null;
+
+			try
+			{
+				int currentUser;
+				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
+				User user = User.GetUserByID(currentUser);
+				if (user.IsAcountAdmin != true)
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get the list of Associate groups");
+				users = Group.GetUserAssociateUsers(int.Parse(ID));
+			}
+			catch (Exception ex)
+			{
+				if (ex.Message != "Forbidden")
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
+			}
+
+			return users;
+		}
+		#endregion
+		#region Users 
 		/// <summary>
 		/// Get user
 		/// </summary>
@@ -107,7 +267,7 @@ namespace EdgeBI.API.Web
 
 		}
 
-		[WebInvoke(Method = "POST", UriTemplate = "users/{ID}")]
+		[WebInvoke(Method = "PUT", UriTemplate = "users/{ID}")]
 		public void UpdateUser(string ID, User user)
 		{
 			try
@@ -152,145 +312,7 @@ namespace EdgeBI.API.Web
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
 			}
 
-		}
-
-		[WebGet(UriTemplate = "groups/{ID}")]
-		public Group GetGroupByID(string ID)
-		{
-			int groupID;
-			Group group = null;
-			try
-			{
-				int currentUser;
-				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-				groupID = int.Parse(ID);
-
-				User user = User.GetUserByID(currentUser);
-				if (user.IsAcountAdmin != true)
-					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
-				group=Group.GetGroupByID(groupID);
-			}
-			catch (Exception ex)
-			{
-
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
-			}
-
-			return group; 
-
-		}
-
-		[WebGet(UriTemplate = "groups")]
-		public List<Group> GetAllGroups()
-		{
-			List<Group> groups = null;
-			try
-			{
-				int currentUser;
-				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-				User user = User.GetUserByID(currentUser);
-				if (user.IsAcountAdmin != true)
-					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get the list of all groups");
-				groups = Group.GetAllGroups();
-			}
-			catch (Exception ex)
-			{
-
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
-			}
-
-			return groups;
-
-		}
-
-		[WebInvoke(Method = "POST", UriTemplate = "groups")]
-		public void AddNewGroup(Group group)
-		{
-
-			//todo: dont forget on production to change the userID field to auto increment
-			try
-			{
-				int currentUser;
-				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-				User activeUser = User.GetUserByID(currentUser);
-				if (activeUser.IsAcountAdmin != true)
-					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can add group ");
-				group.GroupOperations(SqlOperation.Insert);
-			}
-			catch (Exception ex)
-			{
-
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, ex.Message);
-			}
-
-		}
-
-		[WebInvoke(Method = "POST", UriTemplate = "groups/{ID}")]
-		public void UpdateGroup(string ID, Group group)
-		{
-
-			try
-			{
-				if (ID.Trim() != group.GroupID.ToString())
-					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Updated groupID is different from ID");
-				int currentUser;
-				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-				User activeUser = User.GetUserByID(currentUser);
-				if (activeUser.IsAcountAdmin != true)
-					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
-
-				group.GroupOperations(SqlOperation.Update);
-
-			}
-			catch (Exception ex)
-			{
-
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
-			}
-
-
-		}
-
-		[WebInvoke(Method = "DELETE", UriTemplate = "groups/{ID}")]
-		public void DeleteGroup(string ID)
-		{
-			try
-			{
-				int currentUser;
-				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-				User activeUser = User.GetUserByID(currentUser);
-				if (activeUser.IsAcountAdmin != true)
-					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
-				Group group = new Group() { GroupID = int.Parse(ID) };
-				group.GroupOperations(SqlOperation.Delete);
-			}
-			catch (Exception ex)
-			{
-
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
-			}
-
-		}
-
-		[WebInvoke(Method = "POST", UriTemplate = "groups/{groupID}/users/{userID}")]
-		public void AssignUserToGroup(string groupID, string userID)
-		{
-			try
-			{
-				int currentUser;
-				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-				User activeUser = User.GetUserByID(currentUser);
-				if (activeUser.IsAcountAdmin != true)
-					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can assign users to groups ");
-				Group group = Group.GetGroupByID(int.Parse(groupID));
-				group.AssignUser(int.Parse(userID));
-			}
-			catch (Exception ex)
-			{
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, ex.Message);
-			}
-
-		}
+		}		
 		[WebInvoke(Method = "POST", UriTemplate = "users/{userID}/groups/{groupID}")]
 		public void AssignGroupToUser(string userID, string groupID)
 		{
@@ -310,28 +332,32 @@ namespace EdgeBI.API.Web
 			}
 
 		}
-		[WebGet(UriTemplate = "groups/{ID}/users")]
-		public List<User> GetGroupAssociateUsers(string ID)
+		[WebGet(UriTemplate = "user/{ID}/groups")]
+		public static List<Group> GetUserAssociateGroups(int ID)
 		{
-			List<User> users = null;
+			List<Group> associateGroups = new List<Group>();
 
-			try
+			using (DataManager.Current.OpenConnection())
 			{
-				int currentUser;
-				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
-				User user = User.GetUserByID(currentUser);
-				if (user.IsAcountAdmin != true)
-					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get the list of Associate groups");
-				users = Group.GetUserAssociateUsers(int.Parse(ID));
-			}
-			catch (Exception ex)
-			{
-				if (ex.Message != "Forbidden")
-					ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
-			}
+				SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT DISTINCT  T0.GroupID ,T1.Name
+																	FROM User_GUI_UserGroupUser T0
+																	INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID 
+																	WHERE GroupID=@GroupID:Int");
+				sqlCommand.Parameters["@GroupID"].Value = ID;
 
-			return users;
+				using (ThingReader<Group> thingReader = new ThingReader<Group>(sqlCommand.ExecuteReader(), null))
+				{
+					while (thingReader.Read())
+					{
+						associateGroups.Add((Group)thingReader.Current);
+					}
+
+				}
+
+			}
+			return associateGroups;
 		}
+
 
 		#endregion
 
