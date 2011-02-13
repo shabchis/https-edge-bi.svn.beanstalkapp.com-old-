@@ -189,7 +189,8 @@ namespace EdgeBI.API.Web
 			return users;
 		}
 		#endregion
-		#region Users 
+
+		#region Users
 		/// <summary>
 		/// Get user
 		/// </summary>
@@ -211,7 +212,7 @@ namespace EdgeBI.API.Web
 					User user = User.GetUserByID(currentUser);
 					if (user.IsAcountAdmin != true)
 						ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
-					
+
 				}
 				returnUser = User.GetUserByID(userID);
 			}
@@ -229,7 +230,7 @@ namespace EdgeBI.API.Web
 			List<User> users = null;
 			try
 			{
-				
+
 				int currentUser;
 				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 				User user = User.GetUserByID(currentUser);
@@ -312,7 +313,7 @@ namespace EdgeBI.API.Web
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
 			}
 
-		}		
+		}
 		[WebInvoke(Method = "POST", UriTemplate = "users/{userID}/groups/{groupID}")]
 		public void AssignGroupToUser(string userID, string groupID)
 		{
@@ -371,7 +372,7 @@ namespace EdgeBI.API.Web
 				int currentUser;
 				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
 
-				 m = Menu.GetMenu(currentUser);
+				m = Menu.GetMenu(currentUser);
 				if (m == null || m.Count == 0)
 					ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, string.Format("No menu found for userId {0} ", currentUser));
 			}
@@ -437,7 +438,7 @@ namespace EdgeBI.API.Web
 			bool hasPermission = false;
 			try
 			{
-				
+
 				int currentUser;
 				ThingReader<CalculatedPermission> calculatedPermissionReader;
 				currentUser = System.Convert.ToInt32(OperationContext.Current.IncomingMessageProperties["edge-user-id"]);
@@ -574,6 +575,9 @@ namespace EdgeBI.API.Web
 			}
 		}
 
+
+
+
 		#endregion
 
 		#region Login
@@ -591,7 +595,7 @@ namespace EdgeBI.API.Web
 					Encryptor encryptor = new Encryptor(KeyEncrypt);
 					sqlCommand = DataManager.CreateCommand("User_Login(@OperationType:Int,@Email:NVarchar,@Password:NVarchar,@UserID:Int,@SessionID:Int)", CommandType.StoredProcedure);
 
-					
+
 					sqlCommand.Parameters["@OperationType"].Value = sessionData.OperationType;
 					if (sessionData.OperationType == OperationTypeEnum.New)
 					{
