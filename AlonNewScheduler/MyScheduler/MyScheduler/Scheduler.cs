@@ -8,11 +8,13 @@ namespace MyScheduler
 	public class Scheduler
 	{
 		private List<ServiceConfigration> _toBeScheduleServices = new List<ServiceConfigration>();
-		private Dictionary<int, ScheduleInfo> _scheduledServices = new Dictionary<int, ScheduleInfo>();
+		private Dictionary<int, ServiceInstance> _scheduledServices = new Dictionary<int, ServiceInstance>();
 		private Dictionary<int, ServiceConfigration> _servicesPerConfigurationID = new Dictionary<int, ServiceConfigration>();
 		private Dictionary<int, ServiceConfigration> _servicesPerProfileID = new Dictionary<int, ServiceConfigration>();
-		private Dictionary<int, ScheduleInfo> _unscheduleServices = new Dictionary<int, ScheduleInfo>();
-		private const int oddsForAverageExecution = 80;
+		private Dictionary<int, ServiceInstance> _unscheduleServices = new Dictionary<int, ServiceInstance>();
+		private const double oddsForAverageExecution = 0.8;
+		private const double oddsForMaxExecution = 1;
+		private const double wantedOdds = 0.6;
 
 		public Scheduler(List<ServiceConfigration> services)
 		{
@@ -22,102 +24,119 @@ namespace MyScheduler
 		{
 
 
-			var toBeScheduledByTimeAndPriority = _toBeScheduleServices.OrderBy(ordered => ordered.Rule.time).ThenBy(ordered => ordered.MaxWaitingTime).ThenByDescending(ordered => ordered.priority);
+			var toBeScheduledByTimeAndPriority = _toBeScheduleServices.OrderBy(ordered => ordered.Rule.time).ThenBy(ordered => ordered.Rule.MaxDeviation).ThenByDescending(ordered => ordered.priority);
 
 			foreach (ServiceConfigration service in toBeScheduledByTimeAndPriority)
-			{
-				double odds;
-				TimeSpan incrementByMaxExecutionTime;
-				DateTime scheduleTime = SchedulePerService(service.ConfigurationID, service.SchedulingProfile.ProfileID, service.Rule.time, service.AverageExecutionTime, service.MaxConcurrentPerConfiguration, service.MaxCuncurrentPerProfile, out odds, service.MaxExecutionTime, out incrementByMaxExecutionTime);
-				ScheduleService(service, scheduleTime, odds, incrementByMaxExecutionTime);
+			{				
+				ServiceInstance serviceInstance = SchedulePerService(service);
+				ScheduleService(serviceInstance);
 			}
 			PrintSchduleTable();
 		}
 
-		private void ScheduleService(ServiceConfigration service, DateTime scheduleTime, double odds, TimeSpan incrementByMaxExecutionTime)
+		private void ScheduleService(ServiceInstance serviceInstance)
 		{
-			if (scheduleTime.Subtract(service.MaxWaitingTime) > service.Rule.time)
-				_unscheduleServices.Add(service.ID, new ScheduleInfo() { ServiceName = service.Name, ConfigurationID = service.ConfigurationID, EndTime = service.Rule.time, ID = service.ID, MaxConcurrentPerConfiguration = service.MaxConcurrentPerConfiguration, MaxCuncurrentPerProfile = service.MaxCuncurrentPerProfile, ProfileID = service.SchedulingProfile.ProfileID, StartTime = scheduleTime, Priority = service.priority, MaxWaitingTime = service.MaxWaitingTime });
+			if (serviceInstance.ActualDeviation>serviceInstance.MaxDeviation)  // check if the waiting time is bigger then max waiting time.
+				_unscheduleServices.Add(serviceInstance.ID,serviceInstance);
 			else
 			{
-				DateTime maxStartTime = scheduleTime.Add(incrementByMaxExecutionTime);
-				DateTime maxEndTime = scheduleTime.Add(service.AverageExecutionTime).Add(incrementByMaxExecutionTime);
-				_scheduledServices.Add(service.ID, new ScheduleInfo() { ServiceName = service.Name, Odds = odds, ConfigurationID = service.ConfigurationID, EndTime = scheduleTime.Add(service.AverageExecutionTime), ID = service.ID, MaxConcurrentPerConfiguration = service.MaxConcurrentPerConfiguration, MaxCuncurrentPerProfile = service.MaxCuncurrentPerProfile, ProfileID = service.SchedulingProfile.ProfileID, StartTime = scheduleTime, Priority = service.priority,MaxStartTime=maxStartTime,MaxEndTime=maxEndTime });
+				_scheduledServices.Add(serviceInstance.ID, serviceInstance);
 			}
 		}
 
-		private DateTime SchedulePerService(int configurationID, int profileID, DateTime startTime, TimeSpan averageExecutionTime, int MaxConcurrentPerConfiguration, int MaxCuncurrentPerProfile, out double odds, TimeSpan maxExecutionTime,out TimeSpan incrementByMaxExecutionTime)
+		private ServiceInstance SchedulePerService(ServiceConfigration service)
 		{
-			odds = 0;
-			DateTime endTime = startTime.Subtract(averageExecutionTime);
+			
+			
 
 			//Get all services with same configurationID
 			var servicesWithSameConfiguration = from s in _scheduledServices
-												where s.Value.ConfigurationID == configurationID 
+												where s.Value.ConfigurationID ==service.ConfigurationID
 												orderby s.Value.StartTime ascending
 												select s;
 
 			//Get all services with same profileID
 			var servicesWithSameProfile = from s in _scheduledServices
-										  where s.Value.ProfileID == profileID
+										  where s.Value.ProfileID == service.SchedulingProfile.ProfileID
 										  orderby s.Value.StartTime ascending
 										  select s;
-			
-			DateTime schduledTime = FindFirstFreeTime(servicesWithSameConfiguration, servicesWithSameProfile, startTime, endTime, MaxConcurrentPerConfiguration, MaxCuncurrentPerProfile, averageExecutionTime, out odds, maxExecutionTime, out incrementByMaxExecutionTime);			
-			return schduledTime;
+
+			ServiceInstance serviceInstance = FindFirstFreeTime(servicesWithSameConfiguration, servicesWithSameProfile, service);
+
+			return serviceInstance;
 		}
 
-		private DateTime FindFirstFreeTime(IOrderedEnumerable<KeyValuePair<int, ScheduleInfo>> servicesWithSameConfiguration, IOrderedEnumerable<KeyValuePair<int, ScheduleInfo>> servicesWithSameProfile, DateTime startTime, DateTime endTime, int MaxConcurrentPerConfiguration, int MaxCuncurrentPerProfile, TimeSpan averageExecutionTime, out double odds, TimeSpan maxExecutionTime, out TimeSpan incrementByMaxExecutionTime)
+		private ServiceInstance FindFirstFreeTime(IOrderedEnumerable<KeyValuePair<int, ServiceInstance>> servicesWithSameConfiguration, IOrderedEnumerable<KeyValuePair<int, ServiceInstance>> servicesWithSameProfile, ServiceConfigration service)
 		{
-			DateTime schduledTime = new DateTime();
+			ServiceInstance scheduleInfo=null;
+			double percentPerMin = (oddsForMaxExecution - oddsForAverageExecution)/(service.MaxExecutionTime.TotalMinutes - service.AverageExecutionTime.TotalMinutes);
+			TimeSpan executionTime=new TimeSpan(0,System.Convert.ToInt32(System.Math.Round(wantedOdds / percentPerMin, 0)),0);
+			DateTime baseStartTime = service.Rule.time;
+			DateTime baseEndTime = baseStartTime.Add(executionTime);
+			DateTime calculatedStartTime = baseStartTime;
+			DateTime calculatedEndTime = baseEndTime;			
 			bool found = false;			
-			odds = 100;
-			incrementByMaxExecutionTime = new TimeSpan(0, 0, 0); ;
 
 			while (!found)
 			{
-				int countedPerConfiguration = servicesWithSameConfiguration.Count(s => (startTime >= s.Value.StartTime && startTime <= s.Value.EndTime) || (endTime >= s.Value.StartTime && endTime <= s.Value.EndTime));
-				if (countedPerConfiguration < MaxConcurrentPerConfiguration)
+				int countedPerConfiguration = servicesWithSameConfiguration.Count(s => (calculatedStartTime >= s.Value.StartTime && calculatedStartTime <= s.Value.EndTime) || (calculatedEndTime >= s.Value.StartTime && calculatedEndTime <= s.Value.EndTime));
+				if (countedPerConfiguration < service.MaxConcurrentPerConfiguration)
 				{
-					int countedPerProfile = servicesWithSameProfile.Count(s => (startTime >= s.Value.StartTime && startTime <= s.Value.EndTime) || endTime >= s.Value.StartTime || endTime <= s.Value.EndTime);
-					if (countedPerProfile < MaxCuncurrentPerProfile)
+					int countedPerProfile = servicesWithSameProfile.Count(s => (calculatedStartTime >= s.Value.StartTime && calculatedStartTime <= s.Value.EndTime) || calculatedEndTime >= s.Value.StartTime || calculatedEndTime <= s.Value.EndTime);
+					if (countedPerProfile <service.MaxCuncurrentPerProfile)
 					{
-						schduledTime = startTime;
+						scheduleInfo = new ServiceInstance();
+						scheduleInfo.StartTime = calculatedStartTime;
+						scheduleInfo.EndTime = calculatedEndTime;
+						scheduleInfo.Odds = wantedOdds;
+						scheduleInfo.ActualDeviation = calculatedStartTime.Subtract(baseStartTime);
+						scheduleInfo.Priority = service.priority;
+						scheduleInfo.ConfigurationID = service.ConfigurationID;
+						scheduleInfo.ID = service.ID;
+						scheduleInfo.MaxConcurrentPerConfiguration = service.MaxConcurrentPerConfiguration;
+						scheduleInfo.MaxCuncurrentPerProfile = service.MaxCuncurrentPerProfile;
+						scheduleInfo.MaxDeviation = service.Rule.MaxDeviation;
+						scheduleInfo.ProfileID = service.SchedulingProfile.ProfileID;
+						scheduleInfo.ServiceName = service.Name;
+						
+						
 						found = true;
 					}
 					else
 					{
-						odds = (odds * oddsForAverageExecution) / 100;
+						percentPerMin = percentPerMin * wantedOdds;
+						executionTime = new TimeSpan(0, System.Convert.ToInt32(System.Math.Round(wantedOdds / percentPerMin, 0)), 0);
 						//get the next first place of ending service(next start time
-						GetNewStartEndTime(servicesWithSameProfile, ref startTime, ref endTime, averageExecutionTime,ref  incrementByMaxExecutionTime,maxExecutionTime);
-						
+						GetNewStartEndTime(servicesWithSameProfile, ref baseStartTime, ref baseEndTime, executionTime);
+
 						////remove unfree time from servicePerConfiguration and servicePerProfile
-						RemoveBusyTime(ref servicesWithSameConfiguration, ref servicesWithSameProfile,  startTime);						
+						RemoveBusyTime(ref servicesWithSameConfiguration, ref servicesWithSameProfile, baseStartTime);
 					}
 				}
 				else
-				{		
-					odds = (odds * oddsForAverageExecution) / 100;
-					//get the next first place of ending service(next start time
-					GetNewStartEndTime(servicesWithSameConfiguration, ref startTime, ref endTime,averageExecutionTime,ref incrementByMaxExecutionTime,maxExecutionTime);
+				{
+
+					percentPerMin = percentPerMin / wantedOdds;
+					executionTime = new TimeSpan(0, System.Convert.ToInt32(System.Math.Round(wantedOdds / percentPerMin, 0)), 0);
+					
+					GetNewStartEndTime(servicesWithSameConfiguration, ref baseStartTime, ref baseEndTime, executionTime);
 					////remove unfree time from servicePerConfiguration and servicePerProfile
-					RemoveBusyTime(ref servicesWithSameConfiguration, ref servicesWithSameProfile, startTime);
-				} 
+					RemoveBusyTime(ref servicesWithSameConfiguration, ref servicesWithSameProfile, baseStartTime);
+				}
 			}
-			return schduledTime;
+			return scheduleInfo;
 
 		}
 
-		private static void GetNewStartEndTime(IOrderedEnumerable<KeyValuePair<int, ScheduleInfo>> servicesWithSameProfile, ref DateTime startTime, ref DateTime endTime, TimeSpan averageExecutionTime, ref TimeSpan incrementByMaxExecutionTime,TimeSpan maxExecutionTime)
+		private static void GetNewStartEndTime(IOrderedEnumerable<KeyValuePair<int, ServiceInstance>> servicesWithSameProfile, ref DateTime startTime, ref DateTime endTime, TimeSpan ExecutionTime)
 		{
-			TimeSpan difference = maxExecutionTime.Subtract(averageExecutionTime);
-			incrementByMaxExecutionTime = incrementByMaxExecutionTime.Add(difference);
+			
 			startTime = servicesWithSameProfile.Min(s => s.Value.EndTime);
 			//Get end time
-			endTime = startTime + averageExecutionTime;
+			endTime = startTime.Add(ExecutionTime);
 		}
 
-		private  void RemoveBusyTime(ref IOrderedEnumerable<KeyValuePair<int, ScheduleInfo>> servicesWithSameConfiguration, ref IOrderedEnumerable<KeyValuePair<int, ScheduleInfo>> servicesWithSameProfile,  DateTime startTime)
+		private void RemoveBusyTime(ref IOrderedEnumerable<KeyValuePair<int, ServiceInstance>> servicesWithSameConfiguration, ref IOrderedEnumerable<KeyValuePair<int, ServiceInstance>> servicesWithSameProfile, DateTime startTime)
 		{
 			servicesWithSameConfiguration = from s in servicesWithSameConfiguration
 											where s.Value.EndTime > startTime
@@ -133,37 +152,45 @@ namespace MyScheduler
 
 		private void PrintSchduleTable()
 		{
-			 foreach (KeyValuePair<int,ScheduleInfo> scheduled in _scheduledServices.OrderBy(s=>s.Value.StartTime))
+			Console.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", "id", "start", "end", "diff", "odds", "priority");
+			Console.WriteLine("---------------------------------------------------------");
+			KeyValuePair<int, ServiceInstance>? prev = null;
+			foreach (KeyValuePair<int, ServiceInstance> scheduled in _scheduledServices.OrderBy(s => s.Value.StartTime))
 			{
-				Console.WriteLine("Service with ID {0} and name {1},will be executed between:\n{2} and  {3},\n in odds of {4}  and \n100% that the service will be executed until {5}\n and finish until {6}.\n service priority is {7}", scheduled.Key, scheduled.Value.ServiceName, scheduled.Value.StartTime, scheduled.Value.EndTime, scheduled.Value.Odds,scheduled.Value.MaxStartTime,scheduled.Value.MaxEndTime, scheduled.Value.Priority);
-				Console.WriteLine("--------------------------------------------------------------------------------");
-				
-			}
-			if (_unscheduleServices.Count>0)
-				Console.WriteLine("---------------------Will not be scheduled--------------------------------------");
-			 foreach (KeyValuePair<int,ScheduleInfo> notScheduled in _unscheduleServices)
-			 {
-				 Console.WriteLine("Service with ID {0} and name {1},will not be execute since its start time sholud have been{2},and its schedule time is{3}and is maximum waiting time is{4}", notScheduled.Key, notScheduled.Value.ServiceName, notScheduled.Value.EndTime, notScheduled.Value.StartTime,notScheduled.Value.MaxWaitingTime);
+				Console.WriteLine("{0}\t{1:hh:mm}\t{2:hh:mm}\t{3:hh\\:mm}\t{4}\t{5}",
+					scheduled.Key,
+					scheduled.Value.StartTime,
+					scheduled.Value.EndTime,
+					prev != null ? scheduled.Value.StartTime - prev.Value.Value.EndTime : TimeSpan.FromMinutes(0),
+					Math.Round(scheduled.Value.Odds, 2),
+					scheduled.Value.Priority);
+				prev = scheduled;
 
-				 
-			 }
+			}
+			if (_unscheduleServices.Count > 0)
+				Console.WriteLine("---------------------Will not be scheduled--------------------------------------");
+			foreach (KeyValuePair<int, ServiceInstance> notScheduled in _unscheduleServices)
+			{
+				Console.WriteLine("Service with ID {0} and name {1},will not be execute since its start time sholud have been{2},and its schedule time is{3}and is maximum waiting time is{4}", notScheduled.Key, notScheduled.Value.ServiceName, notScheduled.Value.EndTime, notScheduled.Value.StartTime, notScheduled.Value.MaxDeviation);
+
+
+			}
 			Console.ReadLine();
 		}
 	}
-	public class ScheduleInfo
+	public class ServiceInstance
 	{
 		public int ID;
 		public string ServiceName;
 		public int ConfigurationID;
 		public int ProfileID;
 		public DateTime StartTime;
-		public DateTime EndTime;
-		public DateTime MaxStartTime;
-		public DateTime MaxEndTime;		
+		public DateTime EndTime;		
 		public int MaxConcurrentPerConfiguration;
 		public int MaxCuncurrentPerProfile;
 		public int Priority;
-		public TimeSpan MaxWaitingTime;
+		public TimeSpan MaxDeviation;
+		public TimeSpan ActualDeviation;
 		public double Odds;
 
 

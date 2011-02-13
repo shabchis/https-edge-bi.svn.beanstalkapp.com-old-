@@ -49,7 +49,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchedulingRule.cs" />
     <Compile Include="ServiceConfigration.cs" />
-    <Compile Include="ServiceInstance.cs" />
     <Compile Include="UniqueConfiguration.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
