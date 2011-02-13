@@ -16,9 +16,8 @@ namespace MyScheduler
 		public Profile SchedulingProfile;
 		public SchedulingRule Rule;
 		public bool Scheduled = false;
-		public TimeSpan AverageExecutionTime=new TimeSpan(0,10,0);
-		public TimeSpan MaxExecutionTime = new TimeSpan(0,30, 0);
-		public TimeSpan MaxWaitingTime = new TimeSpan(0, 10, 0);
+		public TimeSpan AverageExecutionTime=new TimeSpan(0,30,0);
+		public TimeSpan MaxExecutionTime = new TimeSpan(0,60, 0);		
 		public int priority;
 	}
 
