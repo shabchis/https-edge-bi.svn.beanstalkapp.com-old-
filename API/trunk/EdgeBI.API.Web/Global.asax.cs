@@ -24,9 +24,9 @@ namespace JsonValueSample
         {
 			
 
-			/*Load dll dynamicly in order to  allow publish only specific dlls.*/
-			string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-			path = Path.Combine(path,"test.db4o").Replace(@"file:\","");
+			///*Load dll dynamicly in order to  allow publish only specific dlls.*/
+			string path = Server.MapPath("~test.db4o");
+			
 
 			IEmbeddedConfiguration serverConfig = Db4oEmbedded.NewConfiguration();
 			serverConfig.Common.ObjectClass(typeof(module)).ObjectField("RoutePrefix").Indexed(true);
@@ -34,7 +34,7 @@ namespace JsonValueSample
 			IObjectSet result;
 			using (IObjectContainer db = Db4oEmbedded.OpenFile(serverConfig, path))
 			{
-				module m = new module() { AssemblyQualifiedName = "EdgeBI.API.Web.EdgeApiTools,EdgeBI.API.Web.EdgeApiTools", RoutePrefix="Tools" };
+				module m = new module() { AssemblyQualifiedName = "EdgeBI.API.Web.EdgeApiTools,EdgeBI.API.Web.EdgeApiTools", RoutePrefix = "Tools" };
 				db.Store(m);
 				try
 				{
@@ -44,7 +44,7 @@ namespace JsonValueSample
 				catch (Exception)
 				{
 					db.Rollback();
-					
+
 				}
 				result = db.QueryByExample(typeof(module));
 				db.Ext().Refresh(result, 0);

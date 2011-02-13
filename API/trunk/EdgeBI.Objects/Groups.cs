@@ -91,6 +91,45 @@ namespace EdgeBI.Objects
 
 			return group;
 		}
+		public void AssignUser(int userID)
+		{
+			using (DataManager.Current.OpenConnection())
+			{
+				SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_GUI_UserGroupUser
+																	(GroupID,UserID)
+																	VALUES
+																	(@GroupID,@UserID)");
+				sqlCommand.Parameters["@GroupID"].Value = this.GroupID;
+				sqlCommand.Parameters["@UserID"].Value = userID;
+
+				sqlCommand.ExecuteNonQuery();
+
+			}
+		}
+		public static List<User> GetUserAssociateUsers(int ID)
+		{
+			List<User> associateUsers = new List<User>();
+
+			using (DataManager.Current.OpenConnection())
+			{
+				SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT DISTINCT  T0.UserID ,T1.Name
+																	FROM User_GUI_UserGroupUser T0
+																	INNER JOIN User_GUI_User T1 ON T0.UserID=T1.UserID 
+																	WHERE GroupID=@GroupID:Int");
+				sqlCommand.Parameters["@GroupID"].Value = ID;
+
+				using (ThingReader<User> thingReader = new ThingReader<User>(sqlCommand.ExecuteReader(), null))
+				{
+					while (thingReader.Read())
+					{
+						associateUsers.Add((User)thingReader.Current);
+					}
+
+				}
+
+			}
+			return associateUsers;
+		}
 
 		public  void GroupOperations(SqlOperation sqlOperation)
 		{
