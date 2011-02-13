@@ -30,6 +30,10 @@ namespace EdgeBI.Objects
 		[FieldMap("AccountAdmin")]
 		public bool? IsAcountAdmin;
 
+		[DataMember(Order=3)]
+		[DictionaryMap(Command = "SELECT AccountID,PermissionType,Value FROM User_GUI_AccountPermission WHERE TargetIsGroup=1 and TargetID=@GroupID:Int", IsStoredProcedure = false,ValueIsGenericList=true,KeyName="AccountID",ValueFieldsName="PermissionType,Value")]
+		public Dictionary<int, List<AssignedPermission>> AssignedPermissions = new Dictionary<int, List<AssignedPermission>>();
+
 
 
 		private static object CustomApply(FieldInfo info, IDataRecord reader)

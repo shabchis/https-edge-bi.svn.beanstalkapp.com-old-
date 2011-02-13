@@ -65,13 +65,13 @@ namespace EdgeBI.Objects
 		{
 			int rowsAfected = 0;
 			Type t = typeof(T);
-			
+
 
 			if (!string.IsNullOrEmpty(connectionString))
 				connectionString = DataManager.ConnectionString;
 
 
-			using (SqlConnection sqlConnection=new SqlConnection(connectionString)  )
+			using (SqlConnection sqlConnection = new SqlConnection(connectionString))
 			{
 				using (SqlCommand sqlCommand = DataManager.CreateCommand(Command, commandType))
 				{
@@ -390,59 +390,42 @@ namespace EdgeBI.Objects
 		}
 		public static IDictionary GetDictionryObject(FieldInfo fieldInfo, IDataReader sqlDataReader)
 		{
+			Type keyElement = null;
+			Type typeElement = null;
+
+			//Check that it is realy dictionary
 			string dictionaryKey = string.Empty;
 			if (!fieldInfo.FieldType.IsGenericType || fieldInfo.FieldType.GetGenericTypeDefinition() == typeof(IDictionary))
 				throw new Exception("This is not generic Dictionary");
 
-			Type keyElement = fieldInfo.FieldType.GetGenericArguments()[0];
-			Type typeElement = fieldInfo.FieldType.GetGenericArguments()[1];
-
-			if (Attribute.IsDefined(fieldInfo, typeof(DictionaryMapAttribute)))
-			{
-				DictionaryMapAttribute dictionaryMapAttribute = (DictionaryMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(DictionaryMapAttribute));
-				dictionaryKey = dictionaryMapAttribute.DictionaryKey;
-			}
-			else
+			if (!Attribute.IsDefined(fieldInfo, typeof(DictionaryMapAttribute)))
 				throw new Exception("DictionaryMapatrribute not defined");
 
 
+			//build the dictionary object
+			DictionaryMapAttribute dictionaryMapAttribute = (DictionaryMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(DictionaryMapAttribute));
+			keyElement = fieldInfo.FieldType.GetGenericArguments()[0];
+			typeElement = fieldInfo.FieldType.GetGenericArguments()[1];
 			IDictionary returnObject = (IDictionary)Activator.CreateInstance(fieldInfo.FieldType);
+
 			if (typeElement.IsGenericType)
 			{
-				IList list = (IList)Activator.CreateInstance(typeElement);
-				int? lastAccountId = null;
+				Type listArgType = typeElement.GetGenericArguments()[0];
+				object listArg = Activator.CreateInstance(listArgType);
+				string[] listArgFieldsName = dictionaryMapAttribute.ValueFieldsName.Split(',');
+				IList list;
+
 				while (sqlDataReader.Read())
 				{
-					object currentItem = Activator.CreateInstance(typeElement.GetGenericArguments()[0]);
-					if (lastAccountId != null)
-					{
-						if (lastAccountId != (int)sqlDataReader[dictionaryKey])
-						{
-							returnObject.Add(lastAccountId, list);
-							list = (IList)Activator.CreateInstance(typeElement);
-						}
-
-					}
-					foreach (FieldInfo f in typeElement.GetGenericArguments()[0].GetFields())
-					{
-						if (Attribute.IsDefined(f, typeof(FieldMapAttribute)))
-						{
-							FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(f, typeof(FieldMapAttribute));
-							object val = sqlDataReader[fieldMapAttribute.FieldName];
-							if (val is DBNull)
-							{
-								f.SetValue(currentItem, null);
-							}
-							else
-								f.SetValue(currentItem, val);
-						}
-					}
-					list.Add(currentItem);
-					lastAccountId = (int)sqlDataReader[dictionaryKey];
-				}
-				if (lastAccountId != null)
-				{
-					returnObject.Add(lastAccountId, list);
+					if (!returnObject.Contains(sqlDataReader[dictionaryMapAttribute.KeyName]))
+						returnObject.Add(sqlDataReader[dictionaryMapAttribute.KeyName], (IList)Activator.CreateInstance(typeElement));
+					 list=(IList)returnObject[sqlDataReader[dictionaryMapAttribute.KeyName]];
+					 foreach (string fieldName in listArgFieldsName)
+					 {
+						  listArgType.GetField(fieldName).SetValue(listArg, sqlDataReader[fieldName]);
+						 
+					 }
+					 list.Add(listArg);
 				}
 			}
 			return returnObject;
@@ -518,8 +501,11 @@ namespace EdgeBI.Objects
 	sealed class DictionaryMapAttribute : Attribute
 	{
 		public string Command { get; set; }
-		public string DictionaryKey { get; set; }
 		public bool IsStoredProcedure { get; set; }
+		public bool ValueIsGenericList { get; set; }
+		public string KeyName { get; set; }
+		public string ValueFieldsName { get; set; }
+
 
 	}
 	[AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]

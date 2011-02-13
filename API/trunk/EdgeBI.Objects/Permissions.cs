@@ -20,11 +20,11 @@ namespace EdgeBI.Objects
 
 		[DataMember]
 		[FieldMap("PermissionType")]
-		public string Path;
+		public string PermissionType;
 
 		[DataMember]
 		[FieldMap("Value", Cast = "cast (Value  as int) AS 'Value' ")]
-		public PermissionAssignmentType Assignment;
+		public bool Value;
 
 	}
 	public class CalculatedPermission
@@ -42,6 +42,7 @@ namespace EdgeBI.Objects
 		public int AccountID { get; set; }
 		public string Path { get; set; }
 	}
+	
 	public enum PermissionAssignmentType
 	{
 		Allow = 1,
@@ -66,9 +67,9 @@ namespace EdgeBI.Objects
 						sqlCommand.Parameters["@AccountID"].Value = accountPermissionData.AccountID;
 						sqlCommand.Parameters["@TargetID"].Value = userID;
 						sqlCommand.Parameters["@TargetIsGroup"].Value = targetIsGroup;
-						sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.Path;
+						sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.PermissionType;
 						if (sqlOperation==SqlOperation.Insert || sqlOperation==SqlOperation.Update)																
-									sqlCommand.Parameters["@Value"].Value = assignedPermission.Assignment;						
+									sqlCommand.Parameters["@Value"].Value = assignedPermission.Value;						
 						sqlCommand.ExecuteNonQuery();
 					}
 				}
