@@ -12,12 +12,13 @@ namespace MyScheduler
 		private Dictionary<int, ServiceConfigration> _servicesPerConfigurationID = new Dictionary<int, ServiceConfigration>();
 		private Dictionary<int, ServiceConfigration> _servicesPerProfileID = new Dictionary<int, ServiceConfigration>();
 		private Dictionary<int, ServiceInstance> _unscheduleServices = new Dictionary<int, ServiceInstance>();
-		private const double oddsForAverageExecution = 0.8;
-		private const double oddsForMaxExecution = 1;
+		private  double oddsForAverageExecution = 0.8;
+		private  double oddsForMaxExecution = 1;
 		private const double wantedOdds = 0.6;
 
 		public Scheduler(List<ServiceConfigration> services)
 		{
+			
 			this._toBeScheduleServices = services;
 		}
 		public void CreateSchedule()
@@ -69,10 +70,12 @@ namespace MyScheduler
 		private ServiceInstance FindFirstFreeTime(IOrderedEnumerable<KeyValuePair<int, ServiceInstance>> servicesWithSameConfiguration, IOrderedEnumerable<KeyValuePair<int, ServiceInstance>> servicesWithSameProfile, ServiceConfigration service)
 		{
 			ServiceInstance scheduleInfo=null;
-			double percentPerMin = (oddsForMaxExecution - oddsForAverageExecution)/(service.MaxExecutionTime.TotalMinutes - service.AverageExecutionTime.TotalMinutes);
-			TimeSpan executionTime=new TimeSpan(0,System.Convert.ToInt32(System.Math.Round(wantedOdds / percentPerMin, 0)),0);
+
+			double proportion = 0;
+			int executionTimeInMin=0;
+			executionTimeInMin = CalculateExecutionTimeInMin(oddsForMaxExecution, oddsForAverageExecution, service.MaxExecutionTime.TotalMinutes, service.AverageExecutionTime.TotalMinutes, wantedOdds,ref proportion);  
 			DateTime baseStartTime = service.Rule.time;
-			DateTime baseEndTime = baseStartTime.Add(executionTime);
+			DateTime baseEndTime = baseStartTime.AddMinutes(executionTimeInMin);
 			DateTime calculatedStartTime = baseStartTime;
 			DateTime calculatedEndTime = baseEndTime;			
 			bool found = false;			
@@ -104,36 +107,55 @@ namespace MyScheduler
 					}
 					else
 					{
-						percentPerMin = percentPerMin * wantedOdds;
-						executionTime = new TimeSpan(0, System.Convert.ToInt32(System.Math.Round(wantedOdds / percentPerMin, 0)), 0);
+
+						executionTimeInMin = CalculateExecutionTimeInMin(oddsForMaxExecution, oddsForAverageExecution, service.MaxExecutionTime.TotalMinutes, service.AverageExecutionTime.TotalMinutes,wantedOdds, ref proportion);  
 						//get the next first place of ending service(next start time
-						GetNewStartEndTime(servicesWithSameProfile, ref baseStartTime, ref baseEndTime, executionTime);
+						GetNewStartEndTime(servicesWithSameProfile, ref calculatedStartTime, ref calculatedEndTime, executionTimeInMin);
 
 						////remove unfree time from servicePerConfiguration and servicePerProfile
-						RemoveBusyTime(ref servicesWithSameConfiguration, ref servicesWithSameProfile, baseStartTime);
+						RemoveBusyTime(ref servicesWithSameConfiguration, ref servicesWithSameProfile, calculatedStartTime);
 					}
 				}
 				else
 				{
 
-					percentPerMin = percentPerMin / wantedOdds;
-					executionTime = new TimeSpan(0, System.Convert.ToInt32(System.Math.Round(wantedOdds / percentPerMin, 0)), 0);
-					
-					GetNewStartEndTime(servicesWithSameConfiguration, ref baseStartTime, ref baseEndTime, executionTime);
+
+					executionTimeInMin = CalculateExecutionTimeInMin(oddsForMaxExecution, oddsForAverageExecution, service.MaxExecutionTime.TotalMinutes, service.AverageExecutionTime.TotalMinutes,wantedOdds, ref proportion);  
+
+					GetNewStartEndTime(servicesWithSameConfiguration, ref calculatedStartTime, ref calculatedEndTime, executionTimeInMin);
 					////remove unfree time from servicePerConfiguration and servicePerProfile
-					RemoveBusyTime(ref servicesWithSameConfiguration, ref servicesWithSameProfile, baseStartTime);
+					RemoveBusyTime(ref servicesWithSameConfiguration, ref servicesWithSameProfile, calculatedStartTime);
 				}
 			}
 			return scheduleInfo;
 
 		}
 
-		private static void GetNewStartEndTime(IOrderedEnumerable<KeyValuePair<int, ServiceInstance>> servicesWithSameProfile, ref DateTime startTime, ref DateTime endTime, TimeSpan ExecutionTime)
+		private int CalculateExecutionTimeInMin(double oddsForMaxExecution, double oddsForAverageExecution, double maxExecutionTimeInMin, double averageExecutionTimeInMin,double wantedOdds, ref  double proportion)
+		{
+			
+			//Alon
+			int result;
+			if (proportion != 0)
+				proportion = proportion / oddsForAverageExecution;
+			else
+				proportion = wantedOdds / oddsForAverageExecution;
+			double executionTime;
+			executionTime = proportion * averageExecutionTimeInMin; 
+			
+
+			return result = Convert.ToInt32(executionTime);
+			
+			
+			
+		}
+
+		private static void GetNewStartEndTime(IOrderedEnumerable<KeyValuePair<int, ServiceInstance>> servicesWithSameProfile, ref DateTime startTime, ref DateTime endTime, int ExecutionTime)
 		{
 			
 			startTime = servicesWithSameProfile.Min(s => s.Value.EndTime);
 			//Get end time
-			endTime = startTime.Add(ExecutionTime);
+			endTime = startTime.AddMinutes(ExecutionTime);
 		}
 
 		private void RemoveBusyTime(ref IOrderedEnumerable<KeyValuePair<int, ServiceInstance>> servicesWithSameConfiguration, ref IOrderedEnumerable<KeyValuePair<int, ServiceInstance>> servicesWithSameProfile, DateTime startTime)
@@ -161,7 +183,8 @@ namespace MyScheduler
 					scheduled.Key,
 					scheduled.Value.StartTime,
 					scheduled.Value.EndTime,
-					prev != null ? scheduled.Value.StartTime - prev.Value.Value.EndTime : TimeSpan.FromMinutes(0),
+					/*prev != null ? scheduled.Value.StartTime - prev.Value.Value.EndTime : TimeSpan.FromMinutes(0)*/
+					scheduled.Value.StartTime.Subtract(scheduled.Value.EndTime),
 					Math.Round(scheduled.Value.Odds, 2),
 					scheduled.Value.Priority);
 				prev = scheduled;
