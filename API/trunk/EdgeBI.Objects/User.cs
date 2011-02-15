@@ -49,7 +49,7 @@ namespace EdgeBI.Objects
 		public string Password;
 
 		[DataMember(Order=4)]
-		[DictionaryMap(Command = "SELECT AccountID,PermissionType,Value FROM User_GUI_AccountPermission WHERE TargetIsGroup=0 and TargetID=@UserID:Int", IsStoredProcedure = false, ValueIsGenericList = true, KeyName = "AccountID", ValueFieldsName = "PermissionType,Value")]
+		[DictionaryMap(Command = "User_AssignedPermission(@UserID:Int)", IsStoredProcedure = true, ValueIsGenericList = true, KeyName = "AccountID", ValueFieldsName = "PermissionName,PermissionType,Value")]
 		public Dictionary<int, List<AssignedPermission>> AssignedPermissions = new Dictionary<int, List<AssignedPermission>>();
 
 
