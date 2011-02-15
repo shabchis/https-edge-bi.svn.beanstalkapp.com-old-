@@ -27,19 +27,32 @@ namespace Easynet.Edge.Services.Bing
         protected override ServiceOutcome DoWork()
         {
             string downloadUrl = null;
-            // Create a new delivery with a description
             Delivery delivery = new Delivery();
             downloadUrl=BingRetrieverData();
-
+            delivery.DateCreated = DateTime.Now;
+            delivery.DateModified = DateTime.Now;
+            delivery.AccountID = Instance.AccountID;
+            delivery.CreatedByServiceInstanceID = Instance.ParentInstance.InstanceID;
+            List<DeliveryFileStatus> handledStatus = new List<DeliveryFileStatus>();
+            handledStatus.Add(new DeliveryFileStatus { State = eDeliveryFileState.New, ServiceInstanceID = 0});
             delivery.Files = new List<DeliveryFile>();
+            
             delivery.Files.Add(new DeliveryFile
             {
+                FileRootPath = Instance.Configuration.Options["FileRootPath"],
+                HandledStatus = handledStatus,
                 FileName = "Creative",
                 DownloadUrl = downloadUrl,
-                ReaderType = typeof(BingRetriever)
+                ReaderType = typeof(BingKeywordReportReader),
+                AccountID = Instance.AccountID    ,
+                DeliveryID = delivery.DeliveryID  ,
+                TargetDateTime = DateTime.Now     ,
+                DateCreated =    DateTime.Now     ,
+                DateModified = DateTime.Now           
             });
             delivery.Save();
             delivery.Download();
+            
             return ServiceOutcome.Success;
         }
 
@@ -62,7 +75,7 @@ namespace Easynet.Edge.Services.Bing
             // Specify the format of the report.
             request.Format = ReportingService.ReportFormat.Xml;
             request.ReturnOnlyCompleteData = false;
-            request.ReportName = "Ad performance - " + DateTime.Now.ToString();
+            request.ReportName = "KeywordPerformance-" + DateTime.Now.ToString();
             request.Aggregation = ReportingService.ReportAggregation.Daily;
             
             // Specify the columns that will be in the report.
@@ -120,7 +133,7 @@ namespace Easynet.Edge.Services.Bing
                 // Submit the report request. This will throw an exception if 
                 // an error occurs.
                 ReportingService.SubmitGenerateReportResponse queueResponse;
-               queueResponse = service.SubmitGenerateReport(submitRequest);
+                queueResponse = service.SubmitGenerateReport(submitRequest);
                
 
 
