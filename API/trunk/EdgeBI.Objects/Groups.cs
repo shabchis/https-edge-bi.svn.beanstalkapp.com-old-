@@ -31,7 +31,7 @@ namespace EdgeBI.Objects
 		public bool? IsAcountAdmin;
 
 		[DataMember(Order=3)]
-		[DictionaryMap(Command = "SELECT AccountID,PermissionType,Value FROM User_GUI_AccountPermission WHERE TargetIsGroup=1 and TargetID=@GroupID:Int", IsStoredProcedure = false,ValueIsGenericList=true,KeyName="AccountID",ValueFieldsName="PermissionType,Value")]
+		[DictionaryMap(Command = "Group_AssignedPermission(@GroupID:Int)", IsStoredProcedure = true, ValueIsGenericList = true, KeyName = "AccountID", ValueFieldsName = "PermissionName,PermissionType,Value")]
 		public Dictionary<int, List<AssignedPermission>> AssignedPermissions = new Dictionary<int, List<AssignedPermission>>();
 
 

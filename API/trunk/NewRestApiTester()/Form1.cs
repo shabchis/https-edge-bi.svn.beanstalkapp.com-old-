@@ -108,6 +108,7 @@ namespace NewRestApiTester__
 
 			HttpClient client = new HttpClient();
 			HttpRequestMessage request = new HttpRequestMessage(requestType, fullAddress);
+			
 			//Microsoft.Http.Headers.Connection conn = new Microsoft.Http.Headers.Connection() { Close = false };
 			request.Headers.Accept.Add(new Microsoft.Http.Headers.StringWithOptionalQuality("application/json"));
 

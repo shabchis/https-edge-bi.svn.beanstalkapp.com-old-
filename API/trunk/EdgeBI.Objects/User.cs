@@ -34,15 +34,13 @@ namespace EdgeBI.Objects
 		[FieldMap("IsActive", Show = false)]
 		public bool IsActive=true;
 
-		[DataMember(Order = 3)]
+		[DataMember(Order = 2)]
 		[FieldMap("AccountAdmin")]
 		public bool? IsAcountAdmin;
 
-		//[DataMember(Order = 4)]
-		//[FieldMap("UserAdmin")]
-		//public bool? IsUserAdmin;
+		
 
-		[DataMember(Order = 4)]
+		[DataMember(Order = 3)]
 		[FieldMap("Email")]
 		public string Email;
 
@@ -50,13 +48,10 @@ namespace EdgeBI.Objects
 		[FieldMap("Password",Show=false)]
 		public string Password;
 
-		//TODO: Remember to change back to 1 the TargetIsGroup
-		//[DataMember(Order=6)]
-		//[DictionaryMap("User_GUI_AccountPermission", "AccountID", WhereClause = "TargetIsGroup = 1 and TargetID = @PrimeryKey:Int", OrderBy = " AccountID", AdditionalFields = "AccountID")] 
+		[DataMember(Order=4)]
+		[DictionaryMap(Command = "SELECT AccountID,PermissionType,Value FROM User_GUI_AccountPermission WHERE TargetIsGroup=0 and TargetID=@UserID:Int", IsStoredProcedure = false, ValueIsGenericList = true, KeyName = "AccountID", ValueFieldsName = "PermissionType,Value")]
+		public Dictionary<int, List<AssignedPermission>> AssignedPermissions = new Dictionary<int, List<AssignedPermission>>();
 
-		//[DataMember(Order = 5)]
-		//[DictionaryMap(DictionaryKey = "AccountID", Command = "SELECT AccountID,PermissionType,cast (Value  as int) AS 'Value' FROM User_GUI_AccountPermission where TargetIsGroup = 1 and TargetID =  @UserID:Int Order by AccountID")]
-		//public Dictionary<int, List<AssignedPermission>> AssignedPermissions = new Dictionary<int, List<AssignedPermission>>();
 
 		
 

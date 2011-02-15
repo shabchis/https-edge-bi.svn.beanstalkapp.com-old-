@@ -17,6 +17,9 @@ namespace EdgeBI.Objects
 	//[TableMap("User_GUI_User")]
 	public class AssignedPermission
 	{
+		[DataMember(Order=1)]
+		[FieldMap("PermissionName")]
+		public string PermissionName;
 
 		[DataMember]
 		[FieldMap("PermissionType")]
@@ -84,10 +87,17 @@ namespace EdgeBI.Objects
 	[TableMap("Constant_PermissionType")]
 	public class Permission
 	{
+
 		[DataMember(Order = 1)]
+		[FieldMap("Name")]
+		public string PermissionName;
+		[DataMember(Order = 2)]
 		[FieldMap("Path")]
 		public string Path;
-		[DataMember(Order = 2)]
+		[DataMember(Order = 3)]
+
+
+
 		public List<Permission> ChildPermissions = new List<Permission>();
 		public static List<Permission> GetAllPermissionTypeTree()
 		{
@@ -99,12 +109,7 @@ namespace EdgeBI.Objects
 
 			using (DataManager.Current.OpenConnection())
 			{
-				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT Path 
-																			FROM Constant_PermissionType
-																			UNION ALL
-																			SELECT Path 
-																			FROM Constant_Menu 
-																			ORDER BY Path"))
+				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"Permmissions_GetAllPermissions",CommandType.StoredProcedure))
 				{
 					thingReader = new ThingReader<Permission>(sqlCommand.ExecuteReader(), null);
 					while (thingReader.Read())

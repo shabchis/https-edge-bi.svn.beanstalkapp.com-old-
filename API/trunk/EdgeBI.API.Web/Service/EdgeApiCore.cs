@@ -15,6 +15,7 @@ using Microsoft.Http;
 using System.IO;
 using Newtonsoft.Json;
 using System.Data;
+using System.Text;
 
 /// <summary>
 /// Summary description for AlonService
@@ -503,7 +504,7 @@ namespace EdgeBI.API.Web
 			catch (Exception ex)
 			{
 
-				throw;
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
 			}
 			return permissions;
 		}
@@ -513,8 +514,7 @@ namespace EdgeBI.API.Web
 		{
 			List<Permission> returnObject = new List<Permission>();
 			try
-			{
-				ThingReader<Permission> thingReader;
+			{				
 				Stack<Permission> stackPermission = new Stack<Permission>();
 
 				int currentUser;
@@ -527,13 +527,15 @@ namespace EdgeBI.API.Web
 			}
 			catch (Exception ex)
 			{
-
-				throw;
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
 			}
-
+			string str = CreateHtml(returnObject);
 			return returnObject;
 
+
 		}
+
+	
 
 		[WebInvoke(Method = "POST", UriTemplate = "groups/{groupID}/permissions")]
 		public void InsertUpdateRemovePermissionForGroup(string groupID, AssignedPermissionData assignedPermissions)
@@ -641,6 +643,24 @@ namespace EdgeBI.API.Web
 		}
 
 		#endregion
+
+		private string CreateHtml(List<Permission> permissions)
+		{
+			StringBuilder str = new StringBuilder();
+			foreach (Permission permission in permissions)
+			{
+				if (permission.ChildPermissions.Count > 0)
+				{
+					str.Append(string.Format("<ul><li>{0}{1}</li></ul>", permission.Path, CreateHtml(permission.ChildPermissions)));
+				}
+				else
+				{
+					str.Append(string.Format("<ul><li>{0}</li></ul>", permission.Path));
+
+				}
+			}
+			return str.ToString();
+		}
 
 
 

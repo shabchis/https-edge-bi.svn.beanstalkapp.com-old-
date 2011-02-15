@@ -411,12 +411,13 @@ namespace EdgeBI.Objects
 			if (typeElement.IsGenericType)
 			{
 				Type listArgType = typeElement.GetGenericArguments()[0];
-				object listArg = Activator.CreateInstance(listArgType);
+				
 				string[] listArgFieldsName = dictionaryMapAttribute.ValueFieldsName.Split(',');
 				IList list;
 
 				while (sqlDataReader.Read())
 				{
+					object listArg = Activator.CreateInstance(listArgType);
 					if (!returnObject.Contains(sqlDataReader[dictionaryMapAttribute.KeyName]))
 						returnObject.Add(sqlDataReader[dictionaryMapAttribute.KeyName], (IList)Activator.CreateInstance(typeElement));
 					 list=(IList)returnObject[sqlDataReader[dictionaryMapAttribute.KeyName]];
