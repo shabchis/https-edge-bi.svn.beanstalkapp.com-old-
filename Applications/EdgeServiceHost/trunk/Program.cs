@@ -8,6 +8,7 @@ using Easynet.Edge.Core.Utilities;
 namespace Easynet.Edge.Applications 
 {
     
+	// blah blah
 	class EdgeServiceHost
 	{
 		static void Main(string[] args)
