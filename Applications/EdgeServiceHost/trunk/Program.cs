@@ -5,7 +5,7 @@ using Easynet.Edge.Core.Configuration;
 using Easynet.Edge.Core.Services;
 using Easynet.Edge.Core.Utilities;
 
-namespace Easynet.Edge.Applications
+namespace Easynet.Edge.Applications 
 {
     
 	class EdgeServiceHost
