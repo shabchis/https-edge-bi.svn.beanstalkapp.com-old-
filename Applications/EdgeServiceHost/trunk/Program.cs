@@ -5,10 +5,9 @@ using Easynet.Edge.Core.Configuration;
 using Easynet.Edge.Core.Services;
 using Easynet.Edge.Core.Utilities;
 
-namespace Easynet.Edge.Applications 
+namespace Easynet.Edge.Applications
 {
     
-	// blah blah ALON and SHAY
 	class EdgeServiceHost
 	{
 		static void Main(string[] args)
