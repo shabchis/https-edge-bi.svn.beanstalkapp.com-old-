@@ -47,6 +47,8 @@ namespace Easynet.Edge.Services.Bing
 
             foreach (DeliveryFile df in delivery.Files)
             {
+                BingKeywordReportReader bingReader = new BingKeywordReportReader(df.FilePath);
+
                 using (RowReader<PpcDataUnit> reader = (RowReader<PpcDataUnit>)Activator.CreateInstance(df.ReaderType, df.FilePath))
                 {
                     using (DataManager.Current.OpenConnection())
