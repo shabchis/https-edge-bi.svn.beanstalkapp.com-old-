@@ -178,6 +178,10 @@
 									<Style TargetType="{x:Type ComboBox}">
 										<Setter Property="Width" Value="250"/>
 									</Style>
+									<Style TargetType="{x:Type CheckBox}">
+										<Setter Property="Margin" Value="3,0,0,0"/>
+										<Setter Property="VerticalAlignment" Value="Center"/>
+									</Style>
 								</TabItem.Resources>
 								<StackPanel Style="{StaticResource FormContents}">
 									<StackPanel Style="{StaticResource FormField}" x:Name="_segment1" Visibility="Collapsed">
@@ -211,6 +215,10 @@
 									<Style TargetType="{x:Type TextBox}">
 										<Setter Property="Width" Value="60"/>
 									</Style>
+									<Style TargetType="{x:Type CheckBox}">
+										<Setter Property="Margin" Value="3,0,0,0"/>
+										<Setter Property="VerticalAlignment" Value="Center"/>
+									</Style>
 								</TabItem.Resources>
 
 								<StackPanel Orientation="Vertical">
@@ -225,7 +233,7 @@
 												<DataTemplate DataType="{x:Type data:Measure}">
 													<StackPanel Style="{StaticResource FormField}">
 														<Label Content="{Binding DisplayName}"/>
-														<TextBox Text="{Binding Value}"/>
+														<TextBox Text="{this:NumberBinding Path=Value, AllowEmpty=true}"/>
 													</StackPanel>
 												</DataTemplate>
 											</ItemsControl.ItemTemplate>
@@ -236,6 +244,7 @@
 
 							</TabItem>
 							
+                            
 							<TabItem Header="Details">
 								<TabItem.Resources>
 									<Style TargetType="{x:Type Label}">
@@ -252,7 +261,7 @@
 								<StackPanel Style="{StaticResource FormContents}" IsEnabled="False">
 									<StackPanel Style="{StaticResource FormField}">
 										<Label Content="Name"/>
-										<TextBox Text="{this:StringBinding Path=Name}" this:FloatingDialog.DialogFields="Text" IsReadOnly="True"/>
+										<TextBox Text="{this:StringBinding Path=Name}" this:FloatingDialog.DialogFields="Text" IsReadOnly="True" this:FloatingDialog.ReadOnlyField="true"/>
 									</StackPanel>
 									<StackPanel Style="{StaticResource FormField}">
 										<Label Content="Channel"/>
@@ -264,10 +273,13 @@
 											SelectedValuePath="ID"
 											SelectedValue="{this:DialogBinding Path=ChannelID, Mode=TwoWay}"
 											this:FloatingDialog.DialogFields="SelectedValue"
+											this:FloatingDialog.ReadOnlyField="true"
+											IsReadOnly="True"
 											/>
 									</StackPanel>
 								</StackPanel>
 							</TabItem>
+                           
 
 						</TabControl>
 

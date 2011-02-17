@@ -97,7 +97,7 @@ namespace Easynet.Edge.UI.Client
 
 			#if DEBUG
 			accountID = 63;
-			sessionID = "989AA6475FC4DAC58D83BF8B1B6A7BD9";
+			sessionID = "B2450858C26DA0F3E55F484ACD6AF0C1";
 			menuItemPath = "management/campaigns";
 			#endif
 

@@ -50,6 +50,7 @@ namespace Easynet.Edge.UI.Client
 			public DependencyObject Obj;
 			public DependencyProperty Prp;
 			public bool Changed = false;
+			public bool BatchApply = false;
 		}
 
 		List<BEData> _bindings = null;
@@ -174,6 +175,22 @@ namespace Easynet.Edge.UI.Client
 		// Using a DependencyProperty as the backing store for DialogFields.  This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty DialogFieldsProperty =
 		    DependencyProperty.RegisterAttached("DialogFields", typeof(string), typeof(FloatingDialog));
+
+
+
+		public static bool GetReadOnlyField(DependencyObject obj)
+		{
+			return (bool)obj.GetValue(ReadOnlyFieldProperty);
+		}
+
+		public static void SetReadOnlyField(DependencyObject obj, bool value)
+		{
+			obj.SetValue(ReadOnlyFieldProperty, value);
+		}
+
+		// Using a DependencyProperty as the backing store for ReadOnlyField.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty ReadOnlyFieldProperty =
+			DependencyProperty.RegisterAttached("ReadOnlyField", typeof(bool), typeof(FloatingDialog), new UIPropertyMetadata(false));
 
 
 
@@ -373,8 +390,12 @@ namespace Easynet.Edge.UI.Client
 							// If the property is valid, retrieve the attached binding expression and add it
 							BindingExpression exp = (child as FrameworkElement).GetBindingExpression(dependencyProp);
 							(child as FrameworkElement).SourceUpdated += new EventHandler<DataTransferEventArgs>(FloatingDialog_SourceUpdated);
-							_bindings.Add(new BEData(exp, child, dependencyProp));
+							var bedata = new BEData(exp, child, dependencyProp);
+							_bindings.Add(bedata);
 						}
+
+						// if (life.IsABitch)
+						//		this.Commit("suicide");
 					}
 
 					// Bind to tabcontrol
@@ -514,8 +535,42 @@ namespace Easynet.Edge.UI.Client
 			//OnBeforeBeginEdit(tempContent, targetContent);
 
 			// Don't mark as changed while applying changes
-			this.Content = tempContent;
 			SetValue(TargetContentProperty, targetContent);
+			this.Content = tempContent;
+
+			foreach(BEData bedata in _bindings)
+			{
+				// In batch mode, attach a checkbox to this control for marking it as 'please override'
+				if (bedata.Obj is Control && ((Control)bedata.Obj).Parent is StackPanel && !GetReadOnlyField(bedata.Obj))
+				{
+					Control control = (Control)bedata.Obj;
+					StackPanel stackPanel = (StackPanel)control.Parent;
+					CheckBox checkbox = VisualTree.GetChild<CheckBox>(stackPanel, "__batch__cb");
+
+					if (checkbox == null && this.IsBatch)
+					{
+						checkbox = new CheckBox();
+						checkbox.Name = "__batch__cb";
+						checkbox.IsChecked = false;
+						Action<object, RoutedEventArgs> del = delegate(object sender, RoutedEventArgs e)
+						{
+							control.IsEnabled = checkbox.IsChecked.Value;
+							bedata.BatchApply = control.IsEnabled;
+						};
+
+						checkbox.Checked += new RoutedEventHandler(del);
+						checkbox.Unchecked += new RoutedEventHandler(del);
+						stackPanel.Children.Add(checkbox);
+					}
+
+					if (checkbox != null)
+					{
+						control.IsEnabled = !IsBatch;
+						checkbox.Visibility = IsBatch ? Visibility.Visible : Visibility.Collapsed;
+						checkbox.IsChecked = false;
+					}
+				}
+			}
 
 			IsOpen = true;
 		}
@@ -637,7 +692,10 @@ namespace Easynet.Edge.UI.Client
 			foreach (BEData bdata in _bindings)
 			{
 				// Don't do anything if the binding has not been changed
-				if (!bdata.Changed)
+				if (
+						(this.IsBatch && !bdata.BatchApply) ||
+						!bdata.Changed
+					)
 					continue;
 
 				// Get current val

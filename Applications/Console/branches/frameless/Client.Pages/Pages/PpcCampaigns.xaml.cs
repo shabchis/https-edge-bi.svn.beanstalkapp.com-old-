@@ -1090,7 +1090,7 @@ namespace Easynet.Edge.UI.Client.Pages
 								}
 								else
 								{
-									// For targets in batch mode with targets disabled, use all campaign targets (slow but who gives a fuck)
+									// For targets in batch mode with targets view disabled, use all campaign targets (slow but who gives a fuck)
 									using (OltpProxy proxy = new OltpProxy())
 									{
 										targetsDataToSave = proxy.Service.CampaignTargets_Get(accountID,null);
