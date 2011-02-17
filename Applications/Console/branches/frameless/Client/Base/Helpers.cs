@@ -85,16 +85,21 @@ namespace Easynet.Edge.UI.Client
 		}
 
 
-		public static T GetParent<T>(DependencyObject element) where T : DependencyObject
+		public static T GetParent<T>(DependencyObject element, Func<DependencyObject,bool> test) where T : DependencyObject
 		{
 			if (element == null)
 				return null;
 
 			DependencyObject parent = VisualTreeHelper.GetParent(element);
-			if (parent is T)
+			if (parent is T && (test == null || test(parent)))
 				return parent as T;
 			else
 				return GetParent<T>(parent);
+		}
+
+		public static T GetParent<T>(DependencyObject element) where T : DependencyObject
+		{
+			return GetParent<T>(element, null);
 		}
 
 
