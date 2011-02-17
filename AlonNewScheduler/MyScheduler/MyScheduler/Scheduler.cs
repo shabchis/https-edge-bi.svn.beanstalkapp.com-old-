@@ -136,15 +136,16 @@ namespace MyScheduler
 			
 			//Alon
 			int result;
-			if (proportion != 0)
-				proportion = proportion / oddsForAverageExecution;
-			else
-				proportion = wantedOdds / oddsForAverageExecution;
-			double executionTime;
-			executionTime = proportion * averageExecutionTimeInMin; 
-			
+			//if (proportion != 0)
+			//    proportion = proportion / oddsForAverageExecution;
+			//else
+			//    proportion = wantedOdds / oddsForAverageExecution;
+			//double executionTime;
+			//executionTime = proportion * averageExecutionTimeInMin; 
 
-			return result = Convert.ToInt32(executionTime);
+
+
+			return result = Convert.ToInt32(averageExecutionTimeInMin);
 			
 			
 			
