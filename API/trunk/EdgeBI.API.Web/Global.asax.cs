@@ -25,42 +25,42 @@ namespace JsonValueSample
 			
 
 			///*Load dll dynamicly in order to  allow publish only specific dlls.*/
-			//string path = Server.MapPath("~test.db4o");
+			string path = Server.MapPath("~/test.db4o");
+
+
+			IEmbeddedConfiguration serverConfig = Db4oEmbedded.NewConfiguration();
+			serverConfig.Common.ObjectClass(typeof(module)).ObjectField("RoutePrefix").Indexed(true);
+			serverConfig.Common.Add(new UniqueFieldValueConstraint(typeof(module), "RoutePrefix"));
 			
+			IObjectSet result;
+			using (IObjectContainer db = Db4oEmbedded.OpenFile(serverConfig, path))
+			{
+				module m = new module() { AssemblyQualifiedName = "EdgeBI.API.Web.EdgeApiTools,EdgeBI.API.Web.EdgeApiTools", RoutePrefix = "Tools" };
+				db.Store(m);
+				try
+				{
+					db.Commit();
 
-			//IEmbeddedConfiguration serverConfig = Db4oEmbedded.NewConfiguration();
-			//serverConfig.Common.ObjectClass(typeof(module)).ObjectField("RoutePrefix").Indexed(true);
-			//serverConfig.Common.Add(new UniqueFieldValueConstraint(typeof(module), "RoutePrefix"));
-			//IObjectSet result;
-			//using (IObjectContainer db = Db4oEmbedded.OpenFile(serverConfig, path))
-			//{
-			//    module m = new module() { AssemblyQualifiedName = "EdgeBI.API.Web.EdgeApiTools,EdgeBI.API.Web.EdgeApiTools", RoutePrefix = "Tools" };
-			//    db.Store(m);
-			//    try
-			//    {
-			//        db.Commit();
+				}
+				catch (Exception)
+				{
+					db.Rollback();
 
-			//    }
-			//    catch (Exception)
-			//    {
-			//        db.Rollback();
+				}
+				result = db.QueryByExample(typeof(module));
+				db.Ext().Refresh(result, 0);
+				foreach (module mm in result)
+				{
+					Type t = Type.GetType(m.AssemblyQualifiedName, false);
+					if (t != null)
+					{
+						var route1 = new ServiceRoute(m.RoutePrefix, new EdgeApiServiceHostFactory(new EdgeApiServiceConfiguration()), t);
+						RouteTable.Routes.Add(route1);
+					}
 
-			//    }
-			//    result = db.QueryByExample(typeof(module));
-			//    db.Ext().Refresh(result, 0);
-			//    foreach (module mm in result)
-			//    {
-			//        Type t = Type.GetType(m.AssemblyQualifiedName, false);
-			//        if (t != null)
-			//        {
-			//            var route1 = new ServiceRoute(m.RoutePrefix, new EdgeApiServiceHostFactory(new EdgeApiServiceConfiguration()), t);
-			//            RouteTable.Routes.Add(route1);
-			//        }
-
-			//    }
-			//}			
-			//var route1 = new ServiceRoute("Tools", new EdgeApiServiceHostFactory(new EdgeApiServiceConfiguration()), typeof(EdgeApiTools));
-			//RouteTable.Routes.Add(route1);
+				}
+			}
+		
 			var route2 = new ServiceRoute("", new EdgeApiServiceHostFactory(new EdgeApiServiceConfiguration()), typeof(EdgeApiCore));
 			RouteTable.Routes.Add(route2);
 		   
