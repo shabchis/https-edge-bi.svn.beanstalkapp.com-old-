@@ -47,9 +47,10 @@ namespace Easynet.Edge.Services.Bing
 
             foreach (DeliveryFile df in delivery.Files)
             {
-                BingKeywordReportReader bingReader = new BingKeywordReportReader(df.FilePath);
-
-                using (RowReader<PpcDataUnit> reader = (RowReader<PpcDataUnit>)Activator.CreateInstance(df.ReaderType, df.FilePath))
+                //BingKeywordReportReader bingReader = new BingKeywordReportReader(df.FilePath);
+                //לבדוק שזה בינגdf.ReaderType
+                Type t = typeof(BingKeywordReportReader);
+                using (RowReader<PpcDataUnit> reader = (RowReader<PpcDataUnit>)Activator.CreateInstance(t, df.FilePath + "\\" + df.FileName ))
                 {
                     using (DataManager.Current.OpenConnection())
                     {
@@ -58,6 +59,7 @@ namespace Easynet.Edge.Services.Bing
                         while (reader.Read())
                         {
                             reader.CurrentRow.Save();
+                            
                         }
 
                         DataManager.Current.CommitTransaction();
