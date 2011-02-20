@@ -51,6 +51,7 @@ namespace Easynet.Edge.UI.Client
 			public DependencyProperty Prp;
 			public bool Changed = false;
 			public bool BatchApply = false;
+			public bool BatchApplySet = false;
 		}
 
 		List<BEData> _bindings = null;
@@ -425,6 +426,7 @@ namespace Easynet.Edge.UI.Client
 		void tab_GotFocus(object sender, RoutedEventArgs e)
 		{
 			GetDialogFieldBindings((sender as TabItem).Parent);
+			ApplyBatchCheckboxes(true);
 		}
 
 		DependencyProperty GetDependencyProperty(Type t, string fieldName)
@@ -538,39 +540,7 @@ namespace Easynet.Edge.UI.Client
 			SetValue(TargetContentProperty, targetContent);
 			this.Content = tempContent;
 
-			foreach(BEData bedata in _bindings)
-			{
-				// In batch mode, attach a checkbox to this control for marking it as 'please override'
-				if (bedata.Obj is Control && ((Control)bedata.Obj).Parent is StackPanel && !GetReadOnlyField(bedata.Obj))
-				{
-					Control control = (Control)bedata.Obj;
-					StackPanel stackPanel = (StackPanel)control.Parent;
-					CheckBox checkbox = VisualTree.GetChild<CheckBox>(stackPanel, "__batch__cb");
-
-					if (checkbox == null && this.IsBatch)
-					{
-						checkbox = new CheckBox();
-						checkbox.Name = "__batch__cb";
-						checkbox.IsChecked = false;
-						Action<object, RoutedEventArgs> del = delegate(object sender, RoutedEventArgs e)
-						{
-							control.IsEnabled = checkbox.IsChecked.Value;
-							bedata.BatchApply = control.IsEnabled;
-						};
-
-						checkbox.Checked += new RoutedEventHandler(del);
-						checkbox.Unchecked += new RoutedEventHandler(del);
-						stackPanel.Children.Add(checkbox);
-					}
-
-					if (checkbox != null)
-					{
-						control.IsEnabled = !IsBatch;
-						checkbox.Visibility = IsBatch ? Visibility.Visible : Visibility.Collapsed;
-						checkbox.IsChecked = false;
-					}
-				}
-			}
+			ApplyBatchCheckboxes(false);
 
 			IsOpen = true;
 		}
@@ -685,6 +655,46 @@ namespace Easynet.Edge.UI.Client
 			if (bargs.CloseDialog && !aargs.Cancel)
 				this.Close();
 		}
+
+		private void ApplyBatchCheckboxes(bool createOnly)
+		{
+			foreach (BEData bedata in _bindings)
+			{
+				// In batch mode, attach a checkbox to this control for marking it as 'please override'
+				if (bedata.Obj is Control && ((Control)bedata.Obj).Parent is StackPanel && !GetReadOnlyField(bedata.Obj))
+				{
+					Control control = (Control)bedata.Obj;
+					StackPanel stackPanel = (StackPanel)control.Parent;
+					CheckBox checkbox = VisualTree.GetChild<CheckBox>(stackPanel, "__batch__cb");
+
+					bool created = false;
+					if (checkbox == null && this.IsBatch)
+					{
+						checkbox = new CheckBox();
+						checkbox.Name = "__batch__cb";
+						checkbox.IsChecked = false;
+						Action<object, RoutedEventArgs> del = delegate(object sender, RoutedEventArgs e)
+						{
+							control.IsEnabled = checkbox.IsChecked.Value;
+							bedata.BatchApply = control.IsEnabled;
+						};
+
+						checkbox.Checked += new RoutedEventHandler(del);
+						checkbox.Unchecked += new RoutedEventHandler(del);
+						stackPanel.Children.Add(checkbox);
+						created = true;
+					}
+
+					if (checkbox != null && (!createOnly || created))
+					{
+						control.IsEnabled = !IsBatch;
+						checkbox.Visibility = IsBatch ? Visibility.Visible : Visibility.Collapsed;
+					}
+				}
+			}
+		}
+
+
 
 		public void ApplyBindingsToItems(IEnumerable targetItems)
 		{

@@ -885,6 +885,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				return;
 
 			TargetsRow targetsRow = null;
+			TargetsTable targetsTable = null;
 			int accountID = Window.CurrentAccount.ID;
 			Oltp.CampaignRow tempCampaign = Campaign_dialog.Content as Oltp.CampaignRow;
 			Oltp.CampaignRow targetCampaign = Campaign_dialog.TargetContent as Oltp.CampaignRow;
@@ -896,14 +897,14 @@ namespace Easynet.Edge.UI.Client.Pages
 				{
 					// Since targets are enabled, clone the one attached to this campaign and use it as a temp row for dialog editing
 					DataTable cloned = _targetData.InnerTable.Clone();
-					cloned.ImportRow(targetCampaign.Targets.InnerRow);
-					TargetsTable targetsTable = new TargetsTable(cloned);
-					targetsRow = targetsTable.GetCampaignTargets(targetCampaign.GK);
+					if (!isBatch)
+						cloned.ImportRow(targetCampaign.Targets.InnerRow);
+						
+					targetsTable = new TargetsTable(cloned);
+					targetsRow = targetsTable.GetCampaignTargets(isBatch ? -1 : targetCampaign.GK);
 				}
 				else
 				{
-					TargetsTable targetsTable;
-
 					// Targets on this campaign row are not available, so get them from server
 					using (OltpProxy proxy = new OltpProxy())
 					{
@@ -932,6 +933,41 @@ namespace Easynet.Edge.UI.Client.Pages
 				};
 
 				_campaignTargetsControl.ItemsSource = measuresTargets;
+				_campaignTargetsControl.UpdateLayout();
+				
+				List<TextBox> controls = VisualTree.GetChildren<TextBox>(_campaignTargetsControl);
+				
+				// Wiring for batch checkboxes
+				// don't use foreach otherwise 'control' inside 'del' uses enumerator.Current and thus will always reflect the last one
+				for (int i = 0; i < controls.Count; i++)
+				{
+					TextBox control = controls[i];
+
+					StackPanel stackPanel = control.Parent as StackPanel;
+					CheckBox checkbox = stackPanel.Children[stackPanel.Children.Count - 1] as CheckBox;
+					if (checkbox == null && isBatch)
+					{
+						checkbox = new CheckBox();
+						checkbox.IsChecked = false;
+						Action<object, RoutedEventArgs> del = delegate(object innerSender, RoutedEventArgs innerE)
+						{
+							control.IsEnabled = checkbox.IsChecked.Value;
+							control.Tag = checkbox.IsEnabled;
+						};
+
+						checkbox.Checked += new RoutedEventHandler(del);
+						checkbox.Unchecked += new RoutedEventHandler(del);
+						stackPanel.Children.Add(checkbox);
+					}
+
+					if (checkbox != null)
+					{
+						control.IsEnabled = !isBatch;
+						checkbox.Visibility = isBatch ? Visibility.Visible : Visibility.Collapsed;
+					}
+
+				}
+
 				VisualTree.GetChild<TextBlock>(Campaign_dialog, "note").Visibility =
 					_targetsEnabled ? Visibility.Visible : Visibility.Collapsed;
 			});
@@ -1070,6 +1106,29 @@ namespace Easynet.Edge.UI.Client.Pages
 						// Save (or update) targets
 						bool isBatch = Campaign_dialog.IsBatch;
 						int accountID = Window.CurrentAccount.ID;
+						
+						// Check which measures in batch mode are set to save
+						List<Measure> measuresToSave = null;
+						if (isBatch)
+						{
+							measuresToSave = new List<Measure>();
+							List<TextBox> controls = VisualTree.GetChildren<TextBox>(_campaignTargetsControl);
+
+							for (int i = 0; i < controls.Count; i++)
+							{
+								TextBox control = controls[i];
+
+								StackPanel stackPanel = control.Parent as StackPanel;
+								CheckBox checkbox = stackPanel.Children[stackPanel.Children.Count - 1] as CheckBox;
+
+								// Add the target measure to measuresToSave by finding one with the same ID
+								// (they are not the same object because we cloned the measures when we opened the tab)
+								if (checkbox.IsChecked != null && checkbox.IsChecked.Value)
+									measuresToSave.Add(_measures.Single(m => m.MeasureID == (_campaignTargetsControl.Items[i] as Measure).MeasureID));
+							}
+
+						}
+
 						Window.AsyncOperation(delegate()
 						{
 
@@ -1079,7 +1138,8 @@ namespace Easynet.Edge.UI.Client.Pages
 								// Since this row was borrowed from the full target data table, apply changes to it
 								foreach(Oltp.CampaignRow targetCampaign in targetRows)
 									foreach (Measure m in _measures)
-										targetCampaign.Targets[m.FieldName] = tempRow.Targets[m.FieldName];
+										if (measuresToSave == null || measuresToSave.Contains(m))
+											targetCampaign.Targets[m.FieldName] = tempRow.Targets[m.FieldName];
 							}
 							else
 							{
@@ -1102,7 +1162,8 @@ namespace Easynet.Edge.UI.Client.Pages
 									{
 										TargetsRow targetsRowToSave = tempTargetsTable.GetCampaignTargets(targetCampaign.GK);
 										foreach (Measure m in _measures)
-											targetsRowToSave[m.FieldName] = tempRow.Targets[m.FieldName];
+											if (measuresToSave == null || measuresToSave.Contains(m))
+												targetsRowToSave[m.FieldName] = tempRow.Targets[m.FieldName];
 									}
 								}
 

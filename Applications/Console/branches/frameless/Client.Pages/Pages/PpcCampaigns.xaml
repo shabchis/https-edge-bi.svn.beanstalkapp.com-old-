@@ -239,12 +239,15 @@
 											</ItemsControl.ItemTemplate>
 										</ItemsControl>
 									</ScrollViewer>
-									<TextBlock x:Name="note" Visibility="Collapsed">Note: to save this campaign's targets, you must save all targets from the top right of the main campaign list.</TextBlock>
+									<TextBlock x:Name="note" Visibility="Collapsed" TextWrapping="Wrap" FontSize="10" Margin="10,0,0,0">
+										Note: to save this campaign's targets, you must save all targets by pressing <Bold>'Save'</Bold> on the top right corner of the screen.
+									</TextBlock>
 								</StackPanel>
 
 							</TabItem>
 							
                             
+							<!--
 							<TabItem Header="Details">
 								<TabItem.Resources>
 									<Style TargetType="{x:Type Label}">
@@ -279,6 +282,7 @@
 									</StackPanel>
 								</StackPanel>
 							</TabItem>
+							-->
                            
 
 						</TabControl>
@@ -440,7 +444,8 @@
 																<TextBlock Text="{Binding DisplayTitle}" FontWeight="bold" Margin="0,0,0,5" ToolTip="{Binding AdgroupCreativeGK}"/>
 																<TextBlock Text="{Binding DisplayDesc1}"/>
 																<TextBlock Text="{Binding Desc2}" Margin="0,0,0,5"/>
-																<TextBlock Text="{Binding DisplayURL}" ToolTip="{Binding DestinationUrlDisplay}"/>
+																<TextBlock Text="{Binding DisplayURL}" Margin="0,0,0,5"/>
+																<TextBlock Text="{Binding DestinationUrlDisplay}" FontSize="10" TextWrapping="Wrap" Foreground="#666"/>
 															</StackPanel>
 														</DataTemplate>
 													</GridViewColumn.CellTemplate>
