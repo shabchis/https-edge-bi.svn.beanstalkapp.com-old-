@@ -61,22 +61,19 @@ namespace EdgeBI.Objects
 			return returnObject;
 
 		}
-		public static int SaveOrRemoveSimpleObject<T>(string Command, CommandType commandType, SqlOperation sqlOperation, object objectToInsert, string connectionString) where T : class, new()
+		public static object SaveOrRemoveSimpleObject<T>(string Command, CommandType commandType, SqlOperation sqlOperation, object objectToInsert, SqlConnection sqlConnection,SqlTransaction sqlTransaction) where T : class, new()
 		{
-			int rowsAfected = 0;
+			object rowsAfectedOrIdentity = 0;
 			Type t = typeof(T);
-
-
-			if (string.IsNullOrEmpty(connectionString))
-				connectionString = DataManager.ConnectionString;
-
 			
-			using (SqlConnection sqlConnection = new SqlConnection(connectionString))
-			{
-				sqlConnection.Open();
+			
+				if (sqlConnection.State!=ConnectionState.Open)
+					sqlConnection.Open();
 				using (SqlCommand sqlCommand = DataManager.CreateCommand(Command, commandType))
 				{
 					sqlCommand.Connection = sqlConnection;
+					if (sqlTransaction != null)
+						sqlCommand.Transaction = sqlTransaction;
 					if (sqlCommand.Parameters.Contains("@Action"))
 						sqlCommand.Parameters["@Action"].Value = sqlOperation;
 					foreach (FieldInfo fieldInfo in objectToInsert.GetType().GetFields())
@@ -93,10 +90,10 @@ namespace EdgeBI.Objects
 							}
 						}
 					}
-					rowsAfected = sqlCommand.ExecuteNonQuery();
+					rowsAfectedOrIdentity = sqlCommand.ExecuteScalar();
 				}
-			}
-			return rowsAfected;
+			
+			return rowsAfectedOrIdentity;
 
 		}
 		public static T ExpandObject<T>(object o, Func<FieldInfo, IDataRecord, object> customApply) where T : class , new()

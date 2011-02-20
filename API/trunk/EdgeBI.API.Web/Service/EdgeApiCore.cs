@@ -147,6 +147,7 @@ namespace EdgeBI.API.Web
 			}
 
 		}
+		/*AssignUserToGroup
 		[WebInvoke(Method ="POST", UriTemplate = "groups/{groupID}/users/{userID}")]
 		public void AssignUserToGroup(string groupID, string userID)
 		{
@@ -166,6 +167,7 @@ namespace EdgeBI.API.Web
 			}
 
 		}
+		 */
 
 		[WebGet(UriTemplate = "groups/{ID}/users")]
 		public List<User> GetGroupAssociateUsers(string ID)
@@ -315,6 +317,7 @@ namespace EdgeBI.API.Web
 			}
 
 		}
+		/*AssignGroupToUser
 		[WebInvoke(Method = "POST", UriTemplate = "users/{userID}/groups/{groupID}")]
 		public void AssignGroupToUser(string userID, string groupID)
 		{
@@ -334,6 +337,7 @@ namespace EdgeBI.API.Web
 			}
 
 		}
+		 * */
 		[WebGet(UriTemplate = "users/{ID}/groups")]
 		public  List<Group> GetUserAssociateGroups(string ID)
 		{
@@ -529,7 +533,7 @@ namespace EdgeBI.API.Web
 			{
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
 			}
-			string str = CreateHtml(returnObject);
+			
 			return returnObject;
 
 
@@ -643,7 +647,7 @@ namespace EdgeBI.API.Web
 		}
 
 		#endregion
-
+		/*for yaron -test
 		private string CreateHtml(List<Permission> permissions)
 		{
 			StringBuilder str = new StringBuilder();
@@ -661,7 +665,8 @@ namespace EdgeBI.API.Web
 			}
 			return str.ToString();
 		}
-
+		 */
+		
 
 
 

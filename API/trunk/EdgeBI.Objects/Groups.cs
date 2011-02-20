@@ -142,7 +142,9 @@ namespace EdgeBI.Objects
 		public  void GroupOperations(SqlOperation sqlOperation)
 		{
 			string command = @"Group_Operations(@Action:Int,@Name:NvarChar,@AccountAdmin:bit,1,@GroupID:Int)";
-			MapperUtility.SaveOrRemoveSimpleObject<Group>(command, CommandType.StoredProcedure, sqlOperation, this,string.Empty); 
+			SqlConnection sqlConnection = new SqlConnection(DataManager.ConnectionString);
+			sqlConnection.Open();
+			MapperUtility.SaveOrRemoveSimpleObject<Group>(command, CommandType.StoredProcedure, sqlOperation, this, sqlConnection,null); 
 				
 		}
 		
