@@ -22,17 +22,18 @@ namespace EdgeBI.Objects
 		[FieldMap("Name")]
 		public string Name;
 
-
-		[FieldMap("IsActive", Show = false)]
-		public bool IsActive = true;
-
 		[DataMember(Order = 2)]
+		[FieldMap("IsActive")]
+		public bool IsActive;
+
+		[DataMember(Order = 3)]
 		[FieldMap("AccountAdmin")]
 		public bool? IsAcountAdmin;
 
-		[DataMember(Order=3)]
+		[DataMember(Order=4)]
 		[DictionaryMap(Command = "Group_AssignedPermission(@GroupID:Int)", IsStoredProcedure = true, ValueIsGenericList = true, KeyName = "AccountID", ValueFieldsName = "PermissionName,PermissionType,Value")]
 		public Dictionary<int, List<AssignedPermission>> AssignedPermissions = new Dictionary<int, List<AssignedPermission>>();
+
 
 
 
