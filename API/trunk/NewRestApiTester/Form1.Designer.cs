@@ -106,6 +106,7 @@
 			// 
 			// SetButton
 			// 
+			this.SetButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.SetButton.Location = new System.Drawing.Point(660, 528);
 			this.SetButton.Name = "SetButton";
 			this.SetButton.Size = new System.Drawing.Size(75, 23);
@@ -116,6 +117,7 @@
 			// 
 			// GetButton
 			// 
+			this.GetButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.GetButton.Location = new System.Drawing.Point(578, 528);
 			this.GetButton.Name = "GetButton";
 			this.GetButton.Size = new System.Drawing.Size(75, 23);
@@ -160,6 +162,7 @@
 			// 
 			// BodyTextBox
 			// 
+			this.BodyTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.BodyTextBox.Location = new System.Drawing.Point(15, 225);
 			this.BodyTextBox.Multiline = true;
 			this.BodyTextBox.Name = "BodyTextBox";
@@ -168,6 +171,9 @@
 			// 
 			// label4
 			// 
+			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.label4.AutoSize = true;
 			this.label4.Location = new System.Drawing.Point(14, 209);
 			this.label4.Name = "label4";
@@ -186,6 +192,7 @@
 			// 
 			// HeaderKeytextBox
 			// 
+			this.HeaderKeytextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.HeaderKeytextBox.Location = new System.Drawing.Point(375, 62);
 			this.HeaderKeytextBox.Name = "HeaderKeytextBox";
 			this.HeaderKeytextBox.Size = new System.Drawing.Size(100, 20);
@@ -193,6 +200,7 @@
 			// 
 			// HeaderValuetextBox
 			// 
+			this.HeaderValuetextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.HeaderValuetextBox.Location = new System.Drawing.Point(544, 62);
 			this.HeaderValuetextBox.Name = "HeaderValuetextBox";
 			this.HeaderValuetextBox.Size = new System.Drawing.Size(100, 20);
@@ -200,6 +208,7 @@
 			// 
 			// label6
 			// 
+			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.label6.AutoSize = true;
 			this.label6.Location = new System.Drawing.Point(493, 69);
 			this.label6.Name = "label6";
@@ -209,6 +218,7 @@
 			// 
 			// AddUpdateButton
 			// 
+			this.AddUpdateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.AddUpdateButton.Location = new System.Drawing.Point(661, 60);
 			this.AddUpdateButton.Name = "AddUpdateButton";
 			this.AddUpdateButton.Size = new System.Drawing.Size(75, 23);
@@ -239,6 +249,7 @@
 			// 
 			// panel1
 			// 
+			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.panel1.Controls.Add(this.ResponseBodyRichTextBox);
 			this.panel1.Controls.Add(this.FormatComboBox);
 			this.panel1.Controls.Add(this.label10);
@@ -247,20 +258,22 @@
 			this.panel1.Controls.Add(this.ResponseHeaderTextBox);
 			this.panel1.Location = new System.Drawing.Point(346, 147);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(390, 364);
+			this.panel1.Size = new System.Drawing.Size(390, 375);
 			this.panel1.TabIndex = 19;
 			// 
 			// ResponseBodyRichTextBox
 			// 
+			this.ResponseBodyRichTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.ResponseBodyRichTextBox.Location = new System.Drawing.Point(7, 133);
 			this.ResponseBodyRichTextBox.Name = "ResponseBodyRichTextBox";
 			this.ResponseBodyRichTextBox.ReadOnly = true;
-			this.ResponseBodyRichTextBox.Size = new System.Drawing.Size(309, 248);
+			this.ResponseBodyRichTextBox.Size = new System.Drawing.Size(309, 231);
 			this.ResponseBodyRichTextBox.TabIndex = 6;
 			this.ResponseBodyRichTextBox.Text = "";
 			// 
 			// FormatComboBox
 			// 
+			this.FormatComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.FormatComboBox.FormattingEnabled = true;
 			this.FormatComboBox.Items.AddRange(new object[] {
             "XML",
@@ -273,6 +286,7 @@
 			// 
 			// label10
 			// 
+			this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label10.AutoSize = true;
 			this.label10.Location = new System.Drawing.Point(103, 103);
 			this.label10.Name = "label10";
@@ -282,6 +296,7 @@
 			// 
 			// label9
 			// 
+			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label9.AutoSize = true;
 			this.label9.Location = new System.Drawing.Point(4, 104);
 			this.label9.Name = "label9";
@@ -291,6 +306,7 @@
 			// 
 			// label7
 			// 
+			this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label7.AutoSize = true;
 			this.label7.Location = new System.Drawing.Point(6, 10);
 			this.label7.Name = "label7";
@@ -300,6 +316,7 @@
 			// 
 			// ResponseHeaderTextBox
 			// 
+			this.ResponseHeaderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.ResponseHeaderTextBox.Location = new System.Drawing.Point(3, 33);
 			this.ResponseHeaderTextBox.Multiline = true;
 			this.ResponseHeaderTextBox.Name = "ResponseHeaderTextBox";
@@ -310,6 +327,7 @@
 			// 
 			// DeleteButton
 			// 
+			this.DeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.DeleteButton.Location = new System.Drawing.Point(496, 528);
 			this.DeleteButton.Name = "DeleteButton";
 			this.DeleteButton.Size = new System.Drawing.Size(75, 23);

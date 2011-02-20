@@ -34,7 +34,10 @@ namespace EdgeBI.Objects
 		[DictionaryMap(Command = "Group_AssignedPermission(@GroupID:Int)", IsStoredProcedure = true, ValueIsGenericList = true, KeyName = "AccountID", ValueFieldsName = "PermissionName,PermissionType,Value")]
 		public Dictionary<int, List<AssignedPermission>> AssignedPermissions = new Dictionary<int, List<AssignedPermission>>();
 
-
+		[DataMember(Order = 5)]
+		[DictionaryMap(Command = "SELECT T0.UserID,T1.Name FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_User T1 ON T0.UserID=T1.UserID WHERE T0.GroupID=@GroupID:Int", IsStoredProcedure = false, ValueIsGenericList = false, KeyName = "UserID", ValueFieldsName = "Name")]
+		public Dictionary<int, string> Members = new Dictionary<int, string>();
+		
 
 
 		private static object CustomApply(FieldInfo info, IDataRecord reader)
