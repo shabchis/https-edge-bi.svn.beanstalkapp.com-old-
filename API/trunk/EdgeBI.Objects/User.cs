@@ -30,17 +30,17 @@ namespace EdgeBI.Objects
 		[FieldMap("Name")]
 		public string Name;
 
-		
-		[FieldMap("IsActive", Show = false)]
+		[DataMember(Order = 2)]
+		[FieldMap("IsActive")]
 		public bool IsActive=true;
 
-		[DataMember(Order = 2)]
+		[DataMember(Order = 3)]
 		[FieldMap("AccountAdmin")]
 		public bool? IsAcountAdmin;
 
 		
 
-		[DataMember(Order = 3)]
+		[DataMember(Order = 4)]
 		[FieldMap("Email")]
 		public string Email;
 
