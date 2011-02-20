@@ -56,6 +56,7 @@
 			this.label7 = new System.Windows.Forms.Label();
 			this.ResponseHeaderTextBox = new System.Windows.Forms.TextBox();
 			this.DeleteButton = new System.Windows.Forms.Button();
+			this.btnPut = new System.Windows.Forms.Button();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -336,11 +337,23 @@
 			this.DeleteButton.UseVisualStyleBackColor = true;
 			this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
 			// 
+			// btnPut
+			// 
+			this.btnPut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnPut.Location = new System.Drawing.Point(415, 528);
+			this.btnPut.Name = "btnPut";
+			this.btnPut.Size = new System.Drawing.Size(75, 23);
+			this.btnPut.TabIndex = 21;
+			this.btnPut.Text = "PUT";
+			this.btnPut.UseVisualStyleBackColor = true;
+			this.btnPut.Click += new System.EventHandler(this.btnPut_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(748, 563);
+			this.Controls.Add(this.btnPut);
 			this.Controls.Add(this.DeleteButton);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.removeButton);
@@ -401,6 +414,7 @@
 		private System.Windows.Forms.TextBox ResponseHeaderTextBox;
 		private System.Windows.Forms.RichTextBox ResponseBodyRichTextBox;
 		private System.Windows.Forms.Button DeleteButton;
+		private System.Windows.Forms.Button btnPut;
 	}
 }
 

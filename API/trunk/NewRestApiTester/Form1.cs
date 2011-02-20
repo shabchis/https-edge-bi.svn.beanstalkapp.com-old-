@@ -122,7 +122,7 @@ namespace NewRestApiTester__
 				request.Headers.Add(item.Text, item.SubItems[1].Text);
 
 			}
-			if (requestType == "POST")
+			if (requestType == "POST" || requestType=="PUT")
 			{
 				request.Headers.ContentType = "application/json";
 				if (!string.IsNullOrEmpty(BodyTextBox.Text))
@@ -299,6 +299,11 @@ namespace NewRestApiTester__
 		{
 			CreateRequest("DELETE");
 
+		}
+
+		private void btnPut_Click(object sender, EventArgs e)
+		{
+			CreateRequest("PUT");
 		}
 	}
 }
