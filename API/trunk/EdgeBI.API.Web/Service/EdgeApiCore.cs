@@ -147,7 +147,7 @@ namespace EdgeBI.API.Web
 			}
 
 		}
-		[WebInvoke(Method = "POST", UriTemplate = "groups/{groupID}/users/{userID}")]
+		[WebInvoke(Method ="POST", UriTemplate = "groups/{groupID}/users/{userID}")]
 		public void AssignUserToGroup(string groupID, string userID)
 		{
 			try
