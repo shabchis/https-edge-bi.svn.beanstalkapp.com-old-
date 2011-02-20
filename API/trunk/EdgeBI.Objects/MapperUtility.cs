@@ -67,14 +67,16 @@ namespace EdgeBI.Objects
 			Type t = typeof(T);
 
 
-			if (!string.IsNullOrEmpty(connectionString))
+			if (string.IsNullOrEmpty(connectionString))
 				connectionString = DataManager.ConnectionString;
 
 
 			using (SqlConnection sqlConnection = new SqlConnection(connectionString))
 			{
+				sqlConnection.Open();
 				using (SqlCommand sqlCommand = DataManager.CreateCommand(Command, commandType))
 				{
+					sqlCommand.Connection = sqlConnection;
 					if (sqlCommand.Parameters.Contains("@Action"))
 						sqlCommand.Parameters["@Action"].Value = sqlOperation;
 					foreach (FieldInfo fieldInfo in objectToInsert.GetType().GetFields())
