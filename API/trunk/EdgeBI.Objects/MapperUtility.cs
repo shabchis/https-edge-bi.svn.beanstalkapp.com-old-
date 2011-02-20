@@ -70,7 +70,7 @@ namespace EdgeBI.Objects
 			if (string.IsNullOrEmpty(connectionString))
 				connectionString = DataManager.ConnectionString;
 
-
+			
 			using (SqlConnection sqlConnection = new SqlConnection(connectionString))
 			{
 				sqlConnection.Open();
@@ -413,7 +413,7 @@ namespace EdgeBI.Objects
 			if (typeElement.IsGenericType)
 			{
 				Type listArgType = typeElement.GetGenericArguments()[0];
-				
+
 				string[] listArgFieldsName = dictionaryMapAttribute.ValueFieldsName.Split(',');
 				IList list;
 
@@ -422,14 +422,30 @@ namespace EdgeBI.Objects
 					object listArg = Activator.CreateInstance(listArgType);
 					if (!returnObject.Contains(sqlDataReader[dictionaryMapAttribute.KeyName]))
 						returnObject.Add(sqlDataReader[dictionaryMapAttribute.KeyName], (IList)Activator.CreateInstance(typeElement));
-					 list=(IList)returnObject[sqlDataReader[dictionaryMapAttribute.KeyName]];
-					 foreach (string fieldName in listArgFieldsName)
-					 {
-						  listArgType.GetField(fieldName).SetValue(listArg, sqlDataReader[fieldName]);
-						 
-					 }
-					 list.Add(listArg);
+					list = (IList)returnObject[sqlDataReader[dictionaryMapAttribute.KeyName]];
+					foreach (string fieldName in listArgFieldsName)
+					{
+						listArgType.GetField(fieldName).SetValue(listArg, sqlDataReader[fieldName]);
+
+					}
+					list.Add(listArg);
 				}
+			}
+			else
+			{
+				while (sqlDataReader.Read())
+				{
+					object val;
+					if (typeElement!=typeof(string))
+						val = Activator.CreateInstance(typeElement);
+					else
+						val=sqlDataReader[dictionaryMapAttribute.ValueFieldsName].ToString();
+					if (!returnObject.Contains(sqlDataReader[dictionaryMapAttribute.KeyName]))
+						returnObject.Add(sqlDataReader[dictionaryMapAttribute.KeyName],val );
+					
+
+				}
+
 			}
 			return returnObject;
 		}

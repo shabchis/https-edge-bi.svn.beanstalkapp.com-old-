@@ -48,11 +48,13 @@ namespace EdgeBI.Objects
 		[FieldMap("Password",Show=false)]
 		public string Password;
 
-		[DataMember(Order=4)]
+		[DataMember(Order=5)]
 		[DictionaryMap(Command = "User_AssignedPermission(@UserID:Int)", IsStoredProcedure = true, ValueIsGenericList = true, KeyName = "AccountID", ValueFieldsName = "PermissionName,PermissionType,Value")]
 		public Dictionary<int, List<AssignedPermission>> AssignedPermissions = new Dictionary<int, List<AssignedPermission>>();
 
-
+		[DataMember(Order = 6)]
+		[DictionaryMap(Command = "SELECT T0.GroupID,T1.Name FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID WHERE T0.UserID=@UserID:Int", IsStoredProcedure = false, ValueIsGenericList = false, KeyName = "GroupID", ValueFieldsName = "Name")]
+		public Dictionary<int, string> AssignedToGroups = new Dictionary<int, string>();
 		
 
 		public static User GetUserByID(int id)
@@ -116,6 +118,25 @@ namespace EdgeBI.Objects
 		{
 			string command = @"User_Operations(@Action:Int,@UserID:Int,@Name:NvarChar,1,@AccountAdmin:bit,@Email:NvarChar,@Password:NvarChar)";
 			MapperUtility.SaveOrRemoveSimpleObject<User>(command, CommandType.StoredProcedure, sqlOperation, this,string.Empty);
+			foreach (KeyValuePair<int,List<AssignedPermission>> assignedPermissionPerAccount in this.AssignedPermissions)
+			{
+				foreach (AssignedPermission assignedPermission in assignedPermissionPerAccount.Value)
+				{
+					using (DataManager.Current.OpenConnection())
+					{
+						
+						SqlCommand sqlCommand = null;
+						sqlCommand = DataManager.CreateCommand("Permissions_Operations(@Action:Int,@AccountID:Int,@TargetID:Int,@TargetIsGroup:Bit,@PermissionType:NvarChar,@Value:Bit)", CommandType.StoredProcedure);
+						sqlCommand.Parameters["@GroupID"].Value = groupID;
+						sqlCommand.Parameters["@UserID"].Value = this.UserID; ;
+
+						sqlCommand.ExecuteNonQuery();
+
+					}
+					
+					
+				}
+			}
 		}
 		public void AssignGroup(int groupID)
 		{
