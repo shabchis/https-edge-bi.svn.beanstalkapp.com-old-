@@ -334,8 +334,8 @@ namespace EdgeBI.API.Web
 			}
 
 		}
-		[WebGet(UriTemplate = "user/{ID}/groups")]
-		public static List<Group> GetUserAssociateGroups(int ID)
+		[WebGet(UriTemplate = "users/{ID}/groups")]
+		public  List<Group> GetUserAssociateGroups(string ID)
 		{
 			List<Group> associateGroups = new List<Group>();
 
@@ -344,8 +344,8 @@ namespace EdgeBI.API.Web
 				SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT DISTINCT  T0.GroupID ,T1.Name
 																	FROM User_GUI_UserGroupUser T0
 																	INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID 
-																	WHERE GroupID=@GroupID:Int");
-				sqlCommand.Parameters["@GroupID"].Value = ID;
+																	WHERE T0.UserID=@UserID:Int");
+				sqlCommand.Parameters["@UserID"].Value = int.Parse(ID);
 
 				using (ThingReader<Group> thingReader = new ThingReader<Group>(sqlCommand.ExecuteReader(), null))
 				{
