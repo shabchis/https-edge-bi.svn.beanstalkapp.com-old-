@@ -41,7 +41,7 @@ namespace Services.Checksum
 
 			// Create the phase handler
 			PhaseHandler handler;
-			try { handler = Activator.CreateInstance(handlerType); }
+			try { handler = (PhaseHandler) Activator.CreateInstance(handlerType); }
 			catch (Exception ex)
 			{
 				throw new Exception(

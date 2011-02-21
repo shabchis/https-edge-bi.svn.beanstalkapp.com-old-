@@ -35,6 +35,8 @@ namespace Easynet.Edge.Services.FileImport.Converters
 
             foreach (System.Xml.XmlNode item in list)
 	        {
+				if (item.Attributes["id"] == null)
+					throw new Exception("The id attribute did not found , seems that the configuration is with wrong account and is refrence SaveFilePath element");
                 if (item.Attributes["id"].Value.Equals(accountID))
                 {
                     for (int i = 0; i < item.ChildNodes.Count; i++)
