@@ -7,30 +7,32 @@ using Newtonsoft.Json;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.IO;
 namespace EdgeBI.FacebookTools.Services.Service
 {
 	public class LifeTimeBudget
 	{
-
+		private FileDescription fileDescription;
 		List<JArray> _list = new List<JArray>();
 		StringBuilder str = new StringBuilder();
 		Stack<string> stack = new Stack<string>();
 		Dictionary<int, string> colSettings = new Dictionary<int, string>();
 		private int _counter = 0;
-		public void test(JObject json)
+		public void test(FileDescription fileDescription)
 		{
 			try
 			{
-			
-				foreach (JProperty propy in json.Children())
+				str.Clear();
+				_counter = 0;
+				this.fileDescription = fileDescription;
+				foreach (KeyValuePair<int, ColumnDescriptionAndValues> colDesc in fileDescription.Settings.OrderBy(s => s.Key))
 				{
-					_list.Add((JArray)propy.Value);
-					str.AppendFormat("{0}\t", propy.Name);
-					
+					str.AppendFormat("{0}\t", colDesc.Value.ColumnName);
 				}
-				str.AppendLine();
-				Dublicate(0);
-				
+				str.AppendLine();				
+				Dublicate(0); //pay attention yaron should sent the first col as 0 or you will need to change the method
+				writeFile();
 			}
 			catch (Exception ex)
 			{
@@ -39,44 +41,107 @@ namespace EdgeBI.FacebookTools.Services.Service
 			}
 		}
 
-		public void Dublicate( int listIndex)
+		private void writeFile()
 		{
-			if (listIndex > _list.Count-1)
+		    using (StreamWriter streamWriter=new StreamWriter(@"c:\bulkfile.txt",false,Encoding.Unicode))
+		    {
+				streamWriter.Write(str.ToString());
+				
+		    }
+		}
+
+		public void Dublicate(int listIndex)
+		{
+
+			if (listIndex >= fileDescription.Settings.Count)
 			{
-				_counter++;
-				foreach (string col in stack.Reverse())
+				
+				int colIndex = 0;
+				foreach (string colValue in stack.Reverse())
 				{
-					str.AppendFormat("{0}\t", col);
 					
+					str.Append(GetCustomFormat(colIndex, colValue));
+					colIndex++;
+
 				}
+				_counter++;
 				str.AppendLine();
 				stack.Pop();
 				return;
 			}
 			else
 			{
-				for (int i = listIndex; i <= _list.Count-1; i++)
+
+				List<string> currentCol = (List<string>)fileDescription.Settings[listIndex].values;
+				foreach (string val in currentCol)
 				{
-					foreach (string val in _list[i].Values())
-					{
-						stack.Push(val);
-						Dublicate(listIndex + 1);						
-					}
-					if (stack.Count > 0)
-						stack.Pop();
-					return;
+					stack.Push(val);
+					Dublicate(listIndex + 1);
 				}
+				if (stack.Count > 0)
+					stack.Pop();
+				return;
+
 			}
-			
-		
-			
-			
+
+
+
+
 		}
-	
+
+		private string GetCustomFormat(int listIndex, string colValue)
+		{
+			string columnSetting = fileDescription.Settings[listIndex].SettingName;
+			string result=string.Empty;
+			switch (columnSetting)
+			{
+				case "Default":
+					{
+						result = string.Format("{0}\t", colValue); 
+						break;
+					}
+				case "Int":
+					{
+						int temp;
+						 if (int.TryParse(colValue,out temp))
+							 result = string.Format("{0}\t", colValue); 
+						break;
+					}
+				case "Link":
+					{
+						Match m=Regex.Match(colValue,@"(?<=\=)[\d]+");
+						int nextNum=int.Parse(m.Value);
+						result = Regex.Replace(colValue, @"(?<=\=)[\d]+", (nextNum + _counter).ToString());						
+						break;
+					}
+				case "Double":
+					{
+						double temp;
+						if (double.TryParse(colValue, out temp))
+							result = string.Format("{0}\t", colValue);
+						break;
+						
+					}
+				case "ad_name":
+					{
+						string formatNum = (_counter + 1).ToString().PadLeft(3, '0');
+						result = string.Format("{0}#{1}\t", colValue, formatNum);
+						break;
+
+					}
+				default:
+					{
+						result = string.Format("{0}\t", colValue); 
+						break;
+					}
+			}
+			return result;
+		}
 
 
 
-		
+
+
 
 	}
 }
