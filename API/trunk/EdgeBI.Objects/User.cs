@@ -32,13 +32,11 @@ namespace EdgeBI.Objects
 
 		[DataMember(Order = 2)]
 		[FieldMap("IsActive")]
-		public bool IsActive = true;
-
+		public bool IsActive;
+		
 		[DataMember(Order = 3)]
 		[FieldMap("AccountAdmin")]
-		public bool? IsAcountAdmin;
-
-
+		public bool IsAcountAdmin;
 
 		[DataMember(Order = 4)]
 		[FieldMap("Email")]
@@ -114,18 +112,19 @@ namespace EdgeBI.Objects
 			return users;
 		}
 
-		public void UserOperations(SqlOperation sqlOperation)
+		public int UserOperations(SqlOperation sqlOperation)
 		{
 			SqlTransaction sqlTransaction = null;
+			int returnValue=-1;
 			try
 			{
 
 				//Insert/Update/Remove user (also this clean all permissions and assigned groups)
-				string command = @"User_Operations(@Action:Int,@UserID:Int,@Name:NvarChar,1,@AccountAdmin:bit,@Email:NvarChar,@Password:NvarChar)";
+				string command = @"User_Operations(@Action:Int,@UserID:Int,@Name:NvarChar,@IsActive:bit,@AccountAdmin:bit,@Email:NvarChar,@Password:NvarChar)";
 				SqlConnection sqlConnection = new SqlConnection(DataManager.ConnectionString);
 				sqlConnection.Open();
-				sqlTransaction = sqlConnection.BeginTransaction("SaveUpdateDeletOrRemoveUser");
-				this.UserID = Convert.ToInt32(MapperUtility.SaveOrRemoveSimpleObject<User>(command, CommandType.StoredProcedure, sqlOperation, this, sqlConnection, sqlTransaction));
+				sqlTransaction = sqlConnection.BeginTransaction("SaveUser");
+				returnValue=this.UserID = Convert.ToInt32(MapperUtility.SaveOrRemoveSimpleObject<User>(command, CommandType.StoredProcedure, sqlOperation, this, sqlConnection, sqlTransaction));
 
 				//insert the new permission
 				foreach (KeyValuePair<int, List<AssignedPermission>> assignedPermissionPerAccount in this.AssignedPermissions)
@@ -137,7 +136,7 @@ namespace EdgeBI.Objects
 						sqlCommand.Transaction = sqlTransaction;
 						sqlCommand.Parameters["@AccountID"].Value = assignedPermissionPerAccount.Key;
 						sqlCommand.Parameters["@TargetID"].Value = this.UserID;
-						sqlCommand.Parameters["@TargetIsGroup"].Value = 0;
+						sqlCommand.Parameters["@TargetIsGroup"].Value = 0;						
 						sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.PermissionType;
 						sqlCommand.Parameters["@Value"].Value = assignedPermission.Value;
 						sqlCommand.ExecuteNonQuery();
@@ -166,6 +165,7 @@ namespace EdgeBI.Objects
 					sqlTransaction.Rollback();
 				throw ex;
 			}
+			return returnValue;
 		}
 		public void AssignGroup(int groupID)
 		{

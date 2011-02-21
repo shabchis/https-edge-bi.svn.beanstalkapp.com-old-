@@ -80,9 +80,9 @@ namespace EdgeBI.API.Web
 		}
 
 		[WebInvoke(Method = "POST", UriTemplate = "groups")]
-		public void AddNewGroup(Group group)
+		public int AddNewGroup(Group group)
 		{
-
+			int groupID = 1;
 			//todo: dont forget on production to change the userID field to auto increment
 			try
 			{
@@ -91,20 +91,21 @@ namespace EdgeBI.API.Web
 				User activeUser = User.GetUserByID(currentUser);
 				if (activeUser.IsAcountAdmin != true)
 					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can add group ");
-				group.GroupOperations(SqlOperation.Insert);
+				groupID=group.GroupOperations(SqlOperation.Insert);
 			}
 			catch (Exception ex)
 			{
 
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, ex.Message);
 			}
+			return groupID;
 
 		}
 
 		[WebInvoke(Method = "PUT", UriTemplate = "groups/{ID}")]
-		public void UpdateGroup(string ID, Group group)
+		public int UpdateGroup(string ID, Group group)
 		{
-
+			int groupID =- 1;
 			try
 			{
 				if (ID.Trim() != group.GroupID.ToString())
@@ -115,7 +116,7 @@ namespace EdgeBI.API.Web
 				if (activeUser.IsAcountAdmin != true)
 					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
 
-				group.GroupOperations(SqlOperation.Update);
+				groupID=group.GroupOperations(SqlOperation.Update);
 
 			}
 			catch (Exception ex)
@@ -123,13 +124,15 @@ namespace EdgeBI.API.Web
 
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
 			}
+			return groupID;
 
 
 		}
 
 		[WebInvoke(Method = "DELETE", UriTemplate = "groups/{ID}")]
-		public void DeleteGroup(string ID)
+		public int DeleteGroup(string ID)
 		{
+			int groupID=-1;
 			try
 			{
 				int currentUser;
@@ -138,13 +141,13 @@ namespace EdgeBI.API.Web
 				if (activeUser.IsAcountAdmin != true)
 					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
 				Group group = new Group() { GroupID = int.Parse(ID) };
-				group.GroupOperations(SqlOperation.Delete);
+				groupID=group.GroupOperations(SqlOperation.Delete);
 			}
 			catch (Exception ex)
 			{
-
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
 			}
+			return groupID;
 
 		}
 		/*AssignUserToGroup
@@ -251,9 +254,9 @@ namespace EdgeBI.API.Web
 		}
 
 		[WebInvoke(Method = "POST", UriTemplate = "users")]
-		public void AddNewUser(User user)
+		public int AddNewUser(User user)
 		{
-
+			int userID=-1;
 			//todo: dont forget on production to change the userID field to auto increment
 			try
 			{
@@ -262,18 +265,20 @@ namespace EdgeBI.API.Web
 				User activeUser = User.GetUserByID(currentUser);
 				if (activeUser.IsAcountAdmin != true)
 					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can add users ");
-				user.UserOperations(SqlOperation.Insert);
+				userID=user.UserOperations(SqlOperation.Insert);
 			}
 			catch (Exception ex)
 			{
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.NotFound, ex.Message);
 			}
+			return userID;
 
 		}
 
 		[WebInvoke(Method = "PUT", UriTemplate = "users/{ID}")]
-		public void UpdateUser(string ID, User user)
+		public int UpdateUser(string ID, User user)
 		{
+			int userID = -1;
 			try
 			{
 				if (ID.Trim() != user.UserID.ToString())
@@ -285,21 +290,23 @@ namespace EdgeBI.API.Web
 				if (activeUser.IsAcountAdmin != true)
 					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
 
-				user.UserOperations(SqlOperation.Update);
+				userID=user.UserOperations(SqlOperation.Update);
 			}
 			catch (Exception ex)
 			{
 
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
 			}
+			return userID;
 
 
 
 		}
 
 		[WebInvoke(Method = "DELETE", UriTemplate = "users/{ID}")]
-		public void DeleteUser(string ID)
+		public int DeleteUser(string ID)
 		{
+			int userID = -1;
 			try
 			{
 				int currentUser;
@@ -308,13 +315,14 @@ namespace EdgeBI.API.Web
 				if (activeUser.IsAcountAdmin != true)
 					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
 				User user = new User() { UserID = int.Parse(ID) };
-				user.UserOperations(SqlOperation.Delete);
+				userID=user.UserOperations(SqlOperation.Delete);
 			}
 			catch (Exception ex)
 			{
 
 				ErrorMessageInterceptor.ThrowError(HttpStatusCode.InternalServerError, ex.Message);
 			}
+			return userID;
 
 		}
 		/*AssignGroupToUser

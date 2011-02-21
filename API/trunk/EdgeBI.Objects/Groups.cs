@@ -139,12 +139,60 @@ namespace EdgeBI.Objects
 			return associateUsers;
 		}
 
-		public  void GroupOperations(SqlOperation sqlOperation)
+		public  int GroupOperations(SqlOperation sqlOperation)
 		{
-			string command = @"Group_Operations(@Action:Int,@Name:NvarChar,@AccountAdmin:bit,1,@GroupID:Int)";
-			SqlConnection sqlConnection = new SqlConnection(DataManager.ConnectionString);
-			sqlConnection.Open();
-			MapperUtility.SaveOrRemoveSimpleObject<Group>(command, CommandType.StoredProcedure, sqlOperation, this, sqlConnection,null); 
+			SqlTransaction sqlTransaction = null;
+			int returnValue = -1;
+			try
+			{
+				//Insert/Update/Remove user (also this clean all permissions and assigned groups)
+				string command = @"Group_Operations(@Action:Int,@Name:NvarChar,@AccountAdmin:bit,@IsActive:bit,@GroupID:Int)";
+				SqlConnection sqlConnection = new SqlConnection(DataManager.ConnectionString);
+				sqlConnection.Open();
+				sqlTransaction = sqlConnection.BeginTransaction("SaveGroup");
+				returnValue=this.GroupID = Convert.ToInt32(MapperUtility.SaveOrRemoveSimpleObject<Group>(command, CommandType.StoredProcedure, sqlOperation, this, sqlConnection, sqlTransaction));
+
+				//insert the new permission
+				foreach (KeyValuePair<int, List<AssignedPermission>> assignedPermissionPerAccount in this.AssignedPermissions)
+				{
+					foreach (AssignedPermission assignedPermission in assignedPermissionPerAccount.Value)
+					{
+						SqlCommand sqlCommand = DataManager.CreateCommand("Permissions_Operations(@AccountID:Int,@TargetID:Int,@TargetIsGroup:Bit,@PermissionType:NvarChar,@Value:Bit)", CommandType.StoredProcedure);
+						sqlCommand.Connection = sqlConnection;
+						sqlCommand.Transaction = sqlTransaction;
+						sqlCommand.Parameters["@AccountID"].Value = assignedPermissionPerAccount.Key;
+						sqlCommand.Parameters["@TargetID"].Value = this.GroupID;
+						sqlCommand.Parameters["@TargetIsGroup"].Value = 1;
+						sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.PermissionType;						
+						sqlCommand.Parameters["@Value"].Value = assignedPermission.Value;
+						sqlCommand.ExecuteNonQuery();
+					}
+				}
+				foreach (int userID in this.Members.Keys)
+				{
+					SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_GUI_UserGroupUser
+																	(GroupID,UserID)
+																	VALUES
+																	(@GroupID:Int,@UserID:Int)");
+					sqlCommand.Parameters["@GroupID"].Value = this.GroupID;
+					sqlCommand.Parameters["@UserID"].Value = userID;
+					sqlCommand.Connection = sqlConnection;
+					sqlCommand.Transaction = sqlTransaction;
+					sqlCommand.ExecuteNonQuery();
+
+				}
+
+				sqlTransaction.Commit();
+
+
+			}			
+			catch (Exception ex)
+			{
+				if (sqlTransaction != null)
+					sqlTransaction.Rollback();
+				throw ex;
+			}
+			return returnValue;
 				
 		}
 		
