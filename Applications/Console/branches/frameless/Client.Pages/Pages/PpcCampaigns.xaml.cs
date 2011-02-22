@@ -938,7 +938,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				List<TextBox> controls = VisualTree.GetChildren<TextBox>(_campaignTargetsControl);
 				
 				// Wiring for batch checkboxes
-				// don't use foreach otherwise 'control' inside 'del' uses enumerator.Current and thus will always reflect the last one
+				// don't use foreach otherwise 'control' inside 'del' uses 'enumerator.Current' and thus will always reflect the last one
 				for (int i = 0; i < controls.Count; i++)
 				{
 					TextBox control = controls[i];
@@ -972,6 +972,7 @@ namespace Easynet.Edge.UI.Client.Pages
 					_targetsEnabled ? Visibility.Visible : Visibility.Collapsed;
 			});
 		}
+
 
 	
 		/*=========================*/
@@ -1089,46 +1090,50 @@ namespace Easynet.Edge.UI.Client.Pages
 					if (e.Cancel)
 						return;
 
+					// Update segments of any displayed agroups
 					Campaign_dialog_ApplyingChanges_CascadeSegments(
 						tempRow,
 						targetRows,
 						segmentsHaveChanged);
 
-					if (tempRow.Targets != null && tempRow.Targets.InnerRow == null)
-						throw new Exception("TODO: figure out how to clear targets, right now this doesn't work...");
+					// Save (or update) targets
+					bool isBatch = Campaign_dialog.IsBatch;
+					int accountID = Window.CurrentAccount.ID;
 
-					if (tempRow.Targets == null || tempRow.Targets.InnerRow.RowState == DataRowState.Unchanged)
+					// Check which measures in batch mode are set to save
+					List<Measure> measuresToSave = null;
+					if (isBatch)
+					{
+						measuresToSave = new List<Measure>();
+						List<TextBox> controls = VisualTree.GetChildren<TextBox>(_campaignTargetsControl);
+
+						for (int i = 0; i < controls.Count; i++)
+						{
+							TextBox control = controls[i];
+
+							StackPanel stackPanel = control.Parent as StackPanel;
+							CheckBox checkbox = stackPanel.Children[stackPanel.Children.Count - 1] as CheckBox;
+
+							// Add the target measure to measuresToSave by finding one with the same ID
+							// (they are not the same object because we cloned the measures when we opened the tab)
+							if (checkbox.IsChecked != null && checkbox.IsChecked.Value)
+								measuresToSave.Add(_measures.Single(m => m.MeasureID == (_campaignTargetsControl.Items[i] as Measure).MeasureID));
+						}
+
+					}
+
+
+					//if (tempRow.Targets != null && tempRow.Targets.InnerRow == null)
+					//	throw new Exception("TODO: figure out how to clear targets, right now this doesn't work...");
+
+					if (tempRow.Targets == null ||
+						tempRow.Targets.InnerRow.RowState == DataRowState.Unchanged ||
+						(measuresToSave != null && measuresToSave.Count == 0))
 					{
 						Campaign_dialog.EndApplyChanges(e);
 					}
 					else
 					{
-						// Save (or update) targets
-						bool isBatch = Campaign_dialog.IsBatch;
-						int accountID = Window.CurrentAccount.ID;
-						
-						// Check which measures in batch mode are set to save
-						List<Measure> measuresToSave = null;
-						if (isBatch)
-						{
-							measuresToSave = new List<Measure>();
-							List<TextBox> controls = VisualTree.GetChildren<TextBox>(_campaignTargetsControl);
-
-							for (int i = 0; i < controls.Count; i++)
-							{
-								TextBox control = controls[i];
-
-								StackPanel stackPanel = control.Parent as StackPanel;
-								CheckBox checkbox = stackPanel.Children[stackPanel.Children.Count - 1] as CheckBox;
-
-								// Add the target measure to measuresToSave by finding one with the same ID
-								// (they are not the same object because we cloned the measures when we opened the tab)
-								if (checkbox.IsChecked != null && checkbox.IsChecked.Value)
-									measuresToSave.Add(_measures.Single(m => m.MeasureID == (_campaignTargetsControl.Items[i] as Measure).MeasureID));
-							}
-
-						}
-
 						Window.AsyncOperation(delegate()
 						{
 

@@ -185,6 +185,37 @@ namespace Easynet.Edge.UI.Client
 	/// </summary>
 	public class NumberBinding: ValidatingBinding<NumberValidationRule>
 	{
+		class NumberConverter:IValueConverter
+		{
+			NumberBinding _binding;
+			public NumberConverter(NumberBinding binding)
+			{
+				_binding = binding;
+			}
+
+			public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+			{
+				if (value == null)
+					return string.Empty;
+				else
+					return value.ToString();
+			}
+
+			public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+			{
+				if (_binding != null && _binding.AllowEmpty && (value == null || ((string)value).Trim().Length < 1))
+					return null;
+				else
+					return new Nullable<double>(Double.Parse((string)value));
+			}
+
+		}
+
+		public NumberBinding()
+		{
+			this.Converter = new NumberConverter(this);
+		}
+
 		public bool AllowEmpty
 		{
 			get

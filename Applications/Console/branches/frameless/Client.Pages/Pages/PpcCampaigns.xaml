@@ -212,9 +212,6 @@
 									<Style TargetType="{x:Type Label}">
 										<Setter Property="Width" Value="150"/>
 									</Style>
-									<Style TargetType="{x:Type TextBox}">
-										<Setter Property="Width" Value="60"/>
-									</Style>
 									<Style TargetType="{x:Type CheckBox}">
 										<Setter Property="Margin" Value="3,0,0,0"/>
 										<Setter Property="VerticalAlignment" Value="Center"/>
@@ -233,7 +230,7 @@
 												<DataTemplate DataType="{x:Type data:Measure}">
 													<StackPanel Style="{StaticResource FormField}">
 														<Label Content="{Binding DisplayName}"/>
-														<TextBox Text="{this:NumberBinding Path=Value, AllowEmpty=true}"/>
+														<TextBox Style="{StaticResource FormValidatedInput}" Width="60" Text="{this:NumberBinding Path=Value, AllowEmpty=true}"/>
 													</StackPanel>
 												</DataTemplate>
 											</ItemsControl.ItemTemplate>
