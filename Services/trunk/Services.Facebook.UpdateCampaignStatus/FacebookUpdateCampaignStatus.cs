@@ -54,10 +54,10 @@ namespace Services.Facebook.UpdateCampaignStatus
 				else
 					_FBaccountID = Instance.Configuration.Options["FBaccountID"].ToString();
 
-				if (Instance.Configuration.Options["applicationID"] == null)
-					_ApplicationID = Instance.ParentInstance.Configuration.Options["applicationID"].ToString();
-				else
-					_ApplicationID = Instance.Configuration.Options["applicationID"].ToString();
+				//if (Instance.Configuration.Options["applicationID"] == null)
+				//    _ApplicationID = Instance.ParentInstance.Configuration.Options["applicationID"].ToString();
+				//else
+				//    _ApplicationID = Instance.Configuration.Options["applicationID"].ToString();
 
 
 
@@ -72,10 +72,10 @@ namespace Services.Facebook.UpdateCampaignStatus
 					_sessionSecret = Instance.Configuration.Options["sessionSecret"].ToString();
 
 
-				if (Instance.Configuration.Options["serviceType"] == null)
-					_serviceType = Instance.ParentInstance.Configuration.Options["serviceType"].ToString();
-				else
-					_serviceType = Instance.Configuration.Options["serviceType"].ToString();
+				//if (Instance.Configuration.Options["serviceType"] == null)
+				//    _serviceType = Instance.ParentInstance.Configuration.Options["serviceType"].ToString();
+				//else
+				//    _serviceType = Instance.Configuration.Options["serviceType"].ToString();
 
 				connSession = new myFacebook.Session.ConnectSession(_apiKey, _ap_secret);
 				connSession.SessionKey = _session;
