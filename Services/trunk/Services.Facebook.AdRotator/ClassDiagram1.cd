@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Easynet.Edge.Services.FacebookAdrotator.FacebookAdrotator">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Easynet.Edge.Services.FacebookAdrotator.FacebookAdrotator.adgroup_status" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>FacebookAdrotator.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAEMAAAIABgIIACBAAAAAgQAADQgABEAAACAAAg=</HashCode>
+      <FileName>FacebookAdrotator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>
