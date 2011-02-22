@@ -94,15 +94,15 @@ namespace Services.Facebook.UpdateCampaignStatus
 
 			}
 
-			
+
 		}
 		protected override ServiceOutcome DoWork()
 		{
 			//Get the hour of the Day
-			ServiceOutcome outcome=ServiceOutcome.Success;
+			ServiceOutcome outcome = ServiceOutcome.Success;
 			int hourOfDay = DateTime.Now.Hour;
-			int today=DateTime.Now.Day;
-			StringBuilder campaign_specs=null;
+			int today = Convert.ToInt32(DateTime.Now.DayOfWeek);
+			StringBuilder campaign_specs = new StringBuilder();
 
 
 
@@ -110,53 +110,58 @@ namespace Services.Facebook.UpdateCampaignStatus
 
 			using (DataManager.Current.OpenConnection())
 			{
-				SqlCommand sqlCommand = DataManager.CreateCommand(string.Format(@"SELECT T0.Campaign_GK,T0.Hour{0} 
+				SqlCommand sqlCommand = DataManager.CreateCommand(string.Format(@"SELECT T2.campaignid,T0.Hour{0} 
 																				FROM Facebook_Campaign_StatusByTime T0
 																				INNER JOIN User_GUI_Account T1 ON T0.Account_ID=T1.Account_ID
 																				INNER JOIN UserProcess_GUI_PaidCampaign T2 ON T0.Campaign_GK=T2.Campaign_GK
-																				WHERE T0.Day=@Day:Int AND T0.Account_ID=@Account_ID:Int AND
-																				T0.Channel_ID=6 AND T1.Status!=0", hourOfDay));
-				using (SqlDataReader sqlDataReader=sqlCommand.ExecuteReader())
+																				WHERE T0.Day=@Day:Int AND T0.Account_ID=@Account_ID:Int 
+																				AND T0.Hour{0} is not null AND
+																				T2.Channel_ID=6 AND T1.Status!=0", hourOfDay));
+				sqlCommand.Parameters["@Day"].Value = today;
+				sqlCommand.Parameters["@Account_ID"].Value = this.Instance.AccountID;
+
+				using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
 				{
 					while (sqlDataReader.Read())
 					{
-						int campaign_ID=Convert.ToInt32(sqlDataReader[0]);
-						int campaign_status=Convert.ToInt32(sqlDataReader[1]);
-						campaign_specs.AppendLine(string.Format("{\"campaign_id\":\"{0}\",\"campaign_status\":\"{1}\"},",campaign_ID ,campaign_status ));
-						
-						
-					}					
-				}				
+						long campaign_ID = Convert.ToInt64(sqlDataReader[0]);
+						int campaign_status = Convert.ToInt32(sqlDataReader[1]);
+						campaign_specs.Append("{\"campaign_id\":" + campaign_ID.ToString() + ",\"campaign_status\":" + campaign_status.ToString() + "},");
+						//campaign_specs.AppendLine(string.Format("{\"campaign_id\":\"{0}\",\"campaign_status\":\"{1}\"},",campaign_ID ,campaign_status ));
+
+
+					}
+				}
 			}
 			if (!string.IsNullOrEmpty(campaign_specs.ToString()))
 			{
+
 				//Remove the last ","
-				campaign_specs.Remove(campaign_specs.Length - 1, 1);
+				campaign_specs = campaign_specs.Remove(campaign_specs.Length - 1, 1);
 				//add '[' ']' for json array
-				campaign_specs.Insert(0, '[');
-				campaign_specs.Insert(campaign_specs.Length - 1, ']');
+				campaign_specs = campaign_specs.Insert(0, '[');
+				campaign_specs = campaign_specs.Insert(campaign_specs.Length , ']');
 				string result = UpdateCampaignStatus(campaign_specs.ToString());
 			}
 			return outcome;
 
-			
+
 		}
-		private string UpdateCampaignStatus(string campaign_specs)
+		private List<string> UpdateCampaignStatus(string campaign_specs)
 		{
-			
+			System.Xml.XmlDocument retXml = new System.Xml.XmlDocument();			
+			string result;			
 			_parameterList.Clear();
-			
+
 			_parameterList.Add("account_id", _FBaccountID);
-
-			_parameterList.Add("method", "facebook.Ads.updateCampaigns");			
-
 			_parameterList.Add("campaign_specs", campaign_specs);
-			string res = _facebookAPI.Application.SendRequest(_parameterList);
-			System.Xml.XmlDocument retXml = new System.Xml.XmlDocument();
-			retXml.LoadXml(res);
-			return retXml.ChildNodes[1].ChildNodes[1].Attributes[0].Value;
+			_parameterList.Add("method", "facebook.Ads.updateCampaigns");
+
+			result = _facebookAPI.Application.SendRequest(_parameterList);
+			//get the ones who failed and return them on a list ;
+			return new List<string>();
 		}
-		
+
 	}
-	
+
 }
