@@ -49,9 +49,8 @@ namespace Easynet.Edge.UI.Client
 			public BindingExpression Exp;
 			public DependencyObject Obj;
 			public DependencyProperty Prp;
-			public bool Changed = false;
-			public bool BatchApply = false;
-			public bool BatchApplySet = false;
+			public bool HasValueChanged = false;
+			public bool ShouldBatchApply = false;
 		}
 
 		List<BEData> _bindings = null;
@@ -151,6 +150,26 @@ namespace Easynet.Edge.UI.Client
 		// Using a DependencyProperty as the backing store for ShowApplyButton.  This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty ApplyButtonVisibilityProperty = 
 			DependencyProperty.Register("ApplyButtonVisibility", typeof(Visibility), typeof(FloatingDialog), new UIPropertyMetadata(Visibility.Visible));
+
+		public Visibility OKButtonVisibility
+		{
+			get { return (Visibility)GetValue(OKButtonVisibilityProperty); }
+			set { SetValue(OKButtonVisibilityProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for ShowApplyButton.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty OKButtonVisibilityProperty =
+			DependencyProperty.Register("OKButtonVisibility", typeof(Visibility), typeof(FloatingDialog), new UIPropertyMetadata(Visibility.Visible));
+
+		public string CancelButtonText
+		{
+			get { return (string)GetValue(CancelButtonTextProperty); }
+			set { SetValue(CancelButtonTextProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for ShowApplyButton.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty CancelButtonTextProperty =
+			DependencyProperty.Register("CancelButtonText", typeof(string), typeof(FloatingDialog), new UIPropertyMetadata("Cancel"));
 
 		public bool IsBatch
 		{
@@ -420,7 +439,7 @@ namespace Easynet.Edge.UI.Client
 			// Find the binding data and mark it as changed
 			BEData binding = _bindings.Find(bdata => bdata.Exp == exp);
 			if (binding != null)
-				binding.Changed = true;
+				binding.HasValueChanged = true;
 		}
 
 		void tab_GotFocus(object sender, RoutedEventArgs e)
@@ -534,13 +553,26 @@ namespace Easynet.Edge.UI.Client
 			if (this.IsOpen)
 				throw new InvalidOperationException("Dialog is already open");
 
-			//OnBeforeBeginEdit(tempContent, targetContent);
-
 			// Don't mark as changed while applying changes
 			SetValue(TargetContentProperty, targetContent);
 			this.Content = tempContent;
 
 			ApplyBatchCheckboxes(false);
+
+			// Force a focus of the selected tab, if present
+			TabControl tabs = VisualTree.GetChild<TabControl>(this);
+			if (tabs != null)
+			{
+				for (int i = 0; i < tabs.Items.Count; i++)
+				{
+					TabItem tab = tabs.ItemContainerGenerator.ContainerFromIndex(i) as TabItem;
+					if (tab != null && tab.IsSelected)
+					{
+						tab.RaiseEvent(new RoutedEventArgs(TabItem.GotFocusEvent));
+						break;
+					}
+				}
+			}
 
 			IsOpen = true;
 		}
@@ -658,8 +690,11 @@ namespace Easynet.Edge.UI.Client
 
 		private void ApplyBatchCheckboxes(bool createOnly)
 		{
-			foreach (BEData bedata in _bindings)
+			// do not use foreach beacuse it causes inner delegates to work with the wrong object (enumerator.Current)
+			for (int i = 0; i < _bindings.Count; i++ )
 			{
+				BEData bedata = _bindings[i];
+
 				// In batch mode, attach a checkbox to this control for marking it as 'please override'
 				if (bedata.Obj is Control && ((Control)bedata.Obj).Parent is StackPanel && !GetReadOnlyField(bedata.Obj))
 				{
@@ -672,11 +707,12 @@ namespace Easynet.Edge.UI.Client
 					{
 						checkbox = new CheckBox();
 						checkbox.Name = "__batch__cb";
+						checkbox.ToolTip = "Check this to override the value of this field for all selected items";
 						checkbox.IsChecked = false;
+						checkbox.Style = (Style) App.Current.Resources["FormFieldBatchCheckbox"];
 						Action<object, RoutedEventArgs> del = delegate(object sender, RoutedEventArgs e)
 						{
-							control.IsEnabled = checkbox.IsChecked.Value;
-							bedata.BatchApply = control.IsEnabled;
+							bedata.ShouldBatchApply = control.IsEnabled = checkbox.IsChecked.Value;
 						};
 
 						checkbox.Checked += new RoutedEventHandler(del);
@@ -687,8 +723,9 @@ namespace Easynet.Edge.UI.Client
 
 					if (checkbox != null && (!createOnly || created))
 					{
-						control.IsEnabled = !IsBatch;
+						checkbox.IsChecked = false;
 						checkbox.Visibility = IsBatch ? Visibility.Visible : Visibility.Collapsed;
+						control.IsEnabled = !IsBatch;
 					}
 				}
 			}
@@ -703,8 +740,8 @@ namespace Easynet.Edge.UI.Client
 			{
 				// Don't do anything if the binding has not been changed
 				if (
-						(this.IsBatch && !bdata.BatchApply) ||
-						!bdata.Changed
+						(this.IsBatch && !bdata.ShouldBatchApply) ||
+						!bdata.HasValueChanged
 					)
 					continue;
 

@@ -48,8 +48,8 @@
 								</Style>
 							</StackPanel.Resources>
 
-							<Button Content="OK" x:Name="_buttonOK" IsDefault="True" IsEnabled="False"/>
-							<Button Content="Cancel" x:Name="_buttonCancel" IsCancel="True" IsEnabled="False"/>
+							<Button Content="OK" x:Name="_buttonOK" IsDefault="True" Visibility="{TemplateBinding ApplyButtonVisibility}" IsEnabled="False"/>
+							<Button Content="{TemplateBinding CancelButtonText}" x:Name="_buttonCancel" IsCancel="True" IsEnabled="False"/>
 							<Button Content="Apply" x:Name="_buttonApply" Visibility="{TemplateBinding ApplyButtonVisibility}" IsEnabled="False"/>
 						</StackPanel>
 

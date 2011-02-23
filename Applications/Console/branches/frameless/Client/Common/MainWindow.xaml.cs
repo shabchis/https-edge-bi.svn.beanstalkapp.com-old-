@@ -25,6 +25,7 @@ using System.Net;
 using Easynet.Edge.Core.Configuration;
 using System.IO;
 using System.Diagnostics;
+using System.ServiceModel;
 
 namespace Easynet.Edge.UI.Client
 {
@@ -97,8 +98,8 @@ namespace Easynet.Edge.UI.Client
 
 			#if DEBUG
 			accountID = 63;
-			sessionID = "B5A1E40D0172BAA023D72BE4873CFE53";
-			menuItemPath = "management/campaigns";
+			sessionID = "E2E82E64CCD9827EF958830EF758B0A5";
+			menuItemPath = "find/keywords";
 			#endif
 
 			// Normal producion
@@ -491,10 +492,14 @@ namespace Easynet.Edge.UI.Client
 			if (ex is TargetInvocationException)
 				ex = ex.InnerException;
 
+			Type errorType = ex.GetType();
+			if (ex is FaultException)
+				errorType = ((FaultException)ex).InnerException.GetType();
+
 			MessageBox.Show(
 				ex == null ?
 					message :
-					String.Format("{0}\n\n{1}\n\n({2})", message, ex.Message, ex.GetType().FullName),
+					String.Format("{0}\n\n{1}\n\n({2})", message, ex.Message, errorType.FullName),
 				"Error",
 				MessageBoxButton.OK, MessageBoxImage.Error
 			);

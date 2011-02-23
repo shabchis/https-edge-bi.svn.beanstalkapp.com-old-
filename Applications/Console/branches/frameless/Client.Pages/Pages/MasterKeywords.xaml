@@ -53,7 +53,7 @@
 				</StackPanel>
 			</Canvas>
 			
-			<this:ListTable x:Name="_listTable" Margin="0,35,50,10" SelectionMode="Extended"> 
+			<this:ListTable x:Name="_listTable" Margin="0,35,50,10" SelectionMode="Single"> 
 				<this:ListTable.View>
 					<GridView AllowsColumnReorder="False">
 						<GridViewColumn Width="35"		CellTemplate="{StaticResource EmptyCell}"/>
@@ -74,6 +74,9 @@
 				AppliedChanges="Keyword_dialog_AppliedChanges"
 				Closing="Keyword_dialog_Closing"
 				Loaded="Keyword_dialog_Loaded"
+				ApplyButtonVisibility="Collapsed"
+				OKButtonVisibility="Collapsed"
+				CancelButtonText="OK"
 
 			 >
 				<this:FloatingDialog.Resources>
@@ -91,19 +94,6 @@
 				<this:FloatingDialog.ContentTemplate>
 					<DataTemplate>
 						<TabControl TabStripPlacement="Top" VirtualizingStackPanel.IsVirtualizing="False">
-
-							<TabItem Header="Details">
-								<StackPanel Style="{StaticResource FormContents}">
-									<StackPanel Style="{StaticResource FormField}">
-										<Label Content="Keyword"/>
-										<TextBox x:Name="_keywordValue" Text="{Binding Path=Keyword}" this:FloatingDialog.DialogFields="Text" />
-									</StackPanel>
-									<StackPanel Style="{StaticResource FormField}" Visibility="Collapsed" >
-										<Label Content="Monitor?"/>
-										<CheckBox IsChecked="{Binding Path=IsMonitored}" this:FloatingDialog.DialogFields="IsChecked"/>
-									</StackPanel>
-								</StackPanel>
-							</TabItem>
 
 							<TabItem Header="Associations" GotFocus="AssociationsTabItem_GotFocus">
 								<DockPanel LastChildFill="True" Margin="6">
@@ -133,6 +123,20 @@
 									</ScrollViewer>
 								</DockPanel>
 							</TabItem>
+							
+							<TabItem Header="Details" Visibility="Hidden">
+								<StackPanel Style="{StaticResource FormContents}">
+									<StackPanel Style="{StaticResource FormField}">
+										<Label Content="Keyword"/>
+										<TextBox x:Name="_keywordValue" Text="{Binding Path=Keyword}" this:FloatingDialog.DialogFields="Text" />
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" Visibility="Collapsed" >
+										<Label Content="Monitor?"/>
+										<CheckBox IsChecked="{Binding Path=IsMonitored}" this:FloatingDialog.DialogFields="IsChecked"/>
+									</StackPanel>
+								</StackPanel>
+							</TabItem>
+
 
 						</TabControl>
 					</DataTemplate>

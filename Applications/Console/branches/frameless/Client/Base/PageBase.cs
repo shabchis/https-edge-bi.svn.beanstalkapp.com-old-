@@ -56,6 +56,52 @@ namespace Easynet.Edge.UI.Client
 		/// <summary>
 		/// 
 		/// </summary>
+		protected void Dialog_Open<TableT, RowT>
+			(
+				FloatingDialog dialog,
+				ListTable listTable,
+				ListViewItem clickedItem,
+				bool allowBatch,
+				Func<RowT, bool, string> dialogTitle,
+				Func<RowT, bool, string> dialogTooltip,
+				Func<DataColumn, object> batchFlatten
+			)
+			where TableT : DataTable, new()
+			where RowT : DataRow
+		{
+			// When a single item is clicked, select it
+			if (clickedItem != null && clickedItem.DataContext != null && !listTable.ListView.SelectedItems.Contains(clickedItem.DataContext))
+			{
+				listTable.ListView.SelectedItems.Clear();
+				clickedItem.IsSelected = true;
+			}
+
+			bool batch = listTable.ListView.SelectedItems.Count > 1;
+			if (!allowBatch)
+			{
+				MainWindow.MessageBoxError("You cannot edit more than one item at a time.", null);
+				return;
+			}
+
+			RowT[] targetRows = new RowT[listTable.ListView.SelectedItems.Count];
+			try { listTable.ListView.SelectedItems.CopyTo(targetRows, 0); }
+			catch (InvalidCastException)
+			{
+				MainWindow.MessageBoxError("To edit multiple items, select items of the same type.", null);
+				return;
+			}
+
+			RowT controlRow = Dialog_MakeEditVersion<TableT, RowT>(targetRows, batchFlatten);
+
+			// Show the dialog
+			dialog.Title = dialogTitle != null ? dialogTitle(controlRow, batch) : "Editing " + typeof(RowT).Name;
+			dialog.TitleTooltip = dialogTooltip != null ? dialogTooltip(controlRow, batch) : null;
+			dialog.BeginEdit(controlRow, targetRows.Length > 1 ? (object)targetRows : (object)targetRows[0]);
+		}
+	
+		/// <summary>
+		/// 
+		/// </summary>
 		protected static RowT Dialog_MakeEditVersion<TableT, RowT>(RowT row)
 			where TableT: DataTable, new()
 			where RowT: DataRow

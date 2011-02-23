@@ -1470,16 +1470,29 @@ namespace Easynet.Edge.UI.Server
 						Segment4 = (case when @segment4:Int is null then Segment4 else @segment4 end),
 						Segment5 = (case when @segment5:Int is null then Segment5 else @segment5 end),
 						LastUpdated = getdate()
-				where	Account_ID = @accountID:Int and Creative_GK = @creativeGK:BigInt"
+				where	Account_ID = @accountID:Int and Creative_GK = @creativeGK:BigInt;
+				"
 			); 
 
 			SqlCommand pageCmd = DataManager.CreateCommand
 			(
-				@"
+				String.Format(@"
 				update	UserProcess_GUI_PaidAdgroupCreative
 				set		Page_GK = @pageGK:BigInt,
 						LastUpdated = getdate()
-				where	Account_ID = @accountID:Int and PPC_Creative_GK = @adgroupCreativeGK:BigInt"
+				where	Account_ID = @accountID:Int and PPC_Creative_GK = @adgroupCreativeGK:BigInt;
+
+				update	UserProcess_GUI_Gateway
+				set		Page_GK = @pageGK:BigInt,
+						Segment1 = (case when @segment1:Int is null then Segment1 else @segment1 end),
+						Segment2 = (case when @segment2:Int is null then Segment2 else @segment2 end),
+						Segment3 = (case when @segment3:Int is null then Segment3 else @segment3 end),
+						Segment4 = (case when @segment4:Int is null then Segment4 else @segment4 end),
+						Segment5 = (case when @segment5:Int is null then Segment5 else @segment5 end),
+						LastUpdated = getdate()
+				where	Account_ID = @accountID:Int and Reference_Type = {0} and Reference_ID = @adgroupCreativeGK:BigInt;
+				",
+				 (int)GatewayReferenceType.Creative)
 			);
 
 			// Create transaction and assign it
