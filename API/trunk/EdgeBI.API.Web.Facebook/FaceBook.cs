@@ -7,21 +7,22 @@ using System.ServiceModel.Activation;
 using EdgeBI.Objects;
 using System.Data.SqlClient;
 using Easynet.Edge.Core.Data;
+using System.ServiceModel.Web;
 
-namespace EdgeBI.API.Web.Facebook
+namespace EdgeBI.API.Web
 {
 	[ServiceContract]
 	[ServiceBehavior(IncludeExceptionDetailInFaults = true)]
 	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
 	public class Facebook
 	{
-
-		public List<Campaign> GetCampaignsByAccountIdAndChannel(int accountID,int channelID)
+		[WebGet(UriTemplate = "Campaigns/accounts/{accountID}/channel/{channelID}")]
+		public List<Campaign> GetCampaignsByAccountIdAndChannel(string accountID,string channelID)
 		{
 			List<Campaign> campaigns = new List<Campaign>();
 			try
 			{
-			campaigns= Campaign.GetCampaignsByAccountIdAndChannel(accountID);
+			campaigns= Campaign.GetCampaignsByAccountIdAndChannel( int.Parse(accountID),int.Parse(channelID));
 			}
 			catch (Exception ex)
 			{
@@ -29,6 +30,7 @@ namespace EdgeBI.API.Web.Facebook
 			}
 			return campaigns;
 		}
+		[WebInvoke(Method = "POST", UriTemplate = "CampaignStatusSchedule")]
 		public void ScheduleCampaigns(List<CampaignStatusSchedule> campaignStatusSchedules)
 		{
 			try
@@ -40,19 +42,19 @@ namespace EdgeBI.API.Web.Facebook
 				ErrorMessageInterceptor.ThrowError(System.Net.HttpStatusCode.Forbidden, ex);
 			}
 		}
-		public List<CampaignStatusSchedule> GetCampaignStatusSchedules(long campaignID)
+		[WebGet(UriTemplate = "CampaignStatusSchedule/{campaignGK}")]
+		public List<CampaignStatusSchedule> GetCampaignStatusSchedulesbYcampaignGK(long campaignGK)
 		{
 			List<CampaignStatusSchedule> campaignStatusSchedules = new List<CampaignStatusSchedule>();
 			try
 			{
-			return CampaignStatusSchedule.GetCampaignStatusSchedules(campaignID);
+			return CampaignStatusSchedule.GetCampaignStatusSchedules(campaignGK);
 			}
 			catch (Exception ex)
 			{
 				ErrorMessageInterceptor.ThrowError(System.Net.HttpStatusCode.Forbidden, ex);
 			}
 			return campaignStatusSchedules;
-
 		}
 
 
