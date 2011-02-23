@@ -109,7 +109,12 @@ namespace NewRestApiTester__
 			HttpRequestMessage request = new HttpRequestMessage(requestType, fullAddress);
 			
 			//Microsoft.Http.Headers.Connection conn = new Microsoft.Http.Headers.Connection() { Close = false };
+			
+			if (requestType=="GET")
 			request.Headers.Accept.Add(new Microsoft.Http.Headers.StringWithOptionalQuality("application/json"));
+			else
+				request.Headers.Accept.Add(new Microsoft.Http.Headers.StringWithOptionalQuality("text/tab-separated-values"));
+
 
 
 
@@ -128,7 +133,12 @@ namespace NewRestApiTester__
 					request.Content = HttpContent.Create(BodyTextBox.Text);
 			}
 			HttpResponseMessage response = new HttpResponseMessage();
-			response.Headers.ContentType = "application/json";
+
+			if (requestType == "GET")
+				response.Headers.ContentType = "application/json";
+			else
+				response.Headers.ContentType = "text/tab-separated-values";
+			
 			response = client.Send(request);
 			ResponseHeaderTextBox.Text = string.Empty;
 			ResponseHeaderTextBox.Text += response.StatusCode + "\n";

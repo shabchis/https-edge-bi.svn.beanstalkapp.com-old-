@@ -29,15 +29,21 @@ namespace EdgeBI.FacebookTools.Services.Service
 	public class FacebbookTools
 	{
 		[WebInvoke(Method="POST", UriTemplate = "test")]
-		public void test(FileDescription fileDescription)
-		{
-			LifeTimeBudget l = new LifeTimeBudget();
-			l.test(fileDescription);
-		}
-		[WebGet(UriTemplate = "test")]
-		public FileDescription getJsonTemplate()
+		public LifeTimeBudget test(FileDescription fileDescription)
 		{
 			
+			LifeTimeBudget l = new LifeTimeBudget();
+			l.fileDescription = fileDescription;
+			return l;
+		
+			
+		}
+		[WebGet(UriTemplate = "test")]
+		public FileDescription getJsonTemplate(HttpResponseMessage response )
+		{
+			
+			
+
 			FileDescription f = new FileDescription();
 
 

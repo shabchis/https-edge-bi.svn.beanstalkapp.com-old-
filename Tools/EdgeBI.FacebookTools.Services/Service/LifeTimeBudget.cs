@@ -9,63 +9,86 @@ using Newtonsoft.Json.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
+using Microsoft.Http;
 namespace EdgeBI.FacebookTools.Services.Service
 {
 	public class LifeTimeBudget
 	{
-		private FileDescription fileDescription;
+		public FileDescription fileDescription;
 		List<JArray> _list = new List<JArray>();
-		StringBuilder str = new StringBuilder();
+		
+		public Stream stream;
+		TextWriter t;
+		HttpRequestMessage response = new HttpRequestMessage();
 		Stack<string> stack = new Stack<string>();
 		Dictionary<int, string> colSettings = new Dictionary<int, string>();
 		private int _counter = 0;
-		public void test(FileDescription fileDescription)
+		public void test()
 		{
+			
 			try
 			{
-				str.Clear();
+				
+				
 				_counter = 0;
-				this.fileDescription = fileDescription;
+
+				
+
+				t = new StreamWriter(this.stream);
 				foreach (KeyValuePair<int, ColumnDescriptionAndValues> colDesc in fileDescription.Settings.OrderBy(s => s.Key))
 				{
-					str.AppendFormat("{0}\t", colDesc.Value.ColumnName);
+					t.Write("{0}\t", colDesc.Value.ColumnName);
+					
 				}
-				str.AppendLine();				
+
+
+
+				t.WriteLine();
 				Dublicate(0); //pay attention yaron should sent the first col as 0 or you will need to change the method
-				writeFile();
+				
+				
+				
+				
+				
+
+				
+				
+
 			}
 			catch (Exception ex)
 			{
 
 				ErrorMessageInterceptor.ThrowError(System.Net.HttpStatusCode.Forbidden, ex);
 			}
+			
 		}
 
-		private void writeFile()
-		{
-		    using (StreamWriter streamWriter=new StreamWriter(@"c:\bulkfile.txt",false,Encoding.Unicode))
-		    {
-				streamWriter.Write(str.ToString());
-				
-		    }
-		}
+		//private Stream writeFile()
+		//{
+		//    //StreamWriter streamWriter = new StreamWriter(@"c:\bulkfile.txt", false, Encoding.Unicode);
+
+		//    //streamWriter.Write(str.ToString());
+
+
+		//    //return streamWriter.BaseStream;
+		//}
 
 		public void Dublicate(int listIndex)
 		{
-
+			
 			if (listIndex >= fileDescription.Settings.Count)
 			{
-				
+
 				int colIndex = 0;
 				foreach (string colValue in stack.Reverse())
 				{
-					
-					str.Append(GetCustomFormat(colIndex, colValue));
+
+					t.Write(GetCustomFormat(colIndex, colValue));
 					colIndex++;
 
 				}
 				_counter++;
-				str.AppendLine();
+				t.WriteLine();
 				stack.Pop();
 				return;
 			}
@@ -92,26 +115,27 @@ namespace EdgeBI.FacebookTools.Services.Service
 		private string GetCustomFormat(int listIndex, string colValue)
 		{
 			string columnSetting = fileDescription.Settings[listIndex].SettingName;
-			string result=string.Empty;
+			string result = string.Empty;
 			switch (columnSetting)
 			{
 				case "Default":
 					{
-						result = string.Format("{0}\t", colValue); 
+						result = string.Format("{0}\t", colValue);
 						break;
 					}
 				case "Int":
 					{
 						int temp;
-						 if (int.TryParse(colValue,out temp))
-							 result = string.Format("{0}\t", colValue); 
+						if (int.TryParse(colValue, out temp))
+							result = string.Format("{0}\t", colValue);
 						break;
 					}
 				case "Link":
 					{
-						Match m=Regex.Match(colValue,@"(?<=\=)[\d]+");
-						int nextNum=int.Parse(m.Value);
-						result = Regex.Replace(colValue, @"(?<=\=)[\d]+", (nextNum + _counter).ToString());						
+						Match m = Regex.Match(colValue, @"(?<=\=)[\d]+");
+						int nextNum = int.Parse(m.Value);
+						result = Regex.Replace(colValue, @"(?<=\=)[\d]+", (nextNum + _counter).ToString());
+						result = result + "\t";
 						break;
 					}
 				case "Double":
@@ -120,7 +144,7 @@ namespace EdgeBI.FacebookTools.Services.Service
 						if (double.TryParse(colValue, out temp))
 							result = string.Format("{0}\t", colValue);
 						break;
-						
+
 					}
 				case "ad_name":
 					{
@@ -131,7 +155,7 @@ namespace EdgeBI.FacebookTools.Services.Service
 					}
 				default:
 					{
-						result = string.Format("{0}\t", colValue); 
+						result = string.Format("{0}\t", colValue);
 						break;
 					}
 			}
