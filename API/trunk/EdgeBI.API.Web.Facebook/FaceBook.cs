@@ -16,8 +16,8 @@ namespace EdgeBI.API.Web
 	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
 	public class Facebook
 	{
-		[WebGet(UriTemplate = "Campaigns/accounts/{accountID}/channel/{channelID}")]
-		public List<Campaign> GetCampaignsByAccountIdAndChannel(string accountID,string channelID)
+		[WebGet(UriTemplate = "campaigns/accounts/{accountID}/channels/{channelID}")]
+		public List<Campaign> GetCampaignsByAccountIdAndChannel(string accountID, string channelID)
 		{
 			List<Campaign> campaigns = new List<Campaign>();
 			try
@@ -43,12 +43,12 @@ namespace EdgeBI.API.Web
 			}
 		}
 		[WebGet(UriTemplate = "CampaignStatusSchedule/{campaignGK}")]
-		public List<CampaignStatusSchedule> GetCampaignStatusSchedulesbYcampaignGK(long campaignGK)
+		public List<CampaignStatusSchedule> GetCampaignStatusSchedulesbYcampaignGK(string campaignGK)
 		{
 			List<CampaignStatusSchedule> campaignStatusSchedules = new List<CampaignStatusSchedule>();
 			try
 			{
-			return CampaignStatusSchedule.GetCampaignStatusSchedules(campaignGK);
+			return CampaignStatusSchedule.GetCampaignStatusSchedules(int.Parse(campaignGK));
 			}
 			catch (Exception ex)
 			{

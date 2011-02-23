@@ -47,14 +47,27 @@ namespace JsonValueSample
 					db.Rollback();
 
 				}
+
+				module m2=new module() { AssemblyQualifiedName="EdgeBI.API.Web.Facebook,EdgeBI.API.Web.Facebook",RoutePrefix = "facebook" };
+				db.Store(m2);
+				try
+				{
+					db.Commit();
+
+				}
+				catch (Exception)
+				{
+					db.Rollback();
+
+				}
 				result = db.QueryByExample(typeof(module));
 				db.Ext().Refresh(result, 0);
 				foreach (module mm in result)
 				{
-					Type t = Type.GetType(m.AssemblyQualifiedName, false);
+					Type t = Type.GetType(mm.AssemblyQualifiedName, false);
 					if (t != null)
 					{
-						var route1 = new ServiceRoute(m.RoutePrefix, new EdgeApiServiceHostFactory(new EdgeApiServiceConfiguration()), t);
+						var route1 = new ServiceRoute(mm.RoutePrefix, new EdgeApiServiceHostFactory(new EdgeApiServiceConfiguration()), t);
 						RouteTable.Routes.Add(route1);
 					}
 

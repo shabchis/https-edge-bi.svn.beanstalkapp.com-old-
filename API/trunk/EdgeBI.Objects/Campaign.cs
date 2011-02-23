@@ -39,7 +39,7 @@ namespace EdgeBI.Objects
 
 
 
-		public static List<Campaign> GetCampaignsByAccountIdAndChannel(int AccountID)
+		public static List<Campaign> GetCampaignsByAccountIdAndChannel(int accountID, int channelID)
 		{
 			List<Campaign> campaigns = new List<Campaign>();
 			ThingReader<Campaign> thingReader;
@@ -48,7 +48,8 @@ namespace EdgeBI.Objects
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand("CampaignByAccountAndChannel(@Account_ID:Int,@Channel_ID:Int",System.Data.CommandType.StoredProcedure);
 
-
+				sqlCommand.Parameters["@Account_ID"].Value = accountID;
+				sqlCommand.Parameters["@Channel_ID"].Value = channelID;
 
 				thingReader = new ThingReader<Campaign>(sqlCommand.ExecuteReader(), null);
 				while (thingReader.Read())
