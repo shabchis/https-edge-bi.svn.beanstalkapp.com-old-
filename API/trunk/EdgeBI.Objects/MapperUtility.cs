@@ -12,7 +12,7 @@ using System.Collections;
 namespace EdgeBI.Objects
 {
 	/// <summary>
-	/// Return objects dynamicly
+	/// Return and save objects dynamicly
 	/// </summary>
 	class MapperUtility
 	{

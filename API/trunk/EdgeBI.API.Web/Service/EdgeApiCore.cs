@@ -655,6 +655,7 @@ namespace EdgeBI.API.Web
 		}
 
 		#endregion
+
 		/*for yaron -test
 		private string CreateHtml(List<Permission> permissions)
 		{
