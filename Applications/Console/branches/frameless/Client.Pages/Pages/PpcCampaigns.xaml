@@ -178,10 +178,6 @@
 									<Style TargetType="{x:Type ComboBox}">
 										<Setter Property="Width" Value="250"/>
 									</Style>
-									<Style TargetType="{x:Type CheckBox}">
-										<Setter Property="Margin" Value="3,0,0,0"/>
-										<Setter Property="VerticalAlignment" Value="Center"/>
-									</Style>
 								</TabItem.Resources>
 								<StackPanel Style="{StaticResource FormContents}">
 									<StackPanel Style="{StaticResource FormField}" x:Name="_segment1" Visibility="Collapsed">
@@ -211,10 +207,6 @@
 								<TabItem.Resources>
 									<Style TargetType="{x:Type Label}">
 										<Setter Property="Width" Value="150"/>
-									</Style>
-									<Style TargetType="{x:Type CheckBox}">
-										<Setter Property="Margin" Value="3,0,0,0"/>
-										<Setter Property="VerticalAlignment" Value="Center"/>
 									</Style>
 								</TabItem.Resources>
 
@@ -322,23 +314,23 @@
 								<StackPanel Style="{StaticResource FormContents}">
 									<StackPanel Style="{StaticResource FormField}" x:Name="_segment1" Visibility="Collapsed">
 										<Label/>
-										<ComboBox SelectedValue="{Binding Path=Segment1}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+										<ComboBox SelectedValue="{this:DialogBinding Path=Segment1}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
 									</StackPanel>
 									<StackPanel Style="{StaticResource FormField}" x:Name="_segment2" Visibility="Collapsed">
 										<Label/>
-										<ComboBox SelectedValue="{Binding Path=Segment2}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+										<ComboBox SelectedValue="{this:DialogBinding Path=Segment2}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
 									</StackPanel>
 									<StackPanel Style="{StaticResource FormField}" x:Name="_segment3" Visibility="Collapsed">
 										<Label/>
-										<ComboBox SelectedValue="{Binding Path=Segment3}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+										<ComboBox SelectedValue="{this:DialogBinding Path=Segment3}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
 									</StackPanel>
 									<StackPanel Style="{StaticResource FormField}" x:Name="_segment4" Visibility="Collapsed">
 										<Label/>
-										<ComboBox SelectedValue="{Binding Path=Segment4}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+										<ComboBox SelectedValue="{this:DialogBinding Path=Segment4}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
 									</StackPanel>
 									<StackPanel Style="{StaticResource FormField}" x:Name="_segment5" Visibility="Collapsed">
 										<Label/>
-										<ComboBox SelectedValue="{Binding Path=Segment5}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+										<ComboBox SelectedValue="{this:DialogBinding Path=Segment5}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
 									</StackPanel>
 								</StackPanel>
 							</TabItem>

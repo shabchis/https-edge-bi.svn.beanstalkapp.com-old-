@@ -168,25 +168,13 @@ namespace Easynet.Edge.UI.Client.Pages
 			Keyword_dialog.TitleTooltip = "GK #" + row.GK.ToString();
 
 			// Disable editing keyword value
-			_keywordValueField.IsEnabled = false;
+			if (_keywordValueField != null)
+				_keywordValueField.IsEnabled = false;
 
 			Keyword_dialog.BeginEdit(
 				Dialog_MakeEditVersion<Oltp.KeywordDataTable, Oltp.KeywordRow>(row),
 				row
 			);
-
-			TabControl tabs = VisualTree.GetChild<TabControl>(Keyword_dialog);
-			if (tabs.SelectedIndex == 1)
-			{
-				AssociationsTabItem_GotFocus(null, null);
-			}
-				
-			// When opening, select it only if no more than one is already selected
-			if (_listTable.ListView.SelectedItems.Count < 2)
-			{
-				_listTable.ListView.SelectedItems.Clear();
-				currentItem.IsSelected = true;
-			}
 		}
 
 		/// <summary>
@@ -248,6 +236,11 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void Keyword_dialog_ApplyingChanges(object sender, CancelRoutedEventArgs e)
 		{
+			Keyword_dialog.EndApplyChanges(e);
+			return;
+
+			#region Disabled, hopefully for good
+			/*
 			// Validate keyword field
 			if (_keywordValueField.Text.Trim().Length < 1)
 			{
@@ -290,6 +283,8 @@ namespace Easynet.Edge.UI.Client.Pages
 					typeof(IOltpLogic).GetMethod("Keyword_Save"),
 					e, null, true, null);
 			});
+			 */
+			#endregion
 		}
 
 		/// <summary>
@@ -297,6 +292,10 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void Keyword_dialog_AppliedChanges(object sender, CancelRoutedEventArgs e)
 		{
+			return;
+
+			#region Disabled, hopefully for good
+			/*
 			Oltp.KeywordRow dataItem = Keyword_dialog.TargetContent as Oltp.KeywordRow;
 
 			// Call the univeral applied change handler
@@ -309,6 +308,8 @@ namespace Easynet.Edge.UI.Client.Pages
 			ListViewItem item = _listTable.ListView.ItemContainerGenerator.ContainerFromItem(dataItem) as ListViewItem;
 			(this.Resources["NameTemplateSelector"] as MasterKeywordsLocal.NameTemplateSelector)
 				.ApplyTemplate(dataItem, item);
+			*/
+			#endregion
 		}
 
 		/// <summary>

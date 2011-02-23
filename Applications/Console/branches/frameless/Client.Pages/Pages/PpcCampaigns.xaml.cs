@@ -996,19 +996,52 @@ namespace Easynet.Edge.UI.Client.Pages
 			Campaign_dialog.BeginEdit(editVersion, _campaigns);
 		}
 
+		
+
 		/// <summary>
 		/// Open the dialog
 		/// </summary>
 		private void Campaign_dialog_Open(object sender, RoutedEventArgs e)
 		{
-			// When a single item is clicked, select it
-			bool batch = _listTable.ListView.SelectedItems.Count > 1;
-			if (!batch)
+			Dialog_Open<Oltp.CampaignDataTable, Oltp.CampaignRow>
+			(
+				// dialog:
+				Campaign_dialog,
+
+				// listTable:
+				_listTable,
+
+				// clickedItem:
+				_listTable.GetParentListViewItem(e.OriginalSource as FrameworkElement) as ListViewItem,
+
+				// allowBatch:
+				true,
+
+				// dialogTitle:
+				(row, isBatch) => row.Name,
+
+				// dialogTooltip:
+				(row, isBatch) => isBatch ? null : "GK #" + row.GK.ToString(),
+
+				// batchFlatten:
+				col =>
+					col.ColumnName == _campaigns.GKColumn.ColumnName ? null :
+					col.ColumnName == _campaigns.NameColumn.ColumnName ? "(multiple campaigns)" as object :
+					DBNull.Value as object
+
+			);
+
+
+
+			#if CHICKENSHIT
+			if (!_listTable.ListView.SelectedItems.Contains(currentItem.DataContext))
 			{
-				ListViewItem currentItem = _listTable.GetParentListViewItem(e.OriginalSource as FrameworkElement);
 				_listTable.ListView.SelectedItems.Clear();
 				currentItem.IsSelected = true;
 			}
+			
+			// When a single item is clicked, select it
+			bool batch = _listTable.ListView.SelectedItems.Count > 1;
 			
 			Oltp.CampaignRow[] targetRows = new Oltp.CampaignRow[_listTable.ListView.SelectedItems.Count];
 			try { _listTable.ListView.SelectedItems.CopyTo(targetRows, 0); }
@@ -1039,7 +1072,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			if (tabTargets.IsSelected)
 				CampaignTargets_GotFocus(tabTargets, new RoutedEventArgs());
-
+			#endif
 		}
 
 		/// <summary>
@@ -1100,40 +1133,40 @@ namespace Easynet.Edge.UI.Client.Pages
 					bool isBatch = Campaign_dialog.IsBatch;
 					int accountID = Window.CurrentAccount.ID;
 
-					// Check which measures in batch mode are set to save
+					// Get targets to save
 					List<Measure> measuresToSave = null;
-					if (isBatch)
+					if (isBatch && _campaignTargetsControl != null)
 					{
-						measuresToSave = new List<Measure>();
-						List<TextBox> controls = VisualTree.GetChildren<TextBox>(_campaignTargetsControl);
-
-						for (int i = 0; i < controls.Count; i++)
+						// Check which target measures in batch mode are set to save
+						if (isBatch)
 						{
-							TextBox control = controls[i];
+							measuresToSave = new List<Measure>();
+							List<TextBox> controls = VisualTree.GetChildren<TextBox>(_campaignTargetsControl);
 
-							StackPanel stackPanel = control.Parent as StackPanel;
-							CheckBox checkbox = stackPanel.Children[stackPanel.Children.Count - 1] as CheckBox;
+							for (int i = 0; i < controls.Count; i++)
+							{
+								TextBox control = controls[i];
 
-							// Add the target measure to measuresToSave by finding one with the same ID
-							// (they are not the same object because we cloned the measures when we opened the tab)
-							if (checkbox.IsChecked != null && checkbox.IsChecked.Value)
-								measuresToSave.Add(_measures.Single(m => m.MeasureID == (_campaignTargetsControl.Items[i] as Measure).MeasureID));
+								StackPanel stackPanel = control.Parent as StackPanel;
+								CheckBox checkbox = stackPanel.Children[stackPanel.Children.Count - 1] as CheckBox;
+
+								// Add the target measure to measuresToSave by finding one with the same ID
+								// (they are not the same object because we cloned the measures when we opened the tab)
+								if (checkbox.IsChecked != null && checkbox.IsChecked.Value)
+									measuresToSave.Add(_measures.Single(m => m.MeasureID == (_campaignTargetsControl.Items[i] as Measure).MeasureID));
+							}
 						}
-
 					}
 
 
-					//if (tempRow.Targets != null && tempRow.Targets.InnerRow == null)
-					//	throw new Exception("TODO: figure out how to clear targets, right now this doesn't work...");
-
-					if (tempRow.Targets == null ||
-						tempRow.Targets.InnerRow.RowState == DataRowState.Unchanged ||
-						(measuresToSave != null && measuresToSave.Count == 0))
+					if (tempRow.Targets == null || tempRow.Targets.InnerRow.RowState == DataRowState.Unchanged || (measuresToSave != null && measuresToSave.Count == 0))
 					{
+						// No targets to save, just end here
 						Campaign_dialog.EndApplyChanges(e);
 					}
 					else
 					{
+						// Save targets in async mode
 						Window.AsyncOperation(delegate()
 						{
 
@@ -1457,6 +1490,42 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void Adgroup_dialog_Open(object sender, RoutedEventArgs e)
 		{
+			Dialog_Open<Oltp.AdgroupDataTable, Oltp.AdgroupRow>
+			(
+				// dialog:
+				Adgroup_dialog,
+
+				// listTable:
+				_listTable,
+
+				// clickedItem:
+				_listTable.GetParentListViewItem(e.OriginalSource as FrameworkElement) as ListViewItem,
+
+				// allowBatch:
+				true,
+
+				// dialogTitle:
+				(row, isBatch) => row.Name,
+
+				// dialogTooltip:
+				(row, isBatch) => isBatch ? null : "GK #" + row.GK.ToString(),
+
+				// batchFlatten:
+				col =>
+					col.ColumnName == new Oltp.AdgroupDataTable().GKColumn.ColumnName ? null :
+					col.ColumnName == new Oltp.AdgroupDataTable().NameColumn.ColumnName ? "(multiple adgroups)" as object :
+					DBNull.Value as object
+
+			);
+
+			VisualTree.GetChild<TabItem>(Adgroup_dialog, "_tabKeywords").Visibility = Adgroup_dialog.IsBatch ? Visibility.Collapsed : Visibility.Visible;
+			VisualTree.GetChild<TabItem>(Adgroup_dialog, "_tabCreatives").Visibility = Adgroup_dialog.IsBatch ? Visibility.Collapsed : Visibility.Visible;
+
+			if (Adgroup_dialog.IsBatch)
+				VisualTree.GetChild<TabItem>(Adgroup_dialog, "_tabSegments").Focus();
+
+
+			#if CHICKENSHIT
 			// Set campaign as current item
 			ListViewItem currentItem = _listTable.GetParentListViewItem(e.OriginalSource as FrameworkElement);
 			bool batch = _listTable.ListView.SelectedItems.Count > 1;
@@ -1503,6 +1572,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				_listTable.ListView.SelectedItems.Clear();
 				currentItem.IsSelected = true;
 			}
+			#endif
 		}
 
 
@@ -1573,127 +1643,154 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void Adgroup_dialog_ApplyingChanges(object sender, CancelRoutedEventArgs e)
 		{
+			Oltp.AdgroupKeywordDataTable keywordChanges = null;
+			Oltp.AdgroupCreativeDataTable creativeChanges = null;
 
-			Oltp.AdgroupKeywordDataTable keywordChanges = _adgroupKeywordTable == null ? null : _adgroupKeywordTable.GetChanges() as Oltp.AdgroupKeywordDataTable;
-			Oltp.AdgroupCreativeDataTable creativeChanges = _adgroupCreativeTable == null ? null : _adgroupCreativeTable.GetChanges() as Oltp.AdgroupCreativeDataTable;
-
-			if (creativeChanges != null)
+			// Relevant only in single mode
+			if (!Adgroup_dialog.IsBatch)
 			{
-				MessageBoxResult result = MessageBox.Show("Applying changes will update the segments of all occurences of this adgroup's creatives in other adgroups. Continue?",
-					"Warning",
-					MessageBoxButton.OKCancel,
-					MessageBoxImage.Warning);
+				keywordChanges = _adgroupKeywordTable == null ? null : _adgroupKeywordTable.GetChanges() as Oltp.AdgroupKeywordDataTable;
+				creativeChanges = _adgroupCreativeTable == null ? null : _adgroupCreativeTable.GetChanges() as Oltp.AdgroupCreativeDataTable;
 
-				// Cancel
-				if (result != MessageBoxResult.OK)
+				if (creativeChanges != null)
 				{
-					e.Cancel = true;
-					return;
+					MessageBoxResult result = MessageBox.Show("Applying changes will update the segments of all occurences of this adgroup's creatives in other adgroups. Continue?",
+						"Warning",
+						MessageBoxButton.OKCancel,
+						MessageBoxImage.Warning);
+
+					// Cancel
+					if (result != MessageBoxResult.OK)
+					{
+						e.Cancel = true;
+						return;
+					}
 				}
 			}
 	
 			// Call the universal dialog apply changes handler method
-			Dialog_ApplyingChanges<Oltp.AdgroupDataTable, Oltp.AdgroupRow>(
-				Adgroup_dialog.TargetContent is DataTable ?
-					Adgroup_dialog.TargetContent as Oltp.AdgroupDataTable :
-					(Adgroup_dialog.TargetContent as Oltp.AdgroupRow).Table as Oltp.AdgroupDataTable,
-				Adgroup_dialog,
-				typeof(IOltpLogic).GetMethod("Adgroup_Save"),
-				e,
-				new object[]{Window.CurrentAccount.HasBackOffice},
-				true,
-				delegate()
-			{
-				if (e.Cancel)
-					return;
-
-				// After the adgroup save method is called, we need to populate the rest of the 
-				ObservableCollection<Oltp.AdgroupCreativeRow> sourceCreatives = 
-					_adgroupCreatives.ListView.ItemsSource as ObservableCollection<Oltp.AdgroupCreativeRow>;;
-				ObservableCollection<Oltp.AdgroupKeywordRow> sourceKeywords =
-					_adgroupKeywords.ListView.ItemsSource as ObservableCollection<Oltp.AdgroupKeywordRow>;
-				Oltp.KeywordDataTable masterKeywords = null;
-				ArrayList newKeywords  = null;
-
-				// Create and add new keywords
-				if (keywordChanges != null)
-				{
-					sourceKeywords = _adgroupKeywords.ListView.ItemsSource as ObservableCollection<Oltp.AdgroupKeywordRow>;
-					foreach (Oltp.AdgroupKeywordRow kw in sourceKeywords)
-					{
-						if (kw.KeywordGK < 0)
-						{
-							// Null GK means this keyword does not exist, so create it
-							if (masterKeywords == null)
-							{
-								masterKeywords = new Oltp.KeywordDataTable();
-								newKeywords = new ArrayList();
-							}
-
-							Oltp.KeywordRow masterKw = masterKeywords.NewKeywordRow();
-							masterKw.AccountID = Window.CurrentAccount.ID;
-							masterKw.IsMonitored = false;
-							masterKw.Keyword = kw.Keyword;
-							masterKeywords.AddKeywordRow(masterKw);
-							newKeywords.Add(kw);
-						}
-
-						kw.AdgroupGK = (Adgroup_dialog.TargetContent as Oltp.AdgroupRow).GK;
-					}
-				}
+			Dialog_ApplyingChanges<Oltp.AdgroupDataTable, Oltp.AdgroupRow>
+			(
+				// sourceTable: // this is only relevant for add mode, so it doesn't interfere with batch when it's null
+				Adgroup_dialog.IsBatch ? null:
+					Adgroup_dialog.TargetContent is DataTable ?
+						Adgroup_dialog.TargetContent as Oltp.AdgroupDataTable :
+						(Adgroup_dialog.TargetContent as Oltp.AdgroupRow).Table as Oltp.AdgroupDataTable,
 				
-				// Add new creatives
-				if (creativeChanges != null)
-				{
-					foreach (Oltp.AdgroupCreativeRow creative in sourceCreatives)
-					{
-						creative.AdgroupGK = (Adgroup_dialog.TargetContent as Oltp.AdgroupRow).GK;
-					}
-				}
+				// dialog:
+				Adgroup_dialog,
 
-				Window.AsyncOperation(delegate()
-				{
-					using (OltpProxy proxy = new OltpProxy())
-					{
-						if (keywordChanges != null)
-						{
-							// Save the new keywords to the master table, then update the GK for the profile keywords
-							if (masterKeywords != null)
-							{
-								masterKeywords = proxy.Service.Keyword_Save(masterKeywords);
-								for (int i = 0; i < masterKeywords.Rows.Count; i++)
-									(newKeywords[i] as Oltp.AdgroupKeywordRow).KeywordGK = (masterKeywords.Rows[i] as Oltp.KeywordRow).GK;
-							}
+				// saveMethod:
+				typeof(IOltpLogic).GetMethod("Adgroup_Save"),
+				
+				// e:
+				e,
 
-							proxy.Service.AdgroupKeyword_Save(_adgroupKeywordTable);
-						}
-
-						if (creativeChanges != null)
-						{
-							proxy.Service.AdgroupCreative_Save(_adgroupCreativeTable);
-						}
-					}
-
-				},
-				delegate(Exception ex)
-				{
-					MainWindow.MessageBoxError("Error occured while saving the adgroup's keywords and/or creatives.", ex);
-					e.Cancel = true;
-					return false;
-				},
+				// additionalArgs:
+				new object[]{Window.CurrentAccount.HasBackOffice},
+				
+				// async:
+				true,
+				
+				// postApplying:
 				delegate()
 				{
-					// Accept changes
+					if (e.Cancel)
+						return;
+
+					if (Adgroup_dialog.IsBatch)
+					{
+						Adgroup_dialog.EndApplyChanges(e);
+						return;
+					}
+
+					// After the adgroup save method is called, we need to populate the rest of the 
+					ObservableCollection<Oltp.AdgroupCreativeRow> sourceCreatives = 
+						_adgroupCreatives.ListView.ItemsSource as ObservableCollection<Oltp.AdgroupCreativeRow>;;
+					ObservableCollection<Oltp.AdgroupKeywordRow> sourceKeywords =
+						_adgroupKeywords.ListView.ItemsSource as ObservableCollection<Oltp.AdgroupKeywordRow>;
+					Oltp.KeywordDataTable masterKeywords = null;
+					ArrayList newKeywords  = null;
+
+					// Create and add new keywords
 					if (keywordChanges != null)
-						_adgroupKeywordTable.AcceptChanges();
+					{
+						sourceKeywords = _adgroupKeywords.ListView.ItemsSource as ObservableCollection<Oltp.AdgroupKeywordRow>;
+						foreach (Oltp.AdgroupKeywordRow kw in sourceKeywords)
+						{
+							if (kw.KeywordGK < 0)
+							{
+								// Null GK means this keyword does not exist, so create it
+								if (masterKeywords == null)
+								{
+									masterKeywords = new Oltp.KeywordDataTable();
+									newKeywords = new ArrayList();
+								}
 
-					// Accept changes
+								Oltp.KeywordRow masterKw = masterKeywords.NewKeywordRow();
+								masterKw.AccountID = Window.CurrentAccount.ID;
+								masterKw.IsMonitored = false;
+								masterKw.Keyword = kw.Keyword;
+								masterKeywords.AddKeywordRow(masterKw);
+								newKeywords.Add(kw);
+							}
+
+							kw.AdgroupGK = (Adgroup_dialog.TargetContent as Oltp.AdgroupRow).GK;
+						}
+					}
+					
+					// Add new creatives
 					if (creativeChanges != null)
-						_adgroupCreativeTable.AcceptChanges();
+					{
+						foreach (Oltp.AdgroupCreativeRow creative in sourceCreatives)
+						{
+							creative.AdgroupGK = (Adgroup_dialog.TargetContent as Oltp.AdgroupRow).GK;
+						}
+					}
 
-					Adgroup_dialog.EndApplyChanges(e);
+					Window.AsyncOperation(delegate()
+					{
+						using (OltpProxy proxy = new OltpProxy())
+						{
+							if (keywordChanges != null)
+							{
+								// Save the new keywords to the master table, then update the GK for the profile keywords
+								if (masterKeywords != null)
+								{
+									masterKeywords = proxy.Service.Keyword_Save(masterKeywords);
+									for (int i = 0; i < masterKeywords.Rows.Count; i++)
+										(newKeywords[i] as Oltp.AdgroupKeywordRow).KeywordGK = (masterKeywords.Rows[i] as Oltp.KeywordRow).GK;
+								}
+
+								proxy.Service.AdgroupKeyword_Save(_adgroupKeywordTable);
+							}
+
+							if (creativeChanges != null)
+							{
+								proxy.Service.AdgroupCreative_Save(_adgroupCreativeTable);
+							}
+						}
+
+					},
+					delegate(Exception ex)
+					{
+						MainWindow.MessageBoxError("Error occured while saving the adgroup's keywords and/or creatives.", ex);
+						e.Cancel = true;
+						return false;
+					},
+					delegate()
+					{
+						// Accept changes
+						if (keywordChanges != null)
+							_adgroupKeywordTable.AcceptChanges();
+
+						// Accept changes
+						if (creativeChanges != null)
+							_adgroupCreativeTable.AcceptChanges();
+
+						Adgroup_dialog.EndApplyChanges(e);
+					});
 				});
-			});
 	
 		}
 
