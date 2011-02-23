@@ -76,17 +76,20 @@ namespace EdgeBI.Objects
 						sqlCommand.Transaction = sqlTransaction;
 					if (sqlCommand.Parameters.Contains("@Action"))
 						sqlCommand.Parameters["@Action"].Value = sqlOperation;
-					foreach (FieldInfo fieldInfo in objectToInsert.GetType().GetFields())
+					if (objectToInsert != null)
 					{
-						if (Attribute.IsDefined(fieldInfo, typeof(FieldMapAttribute)))
+						foreach (FieldInfo fieldInfo in objectToInsert.GetType().GetFields())
 						{
-							FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(FieldMapAttribute));
-							if (sqlCommand.Parameters.Contains(string.Format("@{0}", fieldMapAttribute.FieldName)))
+							if (Attribute.IsDefined(fieldInfo, typeof(FieldMapAttribute)))
 							{
-								if (fieldInfo.GetValue(objectToInsert) != null)
-									sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = fieldInfo.GetValue(objectToInsert);
-								else
-									sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = DBNull.Value;
+								FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(FieldMapAttribute));
+								if (sqlCommand.Parameters.Contains(string.Format("@{0}", fieldMapAttribute.FieldName)))
+								{
+									if (fieldInfo.GetValue(objectToInsert) != null)
+										sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = fieldInfo.GetValue(objectToInsert);
+									else
+										sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = DBNull.Value;
+								}
 							}
 						}
 					}

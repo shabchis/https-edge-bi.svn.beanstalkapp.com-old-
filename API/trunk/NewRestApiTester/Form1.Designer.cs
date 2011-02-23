@@ -82,7 +82,7 @@
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(336, 10);
+			this.label2.Location = new System.Drawing.Point(418, 10);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(122, 34);
 			this.label2.TabIndex = 4;
@@ -90,7 +90,7 @@
 			// 
 			// QueryStringstextBox
 			// 
-			this.QueryStringstextBox.Location = new System.Drawing.Point(466, 11);
+			this.QueryStringstextBox.Location = new System.Drawing.Point(548, 11);
 			this.QueryStringstextBox.Name = "QueryStringstextBox";
 			this.QueryStringstextBox.Size = new System.Drawing.Size(178, 20);
 			this.QueryStringstextBox.TabIndex = 3;
@@ -100,7 +100,7 @@
 			this.ServiceAddressComboBox.FormattingEnabled = true;
 			this.ServiceAddressComboBox.Location = new System.Drawing.Point(162, 10);
 			this.ServiceAddressComboBox.Name = "ServiceAddressComboBox";
-			this.ServiceAddressComboBox.Size = new System.Drawing.Size(164, 21);
+			this.ServiceAddressComboBox.Size = new System.Drawing.Size(250, 21);
 			this.ServiceAddressComboBox.TabIndex = 5;
 			this.ServiceAddressComboBox.SelectedIndexChanged += new System.EventHandler(this.ServiceAddressComboBox_SelectedIndexChanged);
 			this.ServiceAddressComboBox.Validated += new System.EventHandler(this.ServiceAddressComboBox_Validated);

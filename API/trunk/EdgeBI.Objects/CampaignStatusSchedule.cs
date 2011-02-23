@@ -125,11 +125,14 @@ namespace EdgeBI.Objects
 
 		public static void Update(List<CampaignStatusSchedule> campaignStatusSchedules)
 		{
+			string command;
 			SqlTransaction sqlTransaction = null;
 			SqlConnection sqlConnection = new SqlConnection(DataManager.ConnectionString);
 			sqlConnection.Open();
 			sqlTransaction = sqlConnection.BeginTransaction("Schedule");
-			string command = @"CampaignStatusSchedule_Insert(@Account_ID:int,
+			command = "DELETE FROM Facebook_Campaign_StatusByTime";
+			MapperUtility.SaveOrRemoveSimpleObject<CampaignStatusSchedule>(command, System.Data.CommandType.Text, SqlOperation.Delete, null, sqlConnection, sqlTransaction);
+			command = @"CampaignStatusSchedule_Insert(@Action:Int,@Account_ID:int,
            @Campaign_GK:int,
            @Channel_ID:int,
            @Day:int,
@@ -157,16 +160,33 @@ namespace EdgeBI.Objects
            @Hour21:int,
            @Hour22:int,
            @Hour23:int)";
-			foreach (CampaignStatusSchedule CampaignStatusSchedule in campaignStatusSchedules)
+			foreach (CampaignStatusSchedule campaignStatusSchedule in campaignStatusSchedules)
 			{
-				MapperUtility.SaveOrRemoveSimpleObject<CampaignStatusSchedule>(command, System.Data.CommandType.StoredProcedure, SqlOperation.Update, CampaignStatusSchedule, sqlConnection, sqlTransaction);
+				MapperUtility.SaveOrRemoveSimpleObject<CampaignStatusSchedule>(command, System.Data.CommandType.StoredProcedure, SqlOperation.Update, campaignStatusSchedule, sqlConnection, sqlTransaction);
 			}
+			sqlTransaction.Commit();
 		}
 
 
 		public static List<CampaignStatusSchedule> GetCampaignStatusSchedules(long campaignID)
 		{
-			throw new NotImplementedException();
+			List<CampaignStatusSchedule> campaignStatusSchedules = new List<CampaignStatusSchedule>();
+			ThingReader<CampaignStatusSchedule> thingReader;
+			//Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
+			using (DataManager.Current.OpenConnection())
+			{
+				SqlCommand sqlCommand = DataManager.CreateCommand("CampaignStatusSchedules_GetByCampaignGK(@Campaign_GK:Int", System.Data.CommandType.StoredProcedure);
+				sqlCommand.Parameters["@Campaign_GK"].Value = campaignID;
+
+
+				thingReader = new ThingReader<CampaignStatusSchedule>(sqlCommand.ExecuteReader(), null);
+				while (thingReader.Read())
+				{
+					campaignStatusSchedules.Add((CampaignStatusSchedule)thingReader.Current);
+				}
+			}
+
+			return campaignStatusSchedules;
 		}
 	}
 	public enum CampaignStatus
