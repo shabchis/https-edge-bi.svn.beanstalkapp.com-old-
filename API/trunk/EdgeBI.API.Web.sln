@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewRestApiTester", "NewRest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeBI.API.Web.EdgeApiTools", "EdgeBI.API.Web.EdgeApiTools\EdgeBI.API.Web.EdgeApiTools.csproj", "{7DF2C6B8-C179-4B88-821F-4AA90375BEDA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeBI.API.Web.Facebook", "EdgeBI.API.Web.Facebook\EdgeBI.API.Web.Facebook.csproj", "{102715EC-9688-474A-9B74-39C5F86AB85C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,16 @@ Global
 		{7DF2C6B8-C179-4B88-821F-4AA90375BEDA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{7DF2C6B8-C179-4B88-821F-4AA90375BEDA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7DF2C6B8-C179-4B88-821F-4AA90375BEDA}.Release|x86.ActiveCfg = Release|Any CPU
+		{102715EC-9688-474A-9B74-39C5F86AB85C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{102715EC-9688-474A-9B74-39C5F86AB85C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{102715EC-9688-474A-9B74-39C5F86AB85C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{102715EC-9688-474A-9B74-39C5F86AB85C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{102715EC-9688-474A-9B74-39C5F86AB85C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{102715EC-9688-474A-9B74-39C5F86AB85C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{102715EC-9688-474A-9B74-39C5F86AB85C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{102715EC-9688-474A-9B74-39C5F86AB85C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{102715EC-9688-474A-9B74-39C5F86AB85C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{102715EC-9688-474A-9B74-39C5F86AB85C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

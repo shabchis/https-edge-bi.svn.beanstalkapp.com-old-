@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{AA37E9C3-5121-4731-BB13-7C79FFEA28AE}</ProjectGuid>
+    <ProjectGuid>{102715EC-9688-474A-9B74-39C5F86AB85C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EdgeBI.Objects</RootNamespace>
-    <AssemblyName>EdgeBI.Objects</AssemblyName>
+    <RootNamespace>EdgeBI.API.Web.Facebook</RootNamespace>
+    <AssemblyName>EdgeBI.API.Web.Facebook</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,12 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>C:\Users\alonya\Downloads\Json35r8\Bin\DotNet\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -45,25 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account.cs" />
-    <Compile Include="Campaign.cs" />
-    <Compile Include="CampaignStatusSchedule.cs" />
-    <Compile Include="Groups.cs" />
-    <Compile Include="Menu.cs" />
-    <Compile Include="Permissions.cs" />
-    <Compile Include="MapperUtility.cs" />
-    <Compile Include="Refund.cs" />
-    <Compile Include="SessionData.cs" />
-    <Compile Include="Things.cs" />
-    <Compile Include="ThingT.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Facebook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebError.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core\Core.csproj">
       <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
       <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EdgeBI.API.Web\EdgeBI.API.Web.csproj">
+      <Project>{C1A8D60A-2937-46A3-837C-AFDD6F2FF53B}</Project>
+      <Name>EdgeBI.API.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EdgeBI.Objects\EdgeBI.Objects.csproj">
+      <Project>{AA37E9C3-5121-4731-BB13-7C79FFEA28AE}</Project>
+      <Name>EdgeBI.Objects</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
