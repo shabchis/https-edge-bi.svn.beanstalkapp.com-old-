@@ -18,6 +18,7 @@ namespace EdgeBI.FacebookTools.Services.Service
 		public string ColumnName;
 		public string SettingName;
 		public List<string> values = new List<string>();
+		public int? from;
 		
 	}
 	

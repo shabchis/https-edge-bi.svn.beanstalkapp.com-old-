@@ -57,6 +57,8 @@ namespace EdgeBI.FacebookTools.Services.Service
 		
 		public override void WriteToStream(object instance, Stream stream, HttpRequestMessage request)
 		{
+			
+
 			JsonSerializer serializer = new JsonSerializer();
 
 			using (StreamWriter sw = new StreamWriter(stream))
@@ -100,7 +102,37 @@ namespace EdgeBI.FacebookTools.Services.Service
 		}
 
 	}
+	public class TabDelimited : MediaTypeProcessor
+	{
+		public TabDelimited(HttpOperationDescription operation, MediaTypeProcessorMode mode) : base(operation, mode)
+		{
+
+		}
+		public override object ReadFromStream(Stream stream, HttpRequestMessage request)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override IEnumerable<string> SupportedMediaTypes
+		{
+			get 
+			{
+				return new List<string>() { "text/tab-separated-values" };
+			}
+		}
+
+		public override void WriteToStream(object instance, Stream stream, HttpRequestMessage request)
+		{
+			LifeTimeBudget l = (LifeTimeBudget)instance;
+			l.stream = stream;
+			l.test();
+		}
+	}
+	
+}
+
+	
 	
 	
 
-}
+
