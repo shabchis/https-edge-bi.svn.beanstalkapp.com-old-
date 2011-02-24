@@ -41,12 +41,7 @@ namespace EdgeBI.FacebookTools.Services.Service
 		[WebGet(UriTemplate = "test")]
 		public FileDescription getJsonTemplate(HttpResponseMessage response )
 		{
-			
-			
-
 			FileDescription f = new FileDescription();
-
-
 			f.Settings.Add(0, new ColumnDescriptionAndValues() { ColumnName = "campaign_name", SettingName = "Default" });
 			f.Settings[0].values.Add("Germany 30-39");
 			f.Settings.Add(1, new ColumnDescriptionAndValues() { ColumnName = "campaign_daily_budget", SettingName = "Double" });
@@ -61,8 +56,8 @@ namespace EdgeBI.FacebookTools.Services.Service
 			f.Settings[5].values.Add("");
 			f.Settings.Add(6, new ColumnDescriptionAndValues() { ColumnName = "ad_status", SettingName = "Default" });
 			f.Settings[6].values.Add("active");
-			f.Settings.Add(7, new ColumnDescriptionAndValues() { ColumnName = "ad_name *", SettingName = "ad_name" });
-			f.Settings[7].values.Add("30-39 Male @ newmeter");
+			f.Settings.Add(7, new ColumnDescriptionAndValues() { ColumnName = "ad_name *", SettingName = "Counter" });
+			f.Settings[7].values.Add("30-39 Male @ newmeter#@@");
 			f.Settings.Add(8, new ColumnDescriptionAndValues() { ColumnName = "bid_type *", SettingName = "Default" });
 			f.Settings[8].values.Add("CPC");
 			f.Settings.Add(9, new ColumnDescriptionAndValues() { ColumnName = "max_bid *", SettingName = "Double" });
@@ -76,8 +71,9 @@ namespace EdgeBI.FacebookTools.Services.Service
 			f.Settings.Add(12, new ColumnDescriptionAndValues() { ColumnName = "image", SettingName = "Default" });
 			f.Settings[12].values.Add("Image1");
 			f.Settings[12].values.Add("Image2");
-			f.Settings.Add(13, new ColumnDescriptionAndValues() { ColumnName = "link *", SettingName = "Link" });
-			f.Settings[13].values.Add("http://www.pc-speed.org/scan/de30/scan.php?utm_source=facebook&utm_medium=cpc&utm_campaign=product&EdgeTrackerID=1000");
+			f.Settings.Add(13, new ColumnDescriptionAndValues() { ColumnName = "link *", SettingName = "Counter" });
+			f.Settings[13].values.Add("http://www.pc-speed.org/scan/de30/scan.php?utm_source=facebook&utm_medium=cpc&utm_campaign=product&EdgeTrackerID=@@");
+			f.Settings[13].from = 1000;
 			f.Settings.Add(14, new ColumnDescriptionAndValues() { ColumnName = "country *", SettingName = "Default" });
 			f.Settings[14].values.Add("DE");
 			f.Settings.Add(15, new ColumnDescriptionAndValues() { ColumnName = "state", SettingName = "Default" });

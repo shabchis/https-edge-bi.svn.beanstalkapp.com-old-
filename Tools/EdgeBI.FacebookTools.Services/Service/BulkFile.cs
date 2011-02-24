@@ -12,31 +12,35 @@ using System.IO;
 using Microsoft.Http;
 namespace EdgeBI.FacebookTools.Services.Service
 {
-	public class BulkFile
+	public class BulkFile : Istremable
 	{
 		public FileDescription fileDescription;
 		List<JArray> _list = new List<JArray>();
 		
 		public Stream stream;
-		TextWriter t;
+		TextWriter textWriter;
 		HttpRequestMessage response = new HttpRequestMessage();
 		Stack<string> stack = new Stack<string>();
 		Dictionary<int, string> colSettings = new Dictionary<int, string>();
 		private int _counter = 0;
-		public void test()
-		{
-			
+		public void ProcessStream()
+		{			
 			try
-			{				
-				_counter = 0;			
+			{		
+				//reset the counter just in case...
+				_counter = 0;
+				//intitalize the return stream
+				textWriter = new StreamWriter(this.stream);
 
-				t = new StreamWriter(this.stream);
+				//witer the titles of the tab delimited file
 				foreach (KeyValuePair<int, ColumnDescriptionAndValues> colDesc in fileDescription.Settings.OrderBy(s => s.Key))
 				{
-					t.Write("{0}\t", colDesc.Value.ColumnName);					
+					textWriter.Write("{0}\t", colDesc.Value.ColumnName);					
 				}
-				t.WriteLine();
-				Dublicate(0); //pay attention yaron should sent the first col as 0 or you will need to change the method
+				textWriter.WriteLine();
+
+				//Create the file duplicate the fields create Cartesian product
+				CartesianProduct(0); //pay attention yaron should sent the first col as 0 or you will need to change the method
 			}
 			catch (Exception ex)
 			{
@@ -45,55 +49,43 @@ namespace EdgeBI.FacebookTools.Services.Service
 			
 		}
 
-		//private Stream writeFile()
-		//{
-		//    //StreamWriter streamWriter = new StreamWriter(@"c:\bulkfile.txt", false, Encoding.Unicode);
 
-		//    //streamWriter.Write(str.ToString());
-
-
-		//    //return streamWriter.BaseStream;
-		//}
-
-		public void Dublicate(int listIndex)
+		public void CartesianProduct(int listIndex)
 		{
-			
-			if (listIndex >= fileDescription.Settings.Count)
+			if (listIndex >= fileDescription.Settings.Count) //the last column then write it on the stream and dont collect on memory
 			{
-
 				int colIndex = 0;
 				foreach (string colValue in stack.Reverse())
 				{
 
-					t.Write(GetCustomFormat(colIndex, colValue));
+					textWriter.Write(GetCustomFormat(colIndex, colValue)); //write to strem with the correct configuration of every column
 					colIndex++;
 
 				}
-				_counter++;
-				t.WriteLine();
-				stack.Pop();
+				_counter++; //this counter is user for specail coonfiguration of some columns "mispar ratz"
+				textWriter.WriteLine();
+				stack.Pop(); //remove last value 
 				return;
 			}
-			else
+			else //still not have a full row not did not pass all columns
 			{
-
-				List<string> currentCol = (List<string>)fileDescription.Settings[listIndex].values;
-				foreach (string val in currentCol)
+				List<string> currentCol = (List<string>)fileDescription.Settings[listIndex].values; //get col by index
+				foreach (string val in currentCol) //foreach value we runing the function again (reqursive)
 				{
-					stack.Push(val);
-					Dublicate(listIndex + 1);
+					stack.Push(val); //enter the new value
+					CartesianProduct(listIndex + 1);
 				}
 				if (stack.Count > 0)
-					stack.Pop();
-				return;
-
+					stack.Pop(); //remove the last value
+				return; //finish all the values the return
 			}
-
-
-
-
 		}
-
+		/// <summary>
+		/// Get the custom format by col id
+		/// </summary>
+		/// <param name="listIndex"></param>
+		/// <param name="colValue"></param>
+		/// <returns></returns>
 		private string GetCustomFormat(int listIndex, string colValue)
 		{
 			string columnSetting = fileDescription.Settings[listIndex].SettingName;
@@ -112,11 +104,15 @@ namespace EdgeBI.FacebookTools.Services.Service
 							result = string.Format("{0}\t", colValue);
 						break;
 					}
-				case "Link":
+				case "Counter": //problem in col ad_name should return the nume with '#' before right now not doing it
 					{
-						Match m = Regex.Match(colValue, @"(?<=\=)[\d]+");
-						int nextNum = int.Parse(m.Value);
-						result = Regex.Replace(colValue, @"(?<=\=)[\d]+", (nextNum + _counter).ToString());
+						int? nextNum = _counter;
+						int? fromNum = fileDescription.Settings[listIndex].from;
+						if (fromNum != null)
+							nextNum += fromNum;
+						else
+							nextNum += 1;						
+						result = Regex.Replace(colValue, @"(\@\@", (nextNum).ToString());
 						result = result + "\t";
 						break;
 					}
@@ -127,14 +123,7 @@ namespace EdgeBI.FacebookTools.Services.Service
 							result = string.Format("{0}\t", colValue);
 						break;
 
-					}
-				case "ad_name":
-					{
-						string formatNum = (_counter + 1).ToString().PadLeft(3, '0');
-						result = string.Format("{0}#{1}\t", colValue, formatNum);
-						break;
-
-					}
+					}				
 				default:
 					{
 						result = string.Format("{0}\t", colValue);
