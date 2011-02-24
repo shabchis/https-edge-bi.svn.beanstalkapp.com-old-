@@ -37,7 +37,7 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <PublishUrl>C:\Documents and Settings\Doron\Desktop\NEW PUBLISH\20101230\</PublishUrl>
+    <PublishUrl>Publish\QA\</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -47,16 +47,17 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://console.edge-bi.com/seperia/wpf</InstallUrl>
+    <InstallUrl>http://bi_rnd/UI/wpf/</InstallUrl>
     <SupportUrl>https://console.edge-bi.com/seperia/wpf/install.html</SupportUrl>
     <TargetCulture>en</TargetCulture>
-    <ProductName>Edge.BI Management Pages [debug]</ProductName>
+    <ProductName>Edge.BI Management Pages [QA]</ProductName>
     <PublisherName>Edge.BI</PublisherName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>install.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <TrustUrlParameters>true</TrustUrlParameters>
-    <ApplicationRevision>280</ApplicationRevision>
-    <ApplicationVersion>2.8.0.280</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>2.9.0.1</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>

@@ -11,7 +11,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Edge.BI")]
 [assembly: AssemblyProduct("Edge.BI Management Pages")]
-[assembly: AssemblyCopyright("Copyright © Edge.BI 2010")]
+[assembly: AssemblyCopyright("Copyright © Edge.BI 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -43,5 +43,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("2.9.0.1")]
+[assembly: AssemblyFileVersion("2.9.0.1")]
