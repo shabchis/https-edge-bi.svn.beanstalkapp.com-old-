@@ -18,6 +18,8 @@ using System.Windows.Controls.Primitives;
 using System.Data;
 using System.Reflection;
 using Easynet.Edge.UI.Server;
+using System.Text.RegularExpressions;
+using Easynet.Edge.BusinessObjects;
 
 namespace Easynet.Edge.UI.Client.Pages
 {
@@ -32,8 +34,10 @@ namespace Easynet.Edge.UI.Client.Pages
 
 		private ObservableCollection<DataRow> _items;
 		Oltp.CreativeDataTable _creatives;
-		TextBox _titleField = null;
 		ItemsControl _assoc_Campaigns;
+		Oltp.SegmentDataTable _segmentTable;
+		Dictionary<Oltp.SegmentRow, Oltp.SegmentValueDataTable> _segmentValueTables;
+		bool _tabSegmentsInitialized = false;
 
 		/*=========================*/
 		#endregion
@@ -70,7 +74,36 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// <returns></returns>
 		public override void OnAccountChanged()
 		{
-			GetCreatives(Window.CurrentAccount, null, false);
+			Oltp.AccountRow value = Window.CurrentAccount;
+
+			//..............................
+			// Segments
+			_tabSegmentsInitialized = false;
+			_segmentValueTables = new Dictionary<Oltp.SegmentRow, Oltp.SegmentValueDataTable>();
+
+			Window.AsyncOperation(delegate()
+			{
+				using (OltpProxy proxy = new OltpProxy())
+				{
+					_segmentTable = proxy.Service.Segment_Get(value.ID, false);
+					foreach (Oltp.SegmentRow segment in _segmentTable.Rows)
+					{
+						Oltp.SegmentValueDataTable values = proxy.Service.SegmentValue_Get(value.ID, segment.SegmentID);
+						Oltp.SegmentValueRow defaultRow = values.NewSegmentValueRow();
+						defaultRow.AccountID = value.ID;
+						defaultRow.SegmentID = segment.SegmentID;
+						defaultRow.ValueID = -1;
+						defaultRow.Value = "(none)";
+						values.Rows.InsertAt(defaultRow, 0);
+						values.AcceptChanges();
+						_segmentValueTables.Add(segment, values);
+					}
+				}
+			},
+			delegate()
+			{
+				GetCreatives(value, null, false);
+			});
 		}
 
 		/// <summary>
@@ -120,6 +153,14 @@ namespace Easynet.Edge.UI.Client.Pages
 			});
 		}
 
+		private void _listTable_SelectAll(object sender, RoutedEventArgs e)
+		{
+			if (_listTable.ListView.SelectedItems.Count == _listTable.ListView.Items.Count)
+				_listTable.ListView.SelectedItems.Clear();
+			else
+				_listTable.ListView.SelectAll();
+		}
+
 		/*=========================*/
 		#endregion
 
@@ -127,122 +168,48 @@ namespace Easynet.Edge.UI.Client.Pages
 		/*=========================*/
 
 		/// <summary>
-		/// 
-		/// </summary>
-		private void Keyword_AddClick(object sender, RoutedEventArgs e)
-		{
-			//// Create an editable new row
-			//Oltp.CreativeRow editVersion = Dialog_MakeEditVersion<Oltp.CreativeDataTable, Oltp.CreativeRow>(_creatives, null);
-			//editVersion.AccountID = this.Window.CurrentAccount.ID;
-			//editVersion.IsMonitored = true;
-
-			//// Show the dialog
-			//Creative_dialog.Title = "New Keyword";
-
-			//// Enable editing keyword value
-			//_keywordValueField.IsReadOnly = false;
-
-			//Creative_dialog.BeginEdit(editVersion, _creatives);
-		}
-
-		/// <summary>
 		/// Open the dialog
 		/// </summary>
 		private void Creative_dialog_Open(object sender, RoutedEventArgs e)
 		{
-			// Set dataItem as current item
-			ListViewItem currentItem = _listTable.GetParentListViewItem(e.OriginalSource as FrameworkElement);
-			Oltp.CreativeRow row = currentItem.Content as Oltp.CreativeRow;
+			Dialog_Open<Oltp.CreativeDataTable, Oltp.CreativeRow>
+			(
+				// dialog:
+				Creative_dialog,
 
-			// Show the dialog
-			Creative_dialog.Title = row.Title;
-			Creative_dialog.TitleTooltip = "GK #" + row.GK.ToString();
+				// listTable:
+				_listTable,
 
-			Creative_dialog.BeginEdit(
-				Dialog_MakeEditVersion<Oltp.CreativeDataTable, Oltp.CreativeRow>(row),
-				row
+				// clickedItem:
+				_listTable.GetParentListViewItem(e.OriginalSource as FrameworkElement) as ListViewItem,
+
+				// allowBatch:
+				true,
+
+				// dialogTitle:
+				(row, isBatch) => row.Title,
+
+				// dialogTooltip:
+				(row, isBatch) => isBatch ? null : "GK #" + row.GK.ToString(),
+
+				// batchFlatten:
+				col =>
+					col.ColumnName == _creatives.GKColumn.ColumnName ? null :
+					col.ColumnName == _creatives.TitleColumn.ColumnName ? "(multiple creatives)" as object :
+					DBNull.Value as object
 			);
 
-			TabControl tabs = VisualTree.GetChild<TabControl>(Creative_dialog);
-			if (tabs.SelectedIndex == 1)
-			{
-				AssociationsTabItem_GotFocus(null, null);
-			}
-			
-			// Select the item
-			currentItem.IsSelected = true;
+			VisualTree.GetChild<TabItem>(Creative_dialog, "_tabAssociation").Visibility = Creative_dialog.IsBatch ? Visibility.Collapsed : Visibility.Visible;
+			if (Creative_dialog.IsBatch)
+				VisualTree.GetChild<TabItem>(Creative_dialog, "_tabSegments").Focus();
 		}
 
-
-		/// <summary>
-		/// 
-		/// </summary>
-		private void AssociationsTabItem_GotFocus(object sender, RoutedEventArgs e)
-		{
-			if (!(Creative_dialog.TargetContent is Oltp.CreativeRow))
-				return;
-	
-			// Show 
-			if (_assoc_Campaigns == null)
-				_assoc_Campaigns = VisualTree.GetChild<ItemsControl>(Creative_dialog, "_assoc_Campaigns");
-
-			if (_assoc_Campaigns.ItemsSource != null)
-				return;
-
-			Oltp.CreativeRow creative = (Creative_dialog.TargetContent as Oltp.CreativeRow);
-			List<CampaignAdgroupCombination> duos = null;
-
-			Window.AsyncOperation(delegate()
-			{
-				using (OltpProxy proxy = new OltpProxy())
-				{
-					duos = new List<CampaignAdgroupCombination>();
-					Oltp.AdgroupDataTable adgroups = proxy.Service.Adgroup_GetByCreative(creative.GK);
-
-					if (adgroups.Rows.Count > 0)
-					{
-						// Get all parent campaign IDs
-						List<long> campaignGKs = new List<long>();
-						foreach (Oltp.AdgroupRow ag in adgroups.Rows)
-						{
-							if (!campaignGKs.Contains(ag.CampaignGK))
-								campaignGKs.Add(ag.CampaignGK);
-						}
-
-						// Now get the campaigns themselves
-						Oltp.CampaignDataTable campaigns = proxy.Service.Campaign_GetIndividualCampaigns(campaignGKs.ToArray());
-						foreach (Oltp.AdgroupRow ag in adgroups.Rows)
-						{
-							DataRow[] rs = campaigns.Select(String.Format("GK = {0}", ag.CampaignGK));
-							if (rs.Length > 0)
-							{
-								duos.Add(new CampaignAdgroupCombination(rs[0] as Oltp.CampaignRow, ag));
-							}
-						}
-					}
-				}
-			},
-			delegate()
-			{
-				_assoc_Campaigns.ItemsSource = duos;
-			});
-		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		private void Creative_dialog_ApplyingChanges(object sender, CancelRoutedEventArgs e)
 		{
-			if (_titleField.Text.Trim().Length < 1)
-			{
-				VisualTree.GetChild<TabControl>(Creative_dialog).SelectedIndex = 0;
-				_titleField.Focus();
-
-				MainWindow.MessageBoxError("Please enter a valid title", null);
-				e.Cancel = true;
-				return;
-			}
-
 			Dialog_ApplyingChanges<Oltp.CreativeDataTable, Oltp.CreativeRow>(
 				_creatives,
 				Creative_dialog,
@@ -274,14 +241,6 @@ namespace Easynet.Edge.UI.Client.Pages
 				_assoc_Campaigns.ItemsSource = null;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		private void Creative_dialog_Loaded(object sender, RoutedEventArgs e)
-		{
-			// Needed for validation
-			_titleField = VisualTree.GetChild<TextBox>(Creative_dialog, "_titleField");
-		}
 
 		private void Creative_ChangeMonitoring(object sender, RoutedEventArgs e)
 		{
@@ -329,6 +288,84 @@ namespace Easynet.Edge.UI.Client.Pages
 				}
 
 				_creatives.AcceptChanges();
+			});
+		}
+
+		private void TabSegments_GotFocus(object sender, RoutedEventArgs e)
+		{
+			if (_tabSegmentsInitialized)
+				return;
+
+			foreach (KeyValuePair<Oltp.SegmentRow, Oltp.SegmentValueDataTable> pair in _segmentValueTables)
+			{
+				// Ignore segments that aren't creative related
+				if ((pair.Key.AssociationFlags & SegmentAssociationFlags.AdgroupCreative) == 0)
+					continue;
+
+				StackPanel segmentPanel = VisualTree.GetChild<StackPanel>(Creative_dialog, "_segment" + pair.Key.SegmentNumber.ToString());
+				if (segmentPanel == null)
+					continue;
+
+				segmentPanel.Visibility = Visibility.Visible;
+
+				VisualTree.GetChild<Label>(segmentPanel).Content = pair.Key.Name;
+				VisualTree.GetChild<ComboBox>(segmentPanel).ItemsSource = pair.Value.Rows;
+			}
+
+			_tabSegmentsInitialized = true;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private void TabAssociations_GotFocus(object sender, RoutedEventArgs e)
+		{
+			if (!(Creative_dialog.TargetContent is Oltp.CreativeRow))
+				return;
+
+			// Show 
+			if (_assoc_Campaigns == null)
+				_assoc_Campaigns = VisualTree.GetChild<ItemsControl>(Creative_dialog, "_assoc_Campaigns");
+
+			if (_assoc_Campaigns.ItemsSource != null)
+				return;
+
+			Oltp.CreativeRow creative = (Creative_dialog.TargetContent as Oltp.CreativeRow);
+			List<CampaignAdgroupCombination> duos = null;
+
+			Window.AsyncOperation(delegate()
+			{
+				using (OltpProxy proxy = new OltpProxy())
+				{
+					duos = new List<CampaignAdgroupCombination>();
+					Oltp.AdgroupDataTable adgroups = proxy.Service.Adgroup_GetByCreative(creative.GK);
+
+					if (adgroups.Rows.Count > 0)
+					{
+						// Get all parent campaign IDs
+						List<long> campaignGKs = new List<long>();
+						foreach (Oltp.AdgroupRow ag in adgroups.Rows)
+						{
+							if (!campaignGKs.Contains(ag.CampaignGK))
+								campaignGKs.Add(ag.CampaignGK);
+						}
+
+						// Now get the campaigns themselves
+						Oltp.CampaignDataTable campaigns = proxy.Service.Campaign_GetIndividualCampaigns(campaignGKs.ToArray());
+						foreach (Oltp.AdgroupRow ag in adgroups.Rows)
+						{
+							DataRow[] rs = campaigns.Select(String.Format("GK = {0}", ag.CampaignGK));
+							if (rs.Length > 0)
+							{
+								duos.Add(new CampaignAdgroupCombination(rs[0] as Oltp.CampaignRow, ag));
+							}
+						}
+					}
+				}
+			},
+			delegate()
+			{
+				_assoc_Campaigns.ItemsSource = duos;
 			});
 		}
 

@@ -135,23 +135,6 @@ namespace Easynet.Edge.UI.Client.Pages
 		/*=========================*/
 		#endregion
 
-		#region Properties
-		/*=========================*/
-
-		/*
-		public bool CurrentItemHasPpcApi
-		{
-			get { return (bool) GetValue(CurrentItemHasPpcApiProperty); }
-			set { SetValue(CurrentItemHasPpcApiProperty, value); }
-		}
-
-		public static readonly DependencyProperty CurrentItemHasPpcApiProperty = 
-			DependencyProperty.Register("CurrentItemHasPpcApi", typeof(bool), typeof(PpcCampaigns), new UIPropertyMetadata(false));
-		*/
-
-		/*=========================*/
-		#endregion
-
 		#region General Methods
 		/*=========================*/
 
@@ -722,6 +705,8 @@ namespace Easynet.Edge.UI.Client.Pages
 			return true;
 		}
 
+		#region Unneeded stuff be gone
+		/*
 		private void Targets_SwitchLevel(object sender, RoutedEventArgs e)
 		{
 			MessageBoxResult warningResult = MessageBox.Show("Warning: existing targets will be deleted. Continue?", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning, MessageBoxResult.Yes);
@@ -789,7 +774,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				e.Handled = true;
 			}
 		}
-
+		
 		void Targets_BatchOpen(object sender, RoutedEventArgs e)
 		{
 			List<Oltp.CampaignRow> campaigns = new List<Oltp.CampaignRow>();
@@ -871,6 +856,8 @@ namespace Easynet.Edge.UI.Client.Pages
 				}
 			}
 		}
+		*/
+		#endregion
 
 		/// <summary>
 		/// The mechanism for displaying targets in a tab relies on the mechanism for table-wide targets.
@@ -1030,49 +1017,6 @@ namespace Easynet.Edge.UI.Client.Pages
 					DBNull.Value as object
 
 			);
-
-
-
-			#if CHICKENSHIT
-			if (!_listTable.ListView.SelectedItems.Contains(currentItem.DataContext))
-			{
-				_listTable.ListView.SelectedItems.Clear();
-				currentItem.IsSelected = true;
-			}
-			
-			// When a single item is clicked, select it
-			bool batch = _listTable.ListView.SelectedItems.Count > 1;
-			
-			Oltp.CampaignRow[] targetRows = new Oltp.CampaignRow[_listTable.ListView.SelectedItems.Count];
-			try { _listTable.ListView.SelectedItems.CopyTo(targetRows, 0); }
-			catch (InvalidCastException){
-				MainWindow.MessageBoxError("To edit multiple items, select items of the same type.", null);
-				return;
-			}
-
-
-			Oltp.CampaignRow controlRow = Dialog_MakeEditVersion<Oltp.CampaignDataTable, Oltp.CampaignRow>(targetRows,
-					col =>
-						col.ColumnName == _campaigns.GKColumn.ColumnName ? null :
-						col.ColumnName == _campaigns.NameColumn.ColumnName ? "(multiple campaigns)" as object :
-						DBNull.Value as object
-					);
-			
-			// Update the segments tab if it is selected
-			TabControl tabs = VisualTree.GetChild<TabControl>(Campaign_dialog);
-			TabItem tabSegments = VisualTree.GetChild<TabItem>(tabs, "_tabSegments");
-			TabItem tabTargets = VisualTree.GetChild<TabItem>(tabs, "_tabCampaigns");
-			if (tabSegments.IsSelected)
-				CampaignSegments_GotFocus(tabSegments, new RoutedEventArgs());
-
-			// Show the dialog
-			Campaign_dialog.Title = controlRow.Name;
-			Campaign_dialog.TitleTooltip = batch ? null : "GK #" + controlRow.GK.ToString();
-			Campaign_dialog.BeginEdit(controlRow, targetRows.Length > 1 ? (object)targetRows : (object)targetRows[0]);
-
-			if (tabTargets.IsSelected)
-				CampaignTargets_GotFocus(tabTargets, new RoutedEventArgs());
-			#endif
 		}
 
 		/// <summary>
@@ -1524,55 +1468,6 @@ namespace Easynet.Edge.UI.Client.Pages
 			if (Adgroup_dialog.IsBatch)
 				VisualTree.GetChild<TabItem>(Adgroup_dialog, "_tabSegments").Focus();
 
-
-			#if CHICKENSHIT
-			// Set campaign as current item
-			ListViewItem currentItem = _listTable.GetParentListViewItem(e.OriginalSource as FrameworkElement);
-			bool batch = _listTable.ListView.SelectedItems.Count > 1;
-
-			Oltp.AdgroupRow row;
-			if (!batch)
-			{
-				// Set campaign as current item
-				row = currentItem.Content as Oltp.AdgroupRow;
-			}
-			else
-			{
-				MessageBox.Show("Sorry, only one item can be edited at a time. Batch edit will be possible in the near future.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-				return;
-			}
-
-			// Show the dialog
-			Adgroup_dialog.Title = row.Name;
-			Adgroup_dialog.TitleTooltip = "GK #" + row.GK.ToString();
-			Adgroup_dialog.BeginEdit(
-				Dialog_MakeEditVersion<Oltp.AdgroupDataTable, Oltp.AdgroupRow>(row),
-				row
-			);
-
-			// Get the current channel and see if it has an API
-			//DataRow[] rs = _channelTable.Select(String.Format("ID = {0}", row.ChannelID));
-			//SetValue(CurrentItemHasPpcApiProperty, rs.Length > 0 && (rs[0] as Oltp.ChannelRow).HasPpcApi);
-
-			// Update the selected tabs
-			TabControl tabs = VisualTree.GetChild<TabControl>(Adgroup_dialog);
-			TabItem tabSegments = VisualTree.GetChild<TabItem>(tabs, "_tabSegments");
-			TabItem tabKeywords = VisualTree.GetChild<TabItem>(tabs, "_tabKeywords");
-			TabItem tabCreatives = VisualTree.GetChild<TabItem>(tabs, "_tabCreatives");
-			if (tabSegments.IsSelected)
-				AdgroupSegments_GotFocus(tabSegments, new RoutedEventArgs());
-			if (tabKeywords.IsSelected)
-				AdgroupKeywords_GotFocus(null, null);
-			if (tabCreatives.IsSelected)
-				AdgroupCreatives_GotFocus(null, null);
-
-			// When opening, select it only if no more than one is already selected
-			if (_listTable.ListView.SelectedItems.Count < 2)
-			{
-				_listTable.ListView.SelectedItems.Clear();
-				currentItem.IsSelected = true;
-			}
-			#endif
 		}
 
 
