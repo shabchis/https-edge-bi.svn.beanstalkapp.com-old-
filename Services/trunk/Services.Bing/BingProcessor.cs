@@ -18,6 +18,7 @@ using System.IO.Compression;
 using System.Xml;
 using System.Reflection;
 using EdgeBI.Data.Pipeline.Objects;
+using GotDotNet.XPath;
 
 
 namespace Easynet.Edge.Services.Bing
@@ -49,7 +50,7 @@ namespace Easynet.Edge.Services.Bing
             {
                 //BingKeywordReportReader bingReader = new BingKeywordReportReader(df.FilePath);
                 //לבדוק שזה בינגdf.ReaderType
-                Type t = typeof(BingKeywordReportReader);
+                Type t = typeof(BingAdPerformanceReportReader);//BingKeywordReportReader
                 using (RowReader<PpcDataUnit> reader = (RowReader<PpcDataUnit>)Activator.CreateInstance(t, df.FilePath + "\\" + df.FileName ))
                 {
                     using (DataManager.Current.OpenConnection())
