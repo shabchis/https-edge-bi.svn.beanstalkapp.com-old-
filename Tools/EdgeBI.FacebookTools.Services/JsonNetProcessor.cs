@@ -123,9 +123,12 @@ namespace EdgeBI.FacebookTools.Services.Service
 
 		public override void WriteToStream(object instance, Stream stream, HttpRequestMessage request)
 		{
-			BulkFile l = (BulkFile)instance;
-			l.stream = stream;
-			l.test();
+			if (instance is Istremable)
+			{
+				BulkFile bulkFile = (BulkFile)instance;
+				bulkFile.stream = stream;
+				bulkFile.ProcessStream();
+			}
 		}
 	}
 	
