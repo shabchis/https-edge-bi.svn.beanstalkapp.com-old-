@@ -50,9 +50,10 @@
 					<CheckBox x:Name="_filterCheckbox" Content="Show unmonitored creatives" Margin="0,0,7,0" Visibility="Collapsed"/>
 				</StackPanel>
 
-				<StackPanel Orientation="Horizontal" Canvas.Right="50" VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Collapsed">
-					<Button x:Name="_buttonMonitor" Style="{StaticResource Link}" Margin="10,20,10,0" Content="Monitor selected" Click="Creative_ChangeMonitoring"/>
-					<Button x:Name="_buttonUnmonitor" Style="{StaticResource Link}" Margin="10,20,10,0" Content="Unmonitor selected" Click="Creative_ChangeMonitoring"/>
+				<StackPanel Orientation="Horizontal" Canvas.Right="50" VerticalAlignment="Center" HorizontalAlignment="Right">
+					<Button x:Name="_buttonSelectAll" Style="{StaticResource Link}" Content="Select All" Click="_listTable_SelectAll" Margin="0,0,15,0"/>
+					<Button x:Name="_buttonMonitor" Style="{StaticResource Link}" Margin="10,20,10,0" Content="Monitor selected" Click="Creative_ChangeMonitoring" Visibility="Collapsed"/>
+					<Button x:Name="_buttonUnmonitor" Style="{StaticResource Link}" Margin="10,20,10,0" Content="Unmonitor selected" Click="Creative_ChangeMonitoring" Visibility="Collapsed"/>
 				</StackPanel>
 			</Canvas>
 
@@ -78,8 +79,6 @@
 				ApplyingChanges="Creative_dialog_ApplyingChanges"
 				AppliedChanges="Creative_dialog_AppliedChanges"
 				Closing="Creative_dialog_Closing"
-				Loaded="Creative_dialog_Loaded"
-
 			 >
 				<this:FloatingDialog.Resources>
 					<Style TargetType="{x:Type Label}">
@@ -97,24 +96,57 @@
 					<DataTemplate>
 						<TabControl TabStripPlacement="Top" VirtualizingStackPanel.IsVirtualizing="False">
 							
+							<TabItem Header="Segments" x:Name="_tabSegments" GotFocus="TabSegments_GotFocus">
+								<TabItem.Resources>
+									<Style TargetType="{x:Type Label}">
+										<Setter Property="Width" Value="80"/>
+									</Style>
+									<Style TargetType="{x:Type ComboBox}">
+										<Setter Property="Width" Value="250"/>
+									</Style>
+								</TabItem.Resources>
+								<StackPanel Style="{StaticResource FormContents}">
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment1" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{this:DialogBinding Path=Segment1}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment2" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{this:DialogBinding Path=Segment2}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment3" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{this:DialogBinding Path=Segment3}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment4" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{this:DialogBinding Path=Segment4}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+									<StackPanel Style="{StaticResource FormField}" x:Name="_segment5" Visibility="Collapsed">
+										<Label/>
+										<ComboBox SelectedValue="{this:DialogBinding Path=Segment5}" SelectedValuePath="ValueID" DisplayMemberPath="Value" this:FloatingDialog.DialogFields="SelectedValue"/>
+									</StackPanel>
+								</StackPanel>
+							</TabItem>
+							
 							<TabItem Header="Details">
 								<StackPanel Style="{StaticResource FormContents}">
 									<StackPanel Style="{StaticResource FormField}">
 										<Label Content="Title"/>
-										<TextBox x:Name="_titleField" IsReadOnly="True" Text="{Binding Path=Title}" this:FloatingDialog.DialogFields="Text"  Width="350"/>
+										<TextBox IsReadOnly="True" Text="{Binding Path=Title}" this:FloatingDialog.DialogFields="Text" this:FloatingDialog.ReadOnlyField="true" Width="350"/>
 									</StackPanel>
 									<StackPanel Style="{StaticResource FormField}">
 										<Label Content="Description 1"/>
-										<TextBox Text="{Binding Path=Desc1}" IsReadOnly="True" this:FloatingDialog.DialogFields="Text" Width="350"/>
+										<TextBox Text="{Binding Path=Desc1}" IsReadOnly="True" this:FloatingDialog.DialogFields="Text" Width="350" this:FloatingDialog.ReadOnlyField="true"/>
 									</StackPanel>
 									<StackPanel Style="{StaticResource FormField}">
 										<Label Content="Description 2"/>
-										<TextBox Text="{Binding Path=Desc2}" IsReadOnly="True" this:FloatingDialog.DialogFields="Text" Width="350"/>
+										<TextBox Text="{Binding Path=Desc2}" IsReadOnly="True" this:FloatingDialog.DialogFields="Text" Width="350" this:FloatingDialog.ReadOnlyField="true"/>
 									</StackPanel>
 								</StackPanel>
 							</TabItem>
 
-							<TabItem Header="Associations" GotFocus="AssociationsTabItem_GotFocus">
+							<TabItem Header="Associations" GotFocus="TabAssociations_GotFocus" x:Name="_tabAssociation">
 								<DockPanel LastChildFill="True" Margin="6">
 									<Label Content="Campaigns/Adgroups:" DockPanel.Dock="Top" HorizontalAlignment="Left" FontStyle="Italic" Width="300"/>
 									<ScrollViewer Style="{StaticResource AssociationPanel}" VerticalScrollBarVisibility="Auto">

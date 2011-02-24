@@ -63,9 +63,6 @@
 			</Setter>
 		</Style>
 		
-		<DataTemplate x:Key="TargetsSwitchTemplate">
-			<Button Style="{StaticResource TargetsSwitchStyle}" Click="Targets_SwitchLevel"/>
-		</DataTemplate>
 
 		<DataTemplate x:Key="ChannelPickerChannelTemplate">
 			<TextBlock Text="{Binding Path=DisplayName}" />
@@ -541,7 +538,6 @@
 				Width="400"
 				Height="250"
 				Title="Assign Targets"
-				ApplyingChanges="Targets_BatchApply"
 				ApplyButtonVisibility="Collapsed"
 				>
 				<this:FloatingDialog.ContentTemplate>

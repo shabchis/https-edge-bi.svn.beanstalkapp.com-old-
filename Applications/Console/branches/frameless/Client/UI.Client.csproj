@@ -29,8 +29,8 @@
     <SccProvider>
     </SccProvider>
     <SignManifests>true</SignManifests>
-    <ManifestCertificateThumbprint>6D06D21CB6059078299388B632DCB657F96C41B2</ManifestCertificateThumbprint>
-    <ManifestKeyFile>Certificates\Certificate 2011.pfx</ManifestKeyFile>
+    <ManifestCertificateThumbprint>30A0F30842A5BE26656B67579F9C8DC5FF7257C0</ManifestCertificateThumbprint>
+    <ManifestKeyFile>Certificates\Certificate 2013.pfx</ManifestKeyFile>
     <StartupObject>
     </StartupObject>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
@@ -323,6 +323,7 @@
   </ItemGroup>
   <!-- Misc. files -->
   <ItemGroup>
+    <None Include="Certificates\Certificate 2013.pfx" />
     <None Include="Properties\app.manifest" />
     <None Include="Regions.txt" />
     <None Include="Certificates\Create Certificate.bat" />

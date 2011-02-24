@@ -98,8 +98,8 @@ namespace Easynet.Edge.UI.Client
 
 			#if DEBUG
 			accountID = 63;
-			sessionID = "E2E82E64CCD9827EF958830EF758B0A5";
-			menuItemPath = "find/keywords";
+			sessionID = "EA592DD05EE41724A8F7F0C4F0750FD4";
+			menuItemPath = "find/creatives";
 			#endif
 
 			// Normal producion

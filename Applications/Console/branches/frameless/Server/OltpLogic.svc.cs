@@ -1474,7 +1474,7 @@ namespace Easynet.Edge.UI.Server
 				"
 			); 
 
-			SqlCommand pageCmd = DataManager.CreateCommand
+			SqlCommand pageAndGatewayCmd = DataManager.CreateCommand
 			(
 				String.Format(@"
 				update	UserProcess_GUI_PaidAdgroupCreative
@@ -1499,27 +1499,18 @@ namespace Easynet.Edge.UI.Server
 			AdgroupCreativeTableAdapter adapter = From<AdgroupCreativeTableAdapter>();
 			adapter.CurrentConnection.Open();
 			adapter.CurrentTransaction = adapter.CurrentConnection.BeginTransaction("AdgroupCreativeUpdate");
-			pageCmd.Connection = cmd.Connection = adapter.CurrentConnection;
-			pageCmd.Transaction = cmd.Transaction = adapter.CurrentTransaction;
+			pageAndGatewayCmd.Connection = cmd.Connection = adapter.CurrentConnection;
+			pageAndGatewayCmd.Transaction = cmd.Transaction = adapter.CurrentTransaction;
 			
 			Oltp.SegmentRow[] segments = new Oltp.SegmentRow[5];
-			int cutAccountID = -99;
+			int currentAccountID = -99;
 
 			List<long> updatedCreativeGKs = new List<long>();
 			foreach (Oltp.AdgroupCreativeRow adgCreative in table.Rows)
 			{
-				// First update the page
-				pageCmd.Parameters["@accountID"].Value = adgCreative.AccountID;
-				pageCmd.Parameters["@pageGK"].Value = adgCreative.PageGK;
-				pageCmd.Parameters["@adgroupCreativeGK"].Value = adgCreative.AdgroupCreativeGK;
-				pageCmd.ExecuteNonQuery();
-
-				if(updatedCreativeGKs.Contains(adgCreative.CreativeGK))
-					continue;
-
-				if (adgCreative.AccountID != cutAccountID)
+				if (adgCreative.AccountID != currentAccountID)
 				{
-					cutAccountID = adgCreative.AccountID;
+					currentAccountID = adgCreative.AccountID;
 					Oltp.SegmentDataTable segmentTable = Segment_Get(adgCreative.AccountID, false);
 
 					// Find segments
@@ -1527,13 +1518,33 @@ namespace Easynet.Edge.UI.Server
 						segments[seg.SegmentNumber-1] = seg;
 				}
 
+				var s1 = adgCreative.IsSegment1Null() || segments[0] == null || (segments[0].AssociationFlags & SegmentAssociationFlags.AdgroupCreative) == 0 || adgCreative[table.Segment1Column, DataRowVersion.Current].Equals(adgCreative[table.Segment1Column, DataRowVersion.Original]) ? (object)DBNull.Value : (object)adgCreative.Segment1;
+				var s2 = adgCreative.IsSegment2Null() || segments[1] == null || (segments[1].AssociationFlags & SegmentAssociationFlags.AdgroupCreative) == 0 || adgCreative[table.Segment2Column, DataRowVersion.Current].Equals(adgCreative[table.Segment2Column, DataRowVersion.Original]) ? (object)DBNull.Value : (object)adgCreative.Segment2;
+				var s3 = adgCreative.IsSegment3Null() || segments[2] == null || (segments[2].AssociationFlags & SegmentAssociationFlags.AdgroupCreative) == 0 || adgCreative[table.Segment3Column, DataRowVersion.Current].Equals(adgCreative[table.Segment3Column, DataRowVersion.Original]) ? (object)DBNull.Value : (object)adgCreative.Segment3;
+				var s4 = adgCreative.IsSegment4Null() || segments[3] == null || (segments[3].AssociationFlags & SegmentAssociationFlags.AdgroupCreative) == 0 || adgCreative[table.Segment4Column, DataRowVersion.Current].Equals(adgCreative[table.Segment4Column, DataRowVersion.Original]) ? (object)DBNull.Value : (object)adgCreative.Segment4;
+				var s5 = adgCreative.IsSegment5Null() || segments[4] == null || (segments[4].AssociationFlags & SegmentAssociationFlags.AdgroupCreative) == 0 || adgCreative[table.Segment5Column, DataRowVersion.Current].Equals(adgCreative[table.Segment5Column, DataRowVersion.Original]) ? (object)DBNull.Value : (object)adgCreative.Segment5;
+
+				// First update the page
+				pageAndGatewayCmd.Parameters["@accountID"].Value = adgCreative.AccountID;
+				pageAndGatewayCmd.Parameters["@pageGK"].Value = adgCreative.PageGK;
+				pageAndGatewayCmd.Parameters["@adgroupCreativeGK"].Value = adgCreative.AdgroupCreativeGK;
+				pageAndGatewayCmd.Parameters["@segment1"].Value = s1;
+				pageAndGatewayCmd.Parameters["@segment2"].Value = s2;
+				pageAndGatewayCmd.Parameters["@segment3"].Value = s3;
+				pageAndGatewayCmd.Parameters["@segment4"].Value = s4;
+				pageAndGatewayCmd.Parameters["@segment5"].Value = s5;
+				pageAndGatewayCmd.ExecuteNonQuery();
+
+				if(updatedCreativeGKs.Contains(adgCreative.CreativeGK))
+					continue;
+
 				cmd.Parameters["@accountID"].Value = adgCreative.AccountID;
 				cmd.Parameters["@creativeGK"].Value = adgCreative.CreativeGK;
-				cmd.Parameters["@segment1"].Value = adgCreative.IsSegment1Null() || segments[0] == null || (segments[0].AssociationFlags & SegmentAssociationFlags.AdgroupCreative) == 0 || adgCreative[table.Segment1Column, DataRowVersion.Current].Equals(adgCreative[table.Segment1Column, DataRowVersion.Original]) ? (object) DBNull.Value : (object) adgCreative.Segment1;
-				cmd.Parameters["@segment2"].Value = adgCreative.IsSegment2Null() || segments[1] == null || (segments[1].AssociationFlags & SegmentAssociationFlags.AdgroupCreative) == 0 || adgCreative[table.Segment2Column, DataRowVersion.Current].Equals(adgCreative[table.Segment2Column, DataRowVersion.Original]) ? (object) DBNull.Value : (object) adgCreative.Segment2;
-				cmd.Parameters["@segment3"].Value = adgCreative.IsSegment3Null() || segments[2] == null || (segments[2].AssociationFlags & SegmentAssociationFlags.AdgroupCreative) == 0 || adgCreative[table.Segment3Column, DataRowVersion.Current].Equals(adgCreative[table.Segment3Column, DataRowVersion.Original]) ? (object) DBNull.Value : (object) adgCreative.Segment3;
-				cmd.Parameters["@segment4"].Value = adgCreative.IsSegment4Null() || segments[3] == null || (segments[3].AssociationFlags & SegmentAssociationFlags.AdgroupCreative) == 0 || adgCreative[table.Segment4Column, DataRowVersion.Current].Equals(adgCreative[table.Segment4Column, DataRowVersion.Original]) ? (object) DBNull.Value : (object) adgCreative.Segment4;
-				cmd.Parameters["@segment5"].Value = adgCreative.IsSegment5Null() || segments[4] == null || (segments[4].AssociationFlags & SegmentAssociationFlags.AdgroupCreative) == 0 || adgCreative[table.Segment5Column, DataRowVersion.Current].Equals(adgCreative[table.Segment5Column, DataRowVersion.Original]) ? (object) DBNull.Value : (object) adgCreative.Segment5;
+				cmd.Parameters["@segment1"].Value = s1;
+				cmd.Parameters["@segment2"].Value = s2;
+				cmd.Parameters["@segment3"].Value = s3;
+				cmd.Parameters["@segment4"].Value = s4;
+				cmd.Parameters["@segment5"].Value = s5;
 				int result = cmd.ExecuteNonQuery();
 
 				updatedCreativeGKs.Add(adgCreative.CreativeGK);
