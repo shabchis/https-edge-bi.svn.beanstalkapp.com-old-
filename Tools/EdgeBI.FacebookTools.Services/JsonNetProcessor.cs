@@ -123,7 +123,7 @@ namespace EdgeBI.FacebookTools.Services.Service
 
 		public override void WriteToStream(object instance, Stream stream, HttpRequestMessage request)
 		{
-			LifeTimeBudget l = (LifeTimeBudget)instance;
+			BulkFile l = (BulkFile)instance;
 			l.stream = stream;
 			l.test();
 		}

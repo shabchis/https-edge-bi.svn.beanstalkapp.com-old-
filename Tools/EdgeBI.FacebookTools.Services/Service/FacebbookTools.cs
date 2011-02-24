@@ -28,11 +28,11 @@ namespace EdgeBI.FacebookTools.Services.Service
 	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
 	public class FacebbookTools
 	{
-		[WebInvoke(Method="POST", UriTemplate = "test")]
-		public LifeTimeBudget test(FileDescription fileDescription)
+		[WebInvoke(Method="POST", UriTemplate = "facebook/bulkupload/createfile")]
+		public BulkFile CreateFile(FileDescription fileDescription)
 		{
 			
-			LifeTimeBudget l = new LifeTimeBudget();
+			BulkFile l = new BulkFile();
 			l.fileDescription = fileDescription;
 			return l;
 		
