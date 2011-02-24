@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Easynet.Edge.Core.Data;
 using System.Text.RegularExpressions;
+using System.Data.SqlClient;
 
 namespace Easynet.Edge.BusinessObjects
 {
@@ -25,13 +26,22 @@ namespace Easynet.Edge.BusinessObjects
 
 		public static string GetAccountTrackerPattern(int accountID)
 		{
-			/*
+			string accountTrackerPattern = null;
 			using (DataManager.Current.OpenConnection())
 			{
+				using (SqlCommand sqlCommand=DataManager.CreateCommand(@"SELECT GatewayBaseUrl 
+																		FROM User_GUI_Account
+																		WHERE Account_ID=@Account_ID:Int"))
+				{
+					sqlCommand.Parameters["@Account_ID"].Value = accountID;
+					accountTrackerPattern = sqlCommand.ExecuteScalar().ToString();
+
+								
+				}
 				// SELECT GatewayBaseUrl FROM User_GUI_Account where
 			}
-			*/
-			throw new NotImplementedException();
+
+			return accountTrackerPattern;
 		}
 	}
 }
