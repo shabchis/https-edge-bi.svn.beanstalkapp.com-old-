@@ -12,7 +12,11 @@ namespace Easynet.Edge.BusinessObjects
 	{
 		public static string ExtractTracker(string url, string regex)
 		{
-			foreach (Group g in Regex.Match(url, regex).Groups)
+			Match m = Regex.Match(url, regex);
+			if (m == null)
+				return null;
+
+			foreach (Group g in m.Groups)
 			{
 				if (!g.Success)
 					continue;
