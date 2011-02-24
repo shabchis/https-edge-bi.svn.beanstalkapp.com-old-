@@ -8,10 +8,6 @@ namespace EdgeBI.FacebookTools.Services.Service
 	public class FileDescription
 	{
 		public Dictionary<int, ColumnDescriptionAndValues> Settings=new Dictionary<int,ColumnDescriptionAndValues>();
-		
-		
-
-
 	}
 	public class ColumnDescriptionAndValues
 	{
@@ -19,6 +15,7 @@ namespace EdgeBI.FacebookTools.Services.Service
 		public string SettingName;
 		public List<string> values = new List<string>();
 		public int? from;
+		public int? PadLeftLength = null;
 		
 	}
 	
