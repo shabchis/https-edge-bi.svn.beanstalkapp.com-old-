@@ -12,7 +12,7 @@ using System.IO;
 using Microsoft.Http;
 namespace EdgeBI.FacebookTools.Services.Service
 {
-	public class LifeTimeBudget
+	public class BulkFile
 	{
 		public FileDescription fileDescription;
 		List<JArray> _list = new List<JArray>();
@@ -27,37 +27,19 @@ namespace EdgeBI.FacebookTools.Services.Service
 		{
 			
 			try
-			{
-				
-				
-				_counter = 0;
-
-				
+			{				
+				_counter = 0;			
 
 				t = new StreamWriter(this.stream);
 				foreach (KeyValuePair<int, ColumnDescriptionAndValues> colDesc in fileDescription.Settings.OrderBy(s => s.Key))
 				{
-					t.Write("{0}\t", colDesc.Value.ColumnName);
-					
+					t.Write("{0}\t", colDesc.Value.ColumnName);					
 				}
-
-
-
 				t.WriteLine();
 				Dublicate(0); //pay attention yaron should sent the first col as 0 or you will need to change the method
-				
-				
-				
-				
-				
-
-				
-				
-
 			}
 			catch (Exception ex)
 			{
-
 				ErrorMessageInterceptor.ThrowError(System.Net.HttpStatusCode.Forbidden, ex);
 			}
 			

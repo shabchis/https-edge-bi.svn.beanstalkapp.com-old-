@@ -113,8 +113,8 @@
     <Compile Include="EdgeApiHosting.cs" />
     <Compile Include="ErrorMessageInterceptor.cs" />
     <Compile Include="MessageInspector.cs" />
+    <Compile Include="Service\BulkFile.cs" />
     <Compile Include="Service\FileDescription.cs" />
-    <Compile Include="Service\LifeTimeBudget.cs" />
     <Compile Include="Service\FacebbookTools.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
