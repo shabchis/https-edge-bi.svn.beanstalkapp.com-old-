@@ -37,7 +37,7 @@ namespace EdgeBI.RestTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("localhost:28383")]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost/bulkupload")]
         public string RemoteAdress {
             get {
                 return ((string)(this["RemoteAdress"]));
@@ -86,7 +86,7 @@ namespace EdgeBI.RestTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("test")]
+        [global::System.Configuration.DefaultSettingValueAttribute("test,facebook/createfile")]
         public string Services {
             get {
                 return ((string)(this["Services"]));

@@ -106,13 +106,23 @@ namespace EdgeBI.FacebookTools.Services.Service
 					}
 				case "Counter": //problem in col ad_name should return the nume with '#' before right now not doing it
 					{
+						string finalNumString = string.Empty;
+						int pad = 0;
 						int? nextNum = _counter;
 						int? fromNum = fileDescription.Settings[listIndex].from;
 						if (fromNum != null)
 							nextNum += fromNum;
 						else
-							nextNum += 1;						
-						result = Regex.Replace(colValue, @"(\@\@", (nextNum).ToString());
+							nextNum += 1;
+
+						if (fileDescription.Settings[listIndex].PadLeftLength != null && fileDescription.Settings[listIndex].PadLeftLength > 0)
+						{
+							pad = (int)fileDescription.Settings[listIndex].PadLeftLength;
+							finalNumString = nextNum.ToString().PadLeft(pad, '0');
+						}
+						else
+							finalNumString = nextNum.ToString();
+						result = Regex.Replace(colValue, @"\@\@", (finalNumString).ToString());
 						result = result + "\t";
 						break;
 					}
