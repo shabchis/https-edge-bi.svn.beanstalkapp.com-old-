@@ -61,41 +61,41 @@ namespace EdgeBI.Objects
 			return returnObject;
 
 		}
-		public static object SaveOrRemoveSimpleObject<T>(string Command, CommandType commandType, SqlOperation sqlOperation, object objectToInsert, SqlConnection sqlConnection,SqlTransaction sqlTransaction) where T : class, new()
+		public static object SaveOrRemoveSimpleObject<T>(string Command, CommandType commandType, SqlOperation sqlOperation, object objectToInsert, SqlConnection sqlConnection, SqlTransaction sqlTransaction) where T : class, new()
 		{
 			object rowsAfectedOrIdentity = 0;
 			Type t = typeof(T);
-			
-			
-				if (sqlConnection.State!=ConnectionState.Open)
-					sqlConnection.Open();
-				using (SqlCommand sqlCommand = DataManager.CreateCommand(Command, commandType))
+
+
+			if (sqlConnection.State != ConnectionState.Open)
+				sqlConnection.Open();
+			using (SqlCommand sqlCommand = DataManager.CreateCommand(Command, commandType))
+			{
+				sqlCommand.Connection = sqlConnection;
+				if (sqlTransaction != null)
+					sqlCommand.Transaction = sqlTransaction;
+				if (sqlCommand.Parameters.Contains("@Action"))
+					sqlCommand.Parameters["@Action"].Value = sqlOperation;
+				if (objectToInsert != null)
 				{
-					sqlCommand.Connection = sqlConnection;
-					if (sqlTransaction != null)
-						sqlCommand.Transaction = sqlTransaction;
-					if (sqlCommand.Parameters.Contains("@Action"))
-						sqlCommand.Parameters["@Action"].Value = sqlOperation;
-					if (objectToInsert != null)
+					foreach (FieldInfo fieldInfo in objectToInsert.GetType().GetFields())
 					{
-						foreach (FieldInfo fieldInfo in objectToInsert.GetType().GetFields())
+						if (Attribute.IsDefined(fieldInfo, typeof(FieldMapAttribute)))
 						{
-							if (Attribute.IsDefined(fieldInfo, typeof(FieldMapAttribute)))
+							FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(FieldMapAttribute));
+							if (sqlCommand.Parameters.Contains(string.Format("@{0}", fieldMapAttribute.FieldName)))
 							{
-								FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(FieldMapAttribute));
-								if (sqlCommand.Parameters.Contains(string.Format("@{0}", fieldMapAttribute.FieldName)))
-								{
-									if (fieldInfo.GetValue(objectToInsert) != null)
-										sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = fieldInfo.GetValue(objectToInsert);
-									else
-										sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = DBNull.Value;
-								}
+								if (fieldInfo.GetValue(objectToInsert) != null)
+									sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = fieldInfo.GetValue(objectToInsert);
+								else
+									sqlCommand.Parameters[string.Format("@{0}", fieldMapAttribute.FieldName)].Value = DBNull.Value;
 							}
 						}
 					}
-					rowsAfectedOrIdentity = sqlCommand.ExecuteScalar();
 				}
-			
+				rowsAfectedOrIdentity = sqlCommand.ExecuteScalar();
+			}
+
 			return rowsAfectedOrIdentity;
 
 		}
@@ -436,13 +436,13 @@ namespace EdgeBI.Objects
 				while (sqlDataReader.Read())
 				{
 					object val;
-					if (typeElement!=typeof(string))
+					if (typeElement != typeof(string))
 						val = Activator.CreateInstance(typeElement);
 					else
-						val=sqlDataReader[dictionaryMapAttribute.ValueFieldsName].ToString();
+						val = sqlDataReader[dictionaryMapAttribute.ValueFieldsName].ToString();
 					if (!returnObject.Contains(sqlDataReader[dictionaryMapAttribute.KeyName]))
-						returnObject.Add(sqlDataReader[dictionaryMapAttribute.KeyName],val );
-					
+						returnObject.Add(sqlDataReader[dictionaryMapAttribute.KeyName], val);
+
 
 				}
 
@@ -483,7 +483,7 @@ namespace EdgeBI.Objects
 	}
 	#region AtrributesClass
 	[AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = false)]
-	sealed class FieldMapAttribute : Attribute
+	public class FieldMapAttribute : Attribute
 	{
 		// See the attribute guidelines at 
 		//  http://go.microsoft.com/fwlink/?LinkId=85236

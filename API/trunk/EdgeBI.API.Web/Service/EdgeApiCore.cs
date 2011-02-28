@@ -16,6 +16,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Data;
 using System.Text;
+using EdgeBI.Objects;
 
 /// <summary>
 /// Summary description for AlonService
@@ -78,7 +79,7 @@ namespace EdgeBI.API.Web
 			return groups;
 
 		}
-
+		
 		[WebInvoke(Method = "POST", UriTemplate = "groups")]
 		public int AddNewGroup(Group group)
 		{
@@ -203,6 +204,7 @@ namespace EdgeBI.API.Web
 		/// <param name="ID">The User Primery Key</param>
 		/// <returns></returns>
 		/// 
+		
 		[WebGet(UriTemplate = "users/{ID}")]
 		public User GetUserByID(string ID)
 		{
