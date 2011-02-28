@@ -24,37 +24,45 @@ namespace EdgeBI.API.Web
 
 		public override void ProcessRequest(ref System.ServiceModel.Channels.Message request)
 		{
-			HttpRequestMessage httpRequestMessage = request.ToHttpRequestMessage();
-
-			if (CheckSession)
+			try
 			{
-				UriTemplateMatch uriTemplateMatch = (UriTemplateMatch)httpRequestMessage.Properties.Where(prop => prop.GetType() == typeof(UriTemplateMatch)).First();
-				
-				if (uriTemplateMatch.Data.ToString().ToUpper() != LogIn.ToUpper())
+				HttpRequestMessage httpRequestMessage = request.ToHttpRequestMessage();
+
+				if (CheckSession)
 				{
-					if (httpRequestMessage.Headers.ContainsKey(SessionHeader))
+					UriTemplateMatch uriTemplateMatch = (UriTemplateMatch)httpRequestMessage.Properties.Where(prop => prop.GetType() == typeof(UriTemplateMatch)).First();
+
+					if (uriTemplateMatch.Data.ToString().ToUpper() != LogIn.ToUpper())
 					{
-						int userCode;
-						string session = httpRequestMessage.Headers[SessionHeader];
-						if (String.IsNullOrEmpty(session) || !IsSessionValid(session, out userCode))
+						if (httpRequestMessage.Headers.ContainsKey(SessionHeader))
 						{
-							ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Invalid session information.");
-							throw new InvalidOperationException();
+							int userCode;
+							string session = httpRequestMessage.Headers[SessionHeader];
+							if (String.IsNullOrEmpty(session) || !IsSessionValid(session, out userCode))
+							{
+								ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Invalid session information.");
+								throw new InvalidOperationException();
+							}
+							else
+							{
+								OperationContext.Current.IncomingMessageProperties.Add("edge-user-id", userCode);
+
+							}
+
 						}
 						else
 						{
-							OperationContext.Current.IncomingMessageProperties.Add("edge-user-id", userCode);
+							ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Invalid session information.");
+							throw new InvalidOperationException();
 
 						}
-
 					}
-					else
-					{
-						ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, "Invalid session information.");
-						throw new InvalidOperationException();
-
-					} 
 				}
+			}
+			catch (Exception ex)
+			{
+				
+				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden,ex);
 			}
 		}
 

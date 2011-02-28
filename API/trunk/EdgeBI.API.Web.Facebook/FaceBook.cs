@@ -43,7 +43,7 @@ namespace EdgeBI.API.Web
 			}
 		}
 		[WebGet(UriTemplate = "CampaignStatusSchedule/{campaignGK}")]
-		public List<CampaignStatusSchedule> GetCampaignStatusSchedulesbYcampaignGK(string campaignGK)
+		public List<CampaignStatusSchedule> GetCampaignStatusSchedulesBYcampaignGK(string campaignGK)
 		{
 			List<CampaignStatusSchedule> campaignStatusSchedules = new List<CampaignStatusSchedule>();
 			try
