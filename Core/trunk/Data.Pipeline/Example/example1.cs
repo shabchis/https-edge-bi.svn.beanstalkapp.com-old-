@@ -5,7 +5,7 @@ using System.Text;
 using System.Data.SqlClient;
 using Easynet.Edge.Core.Data;
 
-namespace EdgeBI.Data.Pipeline.Example
+namespace Services.Data.Pipeline.Example
 {
 	class example1
 	{

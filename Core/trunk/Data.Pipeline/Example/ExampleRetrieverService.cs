@@ -6,7 +6,7 @@ using Easynet.Edge.Core.Services;
 using Easynet.Edge.Core;
 using Easynet.Edge.Core.Data;
 
-namespace EdgeBI.Data.Pipeline
+namespace Services.Data.Pipeline
 {
 	public class ExampleRetrieverService : Service
 	{
@@ -49,10 +49,10 @@ namespace EdgeBI.Data.Pipeline
 			});
 
 			// Save settings to DB
-			delivery.Save();
+			//delivery.Save();
 
 			// Download and report download progress
-			delivery.Retrieve(p => ReportProgress(p));
+            delivery.Retrieve();//p => ReportProgress(p));
 
 			// Remember this delivery for the processor
 			// TODO: implement ServiceContext in Edge.Core.Service

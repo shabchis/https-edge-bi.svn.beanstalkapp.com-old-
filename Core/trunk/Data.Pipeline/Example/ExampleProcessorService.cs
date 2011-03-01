@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 using System.Data;
 using Easynet.Edge.Core.Utilities;
 
-namespace EdgeBI.Data.Pipeline
+namespace Services.Data.Pipeline
 {
 
 	public class ExampleProcessorService : Service

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using EdgeBI.Data.Pipeline;
+using Services.Data.Pipeline;
 using System.Data;
 
-namespace EdgeBI.Data.Pipeline
+namespace Services.Data.Pipeline
 {
 	public class ExampleReader : XPathRowReader<RowT>, IDeliveryFileReader
 	{

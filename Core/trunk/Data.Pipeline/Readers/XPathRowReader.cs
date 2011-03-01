@@ -7,7 +7,7 @@ using System.IO;
 using System.Collections;
 using GotDotNet.XPath;
 
-namespace EdgeBI.Data.Pipeline
+namespace Services.Data.Pipeline
 {
 	public class XPathRowReader<RowT> : RowReader<RowT> where RowT : class
 	{
