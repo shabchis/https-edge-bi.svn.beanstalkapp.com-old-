@@ -26,13 +26,26 @@ namespace Easynet.Edge.Services.Bing
         
         protected override ServiceOutcome DoWork()
         {
-            string downloadUrl = null;
+            string downloadUrl= null,downloadUrl2 = null;
+            Type readerType= null,readerType2 = null;
             Delivery delivery = new Delivery();
-            downloadUrl= Bing //BingKeywordRetrieverData();
+            switch(Instance.Configuration.Options["ReportReaderType"])
+                {
+                    case "BingKeywordReportReader":
+                        downloadUrl = BingKeywordRetrieverData();
+                        readerType =typeof(BingKeywordReportReader) ;
+                        downloadUrl2 = BingAdRetrieverData();
+                        readerType2 = typeof(BingAdPerformanceReportReader);
+                        break;
+                    case "BingAdPerformanceReportReader":
+                        downloadUrl = BingAdRetrieverData();
+                        readerType = typeof(BingAdPerformanceReportReader);
+                        break;
+                }
             delivery.DateCreated = DateTime.Now;
             delivery.DateModified = DateTime.Now;
             delivery.AccountID = Instance.AccountID;
-            delivery.CreatedByServiceInstanceID = Instance.ParentInstance.InstanceID;
+            delivery.CreatedByServiceInstanceID = Instance.InstanceID; //TODO: Instance.ParentInstance.InstanceID;
             List<DeliveryFileStatus> handledStatus = new List<DeliveryFileStatus>();
             handledStatus.Add(new DeliveryFileStatus { State = eDeliveryFileState.New, ServiceInstanceID = 0});
             delivery.Files = new List<DeliveryFile>();
@@ -41,22 +54,36 @@ namespace Easynet.Edge.Services.Bing
             {
                 FileRootPath = Instance.Configuration.Options["FileRootPath"],
                 HandledStatus = handledStatus,
-                FileName = "Creative",
+                FileName = "Creative.zip",
                 DownloadUrl = downloadUrl,
-                ReaderType = typeof(BingKeywordReportReader),
+                ReaderType = readerType.AssemblyQualifiedName,
                 AccountID = Instance.AccountID    ,
                 DeliveryID = delivery.DeliveryID  ,
                 TargetDateTime = DateTime.Now     ,
                 DateCreated =    DateTime.Now     ,
                 DateModified = DateTime.Now           
             });
+            if(Instance.Configuration.Options["ReportReaderType"] == "BingKeywordReportReader")
+                delivery.Files.Add(new DeliveryFile
+                {
+                    FileRootPath = Instance.Configuration.Options["FileRootPath"],
+                    HandledStatus = handledStatus,
+                    FileName = "Creative.zip",
+                    DownloadUrl = downloadUrl2,
+                    ReaderType = readerType2.AssemblyQualifiedName,
+                    AccountID = Instance.AccountID,
+                    DeliveryID = delivery.DeliveryID,
+                    TargetDateTime = DateTime.Now,
+                    DateCreated = DateTime.Now,
+                    DateModified = DateTime.Now
+                });
             delivery.Save();
             delivery.Download();
             
             return ServiceOutcome.Success;
         }
 
-        private sting BingAdRetrieverData()
+        private string BingAdRetrieverData()
         {
             string errMessage = "";
             //Init parameters from configuration
@@ -115,7 +142,7 @@ namespace Easynet.Edge.Services.Bing
                 submitRequest.ReportRequest = request;
 
                 // Set the start date for the report to one month before today.
-                DateTime startDate = DateTime.Today.AddDays(-1);
+                DateTime startDate = DateTime.Today.AddDays(Convert.ToInt32(Instance.Configuration.Options["ReportDays"]));
                 request.Time = new ReportTime();
                 request.Time.CustomDateRangeStart = new Date();
                 request.Time.CustomDateRangeStart.Day = startDate.Day;
@@ -123,7 +150,11 @@ namespace Easynet.Edge.Services.Bing
                 request.Time.CustomDateRangeStart.Year = startDate.Year;
 
                 // Set the end date to today.
-                DateTime endDate = DateTime.Today;
+                 DateTime endDate;
+                if (Instance.Configuration.Options["LastDay"] == "Today")
+                    endDate = DateTime.Today;
+                else
+                    endDate = DateTime.ParseExact(Instance.Configuration.Options["LastDay"], "MM/dd/yyyy",null);
                 request.Time.CustomDateRangeEnd = new Date();
                 request.Time.CustomDateRangeEnd.Day = endDate.Day;
                 request.Time.CustomDateRangeEnd.Month = endDate.Month;
@@ -285,7 +316,7 @@ namespace Easynet.Edge.Services.Bing
                 submitRequest.ReportRequest = request;
 
                 // Set the start date for the report to one month before today.
-                DateTime startDate = DateTime.Today.AddDays(-1);
+                DateTime startDate = DateTime.Today.AddDays(Convert.ToInt32(Instance.Configuration.Options["ReportDays"]));
                 request.Time = new ReportTime();
                 request.Time.CustomDateRangeStart = new Date();
                 request.Time.CustomDateRangeStart.Day = startDate.Day;
@@ -293,7 +324,11 @@ namespace Easynet.Edge.Services.Bing
                 request.Time.CustomDateRangeStart.Year = startDate.Year;
 
                 // Set the end date to today.
-                DateTime endDate = DateTime.Today;
+                DateTime endDate;
+                if (Instance.Configuration.Options["LastDay"] == "Today")
+                    endDate = DateTime.Today;
+                else
+                    endDate = DateTime.ParseExact(Instance.Configuration.Options["LastDay"], "MM/dd/yyyy",null);
                 request.Time.CustomDateRangeEnd = new Date();
                 request.Time.CustomDateRangeEnd.Day = endDate.Day;
                 request.Time.CustomDateRangeEnd.Month = endDate.Month;
