@@ -29,99 +29,105 @@ namespace EdgeBI.Objects
 		public int Channel_ID;
 
 		[DataMember(Order = 4)]
+		[FieldMap("ScheduleEnabled")]
+		public bool ScheduleEnabled;
+
+		[DataMember(Order = 5)]
 		[FieldMap("Hour00")]
 		public CampaignStatus Hour00 = 0;
-		[DataMember(Order = 5)]
+		[DataMember(Order = 6)]
 		[FieldMap("Hour01")]
 		public CampaignStatus Hour01 = 0;
 
-		[DataMember(Order = 6)]
+		[DataMember(Order = 7)]
 		[FieldMap("Hour02")]
 		public CampaignStatus Hour02 = 0;
 
-		[DataMember(Order = 7)]
+		[DataMember(Order = 8)]
 		[FieldMap("Hour03")]
 		public CampaignStatus Hour03 = 0;
 
-		[DataMember(Order = 8)]
+		[DataMember(Order = 9)]
 		[FieldMap("Hour04")]
 		public CampaignStatus Hour04 = 0;
 
-		[DataMember(Order = 9)]
+		[DataMember(Order = 10)]
 		[FieldMap("Hour05")]
 		public CampaignStatus Hour05 = 0;
 
-		[DataMember(Order = 10)]
+		[DataMember(Order = 11)]
 		[FieldMap("Hour06")]
 		public CampaignStatus Hour06 = 0;
 
-		[DataMember(Order = 11)]
+		[DataMember(Order = 12)]
 		[FieldMap("Hour07")]
 		public CampaignStatus Hour07 = 0;
 
-		[DataMember(Order = 12)]
+		[DataMember(Order = 13)]
 		[FieldMap("Hour08")]
 		public CampaignStatus Hour08 = 0;
 
-		[DataMember(Order = 13)]
+		[DataMember(Order = 14)]
 		[FieldMap("Hour09")]
 		public CampaignStatus Hour09 = 0;
 
-		[DataMember(Order = 14)]
+		[DataMember(Order = 15)]
 		[FieldMap("Hour10")]
 		public CampaignStatus Hour10 = 0;
 
-		[DataMember(Order = 15)]
+		[DataMember(Order = 16)]
 		[FieldMap("Hour11")]
 		public CampaignStatus Hour11 = 0;
 
-		[DataMember(Order = 16)]
+		[DataMember(Order = 17)]
 		[FieldMap("Hour12")]
 		public CampaignStatus Hour12 = 0;
 
-		[DataMember(Order = 17)]
+		[DataMember(Order = 18)]
 		[FieldMap("Hour13")]
 		public CampaignStatus Hour13 = 0;
 
-		[DataMember(Order = 18)]
+		[DataMember(Order = 19)]
 		[FieldMap("Hour14")]
 		public CampaignStatus Hour14 = 0;
 
-		[DataMember(Order = 19)]
+		[DataMember(Order = 20)]
 		[FieldMap("Hour15")]
 		public CampaignStatus Hour15 = 0;
 
-		[DataMember(Order = 20)]
+		[DataMember(Order = 21)]
 		[FieldMap("Hour16")]
 		public CampaignStatus Hour16 = 0;
 
-		[DataMember(Order = 21)]
+		[DataMember(Order = 22)]
 		[FieldMap("Hour17")]
 		public CampaignStatus Hour17 = 0;
 
-		[DataMember(Order = 22)]
+		[DataMember(Order = 23)]
 		[FieldMap("Hour18")]
 		public CampaignStatus Hour18 = 0;
 
-		[DataMember(Order = 23)]
+		[DataMember(Order = 24)]
 		[FieldMap("Hour19")]
 		public CampaignStatus Hour19 = 0;
 
-		[DataMember(Order = 24)]
+		[DataMember(Order = 25)]
 		[FieldMap("Hour20")]
 		public CampaignStatus Hour20 = 0;
 
-		[DataMember(Order = 25)]
+		[DataMember(Order = 26)]
 		[FieldMap("Hour21")]
 		public CampaignStatus Hour21 = 0;
 
-		[DataMember(Order = 26)]
+		[DataMember(Order = 27)]
 		[FieldMap("Hour22")]
 		public CampaignStatus Hour22 = 0;
 
-		[DataMember(Order = 27)]
+		[DataMember(Order = 28)]
 		[FieldMap("Hour23")]
 		public CampaignStatus Hour23 = 0;
+
+
 
 		public static void Update(List<CampaignStatusSchedule> campaignStatusSchedules)
 		{
@@ -164,6 +170,11 @@ namespace EdgeBI.Objects
 			{
 				MapperUtility.SaveOrRemoveSimpleObject<CampaignStatusSchedule>(command, System.Data.CommandType.StoredProcedure, SqlOperation.Update, campaignStatusSchedule, sqlConnection, sqlTransaction);
 			}
+			command = @"UPDATE UserProcess_GUI_PaidCampaign
+						SET ScheduleEnabled=@ScheduleEnabled:bit
+						WHERE Campaign_GK= @Campaign_GK:int";
+				;
+				MapperUtility.SaveOrRemoveSimpleObject<CampaignStatusSchedule>(command, System.Data.CommandType.Text, SqlOperation.Update, campaignStatusSchedules[0], sqlConnection, sqlTransaction);
 			sqlTransaction.Commit();
 		}
 

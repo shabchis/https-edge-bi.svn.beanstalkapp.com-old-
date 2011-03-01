@@ -61,8 +61,12 @@ namespace EdgeBI.API.Web
 			}
 			catch (Exception ex)
 			{
-				
-				ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden,ex);
+				if (ex.Message != "Invalid session information.")
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, ex.Message);
+				else
+					ErrorMessageInterceptor.ThrowError(HttpStatusCode.Forbidden, ex.Message);
+				throw;
+
 			}
 		}
 
@@ -72,14 +76,14 @@ namespace EdgeBI.API.Web
 		{
 			bool isValid = false;
 			int sessionID = 0;
-			
-			
+
+
 			DateTime lastModified;
 			userCode = -1;
 			Encryptor encryptor = new Encryptor(KeyEncrypt);
 
 			try { sessionID = int.Parse(encryptor.Decrypt(session)); }
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				// TODO: log the real exception
 				return false;
@@ -94,8 +98,8 @@ namespace EdgeBI.API.Web
 					{
 						if (sqlDataReader.Read())
 						{
-						isValid = System.Convert.ToBoolean(sqlDataReader[0]);
-						userCode = System.Convert.ToInt32(sqlDataReader[1]);
+							isValid = System.Convert.ToBoolean(sqlDataReader[0]);
+							userCode = System.Convert.ToInt32(sqlDataReader[1]);
 						}
 					}
 				}
