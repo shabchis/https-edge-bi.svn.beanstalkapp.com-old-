@@ -45,26 +45,40 @@ namespace Easynet.Edge.Services.Bing
 
        private void ProcessData(Delivery delivery)
         {
-
-            foreach (DeliveryFile df in delivery.Files)
+            Type objType = null;
+            switch (Instance.Configuration.Options["ReportReaderType"])
             {
-                //BingKeywordReportReader bingReader = new BingKeywordReportReader(df.FilePath);
-                //לבדוק שזה בינגdf.ReaderType
-                Type t = typeof(BingAdPerformanceReportReader);//BingKeywordReportReader
-                using (RowReader<PpcDataUnit> reader = (RowReader<PpcDataUnit>)Activator.CreateInstance(t, df.FilePath + "\\" + df.FileName ))
+                case "BingKeywordReportReader":
+                    objType = typeof(BingKeywordReportReader);
+                    break;
+                case "BingAdPerformanceReportReader":
+                    objType = typeof(BingAdPerformanceReportReader);
+                    break;
+            }
+            string[] filesPath = new string[2];
+            for(int i=0;delivery.Files.Count >= i+1;i++) //  DeliveryFile df in delivery.Files)
+            {
+                Type dRederType = Type.GetType(delivery.Files[i].ReaderType);
+                if (dRederType == typeof(BingAdPerformanceReportReader))
+                    filesPath[1] = delivery.Files[i].FilePath;
+                else if (dRederType == typeof(BingKeywordReportReader))
+                    filesPath[0] = delivery.Files[i].FilePath;    
+            }
+            //BingKeywordReportReader bingReader = new BingKeywordReportReader(df.FilePath);
+            //לבדוק שזה בינגdf.ReaderType
+
+            using (RowReader<PpcDataUnit> reader = (RowReader<PpcDataUnit>)Activator.CreateInstance(objType, new object[]{filesPath}))
+            {
+                using (DataManager.Current.OpenConnection())
                 {
-                    using (DataManager.Current.OpenConnection())
+                    DataManager.Current.StartTransaction();
+
+                    while (reader.Read())
                     {
-                        DataManager.Current.StartTransaction();
-
-                        while (reader.Read())
-                        {
-                            reader.CurrentRow.Save();
-                            
-                        }
-
-                        DataManager.Current.CommitTransaction();
+                        reader.CurrentRow.Save();
+                        
                     }
+                    DataManager.Current.CommitTransaction();
                 }
             }
         }
