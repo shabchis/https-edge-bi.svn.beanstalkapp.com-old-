@@ -46,10 +46,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core\Core.csproj">
-      <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EdgeBI.API.Web\EdgeBI.API.Web.csproj">
       <Project>{C1A8D60A-2937-46A3-837C-AFDD6F2FF53B}</Project>
       <Name>EdgeBI.API.Web</Name>

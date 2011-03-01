@@ -71,10 +71,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Http">
-      <HintPath>C:\Users\alonya\Downloads\codeplex\build\Debug\Http\bin\Microsoft.Http.dll</HintPath>
+      <HintPath>..\ThirdParty\Microsoft.Http.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>C:\Users\alonya\Downloads\Json35r8\Bin\DotNet\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\ThirdParty\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
