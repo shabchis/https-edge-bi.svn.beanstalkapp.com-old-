@@ -16,20 +16,63 @@ namespace Easynet.Edge.Services.Bing
 {
     public class BingKeywordReportReader: RowReader<PpcDataUnit>
     {
-        string _zipPath;
-        string _xmlPath;
+        string _zipPathKeywordFile;
+        string _xmlPathKeywordFile;
+        string _zipPathAdFile;
+        string _xmlPathAdFile;
+        Dictionary<long, AdPerformanceValues> Ads;
+
         XmlTextReader _innerReader;
 
-        public BingKeywordReportReader(string zipPath)
+        public BingKeywordReportReader(string[] zipPath)
         {
-            _zipPath = zipPath;
+            _zipPathKeywordFile = zipPath[0];
+            _zipPathAdFile = zipPath[1];
+            //TODO Get the file from zip
+            //_xmlPathKeywordFile = FilesManager.ZipFiles(_zipPathKeywordFile,"Keyword.xml",null);
+            //_xmlPathAdFile = FilesManager.ZipFiles(_zipPathAdFile,"Ad.xml",null);
+
+            _xmlPathKeywordFile = @"C:\tempbing\Accounts\1005\2011\03\01\21\1556480431.xml";
+            _xmlPathAdFile = @"C:\tempbing\Accounts\1005\2011\03\01\21\1556481035.xml";
+            GetAdDictionary();
+
+        }
+
+        private void GetAdDictionary()
+        {
+            try
+            {
+                Ads = new Dictionary<long, AdPerformanceValues>();
+                XmlTextReader adReader = new XmlTextReader(_xmlPathAdFile);
+                while (adReader.Read())
+                {
+                    if (adReader.Name == "Row")
+                    {
+                        string row = adReader.ReadOuterXml();
+                        XmlDocument xd = new XmlDocument();
+                        xd.LoadXml(row);
+                        if(!Ads.ContainsKey(Convert.ToInt64(xd.DocumentElement["AdId"].GetAttribute("value"))))
+                        {
+                            AdPerformanceValues ad = new AdPerformanceValues();
+                            ad.AdDescription = xd.DocumentElement["AdDescription"].GetAttribute("value");
+                            ad.AdTitle = xd.DocumentElement["AdTitle"].GetAttribute("value");
+                            Ads.Add(Convert.ToInt64(xd.DocumentElement["AdId"].GetAttribute("value")), ad);
+                        }
+                        
+                    }
+                }
+            }
+            catch( Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            
         }
 
         protected override void Open()
         {
-            //_xmlPath = FilesManager.ZipFiles(_zipPath,"1.xml",null);
-            _xmlPath = @"C:\tempbing\Accounts\1005\2011\02\07\14\1553253809.xml";
-            _innerReader =  new XmlTextReader(_xmlPath);
+            _innerReader = new XmlTextReader(_xmlPathKeywordFile);
 
             //Moves the reader to the root element.
             //_innerReader.MoveToContent();
@@ -48,38 +91,42 @@ namespace Easynet.Edge.Services.Bing
                     XmlDocument xd = new XmlDocument();
                     xd.LoadXml(row);
                  
-                    PpcDataUnit p =  new PpcDataUnit();
-                    p.AccountID = GetAccountIDFromName(xd.DocumentElement["AccountName"].GetAttribute("value"));
-                    p.AdDistribution =xd.DocumentElement["AdDistribution"].GetAttribute("value");
-                    p.AdId = Convert.ToInt32(xd.DocumentElement["AdId"].GetAttribute("value"));
-                    p.AdGroupName = xd.DocumentElement["AdGroupName"].GetAttribute("value");
-                    p.AdType = xd.DocumentElement["AdType"].GetAttribute("value");
-                    p.CampaignName = xd.DocumentElement["CampaignName"].GetAttribute("value");
-                    p.DestinationUrl =xd.DocumentElement["DestinationUrl"].GetAttribute("value");
-                    p.Impressions = Convert.ToInt32(xd.DocumentElement["Impressions"].GetAttribute("value"));
-                    p.Clicks = Convert.ToInt32(xd.DocumentElement["Clicks"].GetAttribute("value"));
-                    p.Ctr = decimal.Parse(xd.DocumentElement["Ctr"].GetAttribute("value"));
-                    p.AverageCpc = decimal.Parse(xd.DocumentElement["AverageCpc"].GetAttribute("value"));
-                    p.Spend = decimal.Parse(xd.DocumentElement["Spend"].GetAttribute("value"));
-                    p.AveragePosition = decimal.Parse(xd.DocumentElement["AveragePosition"].GetAttribute("value"));
-                    p.Conversions = decimal.Parse(xd.DocumentElement["Conversions"].GetAttribute("value"));
-                    p.ConversionRate = decimal.Parse(xd.DocumentElement["ConversionRate"].GetAttribute("value"));
-                    p.Keyword = xd.DocumentElement["Keyword"].GetAttribute("value");
+                    PpcDataUnit objPpcData =  new PpcDataUnit();
+                    AdPerformanceValues ad = new AdPerformanceValues();
+                    
+                    objPpcData.AccountID = GetAccountIDFromName(xd.DocumentElement["AccountName"].GetAttribute("value"));
+                    objPpcData.AdDistribution =xd.DocumentElement["AdDistribution"].GetAttribute("value");
+                    objPpcData.AdId = Convert.ToInt32(xd.DocumentElement["AdId"].GetAttribute("value"));
+                    objPpcData.AdDistribution = Ads[objPpcData.AdId].AdDescription;
+                    objPpcData.AdTitle = Ads[objPpcData.AdId].AdTitle;
+                    objPpcData.AdGroupName = xd.DocumentElement["AdGroupName"].GetAttribute("value");
+                    objPpcData.AdType = xd.DocumentElement["AdType"].GetAttribute("value");
+                    objPpcData.CampaignName = xd.DocumentElement["CampaignName"].GetAttribute("value");
+                    objPpcData.DestinationUrl =xd.DocumentElement["DestinationUrl"].GetAttribute("value");
+                    objPpcData.Impressions = Convert.ToInt32(xd.DocumentElement["Impressions"].GetAttribute("value"));
+                    objPpcData.Clicks = Convert.ToInt32(xd.DocumentElement["Clicks"].GetAttribute("value"));
+                    objPpcData.Ctr = decimal.Parse(xd.DocumentElement["Ctr"].GetAttribute("value"));
+                    objPpcData.AverageCpc = decimal.Parse(xd.DocumentElement["AverageCpc"].GetAttribute("value"));
+                    objPpcData.Spend = decimal.Parse(xd.DocumentElement["Spend"].GetAttribute("value"));
+                    objPpcData.AveragePosition = decimal.Parse(xd.DocumentElement["AveragePosition"].GetAttribute("value"));
+                    objPpcData.Conversions = decimal.Parse(xd.DocumentElement["Conversions"].GetAttribute("value"));
+                    objPpcData.ConversionRate = decimal.Parse(xd.DocumentElement["ConversionRate"].GetAttribute("value"));
+                    objPpcData.Keyword = xd.DocumentElement["Keyword"].GetAttribute("value");
                     string d = xd.DocumentElement["GregorianDate"].GetAttribute("value");// +" 00:00:01";
-                    p.GregorianDate = DateTime.ParseExact(d, "MM/dd/yyyy",null); //xd.DocumentElement["GregorianDate"].GetAttribute("value"));
-                    p.Matchtype = xd.DocumentElement["MatchType"].GetAttribute("value");
-                    p.Channel_id = 14;
-                    p.Downloaded_date = DateTime.Now;
-                    p.Day_code = Core.Utilities.DayCode.ToDayCode(DateTime.Now);
-                    p.GatewayId = GetGateway(_innerReader.ReadElementString("Gateway"));
-                    p.CampaignGk = GkManager.GetCampaignGK(p.AccountID, p.Channel_id,p.CampaignName,null);
-                    p.AdgroupGk = GkManager.GetAdgroupGK(p.AccountID,p.Channel_id,p.CampaignGk,p.AdGroupName,p.AdGroupId);
-                    //p.CreativeGk = GkManager.GetCreativeGK (p.AccountID,);
-                    p.GatewayGk = GkManager.GetGatewayGK(p.AccountID,p.GatewayId,p.Channel_id,p.CampaignGK,p.Adgroup_Gk,);
-                    //p.PPC_CreativeGk = GkManager.GetAdgroupCreativeGK(p.AccountID,p.Channel_id,p.CampaignGk,p.AdgroupGk,p.CreativeGk,p.DestinationUrl,p.GatewayGk);
-                    p.KeywordGk = GkManager.GetKeywordGK(p.AccountID,p.Keyword);
-                    p.PPC_KeywordGk = GkManager.GetAdgroupKeywordGK(p.AccountID,p.Channel_id,p.CampaignGk,p.AdgroupGk,p.Keywordid ,p.Matchtype,p.DestinationUrl,p.GatewayGk);
-                    return p;
+                    objPpcData.GregorianDate = DateTime.ParseExact(d, "M/d/yyyy",null); //xd.DocumentElement["GregorianDate"].GetAttribute("value"));
+                    objPpcData.Matchtype = (MatchType)Enum.Parse(typeof(MatchType), xd.DocumentElement["MatchType"].GetAttribute("value"), true);
+                    objPpcData.Channel_id = 14;
+                    objPpcData.Downloaded_date = DateTime.Now;
+                    objPpcData.Day_code = Core.Utilities.DayCode.ToDayCode(DateTime.Now);
+                    //GatewayGk Gateway name ?
+                    objPpcData.GatewayGk = GkManager.GetGatewayGK(objPpcData.AccountID, objPpcData.GatewayId, objPpcData.Channel_id, objPpcData.CampaignGK, objPpcData.AdgroupGk, null, objPpcData.DestinationUrl, GatewayReferenceType.Keyword, objPpcData.KeywordGk);
+                    objPpcData.CampaignGk = GkManager.GetCampaignGK(objPpcData.AccountID, objPpcData.Channel_id,objPpcData.CampaignName,null);
+                    objPpcData.AdgroupGk = GkManager.GetAdgroupGK(objPpcData.AccountID,objPpcData.Channel_id,objPpcData.CampaignGk,objPpcData.AdGroupName,objPpcData.AdGroupId);
+                    objPpcData.CreativeGk = GkManager.GetCreativeGK(objPpcData.AccountID, objPpcData.AdTitle, objPpcData.AdDistribution, string.Empty);
+                    objPpcData.PPC_CreativeGk = GkManager.GetAdgroupCreativeGK(objPpcData.AccountID, objPpcData.Channel_id, objPpcData.CampaignGk, objPpcData.AdgroupGk, objPpcData.CreativeGk, objPpcData.DestinationUrl, string.Empty, objPpcData.GatewayGk);
+                    objPpcData.KeywordGk = GkManager.GetKeywordGK(objPpcData.AccountID,objPpcData.Keyword);
+                    objPpcData.PPC_KeywordGk = GkManager.GetAdgroupKeywordGK(objPpcData.AccountID,objPpcData.Channel_id,objPpcData.CampaignGk,objPpcData.AdgroupGk,objPpcData.KeywordId,objPpcData.Matchtype,objPpcData.DestinationUrl,objPpcData.GatewayGk);
+                    return objPpcData;
                 }
             }
             return new PpcDataUnit();
@@ -113,5 +160,10 @@ namespace Easynet.Edge.Services.Bing
         {
             _innerReader.Close();
         }
+    }
+    public class AdPerformanceValues
+    {
+        public string AdDescription;
+        public string AdTitle;
     }
 }
