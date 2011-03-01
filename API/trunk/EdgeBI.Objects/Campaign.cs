@@ -36,6 +36,12 @@ namespace EdgeBI.Objects
 		[FieldMap("campStatus")]
 		public int Campaign_Status;
 
+		[DataMember(Order = 6)]
+		[FieldMap("ScheduleEnabled")]
+		public bool ScheduleEnabled;
+
+
+
 
 
 
