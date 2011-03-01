@@ -6,7 +6,7 @@ using System.Xml;
 using System.IO;
 using System.Collections;
 
-namespace EdgeBI.Data.Pipeline
+namespace Services.Data.Pipeline
 {
 	public class XmlRowReader<RowT> : RowReader<RowT> where RowT: class
 	{
