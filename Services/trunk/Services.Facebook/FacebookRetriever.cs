@@ -320,12 +320,19 @@ namespace Easynet.Edge.Services.Facebook
  
         protected string FindIAdgroupID(System.Xml.XmlNode node)
         {
+			XmlElement creative = (XmlElement)node;
+			if (!creative.HasAttribute("key"))
+				throw new Exception("Adgroup creative is missing attribute 'key' in facebook.Ads.getAdGroupCreatives report.");
+			
+			return creative.GetAttribute("key");
+			/*
             foreach (System.Xml.XmlNode _node in node.ChildNodes)
             {
                 if (_node.Name.Equals("adgroup_id"))
                     return _node.InnerText;
                
             }
+			*/
             return ""; ;
         }
         protected override bool SaveReport()
