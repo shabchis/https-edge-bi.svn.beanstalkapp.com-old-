@@ -119,16 +119,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\BusinessObjects\BusinessObjects.csproj">
-      <Project>{6E2451D8-DD5B-4B28-B84A-A652D539F8C0}</Project>
-      <Name>BusinessObjects</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\Core\Core.csproj">
-      <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
-      <Name>Core %28Core\Core%29</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
@@ -224,6 +214,16 @@
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\GAdWordsReportServiceV13\ReportService.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\BusinessObjects\BusinessObjects.csproj">
+      <Project>{6E2451D8-DD5B-4B28-B84A-A652D539F8C0}</Project>
+      <Name>BusinessObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Core\Core.csproj">
+      <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="General\" />
