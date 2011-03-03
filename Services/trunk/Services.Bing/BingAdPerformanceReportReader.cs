@@ -53,7 +53,7 @@ namespace Easynet.Edge.Services.Bing
                     objPpcData.AdDistribution =xd.DocumentElement["AdDistribution"].GetAttribute("value");
                     objPpcData.AdId = Convert.ToInt32(xd.DocumentElement["AdId"].GetAttribute("value"));
                     objPpcData.AdGroupName = xd.DocumentElement["AdGroupName"].GetAttribute("value");
-                    objPpcData.AdType = xd.DocumentElement["AdType"].GetAttribute("value");
+                    objPpcData.AdType = Convert.ToInt32(xd.DocumentElement["AdType"].GetAttribute("value"));
                     objPpcData.CampaignName = xd.DocumentElement["CampaignName"].GetAttribute("value");
                     //p.DestinationUrl =xd.DocumentElement["DestinationUrl"].GetAttribute("value");
                     objPpcData.Impressions = Convert.ToInt32(xd.DocumentElement["Impressions"].GetAttribute("value"));
