@@ -172,7 +172,6 @@ namespace Easynet.Edge.Services.Bing
                     objPpcData.Channel_id = 14;
                     objPpcData.Downloaded_date = DateTime.Now;
                     objPpcData.Day_code = Core.Utilities.DayCode.ToDayCode(DateTime.Now);
-                    //GatewayGk Gateway name ?
                     objPpcData.CampaignGk = GkManager.GetCampaignGK(objPpcData.AccountID, objPpcData.Channel_id, objPpcData.CampaignName, null);
                     objPpcData.GatewayGk = GkManager.GetGatewayGK(objPpcData.AccountID, objPpcData.GatewayId, objPpcData.Channel_id, objPpcData.CampaignGk, objPpcData.AdgroupGk, null, objPpcData.DestinationUrl, GatewayReferenceType.Keyword, objPpcData.KeywordGk);
                     objPpcData.AdgroupGk = GkManager.GetAdgroupGK(objPpcData.AccountID, objPpcData.Channel_id, objPpcData.CampaignGk, objPpcData.AdGroupName, objPpcData.AdGroupId);
