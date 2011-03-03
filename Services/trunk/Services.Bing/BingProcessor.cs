@@ -75,8 +75,8 @@ namespace Easynet.Edge.Services.Bing
 
                     while (reader.Read())
                     {
-                        reader.CurrentRow.Save();
-                        
+                        if(reader.CurrentRow.AccountID > 0 )
+                            reader.CurrentRow.Save();
                     }
                     DataManager.Current.CommitTransaction();
                 }
