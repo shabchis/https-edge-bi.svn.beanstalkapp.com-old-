@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://eggplant/schema"
+	xmlns:eggplant="http://eggplant/providers/xml/mappings"
+	targetNamespace="http://eggplant/schema"
+	attributeFormDefault="unqualified"
+	elementFormDefault="qualified"
+	>
+
+	<!--===================================-->
+	<!-- Types -->
+
+	<!-- General -->
+	<xs:element name="ObjectSchema">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ObjectSet" type="ObjectSet" minOccurs="1" maxOccurs="unbounded">
+					<xs:key name="_Object_Name">
+						<xs:selector xpath="Object"/>
+						<xs:field xpath="@Name"/>
+					</xs:key>
+					<xs:keyref name="_Object_BasedOn" refer="_Object_Name">
+						<xs:selector xpath="Object"/>
+						<xs:field xpath="@BasedOn"/>
+					</xs:keyref>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="_ObjectSet_Namespace">
+			<xs:selector xpath="ObjectSet"/>
+			<xs:field xpath="@Namespace"/>
+		</xs:key>
+	</xs:element>
+
+	<xs:complexType name="ObjectSet">
+		<xs:sequence>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="Object" type="Object" maxOccurs="unbounded"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="Namespace" type="xs:string" use="required" />
+	</xs:complexType>
+
+	<!-- Object -->
+	<xs:complexType name="Object" eggplant:mapsTo="ObjectDefinition">
+		<xs:all>
+			<xs:element name="Properties" minOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Property" type="Property" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+				<xs:key name="_Property_Name">
+					<xs:selector xpath="Property"/>
+					<xs:field xpath="@Name"/>
+				</xs:key>
+			</xs:element>
+			
+			<xs:element name="Queries" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Query" type="Query" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+				<xs:key name="_Query_Name">
+					<xs:selector xpath="Query"/>
+					<xs:field xpath="@Name"/>
+				</xs:key>
+			</xs:element>
+		</xs:all>
+		
+		<xs:attribute name="Name" type="xs:string" use="required" />
+		<xs:attribute name="Abstract" type="xs:boolean" use="optional" default="false" eggplant:mapsTo="IsAbstract"/>
+		<xs:attribute name="BasedOn" type="xs:string" use="optional" eggplant:mapsTo="BaseDefinition"/>
+	</xs:complexType>
+
+	<!-- Properties -->
+	<xs:complexType name="Property" eggplant:mapsTo="PropertyDefinition">
+		<xs:all minOccurs="0">
+			<xs:element name="Constraints">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Constraint" type="PropertyConstraint" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:all>
+		
+		<xs:attribute name="Name" type="xs:string" use="required" />
+		<xs:attribute name="Type" type="xs:string" use="required" eggplant:mapsTo="TypeObjectDefinition"/>
+		<xs:attribute name="Access" type="PropertyAccess" use="optional" default="ReadWrite"/>
+		<xs:attribute name="EmptyValue" type="xs:string" use="optional"/>
+		<xs:attribute name="DefaultValue" type="xs:string" use="optional"/>
+		<xs:attribute name="AllowEmpty" type="xs:boolean" use="optional" default="false" />
+	</xs:complexType>
+
+	<xs:complexType name="PropertyConstraint">
+		<xs:attribute name="Property" type="xs:string" use="required" />
+		<xs:attribute name="Value" type="xs:string" use="required" />
+		<xs:attribute name="EmptyValueOnRemove" type="xs:boolean" use="optional" default="true" />
+	</xs:complexType>
+
+	<xs:simpleType name="PropertyAccess">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ReadWrite"/>
+			<xs:enumeration value="ReadOnly"/>
+			<xs:enumeration value="ReadWriteDetached"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- Queries -->
+	<xs:complexType name="Query" eggplant:mapsTo="QueryDefinition">
+		<xs:sequence minOccurs="0">
+			<xs:element name="Parameters">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Parameter" maxOccurs="unbounded">
+							<xs:complexType eggplant:mapsTo="QueryParameter">
+								<xs:attribute name="Name" type="xs:string" use="required" />
+								<xs:attribute name="MapsTo" type="xs:string" use="optional" /><!--either-->
+								<xs:attribute name="Type" type="xs:string" use="optional" /><!--or-->
+								<xs:attribute name="AllowEmpty" type="xs:boolean" use="optional" default="false" />
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+
+				<xs:key name="_Parameter_Name">
+					<xs:selector xpath="Parameter"/>
+					<xs:field xpath="@Name"/>
+				</xs:key>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Name" type="xs:string" use="required" />
+		<xs:attribute name="Scope" type="QueryScope" use="required" />
+		<xs:attribute name="ReturnType" type="xs:string" use="optional" />
+	</xs:complexType>
+
+	<xs:simpleType name="QueryScope">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Global"/>
+			<xs:enumeration value="Local"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- Enum -->
+	<xs:simpleType name="QueryReturn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Nothing"/>
+			<xs:enumeration value="Value"/>
+			<xs:enumeration value="Array"/>
+			<xs:enumeration value="Reader"/>
+			<xs:enumeration value="ResultSet"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!--
+	<xs:complexType name="Constructor" mixed="true">
+		<xs:sequence>
+			<xs:element name="Parameter">
+				<xs:complexType>
+					<xs:attribute name="Name" type="xs:string" use="required" />
+					<xs:attribute name="MapsTo" type="xs:string" use="required" />
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	-->
+
+</xs:schema>

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="XsdExtensions"
+    targetNamespace="http://eggplant/providers/xml/mappings"
+    elementFormDefault="qualified"
+	attributeFormDefault="unqualified"
+    xmlns="http://eggplant/providers/xml/mappings"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+	<xs:attribute name="mapsTo" type="xs:string"/>
+</xs:schema>
