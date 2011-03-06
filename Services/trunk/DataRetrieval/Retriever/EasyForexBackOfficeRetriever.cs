@@ -24,7 +24,7 @@ namespace Easynet.Edge.Services.DataRetrieval.Retriever
 
 		//DataSet _dataFromBO;
 		DataTable _dataFromBO;
-		private EasyForexBackOfficeAPI.Marketing _easyForexBackOffice = null;
+		private EasyForexBackOfficeAPI2.Marketing _easyForexBackOffice = null;
 
 		/*=========================*/
 		#endregion  
@@ -101,16 +101,17 @@ namespace Easynet.Edge.Services.DataRetrieval.Retriever
 				return;
 			}
 
-			DataRow[] rows = dataFromBO.Select(GetConfigurationOptionsField("ValidateString"));
+			//DataRow[] rows = dataFromBO.Select(GetConfigurationOptionsField("ValidateString"));
 
 			//DataRow[] rows = dataFromBO.Tables[0].Select(GetConfigurationOptionsField("ValidateString"));
 
-			if (Convert.ToInt32(rows[0]["TotalHits"]) > 0)
-			{
-				return;
-			}
+            //if (Convert.ToInt32(rows[0]["TotalHits"]) > 0)
+            //{
+            //    return;
+            //}
 
-			throw new Exception("The data that Retrievered from EasyForex BackOffice is incorrect.");
+            //throw new Exception("The data that Retrievered from EasyForex BackOffice is incorrect.");
+            return;
 		}
 
 		/// <summary>
@@ -119,9 +120,9 @@ namespace Easynet.Edge.Services.DataRetrieval.Retriever
 		/// <param name="user">Account name (for example "Amiry")</param>
 		/// <param name="password">Password (for example "wretg2gad")</param>
 		/// <returns>Easyforex API access class</returns>
-		private EasyForexBackOfficeAPI.AuthHeader InitBOAccess(string user, string password)
+		private EasyForexBackOfficeAPI2.AuthHeader InitBOAccess(string user, string password)
 		{
-			EasyForexBackOfficeAPI.AuthHeader accessAccount = new EasyForexBackOfficeAPI.AuthHeader();
+			EasyForexBackOfficeAPI2.AuthHeader accessAccount = new EasyForexBackOfficeAPI2.AuthHeader();
 			accessAccount.Password = password;
 			accessAccount.Username = user;
 			return accessAccount;
@@ -135,7 +136,7 @@ namespace Easynet.Edge.Services.DataRetrieval.Retriever
 		{
 			string userName = GetConfigurationOptionsField("User");
 			// Init BackOffice object		
-			_easyForexBackOffice = new EasyForexBackOfficeAPI.Marketing();
+			_easyForexBackOffice = new EasyForexBackOfficeAPI2.Marketing();
 			_easyForexBackOffice.Timeout = 10 * 60 * 1000; // 10 minutes.
 
 			// Init access data to easy forex.
@@ -151,7 +152,9 @@ namespace Easynet.Edge.Services.DataRetrieval.Retriever
 				{
 					//tempDataTable = _easyForexBackOffice.GetCampaignStatistics(1, 1000000, _requiredDay, _requiredDay.AddDays(1).AddTicks(-1)).Tables[0];
 					//tempDataTable = _easyForexBackOffice.GetCampaignStatisticsNEW(1, 1000000, _requiredDay, _requiredDay.AddDays(1).AddTicks(-1)).Tables[0];
-					_dataFromBO = _easyForexBackOffice.GetCampaignStatisticsNEW(1, 1000000, _requiredDay, _requiredDay.AddDays(1).AddTicks(-1)).Tables[0];
+					//_dataFromBO = _easyForexBackOffice.GetCampaignStatisticsNEW(1, 1000000, _requiredDay, _requiredDay.AddDays(1).AddTicks(-1)).Tables[0];
+                    _dataFromBO = _easyForexBackOffice.GetGatewayStatistics(1, 1000000, _requiredDay, _requiredDay.AddDays(1).AddTicks(-1)).Tables[0];
+                    
 				}
 				catch (Exception ex)
 				{
