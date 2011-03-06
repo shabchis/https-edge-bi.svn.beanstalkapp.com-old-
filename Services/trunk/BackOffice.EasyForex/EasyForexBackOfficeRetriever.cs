@@ -33,7 +33,7 @@ namespace Easynet.Edge.Services.BackOffice.EasyForex
 	
 		private ArrayList _errorDates = new ArrayList();
 		private DateTime _requiredDay = DateTime.Today; 
-		private EasyForexBackOfficeAPI.Marketing _easyForexBackOffice = null;
+		private EasyForexBackOfficeAPI2.Marketing _easyForexBackOffice = null;
 
 		/*=========================*/
         #endregion                
@@ -87,7 +87,7 @@ namespace Easynet.Edge.Services.BackOffice.EasyForex
 		private void Retrieve(string userName, string password, DataSet dataFromBO)
 		{
 			// Init BackOffice object		
-			_easyForexBackOffice = new EasyForexBackOfficeAPI.Marketing();
+			_easyForexBackOffice = new EasyForexBackOfficeAPI2.Marketing();
 			_easyForexBackOffice.Timeout = 10 * 60 * 1000; // 10 minutes.
 
 			// Init access data to easy forex.
@@ -102,7 +102,8 @@ namespace Easynet.Edge.Services.BackOffice.EasyForex
 				try
 				{
 					//tempDataTable = _easyForexBackOffice.GetCampaignStatistics(1, 1000000, _requiredDay, _requiredDay.AddDays(1).AddTicks(-1)).Tables[0];
-					tempDataTable = _easyForexBackOffice.GetCampaignStatisticsNEW(1, 1000000, _requiredDay, _requiredDay.AddDays(1).AddTicks(-1)).Tables[0];					
+					//tempDataTable = _easyForexBackOffice.GetCampaignStatisticsNEW(1, 1000000, _requiredDay, _requiredDay.AddDays(1).AddTicks(-1)).Tables[0];
+					tempDataTable = _easyForexBackOffice.GetGatewayStatistics(1, 1000000, _requiredDay, _requiredDay.AddDays(1).AddTicks(-1)).Tables[0];
 				}
 				catch (Exception ex)
 				{
@@ -125,9 +126,9 @@ namespace Easynet.Edge.Services.BackOffice.EasyForex
 		/// <param name="user">Account name (for example "Amiry")</param>
 		/// <param name="password">Password (for example "wretg2gad")</param>
 		/// <returns>Easyforex API access class</returns>
-		private EasyForexBackOfficeAPI.AuthHeader InitBOAccess(string user, string password)
+		private EasyForexBackOfficeAPI2.AuthHeader InitBOAccess(string user, string password)
 		{
-			EasyForexBackOfficeAPI.AuthHeader accessAccount = new EasyForexBackOfficeAPI.AuthHeader();
+			EasyForexBackOfficeAPI2.AuthHeader accessAccount = new EasyForexBackOfficeAPI2.AuthHeader();
 			accessAccount.Password = password;
 			accessAccount.Username = user;
 			return accessAccount;
