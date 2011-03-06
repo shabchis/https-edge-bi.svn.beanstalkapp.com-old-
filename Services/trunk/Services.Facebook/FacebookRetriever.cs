@@ -6,7 +6,7 @@ using Easynet.Edge.Core.Services;
 using System.ServiceModel;
 using myFacebook = Facebook ;
 using Easynet.Edge.Services.DataRetrieval.Retriever;
-using Excel =  Microsoft.Office.Interop.Excel;
+//using Excel =  Microsoft.Office.Interop.Excel;
 using System.Xml; 
 
 namespace Easynet.Edge.Services.Facebook
@@ -213,6 +213,8 @@ namespace Easynet.Edge.Services.Facebook
                                             {
                                                 if (rawDataFields.Fields[innerACreativeChilds.Name].Enabled == true)
                                                 {
+                                                    //Bug Fix - "Cannot get Adgroup Name"(Due to Facebook API Changes 06.03.2011 ) 
+                                                    if (!(rawDataFields.Fields[innerACreativeChilds.Name].Key.ToString().Equals("name")))
                                                     newRow._Values.Add(rawDataFields.Fields[innerACreativeChilds.Name].Value, innerACreativeChilds.InnerText);
                                                 }
                                             }
