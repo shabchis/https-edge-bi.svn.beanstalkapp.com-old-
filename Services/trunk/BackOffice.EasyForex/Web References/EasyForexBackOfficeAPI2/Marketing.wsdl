@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.easy-forex.com" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://www.easy-forex.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.easy-forex.com">
+      <s:element name="GetCampaignStatisticsNEW">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="startGid" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="finishGid" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="fromDateTime" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="toDateTime" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCampaignStatisticsNEWResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCampaignStatisticsNEWResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AuthHeader" type="tns:AuthHeader" />
+      <s:complexType name="AuthHeader">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="GetGatewayStatistics">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="startGid" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="finishGid" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="fromDateTime" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="toDateTime" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetGatewayStatisticsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetGatewayStatisticsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCampaignStatistics">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="startGid" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="finishGid" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="fromDateTime" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="toDateTime" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCampaignStatisticsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCampaignStatisticsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetCampaignStatisticsNEWSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCampaignStatisticsNEW" />
+  </wsdl:message>
+  <wsdl:message name="GetCampaignStatisticsNEWSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCampaignStatisticsNEWResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCampaignStatisticsNEWAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetGatewayStatisticsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetGatewayStatistics" />
+  </wsdl:message>
+  <wsdl:message name="GetGatewayStatisticsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetGatewayStatisticsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetGatewayStatisticsAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetCampaignStatisticsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCampaignStatistics" />
+  </wsdl:message>
+  <wsdl:message name="GetCampaignStatisticsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCampaignStatisticsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCampaignStatisticsAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
+  <wsdl:portType name="MarketingSoap">
+    <wsdl:operation name="GetCampaignStatisticsNEW">
+      <wsdl:input message="tns:GetCampaignStatisticsNEWSoapIn" />
+      <wsdl:output message="tns:GetCampaignStatisticsNEWSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGatewayStatistics">
+      <wsdl:input message="tns:GetGatewayStatisticsSoapIn" />
+      <wsdl:output message="tns:GetGatewayStatisticsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCampaignStatistics">
+      <wsdl:input message="tns:GetCampaignStatisticsSoapIn" />
+      <wsdl:output message="tns:GetCampaignStatisticsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MarketingSoap" type="tns:MarketingSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetCampaignStatisticsNEW">
+      <soap:operation soapAction="http://www.easy-forex.com/GetCampaignStatisticsNEW" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetCampaignStatisticsNEWAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGatewayStatistics">
+      <soap:operation soapAction="http://www.easy-forex.com/GetGatewayStatistics" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetGatewayStatisticsAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCampaignStatistics">
+      <soap:operation soapAction="http://www.easy-forex.com/GetCampaignStatistics" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetCampaignStatisticsAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="MarketingSoap12" type="tns:MarketingSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetCampaignStatisticsNEW">
+      <soap12:operation soapAction="http://www.easy-forex.com/GetCampaignStatisticsNEW" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetCampaignStatisticsNEWAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGatewayStatistics">
+      <soap12:operation soapAction="http://www.easy-forex.com/GetGatewayStatistics" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetGatewayStatisticsAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCampaignStatistics">
+      <soap12:operation soapAction="http://www.easy-forex.com/GetCampaignStatistics" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetCampaignStatisticsAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Marketing">
+    <wsdl:port name="MarketingSoap" binding="tns:MarketingSoap">
+      <soap:address location="https://classic.prp1-ezfx.com/BackOffice/API/Marketing.asmx" />
+    </wsdl:port>
+    <wsdl:port name="MarketingSoap12" binding="tns:MarketingSoap12">
+      <soap12:address location="https://classic.prp1-ezfx.com/BackOffice/API/Marketing.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

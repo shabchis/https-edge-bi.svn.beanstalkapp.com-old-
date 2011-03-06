@@ -57,6 +57,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Web References\EasyForexBackOfficeAPI2\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="Web References\EasyForexBackOfficeAPI\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -95,12 +100,28 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>Edge_Services_BackOffice_EasyForex_EasyForexBackOffice_Marketing</CachedSettingsPropName>
     </WebReferenceUrl>
+    <WebReferenceUrl Include="https://classic.prp1-ezfx.com/BackOffice/API/Marketing.asmx%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\EasyForexBackOfficeAPI2\</RelPath>
+      <UpdateFromURL>https://classic.prp1-ezfx.com/BackOffice/API/Marketing.asmx%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Edge_Services_BackOffice_EasyForex_com_prp1_ezfx_classic_Marketing</CachedSettingsPropName>
+    </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\EasyForexBackOfficeAPI2\Marketing.wsdl" />
+    <None Include="Web References\EasyForexBackOfficeAPI2\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Web References\EasyForexBackOfficeAPI\Marketing.wsdl" />
     <None Include="Web References\EasyForexBackOfficeAPI\Reference.map">
