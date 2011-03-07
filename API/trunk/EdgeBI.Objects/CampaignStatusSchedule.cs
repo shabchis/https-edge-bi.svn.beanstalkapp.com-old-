@@ -136,8 +136,8 @@ namespace EdgeBI.Objects
 			SqlConnection sqlConnection = new SqlConnection(DataManager.ConnectionString);
 			sqlConnection.Open();
 			sqlTransaction = sqlConnection.BeginTransaction("Schedule");
-			command = "DELETE FROM Facebook_Campaign_StatusByTime";
-			MapperUtility.SaveOrRemoveSimpleObject<CampaignStatusSchedule>(command, System.Data.CommandType.Text, SqlOperation.Delete, null, sqlConnection, sqlTransaction);
+			command = "DELETE FROM Facebook_Campaign_StatusByTime WHERE Campaign_GK=@Campaign_GK:int";
+			MapperUtility.SaveOrRemoveSimpleObject<CampaignStatusSchedule>(command, System.Data.CommandType.Text, SqlOperation.Delete, campaignStatusSchedules[0], sqlConnection, sqlTransaction);
 			command = @"CampaignStatusSchedule_Insert(@Action:Int,@Account_ID:int,
            @Campaign_GK:int,
            @Channel_ID:int,

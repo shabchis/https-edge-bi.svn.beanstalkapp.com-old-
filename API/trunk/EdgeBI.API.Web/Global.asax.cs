@@ -48,7 +48,7 @@ namespace JsonValueSample
 
 				}
 
-				module m2=new module() { AssemblyQualifiedName="EdgeBI.API.Web.Facebook,EdgeBI.API.Web.Facebook",RoutePrefix = "facebook" };
+				module m2=new module() { AssemblyQualifiedName="EdgeBI.API.Web.Facebook,EdgeBI.API.Web.EXT",RoutePrefix = "ext" };
 				db.Store(m2);
 				try
 				{
