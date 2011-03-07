@@ -8,10 +8,12 @@ namespace MyScheduler
 	public class Profile
 	{
 		public int ID;
-		public int ProfileID;
-		public TimeSpan MaxDevitation;
 		public string Name;
+		public Dictionary<string,object> Settings;
+		//public int ProfileID;
+		
+		
 
-		public List<ServiceConfigration> Services;
+		
 	}
 }
