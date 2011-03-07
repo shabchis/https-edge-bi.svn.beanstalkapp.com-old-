@@ -16,7 +16,7 @@ namespace EdgeBI.API.Web
 	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
 	public class Facebook
 	{
-		[WebGet(UriTemplate = "campaigns/accounts/{accountID}/channels/{channelID}")]
+		[WebGet(UriTemplate = "accounts/{accountID}/campaigns/channels/{channelID}")]
 		public List<Campaign> GetCampaignsByAccountIdAndChannel(string accountID, string channelID)
 		{
 			List<Campaign> campaigns = new List<Campaign>();

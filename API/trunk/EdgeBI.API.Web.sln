@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewRestApiTester", "NewRest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeBI.API.Web.EdgeApiTools", "EdgeBI.API.Web.EdgeApiTools\EdgeBI.API.Web.EdgeApiTools.csproj", "{7DF2C6B8-C179-4B88-821F-4AA90375BEDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeBI.API.Web.Facebook", "EdgeBI.API.Web.Facebook\EdgeBI.API.Web.Facebook.csproj", "{102715EC-9688-474A-9B74-39C5F86AB85C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeBI.API.Web.EXT", "EdgeBI.API.Web.Facebook\EdgeBI.API.Web.EXT.csproj", "{102715EC-9688-474A-9B74-39C5F86AB85C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\Core\Core\Core.csproj", "{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}"
 EndProject

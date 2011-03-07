@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EdgeBI.API.Web</RootNamespace>
-    <AssemblyName>EdgeBI.API.Web.Facebook</AssemblyName>
+    <AssemblyName>EdgeBI.API.Web.EXT</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
