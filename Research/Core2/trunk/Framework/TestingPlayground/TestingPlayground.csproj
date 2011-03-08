@@ -50,9 +50,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Edge.Core\Edge.Core.csproj">
+    <ProjectReference Include="..\Edge.Core\Eggplant.csproj">
       <Project>{F26C4E12-6598-4A18-AA39-88E040A09EC8}</Project>
-      <Name>Edge.Core</Name>
+      <Name>Eggplant</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
