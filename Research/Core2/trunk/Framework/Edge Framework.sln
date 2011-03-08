@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edge.Core", "Edge.Core\Edge.Core.csproj", "{F26C4E12-6598-4A18-AA39-88E040A09EC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eggplant", "Eggplant\Eggplant.csproj", "{F26C4E12-6598-4A18-AA39-88E040A09EC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingPlayground", "TestingPlayground\TestingPlayground.csproj", "{F0311862-24CB-4A1C-BD68-6270CAD6BE44}"
 EndProject
