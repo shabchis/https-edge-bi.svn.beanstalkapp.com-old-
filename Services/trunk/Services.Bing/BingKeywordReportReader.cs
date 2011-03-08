@@ -107,7 +107,7 @@ namespace Easynet.Edge.Services.Bing
                         switch (nameNode)
                         {
                             case "AccountName":
-                                objPpcData.AccountID = GetAccountIDFromName(valueNode);
+                                objPpcData.AccountID = GetAccountIDByName(valueNode);
                                 break;
                             case "AdDistribution":
                                 objPpcData.AdDistribution = valueNode;
@@ -193,9 +193,8 @@ namespace Easynet.Edge.Services.Bing
 
         }
 
-        private int GetAccountIDFromName(string accoutName)
+        private int GetAccountIDByName(string accoutName)
         {
-            return 10001;
             try
             {
                 int accountId = 0;
