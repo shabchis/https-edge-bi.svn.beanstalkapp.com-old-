@@ -23,35 +23,7 @@ namespace EdgeBI.Data.Pipeline
     {
 
         public static string _rootPath;
-        //public static string GetFileName(ServicesType type)
-        //{
-        //    string rootFolder = AppSettings.Get(typeof(FilesManager), "RootFolder");
-        //    switch (type)
-        //    {
-        //        case ServicesType.Creative:
-        //            return Enum.GetName(typeof(ServicesType),type) + ".zip";
-        //            break;
-        //        case ServicesType.Adwords:
-        //        case ServicesType.Analytics:
-        //        case ServicesType.Content:
-        //        case ServicesType.Status:
-        //            return Enum.GetName(typeof(ServicesType),type) + ".xml";
-        //            break;
-        //        default:
-        //            return Enum.GetName(typeof(ServicesType), ServicesType.None) + ".txt";
-        //            break;
-        //    }
 
-        //}
-        //public static string GetDeliveryFilePath(string RemoteFileServerHost, int accountid, int deliveryid, int channel, string servicetype,string fileName)
-        //{
-        //    if (accountid <= 0 && deliveryid <= 0 && channel == Channels.None && servicetype == ServicesType.None)
-        //        throw new Exception("Function 'SetDeliveryFilesPath' missing one of the required parameter");
-
-        //    if (!CheckHost(RemoteFileServerHost))
-        //        throw new Exception("The remote file host not available");
-        //    return RemoteFileServerHost + "\\" + GetAccountName(accountid) + "\\" + Enum.GetName(typeof(Channels), channel) + "\\" + DateTime.Today.Year.ToString() + "\\" + DateTime.Today.Month.ToString() + "\\" + DateTime.Today.Day.ToString() + "\\" + deliveryid.ToString() ;
-        //}
 
         public static string GetDeliveryFilePath(string targetDir, DateTime targetDate, int deliveryID, string fileName, int? accountID)
         {
@@ -68,20 +40,7 @@ namespace EdgeBI.Data.Pipeline
                 );
             return path;
         }
-
-        private static string GetAccountName(int accountid)
-        {
-            //TODO: Get connection from Configuration
-            SqlConnection con = new SqlConnection("Data Source=console.edge-bi.com;Initial Catalog=Seperia_DWH;User ID=edge;Password=edgebi!");
-            con.Open();
-            SqlCommand command;
-            SqlDataReader reader;
-            command = new SqlCommand("SELECT [Account_Name] FROM [User_GUI_Account] WHERE [Account_ID] = " + accountid, con);
-            reader = command.ExecuteReader();
-            reader.Read();
-            return Convert.ToString(reader["Account_Name"]);
-        }
-
+        
         private static FileInfo SetDeliveryFilePath(string filepath)
         {
             
@@ -99,21 +58,6 @@ namespace EdgeBI.Data.Pipeline
                 throw ex;
             }
         }
-        //private static bool CheckHost(string uri)
-        //{
-        //    WebRequest webRequest = WebRequest.Create(uri);  
-        //    WebResponse webResponse;
-        //    try 
-        //    {
-        //      webResponse = webRequest.GetResponse();
-        //    }
-        //    catch //If exception thrown then couldn't get response from address
-        //    {
-        //      return false;
-        //    } 
-        //    return true;
-        //}
-
 
         public static void DownloadFile(string downloadUrl, string FilePath)
         {
