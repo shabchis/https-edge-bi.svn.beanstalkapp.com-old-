@@ -311,8 +311,8 @@ namespace Easynet.Edge.Services.Bing
                 submitRequest.DeveloperToken = devToken;
                 submitRequest.UserName = username;
                 submitRequest.Password = password;
-                submitRequest.CustomerId = customerid;//"770585";
-                submitRequest.CustomerAccountId = customeraccountid;// "770585";
+                submitRequest.CustomerId = customerid;
+                submitRequest.CustomerAccountId = customeraccountid;
                 submitRequest.ReportRequest = request;
 
                 // Set the start date for the report to one month before today.
