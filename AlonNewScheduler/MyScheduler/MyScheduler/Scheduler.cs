@@ -5,6 +5,8 @@ using System.Text;
 using Easynet.Edge.Core;
 using Easynet.Edge.Core.Configuration;
 using MyScheduler.Objects;
+using Easynet.Edge.Core.Data;
+using System.Data.SqlClient;
 
 namespace MyScheduler
 {
@@ -21,7 +23,7 @@ namespace MyScheduler
 		private const int neededTimeLine = 120;
 		private double oddsForAverageExecution = 0.8;
 		private double oddsForMaxExecution = 1;
-		private const double wantedOdds = 0.6;
+		private const int Percentile = 80;
 
 
 		public Scheduler(bool getServicesFromConfigFile)
@@ -206,8 +208,9 @@ namespace MyScheduler
 					ActiveServiceElement activeServiceElement = new ActiveServiceElement(accountService);
 
 					ServiceConfigration serviceConfiguration = new ServiceConfigration();
-
+					
 					serviceConfiguration.Name = string.Format("{0}-{1}", account.ID, serviceUse.Name);
+					serviceConfiguration.ID = GetServceConfigruationIDByName(serviceConfiguration.Name);
 					serviceConfiguration.MaxConcurrent = activeServiceElement.MaxInstances;
 					serviceConfiguration.MaxCuncurrentPerProfile = activeServiceElement.MaxInstancesPerAccount;
 					
@@ -271,6 +274,30 @@ namespace MyScheduler
 
 		}
 
+		private int GetServceConfigruationIDByName(string serviceConfigurationName)
+		{
+			int serviceConfigration=0;
+			using (DataManager.Current.OpenConnection())
+			{
+				using (SqlCommand sqlCommand=DataManager.CreateCommand("ServiceConfigration_GetIDByName(@serviceConfigurationName:NvarChar(255))",System.Data.CommandType.StoredProcedure))
+				{
+					sqlCommand.Parameters["@serviceConfigurationName"].Value = serviceConfigurationName.Trim();
+					SqlDataReader reader = sqlCommand.ExecuteReader();
+					if (reader.HasRows)
+					{
+						reader.Read();
+						Console.WriteLine(reader[0]);
+						serviceConfigration = System.Convert.ToInt32(reader[0]);
+
+					}
+					//serviceConfigration = System.Convert.ToInt32(sqlCommand.ExecuteScalar());
+				}
+
+				
+			}
+			return serviceConfigration;
+		}
+
 		private void ScheduleService(ServiceInstance serviceInstance)
 		{
 			if (serviceInstance.ActualDeviation > serviceInstance.MaxDeviationAfter)  // check if the waiting time is bigger then max waiting time.
@@ -309,7 +336,7 @@ namespace MyScheduler
 			TimeSpan suitableHour = FindSuitableSchedulingHour(service.SchedulingRules);
 			double proportion = 0;
 			int executionTimeInMin = 0;
-			executionTimeInMin = CalculateExecutionTimeInMin(oddsForMaxExecution, oddsForAverageExecution, service.MaxExecutionTime.TotalMinutes, service.AverageExecutionTime.TotalMinutes, wantedOdds, ref proportion);
+			executionTimeInMin = GetAverageExecutionTime(service.ID);
 			//TODO: CHECK WITH DORON LEAKING YEARS MONTH DAY FOR THE NEXT ROW
 			DateTime baseStartTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, suitableHour.Hours, suitableHour.Minutes, 0);
 			DateTime baseEndTime = baseStartTime.AddMinutes(executionTimeInMin);
@@ -328,7 +355,7 @@ namespace MyScheduler
 						scheduleInfo = new ServiceInstance();
 						scheduleInfo.StartTime = calculatedStartTime;
 						scheduleInfo.EndTime = calculatedEndTime;
-						scheduleInfo.Odds = wantedOdds;
+						scheduleInfo.Odds = Percentile;
 						scheduleInfo.ActualDeviation = calculatedStartTime.Subtract(baseStartTime);
 						scheduleInfo.Priority = service.priority;
 						scheduleInfo.ConfigurationID = service.ConfigurationID;
@@ -344,9 +371,7 @@ namespace MyScheduler
 						found = true;
 					}
 					else
-					{
-
-						executionTimeInMin = CalculateExecutionTimeInMin(oddsForMaxExecution, oddsForAverageExecution, service.MaxExecutionTime.TotalMinutes, service.AverageExecutionTime.TotalMinutes, wantedOdds, ref proportion);
+					{					
 						//get the next first place of ending service(next start time
 						GetNewStartEndTime(servicesWithSameProfile, ref calculatedStartTime, ref calculatedEndTime, executionTimeInMin);
 
@@ -356,10 +381,6 @@ namespace MyScheduler
 				}
 				else
 				{
-
-
-					executionTimeInMin = CalculateExecutionTimeInMin(oddsForMaxExecution, oddsForAverageExecution, service.MaxExecutionTime.TotalMinutes, service.AverageExecutionTime.TotalMinutes, wantedOdds, ref proportion);
-
 					GetNewStartEndTime(servicesWithSameConfiguration, ref calculatedStartTime, ref calculatedEndTime, executionTimeInMin);
 					////remove unfree time from servicePerConfiguration and servicePerProfile
 					RemoveBusyTime(ref servicesWithSameConfiguration, ref servicesWithSameProfile, calculatedStartTime);
@@ -369,23 +390,21 @@ namespace MyScheduler
 
 		}
 
-		private int CalculateExecutionTimeInMin(double oddsForMaxExecution, double oddsForAverageExecution, double maxExecutionTimeInMin, double averageExecutionTimeInMin, double wantedOdds, ref  double proportion)
+		private int GetAverageExecutionTime(int configurationID)
 		{
+			int averageExacutionTime;
+			using (DataManager.Current.OpenConnection())
+			{
+				using (SqlCommand sqlCommand=DataManager.CreateCommand("ServiceConfiguration_GetExecutionTime(@ConfigID:Int,@Percentile:Int)",System.Data.CommandType.StoredProcedure))
+				{
+					sqlCommand.Parameters["@ConfigID"].Value = configurationID;
+					sqlCommand.Parameters["@Percentile"].Value = configurationID;
+					averageExacutionTime = System.Convert.ToInt32(sqlCommand.ExecuteScalar());
+				}
+				
+			}
 
-			//Alon
-			int result;
-			//if (proportion != 0)
-			//    proportion = proportion / oddsForAverageExecution;
-			//else
-			//    proportion = wantedOdds / oddsForAverageExecution;
-			//double executionTime;
-			//executionTime = proportion * averageExecutionTimeInMin; 
-
-
-
-			return result = Convert.ToInt32(averageExecutionTimeInMin);
-
-
+			return averageExacutionTime;
 
 		}
 
@@ -418,7 +437,7 @@ namespace MyScheduler
 			KeyValuePair<string, ServiceInstance>? prev = null;
 			foreach (KeyValuePair<string, ServiceInstance> scheduled in _scheduledServices.OrderBy(s => s.Value.StartTime))
 			{
-				Console.WriteLine("{0}\t{1:hh:mm}\t{2:hh:mm}\t{3:hh\\:mm}\t{4}\t{5}",
+				Console.WriteLine("{0}\t{1:HH:mm}\t{2:HH:mm}\t{3:hh\\:mm}\t{4}\t{5}",
 					scheduled.Value.ServiceName,
 					scheduled.Value.StartTime,
 					scheduled.Value.EndTime,
