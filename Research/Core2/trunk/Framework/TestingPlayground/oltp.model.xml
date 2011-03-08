@@ -15,18 +15,18 @@
 			</Properties>
 
 			<Queries>
-				<Query Scope="Global" Name="GetByID" ShortcutReturns="Value">
+				<Query Scope="Global" Name="GetByID">
 					<Parameters>
 						<Parameter Name="id" MapsTo="ID"/>
 					</Parameters>
 				</Query>
-				<Query Scope="Global" Name="GetByName" ShortcutReturns="Value">
+				<Query Scope="Global" Name="GetByName">
 					<Parameters>
 						<Parameter Name="name" MapsTo="Name"/>
 					</Parameters>
 				</Query>
 				<Query Scope="Global" Name="GetAll"/>
-				<Query Scope="Global" Name="GetByUserPermissions" ShortcutReturns="Array">
+				<Query Scope="Global" Name="GetByUserPermissions">
 					<Parameters>
 						<Parameter Name="user" Type="User" AllowEmpty="false"/>
 					</Parameters>
