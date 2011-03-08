@@ -10,6 +10,7 @@ using EdgeBI.Data.Pipeline;
 using System.Data.SqlClient;
 using Easynet.Edge.Core.Data;
 using System.Data;
+using Easynet.Edge.Services.Bing.ReportingService;
 
 
 namespace Easynet.Edge.Services.Bing
@@ -120,7 +121,7 @@ namespace Easynet.Edge.Services.Bing
                                 objPpcData.AdGroupName = valueNode;
                                 break;
                             case "AdType":
-                                objPpcData.AdType = Convert.ToInt32(valueNode);
+                                objPpcData.AdType = (int)Enum.Parse(typeof(AdVariation), valueNode.Substring(0, valueNode.IndexOf(" ad")), true);// Convert.ToInt32(valueNode);
                                 break;
                             case "CampaignName":
                                 objPpcData.CampaignName = valueNode;
