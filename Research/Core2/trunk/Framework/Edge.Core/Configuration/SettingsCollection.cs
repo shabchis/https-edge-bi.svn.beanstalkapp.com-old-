@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using System.Runtime.Serialization;
 
-namespace Edge.Core.Configuration
+namespace Eggplant.Configuration
 {
 	/// <summary>
 	/// A collection of string key/values that can be serialized to- or deserialized from

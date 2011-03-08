@@ -8,7 +8,7 @@ using System.Security;
 using System.Security.Principal;
 
 
-namespace Edge.Core.Security.Encryption
+namespace Eggplant.Security.Encryption
 {
 	public class Encryptor
 	{
@@ -17,7 +17,7 @@ namespace Edge.Core.Security.Encryption
 		public Encryptor(string key)
 		{
 			_symmetricEncryptor = new Symmetric(Symmetric.Provider.Rijndael, true);
-			_symmetricEncryptor.Key = new Edge.Core.Security.Encryption.Data(key);
+			_symmetricEncryptor.Key = new Eggplant.Security.Encryption.Data(key);
 		}
 
 		/// <summary>
@@ -28,8 +28,8 @@ namespace Edge.Core.Security.Encryption
 		/// <returns></returns>
 		public string Encrypt(string str)
 		{
-			Edge.Core.Security.Encryption.Data raw = new Edge.Core.Security.Encryption.Data(str);
-			Edge.Core.Security.Encryption.Data encrypted = _symmetricEncryptor.Encrypt(raw);
+			Eggplant.Security.Encryption.Data raw = new Eggplant.Security.Encryption.Data(str);
+			Eggplant.Security.Encryption.Data encrypted = _symmetricEncryptor.Encrypt(raw);
 
 			return encrypted.ToHex();
 		}
@@ -41,10 +41,10 @@ namespace Edge.Core.Security.Encryption
 		/// <returns></returns>
 		public string Decrypt(string encodedStr)
 		{
-			Edge.Core.Security.Encryption.Data encrypted = new Edge.Core.Security.Encryption.Data();
+			Eggplant.Security.Encryption.Data encrypted = new Eggplant.Security.Encryption.Data();
 			encrypted.Hex = encodedStr;
 
-			Edge.Core.Security.Encryption.Data decrypted = _symmetricEncryptor.Decrypt(encrypted);
+			Eggplant.Security.Encryption.Data decrypted = _symmetricEncryptor.Decrypt(encrypted);
 			return decrypted.ToString();
 		}
 	}
@@ -65,7 +65,7 @@ namespace Edge.Core.Security.Encryption
 //   http://www.codinghorror.com/
 //
 // [Ported from VB by Doron Assayas]
-namespace Edge.Core.Security.Encryption
+namespace Eggplant.Security.Encryption
 {
 	#region Hash
 

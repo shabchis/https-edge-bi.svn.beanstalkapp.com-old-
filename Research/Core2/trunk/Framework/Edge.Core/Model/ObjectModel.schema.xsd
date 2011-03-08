@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns="http://eggplant/schema"
-	xmlns:eggplant="http://eggplant/providers/xml/mappings"
-	targetNamespace="http://eggplant/schema"
+	xmlns="http://schemas.eggplant-framework.org/1.0/model"
+	xmlns:eggplant="http://schemas.eggplant-framework.org/1.0/providers/xml/mappings"
+	targetNamespace="http://schemas.eggplant-framework.org/1.0/model"
 	attributeFormDefault="unqualified"
 	elementFormDefault="qualified"
 	>
@@ -12,39 +12,45 @@
 	<!-- Types -->
 
 	<!-- General -->
-	<xs:element name="ObjectSchema">
-		<xs:complexType>
+	<xs:element name="ObjectModel">
+		<xs:complexType eggplant:mapsTo="ObjectModel">
 			<xs:sequence>
-				<xs:element name="ObjectSet" type="ObjectSet" minOccurs="1" maxOccurs="unbounded">
-					<xs:key name="_Object_Name">
-						<xs:selector xpath="Object"/>
-						<xs:field xpath="@Name"/>
-					</xs:key>
-					<xs:keyref name="_Object_BasedOn" refer="_Object_Name">
-						<xs:selector xpath="Object"/>
-						<xs:field xpath="@BasedOn"/>
-					</xs:keyref>
-				</xs:element>
-			</xs:sequence>
-		</xs:complexType>
-		<xs:key name="_ObjectSet_Namespace">
-			<xs:selector xpath="ObjectSet"/>
-			<xs:field xpath="@Namespace"/>
-		</xs:key>
-	</xs:element>
-
-	<xs:complexType name="ObjectSet">
-		<xs:sequence>
-			<xs:choice maxOccurs="unbounded">
 				<xs:element name="Object" type="Object" maxOccurs="unbounded"/>
-			</xs:choice>
-		</xs:sequence>
-		<xs:attribute name="Namespace" type="xs:string" use="required" />
-	</xs:complexType>
+			</xs:sequence>
+			<xs:attribute name="Namespace" type="xs:string" use="required" />
+			<eggplant:queryMappings>
+				<eggplant:map query="Load" xpath="/ObjectModel" />
+			</eggplant:queryMappings>
+		</xs:complexType>
+		<xs:key name="_Object_Name">
+			<xs:selector xpath="Object"/>
+			<xs:field xpath="@Name"/>
+		</xs:key>
+		<xs:keyref name="_Object_BasedOn" refer="_Object_Name">
+			<xs:selector xpath="Object"/>
+			<xs:field xpath="@BasedOn"/>
+		</xs:keyref>
+	</xs:element>
 
 	<!-- Object -->
 	<xs:complexType name="Object" eggplant:mapsTo="ObjectDefinition">
 		<xs:all>
+			<xs:element name="Generics" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Type" maxOccurs="unbounded">
+							<xs:complexType eggplant:mapsTo="GenericTypeParameter">
+								<xs:attribute name="Param" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+				<xs:key name="_GenericType_Param">
+					<xs:selector xpath="Type"/>
+					<xs:field xpath="@Param"/>
+				</xs:key>
+			</xs:element>
+
 			<xs:element name="Properties" minOccurs="1">
 				<xs:complexType>
 					<xs:sequence>

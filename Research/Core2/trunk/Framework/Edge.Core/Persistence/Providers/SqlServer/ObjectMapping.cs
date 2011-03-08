@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using Edge.Core.Schema;
-using Edge.Core.Schema.Configuration;
+using Eggplant.Model;
 
-namespace Edge.Core.Persistence.Providers.SqlServer
+namespace Eggplant.Persistence.Providers.SqlServer
 {
 	public class PersistenceConfiguration
 	{

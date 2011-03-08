@@ -2,7 +2,7 @@ using System;
 using System.Configuration;
 using System.Reflection;
 
-namespace Edge.Core.Configuration
+namespace Eggplant.Configuration
 {
 	/// <summary>
 	///	Provides easy access to solution configuration file (.config) settings.

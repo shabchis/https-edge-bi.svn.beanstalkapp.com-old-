@@ -5,9 +5,9 @@ using System.Text;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Threading;
-using Edge.Core.Persistence.Providers.SqlServer;
+using Eggplant.Model;
 
-namespace Edge.Core.Persistence
+namespace Eggplant.Persistence
 {
 	/// <summary>
 	/// Factory base class for persistence connections.
@@ -26,13 +26,13 @@ namespace Edge.Core.Persistence
 			set;
 		}
 
-		public ObjectSchema ObjectSchema
+		public ObjectModel Model
 		{
 			get;
 			set;
 		}
 
-		public PersistenceConfiguration ObjectMappings
+		public PersistenceConfiguration Mappings
 		{
 			get;
 			set;

@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Threading;
 
-namespace Edge.Core.Persistence
+namespace Eggplant.Persistence
 {
 	/// <summary>
 	/// Represents a connection with a persistence store.

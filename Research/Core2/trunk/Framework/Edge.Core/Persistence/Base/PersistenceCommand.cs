@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
 
-namespace Edge.Core.Persistence
+namespace Eggplant.Persistence
 {
 	public enum PersistenceCommandType
 	{

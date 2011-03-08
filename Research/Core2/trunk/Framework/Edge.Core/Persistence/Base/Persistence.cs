@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Threading;
 
-namespace Edge.Core.Persistence
+namespace Eggplant.Persistence
 {
 	/// <summary>
 	/// 
@@ -43,7 +43,7 @@ namespace Edge.Core.Persistence
 		#region Properties
 		/*=========================*/
 
-		public static PersistenceConnection Connection
+		public static PersistenceConnection Current
 		{
 			get
 			{

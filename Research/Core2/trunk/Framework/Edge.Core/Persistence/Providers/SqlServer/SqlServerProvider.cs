@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Data;
 using System.Reflection;
 
-namespace Edge.Core.Persistence.Providers.SqlServer
+namespace Eggplant.Persistence.Providers.SqlServer
 {
 	public class SqlServerProvider: PersistenceProvider
 	{
