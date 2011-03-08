@@ -85,8 +85,6 @@ namespace EdgeBI.Data.Pipeline.Objects
                       "@Impressions:bigint,@Clicks:bigint,@Ctr:float,@AverageCpc:float,@Spend:float,@AveragePosition:float,@Conversions:float,@ConversionRate:float,@Keyword:nvarchar(255),@KeywordId:bigint,@GregorianDate:datetime,@Matchtype:int,@Channel_id:int," +
                       "@Downloaded_date:datetime,@Day_code:int,@GatewayId:bigint,@CampaignGk:bigint,@AdgroupGk:bigint,@CreativeGk:bigint,@PPC_CreativeGk:bigint,@KeywordGk:bigint,@PPC_KeywordGk:bigint,@GatewayGk:bigint,@AdGroupId:bigint)";
             mappper.SaveOrRemoveSimpleObject<Delivery>(command, this);
-
-           //insert to database 
         }
 
     }
