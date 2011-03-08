@@ -22,7 +22,8 @@ namespace Services.Data.Pipeline
                 {
                     using (SqlCommand sqlCommand = DataManager.CreateCommand(Command, CommandType.StoredProcedure))
                     {
-                        sqlCommand.Parameters["@RETVAL"].Direction = ParameterDirection.Output;
+                        if (Command.Contains("@RETVAL"))
+                            sqlCommand.Parameters["@RETVAL"].Direction = ParameterDirection.Output;
                         foreach (FieldInfo fieldInfo in objectToInsert.GetType().GetFields())
                         {
                             if (Attribute.IsDefined(fieldInfo, typeof(FieldMapAttribute)))
@@ -38,7 +39,10 @@ namespace Services.Data.Pipeline
                             }
                         }
                         sqlCommand.ExecuteNonQuery();
-                        return (int)sqlCommand.Parameters["@RETVAL"].Value;
+                        if (sqlCommand.Parameters.Contains("@RETVAL"))
+                            return (int)sqlCommand.Parameters["@RETVAL"].Value;
+                        else
+                            return 0;
                     }
                 }
                 catch (Exception ex)
