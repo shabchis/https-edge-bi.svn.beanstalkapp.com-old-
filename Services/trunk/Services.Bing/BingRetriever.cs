@@ -45,7 +45,7 @@ namespace Easynet.Edge.Services.Bing
             delivery.DateCreated = DateTime.Now;
             delivery.DateModified = DateTime.Now;
             delivery.AccountID = Instance.AccountID;
-            delivery.CreatedByServiceInstanceID = Instance.InstanceID; //TODO: Instance.ParentInstance.InstanceID;
+            delivery.CreatedByServiceInstanceID =  Instance.ParentInstance.InstanceID;
             List<DeliveryFileStatus> handledStatus = new List<DeliveryFileStatus>();
             handledStatus.Add(new DeliveryFileStatus { State = eDeliveryFileState.New, ServiceInstanceID = 0});
             delivery.Files = new List<DeliveryFile>();
