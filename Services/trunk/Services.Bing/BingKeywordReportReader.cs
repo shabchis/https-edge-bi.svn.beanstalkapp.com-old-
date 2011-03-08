@@ -13,6 +13,7 @@ using System.Data;
 using Easynet.Edge.Services.Bing.ReportingService;
 
 
+
 namespace Easynet.Edge.Services.Bing
 {
     public class BingKeywordReportReader: RowReader<PpcDataUnit>
@@ -32,12 +33,9 @@ namespace Easynet.Edge.Services.Bing
         {
             _zipPathKeywordFile = zipPath[0];
             _zipPathAdFile = zipPath[1];
-            //TODO Get the file from zip
-            //_xmlPathKeywordFile = FilesManager.ZipFiles(_zipPathKeywordFile,"Keyword.xml",null);
-            //_xmlPathAdFile = FilesManager.ZipFiles(_zipPathAdFile,"Ad.xml",null);
 
-            _xmlPathKeywordFile = @"C:\tempbing\Accounts\1005\2011\03\01\21\1556480431.xml";
-            _xmlPathAdFile = @"C:\tempbing\Accounts\1005\2011\03\01\21\1556481035.xml";
+            _xmlPathKeywordFile = FilesManager.UnZipFiles(_zipPathKeywordFile, string.Empty, string.Empty, false);
+            _xmlPathAdFile = FilesManager.UnZipFiles(_zipPathAdFile, string.Empty, string.Empty, false);
             GetAdDictionary();
 
         }
