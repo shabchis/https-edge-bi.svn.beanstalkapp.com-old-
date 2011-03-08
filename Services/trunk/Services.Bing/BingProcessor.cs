@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Easynet.Edge.Core.Services;
 using System.ServiceModel;
-using Easynet.Edge.Core.Services;
 using Easynet.Edge.Core.Data.Proxy;
 using Easynet.Edge.Core.Workflow;
 using Easynet.Edge.Core.Data;
