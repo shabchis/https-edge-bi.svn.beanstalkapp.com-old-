@@ -56,7 +56,7 @@ namespace Easynet.Edge.Services.Bing
                     break;
             }
             string[] filesPath = new string[2];
-            for(int i=0;delivery.Files.Count >= i+1;i++) //  DeliveryFile df in delivery.Files)
+            for(int i=0;delivery.Files.Count >= i+1;i++) 
             {
                 Type dRederType = Type.GetType(delivery.Files[i].ReaderType);
                 if (dRederType == typeof(BingAdPerformanceReportReader))
@@ -64,8 +64,6 @@ namespace Easynet.Edge.Services.Bing
                 else if (dRederType == typeof(BingKeywordReportReader))
                     filesPath[0] = delivery.Files[i].FilePath;    
             }
-            //BingKeywordReportReader bingReader = new BingKeywordReportReader(df.FilePath);
-            //לבדוק שזה בינגdf.ReaderType
 
             using (RowReader<PpcDataUnit> reader = (RowReader<PpcDataUnit>)Activator.CreateInstance(objType, new object[]{filesPath}))
             {
