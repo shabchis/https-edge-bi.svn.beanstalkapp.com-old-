@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Edge.Core.Persistence
+namespace Eggplant.Persistence
 {
 	/// <summary>
 	/// Monitors and switches between active connections.

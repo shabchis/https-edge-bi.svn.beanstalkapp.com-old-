@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
 
-namespace Edge.Core.Persistence.Providers.SqlServer
+namespace Eggplant.Persistence.Providers.SqlServer
 {
 	public class SqlServerConnection : PersistenceConnection
 	{
