@@ -104,7 +104,6 @@ namespace Services.Data.Pipeline
                 {
                     DeliveryFile df = new DeliveryFile();
                     if (!reader["FileID"].Equals(System.DBNull.Value)) df.FileID = (int)reader["FileID"];
-                    //if (!reader["AccountID"].Equals(System.DBNull.Value)) df.AccountID = (int)reader["AccountID"];
                     if (!reader["DeliveryID"].Equals(System.DBNull.Value)) df.DeliveryID = (int)reader["DeliveryID"];
                     if (!reader["FileName"].Equals(System.DBNull.Value)) df.FileName = (string)reader["FileName"];
                     if (!reader["FilePath"].Equals(System.DBNull.Value)) df.FilePath = (string)reader["FilePath"];
