@@ -121,9 +121,9 @@ namespace Easynet.Edge.Services.Bing
             // Specify the filter for the report. This example requests 
             // only search ads that were displayed in the United States to be in 
             // the report.
-            request.Filter = new ReportingService.AdPerformanceReportFilter();
-            request.Filter.AdDistribution = ReportingService.AdDistributionReportFilter.Search;
-            request.Filter.LanguageAndRegion = ReportingService.LanguageAndRegionReportFilter.UnitedStates;
+            //request.Filter = new ReportingService.AdPerformanceReportFilter();
+            //request.Filter.AdDistribution = ReportingService.AdDistributionReportFilter.Search;
+            //request.Filter.LanguageAndRegion = ReportingService.LanguageAndRegionReportFilter.UnitedStates;
 
             // Create and initialize the ReportingServiceClient object.
             ReportingService.ReportingServiceClient service = new ReportingService.ReportingServiceClient();
@@ -295,9 +295,9 @@ namespace Easynet.Edge.Services.Bing
             // Specify the filter for the report. This example requests 
             // only search ads that were displayed in the United States to be in 
             // the report.
-            request.Filter = new ReportingService.KeywordPerformanceReportFilter();
-            request.Filter.AdDistribution = ReportingService.AdDistributionReportFilter.Search;
-            request.Filter.LanguageAndRegion = ReportingService.LanguageAndRegionReportFilter.UnitedStates;
+            //request.Filter = new ReportingService.KeywordPerformanceReportFilter();
+            //request.Filter.AdDistribution = ReportingService.AdDistributionReportFilter.Search;
+            //request.Filter.LanguageAndRegion = ReportingService.LanguageAndRegionReportFilter.UnitedStates;
 
             // Create and initialize the ReportingServiceClient object.
             ReportingService.ReportingServiceClient service = new ReportingService.ReportingServiceClient();
