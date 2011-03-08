@@ -119,7 +119,7 @@ namespace Easynet.Edge.Services.Bing
                                 objPpcData.AdGroupName = valueNode;
                                 break;
                             case "AdType":
-                                objPpcData.AdType = (int)Enum.Parse(typeof(AdVariation), valueNode.Substring(0, valueNode.IndexOf(" ad")), true);// Convert.ToInt32(valueNode);
+                                objPpcData.AdType = (int)Enum.Parse(typeof(AdVariation), valueNode.Substring(0, valueNode.IndexOf(" ad")), true);
                                 break;
                             case "CampaignName":
                                 objPpcData.CampaignName = valueNode;
