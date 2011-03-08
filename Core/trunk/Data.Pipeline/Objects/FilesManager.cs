@@ -221,8 +221,12 @@ namespace EdgeBI.Data.Pipeline
         }
 
 
-        public static void UnZipFiles(string zipPathAndFile, string outputFolder, string password, bool deleteZipFile)
+        public static string UnZipFiles(string zipPathAndFile, string outputFolder, string password, bool deleteZipFile)
         {
+            string fullPath = string.Empty;
+            if(outputFolder == string.Empty || outputFolder  == null)
+                outputFolder = Path.GetDirectoryName(zipPathAndFile);
+                
             ZipInputStream s = new ZipInputStream(File.OpenRead(zipPathAndFile));
             if (password != null && password != String.Empty)
                 s.Password = password;
@@ -233,40 +237,38 @@ namespace EdgeBI.Data.Pipeline
                 string directoryName = outputFolder;
                 string fileName = Path.GetFileName(theEntry.Name);
                 // create directory 
-                if (directoryName != "")
+                if (!Directory.Exists(directoryName))
                 {
                     Directory.CreateDirectory(directoryName);
                 }
                 if (fileName != String.Empty)
                 {
-                    if (theEntry.Name.IndexOf(".ini") < 0)
+                    fullPath = directoryName + "\\" + theEntry.Name;
+                    fullPath = fullPath.Replace("\\ ", "\\");
+                    string fullDirPath = Path.GetDirectoryName(fullPath);
+                    if (!Directory.Exists(fullDirPath)) Directory.CreateDirectory(fullDirPath);
+                    FileStream streamWriter = File.Create(fullPath);
+                    int size = 2048;
+                    byte[] data = new byte[2048];
+                    while (true)
                     {
-                        string fullPath = directoryName + "\\" + theEntry.Name;
-                        fullPath = fullPath.Replace("\\ ", "\\");
-                        string fullDirPath = Path.GetDirectoryName(fullPath);
-                        if (!Directory.Exists(fullDirPath)) Directory.CreateDirectory(fullDirPath);
-                        FileStream streamWriter = File.Create(fullPath);
-                        int size = 2048;
-                        byte[] data = new byte[2048];
-                        while (true)
+                        size = s.Read(data, 0, data.Length);
+                        if (size > 0)
                         {
-                            size = s.Read(data, 0, data.Length);
-                            if (size > 0)
-                            {
-                                streamWriter.Write(data, 0, size);
-                            }
-                            else
-                            {
-                                break;
-                            }
+                            streamWriter.Write(data, 0, size);
                         }
-                        streamWriter.Close();
+                        else
+                        {
+                            break;
+                        }
                     }
+                    streamWriter.Close();
                 }
             }
             s.Close();
             if (deleteZipFile)
                 File.Delete(zipPathAndFile);
+            return fullPath;
         }
     }
 }
