@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MyScheduler.Objects;
 
-namespace MyScheduler
+
+namespace MyScheduler.Objects
 {
-	public class ServiceConfigration
+	public class ServiceConfiguration
 	{
-		public ServiceConfigration BaseConfiguration;
-		public int ConfigurationID;
 		public int ID;
+		public ServiceConfiguration BaseConfiguration;
+		public int ConfigurationID;		
 		public string Name;
 		public int MaxConcurrent;
 		public int MaxCuncurrentPerProfile;

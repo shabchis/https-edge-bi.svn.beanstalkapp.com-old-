@@ -50,11 +50,9 @@
     <Compile Include="Main.cs" />
     <Compile Include="Objects\SchedulingRule.cs" />
     <Compile Include="Scheduler.cs" />
-    <Compile Include="Profile.cs" />
+    <Compile Include="Objects\Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SchedulingRule.cs" />
-    <Compile Include="ServiceConfigration.cs" />
-    <Compile Include="UniqueConfiguration.cs" />
+    <Compile Include="Objects\ServiceConfigration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
