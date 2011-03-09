@@ -16,13 +16,14 @@ namespace MyScheduler.Objects
 		public TimeSpan MaxDeviationAfter { get; set; }
 		// public Dictionary<string,object> ServiceSettings { get; }
 	}
-	struct SchedulingData
+	public struct SchedulingData
 	{
 		public ServiceConfiguration Configuration;
 		public SchedulingRule Rule;
-		public int SelectedDay = 1;
-		//public int SelectedHour;
-		// public.... ?
+		public int SelectedDay;
+		public TimeSpan SelectedHour;
+		public int Priority;
+		
 
 		public override string ToString()
 		{
