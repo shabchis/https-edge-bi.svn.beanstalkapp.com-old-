@@ -16,10 +16,10 @@ namespace MyScheduler
 	public class Scheduler
 	{
 		#region members
-		private List<ServiceConfiguration> _toBeScheduleServices = new List<ServiceConfigration>();
+		private List<ServiceConfiguration> _toBeScheduleServices = new List<ServiceConfiguration>();
 		private Dictionary<string, ServiceInstance> _scheduledServices = new Dictionary<string, ServiceInstance>();
-		private Dictionary<int, ServiceConfiguration> _servicesPerConfigurationID = new Dictionary<int, ServiceConfigration>();
-		private Dictionary<int, ServiceConfiguration> _servicesPerProfileID = new Dictionary<int, ServiceConfigration>();
+		private Dictionary<int, ServiceConfiguration> _servicesPerConfigurationID = new Dictionary<int, ServiceConfiguration>();
+		private Dictionary<int, ServiceConfiguration> _servicesPerProfileID = new Dictionary<int, ServiceConfiguration>();
 		private Dictionary<string, ServiceInstance> _unscheduleServices = new Dictionary<string, ServiceInstance>();
 		DateTime _scheduleFrom;
 		DateTime _scheduleTo;
@@ -54,90 +54,90 @@ namespace MyScheduler
 			}
 			PrintSchduleTable();
 		}
-		private List<ServiceConfiguration> SortBySuitableSchedulingRuleAndPriority(List<SchedulingData> servicesForNextTimeLine)
-		{
-			//TODO: IF SAME HOUR SORT BY PRIORITY
-			List<SchedulingData> serviceSortedByTimeAndPriority = new List<SchedulingData>();
-			Stack<ServiceHourStruct> stack = new Stack<ServiceHourStruct>();
+		//private List<ServiceConfiguration> SortBySuitableSchedulingRuleAndPriority(List<SchedulingData> servicesForNextTimeLine)
+		//{
+		//    //TODO: IF SAME HOUR SORT BY PRIORITY
+		//    List<SchedulingData> serviceSortedByTimeAndPriority = new List<SchedulingData>();
+		//    Stack<ServiceHourStruct> stack = new Stack<ServiceHourStruct>();
 
-			foreach (SchedulingData service in servicesForNextTimeLine)
-			{
-				TimeSpan hour = FindSuitableSchedulingHour(service.SchedulingRules);
-				ServiceHourStruct serviceHour;
-				serviceHour.SuitableHour = hour;
-				serviceHour.Service = service;
+		//    foreach (SchedulingData service in servicesForNextTimeLine)
+		//    {
+		//        TimeSpan hour = FindSuitableSchedulingHour(service.SchedulingRules);
+		//        ServiceHourStruct serviceHour;
+		//        serviceHour.SuitableHour = hour;
+		//        serviceHour.Service = service;
 
-				if (stack.Count == 0 || stack.Peek().SuitableHour > hour)
-				{
-					stack.Push(serviceHour);
-				}
-				else
-				{
-					while (stack.Count != 0 && stack.Peek().SuitableHour < hour)
-					{
-						serviceSortedByTimeAndPriority.Add(stack.Pop().Service);
-					}
-					stack.Push(serviceHour);
-				}
-			}
-			while (stack.Count != 0)
-			{
-				serviceSortedByTimeAndPriority.Add(stack.Pop().Service);
-			}
-			return serviceSortedByTimeAndPriority;
+		//        if (stack.Count == 0 || stack.Peek().SuitableHour > hour)
+		//        {
+		//            stack.Push(serviceHour);
+		//        }
+		//        else
+		//        {
+		//            while (stack.Count != 0 && stack.Peek().SuitableHour < hour)
+		//            {
+		//                serviceSortedByTimeAndPriority.Add(stack.Pop().Service);
+		//            }
+		//            stack.Push(serviceHour);
+		//        }
+		//    }
+		//    while (stack.Count != 0)
+		//    {
+		//        serviceSortedByTimeAndPriority.Add(stack.Pop().Service);
+		//    }
+		//    return serviceSortedByTimeAndPriority;
 
-		}
+		//}
 		/// <summary>
 		/// Sort service by time and priotiry from desc
 		/// </summary>
 		/// <param name="servicesForNextTimeLine"></param>
 		/// <returns>sorted list of service configurations</returns>
-		private List<ServiceConfiguration> SortBySuitableSchedulingRuleAndPriority(List<ServiceConfiguration> servicesForNextTimeLine)
-		{
-			//TODO: IF SAME HOUR SORT BY PRIORITY
-			List<ServiceConfigration> serviceSortedByTimeAndPriority = new List<ServiceConfigration>();
-			Stack<ServiceHourStruct> stack = new Stack<ServiceHourStruct>();
+		//private List<ServiceConfiguration> SortBySuitableSchedulingRuleAndPriority(List<ServiceConfiguration> servicesForNextTimeLine)
+		//{
+		//    //TODO: IF SAME HOUR SORT BY PRIORITY
+		//    List<ServiceConfigration> serviceSortedByTimeAndPriority = new List<ServiceConfigration>();
+		//    Stack<ServiceHourStruct> stack = new Stack<ServiceHourStruct>();
 
-			foreach (ServiceConfigration service in servicesForNextTimeLine)
-			{
-				TimeSpan hour = FindSuitableSchedulingHour(service.SchedulingRules);
-				ServiceHourStruct serviceHour;
-				serviceHour.SuitableHour = hour;
-				serviceHour.Service = service;
+		//    foreach (ServiceConfigration service in servicesForNextTimeLine)
+		//    {
+		//        TimeSpan hour = FindSuitableSchedulingHour(service.SchedulingRules);
+		//        ServiceHourStruct serviceHour;
+		//        serviceHour.SuitableHour = hour;
+		//        serviceHour.Service = service;
 
-				if (stack.Count == 0 || stack.Peek().SuitableHour > hour)
-				{
-					stack.Push(serviceHour);
-				}
-				else
-				{
-					while (stack.Count != 0 && stack.Peek().SuitableHour <hour)
-					{
-						serviceSortedByTimeAndPriority.Add(stack.Pop().Service);
-					}
-					stack.Push(serviceHour);
-				}				
-			}
-			while (stack.Count != 0)
-			{
-				serviceSortedByTimeAndPriority.Add(stack.Pop().Service);
-			}
-			return serviceSortedByTimeAndPriority;
+		//        if (stack.Count == 0 || stack.Peek().SuitableHour > hour)
+		//        {
+		//            stack.Push(serviceHour);
+		//        }
+		//        else
+		//        {
+		//            while (stack.Count != 0 && stack.Peek().SuitableHour <hour)
+		//            {
+		//                serviceSortedByTimeAndPriority.Add(stack.Pop().Service);
+		//            }
+		//            stack.Push(serviceHour);
+		//        }				
+		//    }
+		//    while (stack.Count != 0)
+		//    {
+		//        serviceSortedByTimeAndPriority.Add(stack.Pop().Service);
+		//    }
+		//    return serviceSortedByTimeAndPriority;
 
-		}
+		//}
 		/// <summary>
 		/// Since a rule can have a few hours we want only the hour in hour time line get scheduling rules
 		/// </summary>
 		/// <param name="schedulingRules"></param>
 		/// <returns>hour from rule in needed time line</returns>
-		private TimeSpan FindSuitableSchedulingHour(List<SchedulingRule> schedulingRules)
-		{
-			TimeSpan suitHour;
-			SchedulingRule schedulingRule = FindSuitableSchedulingRule(schedulingRules);
-			suitHour = FindSuitableSchedulingHour(schedulingRule.Hours);
-			return suitHour;
+		//private TimeSpan FindSuitableSchedulingHour(List<SchedulingRule> schedulingRules)
+		//{
+		//    TimeSpan suitHour;
+		//    SchedulingRule schedulingRule = FindSuitableSchedulingRule(schedulingRules);
+		//    suitHour = FindSuitableSchedulingHour(schedulingRule.Hours);
+		//    return suitHour;
 			
-		}
+		//}
 		/// <summary>
 		/// Since a rule can have a few hours we want only the hour in hour time line get scheduling hours
 		/// </summary>
@@ -156,7 +156,7 @@ namespace MyScheduler
 			}
 			return suitHour;
 		}
-		private List<ServiceConfiguration> GetServicesForNextTimeLine(bool b)
+		private List<SchedulingData> GetServicesForNextTimeLine(bool b)
 		{
 			List<ServiceConfiguration> nextTimeLineServices = new List<ServiceConfiguration>();
 			int timeLineInMin = neededTimeLine;
@@ -169,24 +169,24 @@ namespace MyScheduler
 		/// Get only the services that in our time line by their scheduling rules hours get a list of service
 		/// </summary>
 		/// <returns>Return a list of services suit the time line</returns>
-		private List<ServiceConfiguration> GetServicesForNextTimeLine()
-		{
-			List<ServiceConfiguration> nextTimeLineServices = new List<ServiceConfiguration>();
-			int timeLineInMin = neededTimeLine;
-			 _scheduleFrom = DateTime.Now;
-			 _scheduleTo = DateTime.Now.AddMinutes(timeLineInMin);
-			 List<SchedulingData> schedulingData = FindSuitableSchedulingRule();
-			//foreach (ServiceConfigration service in _toBeScheduleServices)
-			//{				
-			//    List<SchedulingRule> schedulingRules = FindSuitableSchedulingRule(service.SchedulingRules);
-			//    foreach (SchedulingRule schedulingRule in schedulingRules)
-			//    {
-			//        if (schedulingRule != null)
-			//            nextTimeLineServices.Add(service);						
-			//    }
-			//}
-			//return nextTimeLineServices;
-		}
+		//private List<ServiceConfiguration> GetServicesForNextTimeLine()
+		//{
+		//    List<ServiceConfiguration> nextTimeLineServices = new List<ServiceConfiguration>();
+		//    int timeLineInMin = neededTimeLine;
+		//     _scheduleFrom = DateTime.Now;
+		//     _scheduleTo = DateTime.Now.AddMinutes(timeLineInMin);
+		//     List<SchedulingData> schedulingData = FindSuitableSchedulingRule();
+		//    //foreach (ServiceConfigration service in _toBeScheduleServices)
+		//    //{				
+		//    //    List<SchedulingRule> schedulingRules = FindSuitableSchedulingRule(service.SchedulingRules);
+		//    //    foreach (SchedulingRule schedulingRule in schedulingRules)
+		//    //    {
+		//    //        if (schedulingRule != null)
+		//    //            nextTimeLineServices.Add(service);						
+		//    //    }
+		//    //}
+		//    //return nextTimeLineServices;
+		//}
 
 		private List<SchedulingData> FindSuitableSchedulingRule()
 		{
@@ -206,7 +206,7 @@ namespace MyScheduler
 								{
 									case SchedulingScope.Day:
 										{
-											Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay =(int) (DateTime.Now.DayOfWeek) + 1 };
+											Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay =(int) (DateTime.Now.DayOfWeek) + 1 ,SelectedHour=hour, Priority=service.priority };
 											
 											foundedSchedulingdata.Add(Schedulingdata);
 											break;
@@ -217,10 +217,9 @@ namespace MyScheduler
 											{
 												if (day == (int)_scheduleFrom.DayOfWeek + 1 || day == (int)_scheduleTo.DayOfWeek + 1)
 												{
-													Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = day };
+													Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = day,SelectedHour=hour, Priority=service.priority };
 													foundedSchedulingdata.Add(Schedulingdata);
 												}
-
 											}
 											break;
 										}
@@ -230,7 +229,7 @@ namespace MyScheduler
 											{
 												if (day == _scheduleFrom.Day+1 || day == _scheduleTo.Day+1)
 												{
-													Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = day };
+													Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = day, SelectedHour = hour, Priority = service.priority };
 													foundedSchedulingdata.Add(Schedulingdata);
 												}
 											}
@@ -249,63 +248,63 @@ namespace MyScheduler
 		/// </summary>
 		/// <param name="SchedulingRules"></param>
 		/// <returns>scheduling rule</returns>
-		private List<SchedulingData>  FindSuitableSchedulingRule(List<SchedulingRule> SchedulingRules)
-		{
-			SchedulingData Schedulingdata;
-			List<SchedulingData> foundedSchedulingdata = new List<SchedulingData>();
-			foreach (SchedulingRule schedulingRule in SchedulingRules)
-			{				
-				if (schedulingRule != null)
-				{
-					foreach (TimeSpan hour in schedulingRule.Hours)
-					{
-						if (hour >= _scheduleFrom.TimeOfDay && hour <= _scheduleTo.TimeOfDay)
-						{
-							switch (schedulingRule.Scope)
-							{
-								case SchedulingScope.Day:
-									{
-										Schedulingdata = new SchedulingData();										
-										foundedSchedulingdata.Add(Schedulingdata);
-										break;
-									}
-								case SchedulingScope.Week:
-									{
-										foreach (int day in schedulingRule.Days)
-										{
-											if (day == (int)_scheduleFrom.DayOfWeek + 1 || day == (int)_scheduleTo.DayOfWeek + 1)
-												foundedSchedulingdata.Add(Schedulingdata);												
+		//private List<SchedulingData>  FindSuitableSchedulingRule(List<SchedulingRule> SchedulingRules)
+		//{
+		//    SchedulingData Schedulingdata;
+		//    List<SchedulingData> foundedSchedulingdata = new List<SchedulingData>();
+		//    foreach (SchedulingRule schedulingRule in SchedulingRules)
+		//    {				
+		//        if (schedulingRule != null)
+		//        {
+		//            foreach (TimeSpan hour in schedulingRule.Hours)
+		//            {
+		//                if (hour >= _scheduleFrom.TimeOfDay && hour <= _scheduleTo.TimeOfDay)
+		//                {
+		//                    switch (schedulingRule.Scope)
+		//                    {
+		//                        case SchedulingScope.Day:
+		//                            {
+		//                                Schedulingdata = new SchedulingData();										
+		//                                foundedSchedulingdata.Add(Schedulingdata);
+		//                                break;
+		//                            }
+		//                        case SchedulingScope.Week:
+		//                            {
+		//                                foreach (int day in schedulingRule.Days)
+		//                                {
+		//                                    if (day == (int)_scheduleFrom.DayOfWeek + 1 || day == (int)_scheduleTo.DayOfWeek + 1)
+		//                                        foundedSchedulingdata.Add(Schedulingdata);												
 											
-										}
-										break;
-									}
-								case SchedulingScope.Month://TODO: 31,30,29 of month can be problematicly
-									{
-										foreach (int day in schedulingRule.Days)
-										{
-											if (day == _scheduleFrom.Day || day == _scheduleTo.Day)
-												foundedSchedulingdata.Add(Schedulingdata);										
-										}
-										break;
-									}
-							}
-						}						
-					}					
-				}
-			}
-			return foundedSchedulingdata;
-		}
+		//                                }
+		//                                break;
+		//                            }
+		//                        case SchedulingScope.Month://TODO: 31,30,29 of month can be problematicly
+		//                            {
+		//                                foreach (int day in schedulingRule.Days)
+		//                                {
+		//                                    if (day == _scheduleFrom.Day || day == _scheduleTo.Day)
+		//                                        foundedSchedulingdata.Add(Schedulingdata);										
+		//                                }
+		//                                break;
+		//                            }
+		//                    }
+		//                }						
+		//            }					
+		//        }
+		//    }
+		//    return foundedSchedulingdata;
+		//}
 		/// <summary>
 		/// Load and translate the services from app.config
 		/// </summary>
 		public void GetServicesFromConfigurationFile()
-		{			
-			Dictionary<string, ServiceConfigration> baseConfigurations = new Dictionary<string, ServiceConfigration>();
-			Dictionary<string, ServiceConfigration> configurations = new Dictionary<string, ServiceConfigration>();
+		{
+			Dictionary<string, ServiceConfiguration> baseConfigurations = new Dictionary<string, ServiceConfiguration>();
+			Dictionary<string, ServiceConfiguration> configurations = new Dictionary<string, ServiceConfiguration>();
 			//base configuration
 			foreach (ServiceElement serviceElement in ServicesConfiguration.Services)
 			{
-				ServiceConfigration serviceConfiguration = new ServiceConfigration();
+				ServiceConfiguration serviceConfiguration = new ServiceConfiguration();
 				serviceConfiguration.Name = serviceElement.Name;				
 				serviceConfiguration.MaxConcurrent = serviceElement.MaxInstances;
 				serviceConfiguration.MaxCuncurrentPerProfile = serviceElement.MaxInstancesPerAccount;
@@ -320,7 +319,7 @@ namespace MyScheduler
 					ServiceElement serviceUse = accountService.Uses.Element;
 					//active element is the calculated configuration 
 					ActiveServiceElement activeServiceElement = new ActiveServiceElement(accountService);
-					ServiceConfigration serviceConfiguration = new ServiceConfigration();					
+					ServiceConfiguration serviceConfiguration = new ServiceConfiguration();					
 					serviceConfiguration.Name = string.Format("{0}-{1}", account.ID, serviceUse.Name);
 					serviceConfiguration.ID = GetServceConfigruationIDByName(serviceConfiguration.Name);
 					serviceConfiguration.MaxConcurrent = activeServiceElement.MaxInstances;
