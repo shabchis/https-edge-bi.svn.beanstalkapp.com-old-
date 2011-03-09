@@ -6,6 +6,7 @@ using myFacebook = Facebook;
 using Easynet.Edge.Core.Services;
 using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
+using System.Xml;
 
 namespace Services.Facebook.UpdateCampaignStatus
 {
@@ -102,6 +103,10 @@ namespace Services.Facebook.UpdateCampaignStatus
 			ServiceOutcome outcome = ServiceOutcome.Success;
 			int hourOfDay = DateTime.Now.Hour;
 			int today = Convert.ToInt32(DateTime.Now.DayOfWeek);
+			if (today == 0)
+				today = 7;
+			
+
 			StringBuilder campaign_specs = new StringBuilder();
 
 
@@ -115,8 +120,8 @@ namespace Services.Facebook.UpdateCampaignStatus
 																				INNER JOIN User_GUI_Account T1 ON T0.Account_ID=T1.Account_ID
 																				INNER JOIN UserProcess_GUI_PaidCampaign T2 ON T0.Campaign_GK=T2.Campaign_GK
 																				WHERE T0.Day=@Day:Int AND T0.Account_ID=@Account_ID:Int 
-																				AND T0.Hour{0} is not null AND
-																				T2.Channel_ID=6 AND T1.Status!=0", hourOfDay));
+																				AND (T0.Hour{0} =1 OR T0.Hour{0}=2) AND
+																				T2.Channel_ID=6 AND T1.Status!=0 AND T2.campStatus<>3 AND T2.ScheduleEnabled=1", hourOfDay.ToString().PadLeft(2, '0')));
 				sqlCommand.Parameters["@Day"].Value = today;
 				sqlCommand.Parameters["@Account_ID"].Value = this.Instance.AccountID;
 
@@ -127,12 +132,16 @@ namespace Services.Facebook.UpdateCampaignStatus
 						long campaign_ID = Convert.ToInt64(sqlDataReader[0]);
 						int campaign_status = Convert.ToInt32(sqlDataReader[1]);
 						campaign_specs.Append("{\"campaign_id\":" + campaign_ID.ToString() + ",\"campaign_status\":" + campaign_status.ToString() + "},");
-						//campaign_specs.AppendLine(string.Format("{\"campaign_id\":\"{0}\",\"campaign_status\":\"{1}\"},",campaign_ID ,campaign_status ));
+
 
 
 					}
 				}
 			}
+
+			/* For test only - capaign with deleted status
+			campaign_specs.Append("{\"campaign_id\":" + "60028003668686853" + ",\"campaign_status\":" + "2" + "},");
+			List<string> campaigns = GetCampaigns();*/
 			if (!string.IsNullOrEmpty(campaign_specs.ToString()))
 			{
 
@@ -140,26 +149,89 @@ namespace Services.Facebook.UpdateCampaignStatus
 				campaign_specs = campaign_specs.Remove(campaign_specs.Length - 1, 1);
 				//add '[' ']' for json array
 				campaign_specs = campaign_specs.Insert(0, '[');
-				campaign_specs = campaign_specs.Insert(campaign_specs.Length , ']');
-				string result = UpdateCampaignStatus(campaign_specs.ToString());
+				campaign_specs = campaign_specs.Insert(campaign_specs.Length, ']');
+
+				string Errors = UpdateCampaignStatus(campaign_specs.ToString());
+				if (!string.IsNullOrEmpty(Errors))
+				{
+					outcome = ServiceOutcome.Failure;
+					Easynet.Edge.Core.Utilities.Log.Write(Errors, Easynet.Edge.Core.Utilities.LogMessageType.Error);
+
+
+				}
+
 			}
 			return outcome;
 
 
 		}
-		private List<string> UpdateCampaignStatus(string campaign_specs)
+
+		private List<string> GetCampaigns()
 		{
-			System.Xml.XmlDocument retXml = new System.Xml.XmlDocument();			
-			string result;			
+			List<string> errors = new List<string>();
+
+
+			System.Xml.XmlDocument retXml = new System.Xml.XmlDocument();
+			string result;
+			_parameterList.Clear();
+
+			_parameterList.Add("account_id", _FBaccountID);
+
+			_parameterList.Add("method", "facebook.Ads.getCampaigns");
+			_parameterList.Add("include_deleted", "true");
+			try
+			{
+				result = _facebookAPI.Application.SendRequest(_parameterList);
+
+
+				//get the ones who failed and return them on a list ;
+				retXml.LoadXml(result);
+			}
+			catch (Exception ex)
+			{
+				Easynet.Edge.Core.Utilities.Log.Write("Error on respond from facebook", ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
+				throw new Exception("Error on respond from facebook", ex);
+			}
+			foreach (XmlNode errorCampaign in retXml.ChildNodes[1].ChildNodes[1].ChildNodes)
+			{
+				errors.Add(errorCampaign.InnerText);
+			}
+
+			return errors;
+
+
+		}
+		private string UpdateCampaignStatus(string campaign_specs)
+		{
+			StringBuilder errors = new StringBuilder();
+			System.Xml.XmlDocument retXml = new System.Xml.XmlDocument();
+			string result;
 			_parameterList.Clear();
 
 			_parameterList.Add("account_id", _FBaccountID);
 			_parameterList.Add("campaign_specs", campaign_specs);
 			_parameterList.Add("method", "facebook.Ads.updateCampaigns");
+			try
+			{
+				result = _facebookAPI.Application.SendRequest(_parameterList);
+				retXml.LoadXml(result);
 
-			result = _facebookAPI.Application.SendRequest(_parameterList);
-			//get the ones who failed and return them on a list ;
-			return new List<string>();
+				//get the ones who failed and return them on a list ;
+			}
+			catch (Exception ex)
+			{
+				Easynet.Edge.Core.Utilities.Log.Write("Error on respond from facebook", ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
+				throw new Exception("Error on respond from facebook", ex);
+			}
+			foreach (XmlNode errorCampaign in retXml.ChildNodes[1].ChildNodes[1].ChildNodes)
+			{
+				errors.AppendFormat("{0},", errorCampaign.Attributes[0].Value);
+			}
+			if (!string.IsNullOrEmpty(errors.ToString()))
+				errors.Insert(0, "Failed Campaigns: ");
+
+			return errors.ToString();
+
 		}
 
 	}
