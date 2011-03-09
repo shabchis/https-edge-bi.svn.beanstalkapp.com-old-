@@ -43,16 +43,49 @@ namespace MyScheduler
 		/// </summary>
 		public void CreateSchedule()
 		{
-			List<ServiceConfigration> servicesForNextTimeLine = GetServicesForNextTimeLine();
+			List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(true);
 
-			List<ServiceConfigration> toBeScheduledByTimeAndPriority = SortBySuitableSchedulingRuleAndPriority(servicesForNextTimeLine); //servicesForNextTimeLine.OrderBy(ordered => ordered.SchedulingRules[0].Hours[0]).ThenByDescending(ordered => ordered.priority);
-
-			foreach (ServiceConfigration service in toBeScheduledByTimeAndPriority)
+			//List<SchedulingData> toBeScheduledByTimeAndPriority = SortBySuitableSchedulingRuleAndPriority(servicesForNextTimeLine); //servicesForNextTimeLine.OrderBy(ordered => ordered.SchedulingRules[0].Hours[0]).ThenByDescending(ordered => ordered.priority);
+			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s => s.SelectedDay).ThenBy(s => s.SelectedHour).ThenBy(s => s.Priority);
+			foreach (var service in toBeScheduledByTimeAndPriority)
 			{
 				ServiceInstance serviceInstance = SchedulePerService(service);
 				ScheduleService(serviceInstance);
 			}
 			PrintSchduleTable();
+		}
+		private List<ServiceConfiguration> SortBySuitableSchedulingRuleAndPriority(List<SchedulingData> servicesForNextTimeLine)
+		{
+			//TODO: IF SAME HOUR SORT BY PRIORITY
+			List<SchedulingData> serviceSortedByTimeAndPriority = new List<SchedulingData>();
+			Stack<ServiceHourStruct> stack = new Stack<ServiceHourStruct>();
+
+			foreach (SchedulingData service in servicesForNextTimeLine)
+			{
+				TimeSpan hour = FindSuitableSchedulingHour(service.SchedulingRules);
+				ServiceHourStruct serviceHour;
+				serviceHour.SuitableHour = hour;
+				serviceHour.Service = service;
+
+				if (stack.Count == 0 || stack.Peek().SuitableHour > hour)
+				{
+					stack.Push(serviceHour);
+				}
+				else
+				{
+					while (stack.Count != 0 && stack.Peek().SuitableHour < hour)
+					{
+						serviceSortedByTimeAndPriority.Add(stack.Pop().Service);
+					}
+					stack.Push(serviceHour);
+				}
+			}
+			while (stack.Count != 0)
+			{
+				serviceSortedByTimeAndPriority.Add(stack.Pop().Service);
+			}
+			return serviceSortedByTimeAndPriority;
+
 		}
 		/// <summary>
 		/// Sort service by time and priotiry from desc
@@ -376,26 +409,26 @@ namespace MyScheduler
 		/// <summary>
 		/// Schedule per service
 		/// </summary>
-		/// <param name="service"></param>
+		/// <param name="schedulingData"></param>
 		/// <returns>service instance with scheduling data and more</returns>
-		private ServiceInstance SchedulePerService(ServiceConfiguration service)
+		private ServiceInstance SchedulePerService(SchedulingData schedulingData)
 		{
 
 
 
 			//Get all services with same configurationID
 			var servicesWithSameConfiguration = from s in _scheduledServices
-												where s.Value.ConfigurationID == service.BaseConfiguration.ConfigurationID
+												where s.Value.ConfigurationID == schedulingData.Configuration.BaseConfiguration.ConfigurationID
 												orderby s.Value.StartTime ascending
 												select s;
 
 			//Get all services with same profileID
 			var servicesWithSameProfile = from s in _scheduledServices
-										  where s.Value.ProfileID == service.SchedulingProfile.ID
+										  where s.Value.ProfileID == schedulingData.Configuration.SchedulingProfile.ID
 										  orderby s.Value.StartTime ascending
 										  select s;
 
-			ServiceInstance serviceInstance = FindFirstFreeTime(servicesWithSameConfiguration, servicesWithSameProfile, service);
+			ServiceInstance serviceInstance = FindFirstFreeTime(servicesWithSameConfiguration, servicesWithSameProfile, schedulingData);
 
 			return serviceInstance;
 		}
@@ -404,14 +437,14 @@ namespace MyScheduler
 		/// </summary>
 		/// <param name="servicesWithSameConfiguration"></param>
 		/// <param name="servicesWithSameProfile"></param>
-		/// <param name="service"></param>
+		/// <param name="schedulingData"></param>
 		/// <returns></returns>
-		private ServiceInstance FindFirstFreeTime(IOrderedEnumerable<KeyValuePair<string, ServiceInstance>> servicesWithSameConfiguration, IOrderedEnumerable<KeyValuePair<string, ServiceInstance>> servicesWithSameProfile, ServiceConfiguration service)
+		private ServiceInstance FindFirstFreeTime(IOrderedEnumerable<KeyValuePair<string, ServiceInstance>> servicesWithSameConfiguration, IOrderedEnumerable<KeyValuePair<string, ServiceInstance>> servicesWithSameProfile, SchedulingData schedulingData)
 		{
 			ServiceInstance scheduleInfo = null;
-			TimeSpan suitableHour = FindSuitableSchedulingHour(service.SchedulingRules);			
+			TimeSpan suitableHour = schedulingData.SelectedHour;			
 			int executionTimeInMin = 0;
-			executionTimeInMin = GetAverageExecutionTime(service.ID);
+			executionTimeInMin = GetAverageExecutionTime(schedulingData.Configuration.ID);
 			//TODO: CHECK WITH DORON LEAKING YEARS MONTH DAY FOR THE NEXT ROW
 			DateTime baseStartTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, suitableHour.Hours, suitableHour.Minutes, 0);
 			DateTime baseEndTime = baseStartTime.AddMinutes(executionTimeInMin);
@@ -422,25 +455,25 @@ namespace MyScheduler
 			while (!found)
 			{
 				int countedPerConfiguration = servicesWithSameConfiguration.Count(s => (calculatedStartTime >= s.Value.StartTime && calculatedStartTime <= s.Value.EndTime) || (calculatedEndTime >= s.Value.StartTime && calculatedEndTime <= s.Value.EndTime));
-				if (countedPerConfiguration < service.MaxConcurrent)
+				if (countedPerConfiguration < schedulingData.Configuration.MaxConcurrent)
 				{
 					int countedPerProfile = servicesWithSameProfile.Count(s => (calculatedStartTime >= s.Value.StartTime && calculatedStartTime <= s.Value.EndTime) || calculatedEndTime >= s.Value.StartTime || calculatedEndTime <= s.Value.EndTime);
-					if (countedPerProfile < service.MaxCuncurrentPerProfile)
+					if (countedPerProfile < schedulingData.Configuration.MaxCuncurrentPerProfile)
 					{
 						scheduleInfo = new ServiceInstance();
 						scheduleInfo.StartTime = calculatedStartTime;
 						scheduleInfo.EndTime = calculatedEndTime;
 						scheduleInfo.Odds = Percentile;
 						scheduleInfo.ActualDeviation = calculatedStartTime.Subtract(baseStartTime);
-						scheduleInfo.Priority = service.priority;
-						scheduleInfo.ConfigurationID = service.ConfigurationID;
-						scheduleInfo.ID = service.ID;
-						scheduleInfo.MaxConcurrentPerConfiguration = service.MaxConcurrent;
-						scheduleInfo.MaxCuncurrentPerProfile = service.MaxCuncurrentPerProfile;
-						scheduleInfo.MaxDeviationAfter = service.SchedulingRules[0].MaxDeviationAfter;
-						scheduleInfo.MaxDeviationBefore = service.SchedulingRules[0].MaxDeviationBefore;
-						scheduleInfo.ProfileID = service.SchedulingProfile.ID;
-						scheduleInfo.ServiceName = service.Name;
+						scheduleInfo.Priority = schedulingData.Priority;
+						scheduleInfo.ConfigurationID = schedulingData.Configuration.ConfigurationID;
+						scheduleInfo.ID = schedulingData.Configuration.ID;
+						scheduleInfo.MaxConcurrentPerConfiguration = schedulingData.Configuration.MaxConcurrent;
+						scheduleInfo.MaxCuncurrentPerProfile = schedulingData.Configuration.MaxCuncurrentPerProfile;
+						scheduleInfo.MaxDeviationAfter = schedulingData.Rule.MaxDeviationAfter;
+						scheduleInfo.MaxDeviationBefore = schedulingData.Rule.MaxDeviationBefore;
+						scheduleInfo.ProfileID = schedulingData.Configuration.SchedulingProfile.ID;
+						scheduleInfo.ServiceName = schedulingData.Configuration.Name;
 						found = true;
 					}
 					else
@@ -564,6 +597,6 @@ namespace MyScheduler
 	public struct ServiceHourStruct
 	{
 		public TimeSpan SuitableHour;
-		public ServiceConfiguration Service;
+		public SchedulingData Service;
 	}
 }
