@@ -22,7 +22,7 @@ namespace EdgeBI.API.Web
 			List<Campaign> campaigns = new List<Campaign>();
 			try
 			{
-			campaigns= Campaign.GetCampaignsByAccountIdAndChannel( int.Parse(accountID),int.Parse(channelID));
+				campaigns = Campaign.GetCampaignsByAccountIdAndChannel(int.Parse(accountID), int.Parse(channelID));
 			}
 			catch (Exception ex)
 			{
@@ -30,8 +30,8 @@ namespace EdgeBI.API.Web
 			}
 			return campaigns;
 		}
-		[WebInvoke(Method = "POST", UriTemplate = "CampaignStatusSchedule")]
-		public void ScheduleCampaigns(List<CampaignStatusSchedule> campaignStatusSchedules)
+		[WebInvoke(Method = "POST", UriTemplate = "accounts/{accountID}/campaigns/{campaignGK}")]
+		public void ScheduleCampaigns(List<CampaignStatusSchedule> campaignStatusSchedules, string accountID, string campaignGK)
 		{
 			try
 			{
@@ -42,13 +42,13 @@ namespace EdgeBI.API.Web
 				ErrorMessageInterceptor.ThrowError(System.Net.HttpStatusCode.Forbidden, ex);
 			}
 		}
-		[WebGet(UriTemplate = "CampaignStatusSchedule/{campaignGK}")]
-		public List<CampaignStatusSchedule> GetCampaignStatusSchedulesBYcampaignGK(string campaignGK)
+		[WebGet(UriTemplate = "accounts/{accountID}/campaigns/{campaignGK}")]
+		public List<CampaignStatusSchedule> GetCampaignStatusSchedulesBYcampaignGK(string accountID, string campaignGK)
 		{
 			List<CampaignStatusSchedule> campaignStatusSchedules = new List<CampaignStatusSchedule>();
 			try
 			{
-			return CampaignStatusSchedule.GetCampaignStatusSchedules(int.Parse(campaignGK));
+				return CampaignStatusSchedule.GetCampaignStatusSchedules(int.Parse(campaignGK));
 			}
 			catch (Exception ex)
 			{
