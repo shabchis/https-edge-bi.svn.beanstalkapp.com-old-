@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace EdgeApiRest
+namespace Edge.Api
 {
 	public abstract class BaseHandler : IHttpHandler
 	{

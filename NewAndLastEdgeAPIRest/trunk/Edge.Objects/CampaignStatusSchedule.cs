@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Data.SqlClient;
 using Easynet.Edge.Core.Data;
 
-namespace EdgeBI.Objects
+namespace Edge.Objects
 {
 	[DataContract]
 	[TableMap("Facebook_Campaign_StatusByTime")]

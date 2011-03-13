@@ -10,7 +10,7 @@ using System.Data.SqlClient;
 using Easynet.Edge.Core;
 
 
-namespace EdgeBI.Objects
+namespace Edge.Objects
 {
 	[DataContract]
 	[TableMap("User_GUI_Account")]

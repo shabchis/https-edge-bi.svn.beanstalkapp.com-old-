@@ -5,7 +5,7 @@ using System.Web;
 using System.Net;
 using System.Text.RegularExpressions;
 
-namespace EdgeApiRest.Handlers.UriTemplate
+namespace Edge.Api.Handlers.UriTemplate
 {
 	[AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
 	public sealed class UriMappingAttribute : Attribute

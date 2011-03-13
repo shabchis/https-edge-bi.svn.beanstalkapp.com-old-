@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EdgeBI.Objects
+namespace Edge.Objects
 {
 	class ThingT
 	{

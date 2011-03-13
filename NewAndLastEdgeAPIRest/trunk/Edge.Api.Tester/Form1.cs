@@ -10,11 +10,11 @@ using System.Windows.Forms;
 using NewRestApiTester;
 using System.Net;
 using Microsoft.Http;
-using EdgeBI.Objects;
 using Newtonsoft;
 using System.Xml;
 using System.IO;
 using Microsoft.Win32;
+using Edge.Objects;
 
 
 

@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
 
-namespace EdgeBI.Objects
+namespace Edge.Objects
 {
 	[DataContract]
 	[TableMap("UserProcess_GUI_PaidCampaign")]

@@ -12,7 +12,7 @@ using System.Data.SqlClient;
 
 
 
-namespace EdgeBI.Objects
+namespace Edge.Objects
 {
 	//[TableMap("User_GUI_User")]
 	public class AssignedPermission

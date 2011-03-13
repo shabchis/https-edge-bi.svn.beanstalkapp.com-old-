@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
 
-namespace EdgeApiRest.Handlers.UriTemplate
+namespace Edge.Api.Handlers.UriTemplate
 {
 	public abstract class UriTemplateHandler:BaseHandler
 	{

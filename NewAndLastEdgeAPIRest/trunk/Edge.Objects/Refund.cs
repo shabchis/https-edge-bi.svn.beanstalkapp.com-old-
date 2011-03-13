@@ -5,7 +5,7 @@ using System.Text;
 using Easynet.Edge.Core.Configuration;
 using System.Data.SqlClient;
 
-namespace EdgeBI.Objects
+namespace Edge.Objects
 {
 	public class Refund
 	{
