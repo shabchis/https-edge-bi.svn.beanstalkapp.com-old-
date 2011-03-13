@@ -1,0 +1,25 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NewRestApiTester__.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LocalAdress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost:28383</Value>
+    </Setting>
+    <Setting Name="RemoteAdress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost/api2</Value>
+    </Setting>
+    <Setting Name="BodyLogInJson" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{"OperationType":"New","email":"amir@seperia.com","Password":"123456",
+"UserID":"8","Session":"0EB3BAD4D3FB3F64FE2EE9EC27B54752"}</Value>
+    </Setting>
+    <Setting Name="DefaultHeaders" Type="System.String" Scope="User">
+      <Value Profile="(Default)">x-edgebi-session:{0}</Value>
+    </Setting>
+    <Setting Name="BodyGetSpecificPermission" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{"AccountID":"7","Path":"management"}</Value>
+    </Setting>
+    <Setting Name="Services" Type="System.String" Scope="User">
+      <Value Profile="(Default)">users/{0},users,Menu,accounts,accounts/{0},permissions,permissions/list,permissions/tree,Sessions,groups,groups/{0},users/{0}/permissions,groups/{0}/permissions,Tools/refund,users/{0}/groups,groups/{0}/users,groups/{0}/users/{1},ext/accounts/{0}/campaigns/channels/{1},ext/CampaignStatusSchedule,ext/CampaignStatusSchedule/{0}</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
