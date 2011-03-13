@@ -12,6 +12,7 @@ namespace EdgeApiRest.Handlers.UriTemplate
 	{
 		public string Template { get; set; }
 		public string Method { get; set; }
+		public string BodyParameter { get; set; }
 
 		public Regex Regex { get; set;  }
 	}	

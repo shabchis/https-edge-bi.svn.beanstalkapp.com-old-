@@ -15,4 +15,5 @@ namespace EdgeApiRest.Handlers.UriTemplate
 		  System.Runtime.Serialization.StreamingContext context)
 			: base(info, context) { }
 	}
+
 }

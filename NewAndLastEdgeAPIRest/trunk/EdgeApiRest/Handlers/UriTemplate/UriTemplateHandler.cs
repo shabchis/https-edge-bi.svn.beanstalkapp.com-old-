@@ -18,17 +18,38 @@ namespace EdgeApiRest.Handlers.UriTemplate
 			TypeExpressions[typeof(int)] = "[1-9][0-9]*";
 		}
 
+		private HttpContext _currentContext;
+
+		public HttpContext CurrentContext
+		{
+			get { return _currentContext; }
+			
+		}
+
+		public override bool IsReusable
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 
 		static Regex FindParametersRegex = new Regex(@"\{([A-Za-z_][A-Za-z_0-9]*)\}");
 		public sealed override void ProcessRequest(HttpContext context)
 		{
+			_currentContext = context;
+
 			if (ShouldValidateSession)
 			{
 				// TODO: check session
+
+				// TODO -later: permissions per request
 			}
 
 			MethodInfo[] methods = this.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 			MethodInfo foundMethod = null;
+			UriMappingAttribute foundAttribute = null;
 			Match foundMatch = null;
 			foreach (MethodInfo method in methods)
 			{
@@ -48,6 +69,7 @@ namespace EdgeApiRest.Handlers.UriTemplate
 				{
 					foundMethod = method;
 					foundMatch = match;
+					foundAttribute = attr;
 					break;
 				}
 			}
@@ -61,8 +83,20 @@ namespace EdgeApiRest.Handlers.UriTemplate
 			for (int i = 0; i < methodParams.Length; i++)
 			{
 				ParameterInfo param = methodParams[i];
-				string rawValue = foundMatch.Groups[param.Name].Value;
-				methodArgs[i] = Convert.ChangeType(rawValue, param.ParameterType);
+				object paramVal;
+				if (param.Name == foundAttribute.BodyParameter)
+				{
+					// Handle POST body deserialization
+					// TODO: allow deserializing as stream
+					paramVal = HttpSerializer.DeserializeValue(context, param.ParameterType);
+				}
+				else
+				{
+					// foundMatch.Groups[param.Name] will always find a group because if it were empty - the regex would not have succeeded
+					string rawValue = foundMatch.Groups[param.Name].Value;
+					paramVal = Convert.ChangeType(rawValue, param.ParameterType);
+				}
+				methodArgs[i] = paramVal;
 			}
 
 			// Run the MOTHERFUCKER
