@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="EdgeApiRest.Global" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="Edge.Api.Global" Language="C#" %>
