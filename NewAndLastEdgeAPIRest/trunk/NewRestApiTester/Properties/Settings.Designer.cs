@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NewRestApiTester.Properties {
+namespace Edge.Api.Tester.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
