@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeApiRest", "EdgeApiRest\EdgeApiRest.csproj", "{15C720A8-FC62-4E04-9491-F5648F4970FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edge.Api", "EdgeApiRest\Edge.Api.csproj", "{15C720A8-FC62-4E04-9491-F5648F4970FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewRestApiTester", "NewRestApiTester\NewRestApiTester.csproj", "{BBE71D21-ABB9-4675-898F-1106FE175221}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edge.Api.Tester", "NewRestApiTester\Edge.Api.Tester.csproj", "{BBE71D21-ABB9-4675-898F-1106FE175221}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeBI.Objects", "EdgeBi.Objects\EdgeBI.Objects.csproj", "{AA37E9C3-5121-4731-BB13-7C79FFEA28AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edge.Objects", "EdgeBi.Objects\Edge.Objects.csproj", "{AA37E9C3-5121-4731-BB13-7C79FFEA28AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\Core\Core\Core.csproj", "{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}"
 EndProject
