@@ -25,7 +25,7 @@ namespace NewRestApiTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("localhost:28383")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8080")]
         public string LocalAdress {
             get {
                 return ((string)(this["LocalAdress"]));
@@ -37,7 +37,7 @@ namespace NewRestApiTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("localhost/api2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8080")]
         public string RemoteAdress {
             get {
                 return ((string)(this["RemoteAdress"]));

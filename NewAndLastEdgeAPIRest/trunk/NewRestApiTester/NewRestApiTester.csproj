@@ -70,11 +70,14 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Edge.Core">
+      <HintPath>..\Dlls\Edge.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Http">
-      <HintPath>..\ThirdParty\Microsoft.Http.dll</HintPath>
+      <HintPath>..\Dlls\Microsoft.Http.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\ThirdParty\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\Dlls\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
