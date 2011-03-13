@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace EdgeBI.Objects
+namespace Edge.Objects
 {
 	
 	public class SessionRequestData

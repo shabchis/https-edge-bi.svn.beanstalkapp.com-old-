@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace EdgeApiRest
+namespace Edge.Api
 {
 	public class HttpSerializer
 	{

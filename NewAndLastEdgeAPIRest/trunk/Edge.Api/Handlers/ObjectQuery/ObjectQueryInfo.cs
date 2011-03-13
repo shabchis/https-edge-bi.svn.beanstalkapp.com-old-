@@ -5,7 +5,7 @@ using System.Web;
 using System.Text.RegularExpressions;
 using System.Collections.Specialized;
 
-namespace EdgeApiRest
+namespace Edge.Api
 {
 
 	class RequestLevel

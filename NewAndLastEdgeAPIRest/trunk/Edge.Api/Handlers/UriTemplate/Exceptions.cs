@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace EdgeApiRest.Handlers.UriTemplate
+namespace Edge.Api.Handlers.UriTemplate
 {
 	[Serializable]
 	public class UriTemplateException : Exception

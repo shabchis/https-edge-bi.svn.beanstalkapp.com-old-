@@ -8,7 +8,7 @@ using System.Data;
 using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
 
-namespace EdgeBI.Objects
+namespace Edge.Objects
 {
 	[DataContract]
 	[TableMap("User_GUI_UserGroup")]

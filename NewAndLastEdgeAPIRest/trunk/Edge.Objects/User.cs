@@ -14,7 +14,7 @@ using Easynet.Edge.Core.Data;
 
 
 
-namespace EdgeBI.Objects
+namespace Edge.Objects
 {
 
 	[DataContract]

@@ -9,7 +9,7 @@ using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
 using System.Collections;
 
-namespace EdgeBI.Objects
+namespace Edge.Objects
 {
 	/// <summary>
 	/// Return and save objects dynamicly
