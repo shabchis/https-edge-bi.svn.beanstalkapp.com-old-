@@ -34,7 +34,7 @@ namespace Edge.Api.Handlers
 			SqlCommand sqlCommand;
 			SessionResponseData returnsessionData = null;
 			int session;
-
+			throw new Exception("vdvsd");
 			try
 			{
 				using (DataManager.Current.OpenConnection())

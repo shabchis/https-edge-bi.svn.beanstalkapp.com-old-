@@ -40,7 +40,7 @@ namespace Edge.Api
 			Exception ex = Server.GetLastError();
 			Server.ClearError();
 
-			HttpSerializer.SerializeValue(this.Context, ex);
+			HttpSerializer.SerializeValue(this.Context, ex.InnerException);
 
 		}
 

@@ -107,12 +107,15 @@ namespace NewRestApiTester__
 
 			string fullAddress = string.Format("{0}/{1}", server, service);
 
-
-			WebRequest request = HttpWebRequest.Create(fullAddress);
+			
+			HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(fullAddress);
 			request.Timeout = 130000;
+			request.Accept = "application/json";
 			request.ContentType = "application/json";
+			
 			request.Method = requestType;
-			request.ContentLength = 0;
+			
+			request.ContentLength = BodyTextBox.Text.Length;
 
 			if (requestType == "POST" || requestType == "PUT")
 			{
@@ -131,10 +134,10 @@ namespace NewRestApiTester__
 			}
 			ResponseHeaderTextBox.Text = string.Empty;
 			//ResponseHeaderTextBox.Text += response.Headers. + "\n";
-			foreach (KeyValuePair<string, string[]> header in response.Headers)
-			{
-				ResponseHeaderTextBox.Text += string.Format(header.Key + ": {0}\n", header.Value[0]);
-			}
+			//foreach (KeyValuePair<string, string[]> header in response.Headers)
+			//{
+			//    ResponseHeaderTextBox.Text += string.Format(header.Key + ": {0}\n", header.Value[0]);
+			//}
 			AfterRespondEvents(service);
 			/*
 			HttpClient client = new HttpClient();
@@ -177,7 +180,7 @@ namespace NewRestApiTester__
 
 		}
 
-		private void SetBodyForCollectRequest(ref WebRequest request)
+		private void SetBodyForCollectRequest(ref HttpWebRequest request)
 		{
 			using (StreamWriter writer=new StreamWriter(request.GetRequestStream()))
 			{

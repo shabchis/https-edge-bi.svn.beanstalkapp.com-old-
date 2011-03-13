@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using Edge.Api.Base;
 
 namespace Edge.Api
 {
@@ -18,7 +19,7 @@ namespace Edge.Api
 		public static void SerializeValue(HttpContext context, object value)
 		{
 			// TODO: clean up content type
-			string contentType = context.Request.Headers["accept-type"];
+			string contentType = context.Request.Headers["Accept"];
 
 			IHttpSerializer serializer = GetOrThrow(contentType);
 			serializer.SerializeValue(contentType, context.Response.OutputStream, value);
