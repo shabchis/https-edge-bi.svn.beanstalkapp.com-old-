@@ -12,7 +12,7 @@ namespace EdgeApiRest
 	{
 		#region IHttpHandler Members
 
-		public bool IsReusable
+		public virtual bool IsReusable
 		{
 			get { return true; }
 		}
@@ -27,6 +27,7 @@ namespace EdgeApiRest
 
 		static BaseHandler()
 		{
+			
 			StatusDescriptions = new Dictionary<HttpStatusCode, string>();
 
 			StatusDescriptions.Add(HttpStatusCode.OK, "OK");
@@ -48,7 +49,7 @@ namespace EdgeApiRest
 			context.Response.StatusDescription = StatusDescriptions.ContainsKey(status) ? StatusDescriptions[status] : null;
 			context.Response.ContentType = contentType;
 			context.Response.ContentEncoding = Encoding.UTF8;
-
+			
 			// Response body
 			if (message != null)
 			{

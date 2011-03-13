@@ -13,8 +13,8 @@ namespace EdgeApiRest.Handlers
 			get { return false; }
 		}
 
-		[UriMapping(Method = "GET", Template = "users/{userID}")]
-		public object Example(int userID)
+		[UriMapping(Method = "POST", Template = "users/{userID}/permissions", BodyParameter="jsonObject")]
+		public object Example(int userID, object jsonObject)
 		{
 			return null;
 		}
