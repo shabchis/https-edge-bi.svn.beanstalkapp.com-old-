@@ -105,8 +105,38 @@ namespace NewRestApiTester__
 				service = ServiceAddressComboBox.Text.Trim();
 
 
-			string fullAddress = string.Format("http://{0}/{1}", server, service);
+			string fullAddress = string.Format("{0}/{1}", server, service);
 
+
+			WebRequest request = HttpWebRequest.Create(fullAddress);
+			request.Timeout = 130000;
+			request.ContentType = "application/json";
+			request.Method = requestType;
+			request.ContentLength = 0;
+
+			if (requestType == "POST" || requestType == "PUT")
+			{
+				request.Headers["ContentType"]="application/json";
+				if (!string.IsNullOrEmpty(BodyTextBox.Text))
+					SetBodyForCollectRequest(ref request);
+
+			}
+
+			WebResponse response = request.GetResponse();
+
+			using (StreamReader reader=new StreamReader(response.GetResponseStream()))
+			{
+
+				ResponseBodyRichTextBox.Text = reader.ReadToEnd();
+			}
+			ResponseHeaderTextBox.Text = string.Empty;
+			//ResponseHeaderTextBox.Text += response.Headers. + "\n";
+			foreach (KeyValuePair<string, string[]> header in response.Headers)
+			{
+				ResponseHeaderTextBox.Text += string.Format(header.Key + ": {0}\n", header.Value[0]);
+			}
+			AfterRespondEvents(service);
+			/*
 			HttpClient client = new HttpClient();
 			HttpRequestMessage request = new HttpRequestMessage(requestType, fullAddress);
 			
@@ -131,7 +161,11 @@ namespace NewRestApiTester__
 			}
 			HttpResponseMessage response = new HttpResponseMessage();
 			response.Headers.ContentType = "application/json";
-			response = client.Send(request);
+			lock (client)
+			{
+				response = client.Send(request);
+
+			}
 			ResponseHeaderTextBox.Text = string.Empty;
 			ResponseHeaderTextBox.Text += response.StatusCode + "\n";
 			foreach (KeyValuePair<string, string[]> header in response.Headers)
@@ -139,8 +173,19 @@ namespace NewRestApiTester__
 				ResponseHeaderTextBox.Text += string.Format(header.Key + ": {0}\n", header.Value[0]);
 			}
 			ResponseBodyRichTextBox.Text = response.Content.ReadAsString();
-			AfterRespondEvents(service);
+			AfterRespondEvents(service);*/
 
+		}
+
+		private void SetBodyForCollectRequest(ref WebRequest request)
+		{
+			using (StreamWriter writer=new StreamWriter(request.GetRequestStream()))
+			{
+				writer.Write(BodyTextBox.Text);
+				//writer.Flush();
+				
+			}
+			
 		}
 
 		private void AfterRespondEvents(string service)
