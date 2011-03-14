@@ -116,6 +116,11 @@ namespace NewRestApiTester__
 			request.Method = requestType;
 			
 			request.ContentLength = BodyTextBox.Text.Length;
+			foreach (ListViewItem item in HeaderslistView.Items)
+			{
+				request.Headers.Add(item.Text, item.SubItems[1].Text);
+
+			}
 
 			if (requestType == "POST" || requestType == "PUT")
 			{
@@ -125,20 +130,26 @@ namespace NewRestApiTester__
 
 			}
 
-			WebResponse response = request.GetResponse();
+
+			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
 			using (StreamReader reader=new StreamReader(response.GetResponseStream()))
 			{
 
 				ResponseBodyRichTextBox.Text = reader.ReadToEnd();
 			}
+			
 			ResponseHeaderTextBox.Text = string.Empty;
-			//ResponseHeaderTextBox.Text += response.Headers. + "\n";
-			//foreach (KeyValuePair<string, string[]> header in response.Headers)
-			//{
-			//    ResponseHeaderTextBox.Text += string.Format(header.Key + ": {0}\n", header.Value[0]);
-			//}
+			ResponseHeaderTextBox.Text += response.StatusCode + "\n";
+			ResponseHeaderTextBox.Text += response.StatusDescription + "\n";
+			ResponseHeaderTextBox.Text += response.LastModified+"\n";
+			foreach (var header in response.Headers)
+			{
+				
+				ResponseHeaderTextBox.Text += string.Format(header+ "\n");
+			}
 			AfterRespondEvents(service);
+			response.Close();
 			/*
 			HttpClient client = new HttpClient();
 			HttpRequestMessage request = new HttpRequestMessage(requestType, fullAddress);

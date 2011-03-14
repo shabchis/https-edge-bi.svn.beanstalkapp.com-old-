@@ -5,13 +5,22 @@ using System.Web;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
+using Easynet.Edge.Core.Configuration;
+using Easynet.Edge.Core.Utilities;
+using Easynet.Edge.Core.Data;
+using System.Data.SqlClient;
+using System.Net;
 
-namespace Edge.Api.Handlers.UriTemplate
+namespace Edge.Api.Handlers.Template
 {
-	public abstract class UriTemplateHandler:BaseHandler
+	public abstract class TemplateHandler : BaseHandler
 	{
 		public static Dictionary<Type, string> TypeExpressions;
-		static UriTemplateHandler()
+		private const string KeyEncrypt = "5c51374e366f41297356413c71677220386c534c394742234947567840";
+		private const string SessionHeader = "x-edgebi-session";
+		private const string LogIn = "LogIn";
+		static bool CheckSession = (bool.Parse(AppSettings.GetAbsolute("CheckSession")));
+		static TemplateHandler()
 		{
 			TypeExpressions = new Dictionary<Type, string>();
 			TypeExpressions[typeof(string)] = ".+";
@@ -23,7 +32,7 @@ namespace Edge.Api.Handlers.UriTemplate
 		public HttpContext CurrentContext
 		{
 			get { return _currentContext; }
-			
+
 		}
 
 		public override bool IsReusable
@@ -39,13 +48,28 @@ namespace Edge.Api.Handlers.UriTemplate
 		public sealed override void ProcessRequest(HttpContext context)
 		{
 			_currentContext = context;
+			
+			
+				if (CheckSession)
+				{
+					if (context.Request.Url.ToString() != LogIn)
+					{
+						int userCode;
+						string session = context.Request.Headers[SessionHeader];
+						if (String.IsNullOrEmpty(session) || !IsSessionValid(session, out userCode))
+						{
+							throw new HttpException("Invalid session information",(int)HttpStatusCode.Forbidden);
 
-			if (ShouldValidateSession)
-			{
-				// TODO: check session
+						}
+						else
+						{
+							context.Request.Headers.Add("edge-user-id", userCode.ToString());
+						}
+					}
+				}
 
 				// TODO -later: permissions per request
-			}
+			
 
 			MethodInfo[] methods = this.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 			MethodInfo foundMethod = null;
@@ -63,14 +87,16 @@ namespace Edge.Api.Handlers.UriTemplate
 					// Assign the regex to the attribute for later use
 					attr.Regex = BuildRegex(method, attr);
 				}
-
-				Match match = attr.Regex.Match(context.Request.Url.PathAndQuery);
-				if (match.Success)
+				if (!string.IsNullOrEmpty( attr.Regex.ToString()))
 				{
-					foundMethod = method;
-					foundMatch = match;
-					foundAttribute = attr;
-					break;
+					Match match = attr.Regex.Match(context.Request.Url.PathAndQuery);
+					if (match.Success)
+					{
+						foundMethod = method;
+						foundMatch = match;
+						foundAttribute = attr;
+						break;
+					}
 				}
 			}
 
@@ -113,7 +139,7 @@ namespace Edge.Api.Handlers.UriTemplate
 			MatchCollection paramMatches = FindParametersRegex.Matches(urlToParse);
 			if (paramMatches.Count < 1)
 			{
-				targetRegex = new Regex("");
+				targetRegex = new Regex(string.Format(@"/{0}",urlToParse),RegexOptions.IgnoreCase);
 			}
 			else
 			{
@@ -147,7 +173,7 @@ namespace Edge.Api.Handlers.UriTemplate
 					{
 						string typeExpression;
 						if (!TypeExpressions.TryGetValue(foundParam.ParameterType, out typeExpression))
-							throw new UriTemplateException("Cannot map URL parameter to method parameter type.", foundParam.Name);
+							throw new TemplateException(System.Net.HttpStatusCode.InternalServerError, "Cannot map URL parameter to method parameter type.", foundParam.Name);
 
 						// we found a matching parameter!
 						paramExpression = "(?<" + foundParam.Name + ">" + typeExpression + ")";
@@ -159,6 +185,44 @@ namespace Edge.Api.Handlers.UriTemplate
 				targetRegex = new Regex(targetRegexPattern);
 			}
 			return targetRegex;
+		}
+		private bool IsSessionValid(string session, out int userCode)
+		{
+			bool isValid = false;
+			int sessionID = 0;
+
+
+			
+			userCode = -1;
+			Encryptor encryptor = new Encryptor(KeyEncrypt);
+
+			try { sessionID = int.Parse(encryptor.Decrypt(session)); }
+			catch (Exception ex)
+			{
+				// TODO: log the real exception
+				return false;
+			}
+
+			using (DataManager.Current.OpenConnection())
+			{
+				using (SqlCommand sqlCommand = DataManager.CreateCommand("Session_ValidateSession(@SessionID:Int)", System.Data.CommandType.StoredProcedure))
+				{
+					sqlCommand.Parameters["@SessionID"].Value = sessionID;
+					using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
+					{
+						if (sqlDataReader.Read())
+						{
+							isValid = System.Convert.ToBoolean(sqlDataReader[0]);
+							userCode = System.Convert.ToInt32(sqlDataReader[1]);
+						}
+					}
+				}
+			}
+
+
+
+			return isValid;
+
 		}
 
 		public abstract bool ShouldValidateSession { get; }
