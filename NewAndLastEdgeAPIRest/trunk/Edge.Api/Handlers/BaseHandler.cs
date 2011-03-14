@@ -49,7 +49,7 @@ namespace Edge.Api
 			context.Response.StatusDescription = StatusDescriptions.ContainsKey(status) ? StatusDescriptions[status] : null;
 			context.Response.ContentType = contentType;
 			context.Response.ContentEncoding = Encoding.UTF8;
-			
+				
 			// Response body
 			if (message != null)
 			{

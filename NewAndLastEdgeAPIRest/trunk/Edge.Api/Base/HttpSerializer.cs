@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using Edge.Api.Base;
+using System.Net;
 
 namespace Edge.Api
 {
@@ -19,9 +20,16 @@ namespace Edge.Api
 		public static void SerializeValue(HttpContext context, object value)
 		{
 			// TODO: clean up content type
-			string contentType = context.Request.Headers["Accept"];
-
+			string contentType = context.Request.Headers["Accept"];			
 			IHttpSerializer serializer = GetOrThrow(contentType);
+			serializer.SerializeValue(contentType, context.Response.OutputStream, value);
+		}
+		public static void SerializeValue(HttpContext context, object value,HttpStatusCode httpStatusCode) //error
+		{
+			// TODO: clean up content type
+			string contentType = context.Request.Headers["Accept"];			
+			IHttpSerializer serializer = GetOrThrow(contentType);
+
 			serializer.SerializeValue(contentType, context.Response.OutputStream, value);
 		}
 
