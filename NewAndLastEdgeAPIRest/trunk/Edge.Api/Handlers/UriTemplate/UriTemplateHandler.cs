@@ -18,8 +18,8 @@ namespace Edge.Api.Handlers.Template
 		public static Dictionary<Type, string> TypeExpressions;
 		private const string KeyEncrypt = "5c51374e366f41297356413c71677220386c534c394742234947567840";
 		private const string SessionHeader = "x-edgebi-session";
-		private const string LogIn = "LogIn";
-		static bool CheckSession = (bool.Parse(AppSettings.GetAbsolute("CheckSession")));
+		private const string LogIn = "/sessions";
+		//static bool CheckSession = (bool.Parse(AppSettings.GetAbsolute("CheckSession")));
 		static TemplateHandler()
 		{
 			TypeExpressions = new Dictionary<Type, string>();
@@ -48,11 +48,11 @@ namespace Edge.Api.Handlers.Template
 		public sealed override void ProcessRequest(HttpContext context)
 		{
 			_currentContext = context;
-			
-			
-				if (CheckSession)
+
+
+			if (ShouldValidateSession)
 				{
-					if (context.Request.Url.ToString() != LogIn)
+					if (context.Request.Path.ToLower() != LogIn.ToLower())
 					{
 						int userCode;
 						string session = context.Request.Headers[SessionHeader];
@@ -92,10 +92,13 @@ namespace Edge.Api.Handlers.Template
 					Match match = attr.Regex.Match(context.Request.Url.PathAndQuery);
 					if (match.Success)
 					{
-						foundMethod = method;
-						foundMatch = match;
-						foundAttribute = attr;
-						break;
+						if (context.Request.HttpMethod == attr.Method)
+						{
+							foundMethod = method;
+							foundMatch = match;
+							foundAttribute = attr;
+							break;
+						}
 					}
 				}
 			}

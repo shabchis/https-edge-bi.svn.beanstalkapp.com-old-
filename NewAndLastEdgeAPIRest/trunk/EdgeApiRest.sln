@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edge.Objects", "Edge.Object
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\Core\Core\Core.csproj", "{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edge.Api.Accounts", "Edge.Api.Accounts\Edge.Api.Accounts.csproj", "{921CBDEB-2148-4347-AB29-E74BAB5DCC05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,16 @@ Global
 		{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}.Release|x86.ActiveCfg = Release|Any CPU
+		{921CBDEB-2148-4347-AB29-E74BAB5DCC05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{921CBDEB-2148-4347-AB29-E74BAB5DCC05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{921CBDEB-2148-4347-AB29-E74BAB5DCC05}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{921CBDEB-2148-4347-AB29-E74BAB5DCC05}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{921CBDEB-2148-4347-AB29-E74BAB5DCC05}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{921CBDEB-2148-4347-AB29-E74BAB5DCC05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{921CBDEB-2148-4347-AB29-E74BAB5DCC05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{921CBDEB-2148-4347-AB29-E74BAB5DCC05}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{921CBDEB-2148-4347-AB29-E74BAB5DCC05}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{921CBDEB-2148-4347-AB29-E74BAB5DCC05}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
