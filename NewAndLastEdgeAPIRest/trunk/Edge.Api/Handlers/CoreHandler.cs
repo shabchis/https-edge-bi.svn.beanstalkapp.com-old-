@@ -18,7 +18,7 @@ namespace Edge.Api.Handlers
 		private const string KeyEncrypt = "5c51374e366f41297356413c71677220386c534c394742234947567840";
 		public override bool ShouldValidateSession
 		{
-			get { return false; }
+			get { return true; }
 		}
 
 
@@ -258,7 +258,7 @@ namespace Edge.Api.Handlers
 		/// <returns></returns>
 		/// 
 
-		[UriMapping(Template = "users/{ID}")]
+		[UriMapping(Method="GET", Template = "users/{ID}")]
 		public User GetUserByID(string ID)
 		{
 			int userID;
@@ -453,49 +453,7 @@ namespace Edge.Api.Handlers
 		}
 		#endregion
 
-		//#region Accounts
-
-		//[UriMapping(Template = "Accounts/{accountID}")]
-		//public Account GetAccount(string accountID)
-		//{
-		//    List<Account> acc = null;
-		//    try
-		//    {
-		//        int currentUser;
-		//        currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
-		//        int? accId = int.Parse(accountID);
-		//        acc = Account.GetAccount(accId, true, currentUser);
-		//        if (acc.Count == 0)
-		//            throw new HttpStatusException(HttpStatusCode.NotFound, String.Format("No account with permission found for user {0}", currentUser));
-		//    }
-		//    catch (Exception ex)
-		//    {
-
-		//        throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-		//    }
-		//    return acc[0];
-		//}
-
-		//[UriMapping(Template = "Accounts")]
-		//public List<Account> GetAccount()
-		//{
-		//    List<Account> acc = null;
-		//    try
-		//    {
-		//        int currentUser;
-		//        currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
-		//        acc = Account.GetAccount(null, true, currentUser);
-		//        if (acc.Count == 0)
-		//            throw new HttpStatusException(HttpStatusCode.NotFound, String.Format("No account with permission found for user {0}", currentUser));
-		//    }
-		//    catch (Exception ex)
-		//    {
-
-		//        throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-		//    }
-		//    return acc;
-		//}
-		//#endregion
+		
 
 		#region permissions
 		[UriMapping(Method = "POST", Template = "permissions", BodyParameter = "permissionRequest")]

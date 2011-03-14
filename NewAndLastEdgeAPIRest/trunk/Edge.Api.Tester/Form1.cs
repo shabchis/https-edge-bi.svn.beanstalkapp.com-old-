@@ -115,7 +115,7 @@ namespace NewRestApiTester__
 			
 			request.Method = requestType;
 			
-			request.ContentLength = BodyTextBox.Text.Length;
+			
 			foreach (ListViewItem item in HeaderslistView.Items)
 			{
 				request.Headers.Add(item.Text, item.SubItems[1].Text);
@@ -124,6 +124,7 @@ namespace NewRestApiTester__
 
 			if (requestType == "POST" || requestType == "PUT")
 			{
+				request.ContentLength = BodyTextBox.Text.Length;
 				request.Headers["ContentType"]="application/json";
 				if (!string.IsNullOrEmpty(BodyTextBox.Text))
 					SetBodyForCollectRequest(ref request);
