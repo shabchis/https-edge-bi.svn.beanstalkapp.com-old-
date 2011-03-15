@@ -98,13 +98,13 @@ namespace Edge.Api.Handlers
 
 				User user = User.GetUserByID(currentUser);
 				if (user.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+					throw new HttpStatusException("Only Account Administrator, can get user that is diffrent then current user!", HttpStatusCode.Forbidden);
 				group = Group.GetGroupByID(groupID);
 			}
 			catch (Exception ex)
 			{
 
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
+				throw new HttpStatusException(ex.Message, HttpStatusCode.InternalServerError);
 			}
 
 			return group;
@@ -115,20 +115,14 @@ namespace Edge.Api.Handlers
 		public List<Group> GetAllGroups()
 		{
 			List<Group> groups = null;
-			try
-			{
+			
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 				User user = User.GetUserByID(currentUser);
 				if (user.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can get the list of all groups");
+					throw new HttpStatusException("Only Account Administrator, can get the list of all groups", HttpStatusCode.Forbidden);
 				groups = Group.GetAllGroups();
-			}
-			catch (Exception ex)
-			{
-
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 
 			return groups;
 
@@ -139,19 +133,14 @@ namespace Edge.Api.Handlers
 		{
 			int groupID = 1;
 			//todo: dont forget on production to change the userID field to auto increment
-			try
-			{
+			
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 				User activeUser = User.GetUserByID(currentUser);
 				if (activeUser.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can add group ");
+					throw new HttpStatusException("Only Account Administrator, can add group ", HttpStatusCode.Forbidden);
 				groupID = group.GroupOperations(SqlOperation.Insert);
-			}
-			catch (Exception ex)
-			{
-				throw new HttpStatusException(HttpStatusCode.NotFound, ex.Message);
-			}
+			
 			return groupID;
 
 		}
@@ -160,24 +149,18 @@ namespace Edge.Api.Handlers
 		public int UpdateGroup(string ID, Group group)
 		{
 			int groupID = -1;
-			try
-			{
+			
 				if (ID.Trim() != group.GroupID.ToString())
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Updated groupID is different from ID");
+					throw new HttpStatusException("Updated groupID is different from ID", HttpStatusCode.Forbidden);
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 				User activeUser = User.GetUserByID(currentUser);
 				if (activeUser.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
+					throw new HttpStatusException("Only Account Administrator, can updated users", HttpStatusCode.Forbidden);
 
 				groupID = group.GroupOperations(SqlOperation.Update);
 
-			}
-			catch (Exception ex)
-			{
-
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 			return groupID;
 
 
@@ -187,20 +170,15 @@ namespace Edge.Api.Handlers
 		public int DeleteGroup(string ID)
 		{
 			int groupID = -1;
-			try
-			{
+			
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 				User activeUser = User.GetUserByID(currentUser);
 				if (activeUser.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
+					throw new HttpStatusException("Only Account Administrator, can delete users", HttpStatusCode.Forbidden);
 				Group group = new Group() { GroupID = int.Parse(ID) };
 				groupID = group.GroupOperations(SqlOperation.Delete);
-			}
-			catch (Exception ex)
-			{
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 			return groupID;
 
 		}
@@ -231,20 +209,14 @@ namespace Edge.Api.Handlers
 		{
 			List<User> users = null;
 
-			try
-			{
+			
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 				User user = User.GetUserByID(currentUser);
 				if (user.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can get the list of Associate groups");
+					throw new HttpStatusException("Only Account Administrator, can get the list of Associate groups", HttpStatusCode.Forbidden);
 				users = Group.GetUserAssociateUsers(int.Parse(ID));
-			}
-			catch (Exception ex)
-			{
-				if (ex.Message != "Forbidden")
-					throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 
 			return users;
 		}
@@ -263,8 +235,7 @@ namespace Edge.Api.Handlers
 		{
 			int userID;
 			User returnUser = null;
-			try
-			{
+			
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 				userID = int.Parse(ID);
@@ -272,16 +243,11 @@ namespace Edge.Api.Handlers
 				{
 					User user = User.GetUserByID(currentUser);
 					if (user.IsAcountAdmin != true)
-						throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+						throw new HttpStatusException("Only Account Administrator, can get user that is diffrent then current user!", HttpStatusCode.Forbidden);
 
 				}
 				returnUser = User.GetUserByID(userID);
-			}
-			catch (Exception ex)
-			{
-
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 			return returnUser;
 		}
 
@@ -289,21 +255,15 @@ namespace Edge.Api.Handlers
 		public List<User> GetAllUsers()
 		{
 			List<User> users = null;
-			try
-			{
+			
 
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 				User user = User.GetUserByID(currentUser);
 				if (user.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+					throw new HttpStatusException("Only Account Administrator, can get user that is diffrent then current user!", HttpStatusCode.Forbidden);
 				users = User.GetAllUsers();
-			}
-			catch (Exception ex)
-			{
-
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 
 			return users;
 		}
@@ -313,19 +273,14 @@ namespace Edge.Api.Handlers
 		{
 			int userID = -1;
 			//todo: dont forget on production to change the userID field to auto increment
-			try
-			{
+			
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 				User activeUser = User.GetUserByID(currentUser);
 				if (activeUser.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can add users ");
+					throw new HttpStatusException("Only Account Administrator, can add users ", HttpStatusCode.Forbidden);
 				userID = user.UserOperations(SqlOperation.Insert);
-			}
-			catch (Exception ex)
-			{
-				throw new HttpStatusException(HttpStatusCode.NotFound, ex.Message);
-			}
+		
 			return userID;
 
 		}
@@ -334,24 +289,18 @@ namespace Edge.Api.Handlers
 		public int UpdateUser(string ID, User user)
 		{
 			int userID = -1;
-			try
-			{
+			
 				if (ID.Trim() != user.UserID.ToString())
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Updated userId is different from ID");
+					throw new HttpStatusException("Updated userId is different from ID", HttpStatusCode.Forbidden);
 
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 				User activeUser = User.GetUserByID(currentUser);
 				if (activeUser.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can updated users");
+					throw new HttpStatusException("Only Account Administrator, can updated users", HttpStatusCode.Forbidden);
 
 				userID = user.UserOperations(SqlOperation.Update);
-			}
-			catch (Exception ex)
-			{
-
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 			return userID;
 
 
@@ -362,21 +311,15 @@ namespace Edge.Api.Handlers
 		public int DeleteUser(string ID)
 		{
 			int userID = -1;
-			try
-			{
+			
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 				User activeUser = User.GetUserByID(currentUser);
 				if (activeUser.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can delete users");
+					throw new HttpStatusException("Only Account Administrator, can delete users", HttpStatusCode.Forbidden);
 				User user = new User() { UserID = int.Parse(ID) };
 				userID = user.UserOperations(SqlOperation.Delete);
-			}
-			catch (Exception ex)
-			{
-
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 			return userID;
 
 		}
@@ -435,20 +378,14 @@ namespace Edge.Api.Handlers
 		public List<Menu> GetMenu()
 		{
 			List<Menu> m = null;
-			try
-			{
+			
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 
 				m = Menu.GetMenu(currentUser);
 				if (m == null || m.Count == 0)
-					throw new HttpStatusException(HttpStatusCode.NotFound, string.Format("No menu found for userId {0} ", currentUser));
-			}
-			catch (Exception ex)
-			{
-
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+					throw new HttpStatusException(string.Format("No menu found for userId {0} ", currentUser), HttpStatusCode.NotFound);
+			
 			return m;
 		}
 		#endregion
@@ -461,8 +398,7 @@ namespace Edge.Api.Handlers
 		{
 
 			bool hasPermission = false;
-			try
-			{
+			
 
 				int currentUser;
 				ThingReader<CalculatedPermission> calculatedPermissionReader;
@@ -500,12 +436,7 @@ namespace Edge.Api.Handlers
 					}
 
 				}
-			}
-			catch (Exception ex)
-			{
-
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 			return hasPermission;
 		}
 
@@ -514,22 +445,16 @@ namespace Edge.Api.Handlers
 		{
 			List<string> permissions = new List<string>();
 
-			try
-			{
+			
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 
 				User user = User.GetUserByID(currentUser);
 				if (user.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+					throw new HttpStatusException("Only Account Administrator, can get user that is diffrent then current user!", HttpStatusCode.Forbidden);
 
 				permissions = Permission.GetAllPermissionTypeList();
-			}
-			catch (Exception ex)
-			{
-
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 			return permissions;
 		}
 
@@ -537,8 +462,7 @@ namespace Edge.Api.Handlers
 		public List<Permission> GetTreeOfAllPermissionType()
 		{
 			List<Permission> returnObject = new List<Permission>();
-			try
-			{
+			
 				Stack<Permission> stackPermission = new Stack<Permission>();
 
 				int currentUser;
@@ -546,13 +470,9 @@ namespace Edge.Api.Handlers
 
 				User user = User.GetUserByID(currentUser);
 				if (user.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can get user that is diffrent then current user!");
+					throw new HttpStatusException("Only Account Administrator, can get user that is diffrent then current user!", HttpStatusCode.Forbidden);
 				returnObject = Permission.GetAllPermissionTypeTree();
-			}
-			catch (Exception ex)
-			{
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 
 			return returnObject;
 
@@ -565,40 +485,28 @@ namespace Edge.Api.Handlers
 		public void InsertUpdateRemovePermissionForGroup(string groupID, AssignedPermissionData assignedPermissions)
 		{
 
-			try
-			{
+			
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 				User user = User.GetUserByID(currentUser);
 				if (user.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can edit permissions");
+					throw new HttpStatusException("Only Account Administrator, can edit permissions", HttpStatusCode.Forbidden);
 				AssignedPermissionData.PermissionOperations(int.Parse(groupID), assignedPermissions.accountsPermissionsData, true, assignedPermissions.permissionOperation);
-			}
-			catch (Exception ex)
-			{
-
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 		}
 
 		[UriMapping(Method = "POST", Template = "users/{userID}/permissions", BodyParameter = "assignedPermissions")]
 		public void InsertUpdateRemovePermissionForUser(string userID, AssignedPermissionData assignedPermissions)
 		{
 
-			try
-			{
+			
 				int currentUser;
 				currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 				User user = User.GetUserByID(currentUser);
 				if (user.IsAcountAdmin != true)
-					throw new HttpStatusException(HttpStatusCode.Forbidden, "Only Account Administrator, can edit permissions");
+					throw new HttpStatusException("Only Account Administrator, can edit permissions", HttpStatusCode.Forbidden);
 				AssignedPermissionData.PermissionOperations(int.Parse(userID), assignedPermissions.accountsPermissionsData, false, assignedPermissions.permissionOperation);
-			}
-			catch (Exception ex)
-			{
-
-				throw new HttpStatusException(HttpStatusCode.InternalServerError, ex.Message);
-			}
+			
 		}
 
 

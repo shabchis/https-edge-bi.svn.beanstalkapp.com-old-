@@ -47,6 +47,7 @@ namespace NewRestApiTester__
 		private List<string> GetListOfValuesBySetting(string settings)
 		{
 			List<string> values = settings.Split(',').ToList<string>();
+			values.Sort();
 			return values;
 		}
 

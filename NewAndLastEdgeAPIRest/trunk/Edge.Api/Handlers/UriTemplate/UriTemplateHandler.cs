@@ -23,7 +23,7 @@ namespace Edge.Api.Handlers.Template
 		static TemplateHandler()
 		{
 			TypeExpressions = new Dictionary<Type, string>();
-			TypeExpressions[typeof(string)] = ".+";
+			TypeExpressions[typeof(string)] = @"[^\/\?]+";
 			TypeExpressions[typeof(int)] = "[1-9][0-9]*";
 		}
 
@@ -92,19 +92,22 @@ namespace Edge.Api.Handlers.Template
 					Match match = attr.Regex.Match(context.Request.Url.PathAndQuery);
 					if (match.Success)
 					{
-						if (context.Request.HttpMethod == attr.Method)
+						if (match.Value == context.Request.Url.PathAndQuery)
 						{
-							foundMethod = method;
-							foundMatch = match;
-							foundAttribute = attr;
-							break;
+							if (context.Request.HttpMethod == attr.Method)
+							{
+								foundMethod = method;
+								foundMatch = match;
+								foundAttribute = attr;
+								break;
+							} 
 						}
 					}
 				}
 			}
 
 			if (foundMethod == null || foundMatch == null)
-				throw new Exception("400 Bad Request");
+				throw new UriTemplateException("method not exist", context.Request.Url.PathAndQuery, HttpStatusCode.NotFound);
 
 			// Build a list of method arguments
 			ParameterInfo[] methodParams = foundMethod.GetParameters();
@@ -117,7 +120,7 @@ namespace Edge.Api.Handlers.Template
 				{
 					// Handle POST body deserialization
 					// TODO: allow deserializing as stream
-					paramVal = HttpSerializer.DeserializeValue(context, param.ParameterType);
+					paramVal = HttpManager.DeserializeFromInput(context, param.ParameterType);
 				}
 				else
 				{
@@ -132,7 +135,7 @@ namespace Edge.Api.Handlers.Template
 			object val = foundMethod.Invoke(this, methodArgs);
 
 			// return as JSON for now
-			SetResponse(context, System.Net.HttpStatusCode.OK, val, "text/plain");
+			HttpManager.SetResponse(context, System.Net.HttpStatusCode.OK, val, "text/plain");
 		}
 
 		private static Regex BuildRegex(MethodInfo method, UriMappingAttribute attr)
@@ -152,8 +155,8 @@ namespace Edge.Api.Handlers.Template
 
 				foreach (Match m in paramMatches)
 				{
-					targetRegexPattern += urlToParse.Substring(lastIndex, m.Index - lastIndex);
-					lastIndex = m.Index + m.Value.Length;
+					targetRegexPattern +=string.Format("/{0}", urlToParse.Substring(lastIndex, m.Index - lastIndex));
+					lastIndex = m.Index + m.Value.Length+1;
 
 					ParameterInfo foundParam = null;
 					foreach (ParameterInfo param in parameters)
@@ -176,7 +179,8 @@ namespace Edge.Api.Handlers.Template
 					{
 						string typeExpression;
 						if (!TypeExpressions.TryGetValue(foundParam.ParameterType, out typeExpression))
-							throw new TemplateException(System.Net.HttpStatusCode.InternalServerError, "Cannot map URL parameter to method parameter type.", foundParam.Name);
+							throw new UriTemplateException(foundParam.Name, System.Net.HttpStatusCode.NotFound);
+						
 
 						// we found a matching parameter!
 						paramExpression = "(?<" + foundParam.Name + ">" + typeExpression + ")";

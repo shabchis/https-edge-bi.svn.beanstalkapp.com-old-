@@ -7,30 +7,16 @@ using System.Net;
 namespace Edge.Api.Handlers.Template
 {
 	[Serializable]
-	public class TemplateException : HttpStatusException
+	public class UriTemplateException : HttpStatusException
 	{
-		public TemplateException(HttpStatusCode httpStatusCode,string paramName):this(httpStatusCode,"Parameter mismatch.", paramName) { }
-		public TemplateException(HttpStatusCode httpStatusCode,string message, string paramName) : base(httpStatusCode, message + "\nParameter: " + paramName) { }
-		//protected TemplateException(
-		//  System.Runtime.Serialization.SerializationInfo info,
-		//  System.Runtime.Serialization.StreamingContext context)
-		//    : base(info, context) { }
-	}
-	[Serializable]
-	public class HttpStatusException : Exception
-	{
-		public HttpStatusCode StatusCode;
-		
-		public HttpStatusException(HttpStatusCode httpStatusCode,string message) :base (message)
+		public UriTemplateException(string paramName, HttpStatusCode httpStatusCode) :
+			this("Parameter mismatch.", paramName, httpStatusCode)
 		{
-			StatusCode = httpStatusCode;
-			
-
 		}
-		//protected HttpStatusException(System.Runtime.Serialization.SerializationInfo info,
-		//  System.Runtime.Serialization.StreamingContext context)
-		//    : base(info, context) { }
 
+		public UriTemplateException(string message, string paramName, HttpStatusCode httpStatusCode) :
+			base(message + "\nParameter: " + paramName, httpStatusCode)
+		{
+		}
 	}
-
 }
