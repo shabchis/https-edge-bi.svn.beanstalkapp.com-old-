@@ -8,7 +8,7 @@ using Easynet.Edge.Core.Services;
 using System.ServiceModel;
 using myFacebook = Facebook ;
 using Easynet.Edge.Services.DataRetrieval.Retriever;
-using Excel =  Microsoft.Office.Interop.Excel;
+//using Excel =  Microsoft.Office.Interop.Excel;
 using System.Data.SqlClient;
 using Easynet.Edge.Core.Data;
 using System.Data;

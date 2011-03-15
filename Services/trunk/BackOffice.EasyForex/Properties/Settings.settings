@@ -6,7 +6,7 @@
       <Value Profile="(Default)">https://classic.easy-forex.com/BackOffice/API/Marketing.asmx</Value>
     </Setting>
     <Setting Name="Edge_Services_BackOffice_EasyForex_com_prp1_ezfx_classic_Marketing" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">https://classic.prp1-ezfx.com/BackOffice/API/Marketing.asmx</Value>
+      <Value Profile="(Default)">https://classic.easy-forex.com/BackOffice/API/Marketing.asmx</Value>
     </Setting>
   </Settings>
 </SettingsFile>

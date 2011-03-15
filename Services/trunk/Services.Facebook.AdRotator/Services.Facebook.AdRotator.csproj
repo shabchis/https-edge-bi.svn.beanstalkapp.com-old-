@@ -35,7 +35,7 @@
   <ItemGroup>
     <Reference Include="Facebook, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Applications\EdgeServiceHost\bin\Debug\Services\Facebook.dll</HintPath>
+      <HintPath>..\ThirdParty\Facebook.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />

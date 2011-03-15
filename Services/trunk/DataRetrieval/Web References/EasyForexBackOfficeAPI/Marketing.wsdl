@@ -34,6 +34,30 @@
         </s:sequence>
         <s:anyAttribute />
       </s:complexType>
+      <s:element name="GetGatewayStatistics">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="startGid" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="finishGid" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="fromDateTime" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="toDateTime" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetGatewayStatisticsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetGatewayStatisticsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetCampaignStatistics">
         <s:complexType>
           <s:sequence>
@@ -69,6 +93,15 @@
   <wsdl:message name="GetCampaignStatisticsNEWAuthHeader">
     <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
   </wsdl:message>
+  <wsdl:message name="GetGatewayStatisticsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetGatewayStatistics" />
+  </wsdl:message>
+  <wsdl:message name="GetGatewayStatisticsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetGatewayStatisticsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetGatewayStatisticsAuthHeader">
+    <wsdl:part name="AuthHeader" element="tns:AuthHeader" />
+  </wsdl:message>
   <wsdl:message name="GetCampaignStatisticsSoapIn">
     <wsdl:part name="parameters" element="tns:GetCampaignStatistics" />
   </wsdl:message>
@@ -83,6 +116,10 @@
       <wsdl:input message="tns:GetCampaignStatisticsNEWSoapIn" />
       <wsdl:output message="tns:GetCampaignStatisticsNEWSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetGatewayStatistics">
+      <wsdl:input message="tns:GetGatewayStatisticsSoapIn" />
+      <wsdl:output message="tns:GetGatewayStatisticsSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetCampaignStatistics">
       <wsdl:input message="tns:GetCampaignStatisticsSoapIn" />
       <wsdl:output message="tns:GetCampaignStatisticsSoapOut" />
@@ -95,6 +132,16 @@
       <wsdl:input>
         <soap:body use="literal" />
         <soap:header message="tns:GetCampaignStatisticsNEWAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGatewayStatistics">
+      <soap:operation soapAction="http://www.easy-forex.com/GetGatewayStatistics" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetGatewayStatisticsAuthHeader" part="AuthHeader" use="literal" />
       </wsdl:input>
       <wsdl:output>
         <soap:body use="literal" />
@@ -118,6 +165,16 @@
       <wsdl:input>
         <soap12:body use="literal" />
         <soap12:header message="tns:GetCampaignStatisticsNEWAuthHeader" part="AuthHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGatewayStatistics">
+      <soap12:operation soapAction="http://www.easy-forex.com/GetGatewayStatistics" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetGatewayStatisticsAuthHeader" part="AuthHeader" use="literal" />
       </wsdl:input>
       <wsdl:output>
         <soap12:body use="literal" />

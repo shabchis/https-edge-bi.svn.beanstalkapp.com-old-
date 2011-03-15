@@ -10,7 +10,6 @@ using Easynet.Edge.Core.Utilities;
 using System.IO;
 using System.Configuration;
 
-using   Easynet.Edge.Services.DataRetrieval.com.google.adwords;
 
 
 

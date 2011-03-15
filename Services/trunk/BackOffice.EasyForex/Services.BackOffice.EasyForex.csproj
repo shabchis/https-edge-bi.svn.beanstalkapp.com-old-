@@ -100,10 +100,10 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>Edge_Services_BackOffice_EasyForex_EasyForexBackOffice_Marketing</CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="https://classic.prp1-ezfx.com/BackOffice/API/Marketing.asmx%3fwsdl">
+    <WebReferenceUrl Include="https://classic.easy-forex.com/BackOffice/API/Marketing.asmx%3fwsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\EasyForexBackOfficeAPI2\</RelPath>
-      <UpdateFromURL>https://classic.prp1-ezfx.com/BackOffice/API/Marketing.asmx%3fwsdl</UpdateFromURL>
+      <UpdateFromURL>https://classic.easy-forex.com/BackOffice/API/Marketing.asmx%3fwsdl</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
