@@ -11,8 +11,8 @@
     <Setting Name="Edge_Services_DataRetrieval_EasyForexBackOfficeAPI_Marketing" Type="(Web Service URL)" Scope="Application">
       <Value Profile="(Default)">https://classic.easy-forex.com/BackOffice/API/Marketing.asmx</Value>
     </Setting>
-    <Setting Name="Edge_Services_DataRetrieval_com_google_adwords_CampaignService" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">https://adwords.google.com/api/adwords/cm/v200909/CampaignService</Value>
+    <Setting Name="Edge_Services_DataRetrieval_com_prp1_ezfx_classic_Marketing" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://classic.easy-forex.com/BackOffice/API/Marketing.asmx</Value>
     </Setting>
   </Settings>
 </SettingsFile>

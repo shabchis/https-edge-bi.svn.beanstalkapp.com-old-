@@ -132,7 +132,7 @@ namespace Easynet.Edge.Services.DataRetrieval.Processor
 			bool deleteDay = String.IsNullOrEmpty(shouldDelete) || shouldDelete.ToLower() != "false";
 			if (deleteDay)
 			{
-				Log.Write(String.Format("Deleting day {0} for table {1}", Core.Utilities.DayCode.ToDayCode(_requiredDay), _tableName), LogMessageType.Information);
+				//Log.Write(String.Format("Deleting day {0} for table {1}", Core.Utilities.DayCode.ToDayCode(_requiredDay), _tableName), LogMessageType.Information);
 				base.HandleDeleteDay();
 			}
 		}

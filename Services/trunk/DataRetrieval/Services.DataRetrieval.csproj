@@ -96,8 +96,7 @@
     <Compile Include="Retriever\GAnalyticsRetriever.cs" />
     <Compile Include="Retriever\ImporterRetriever.cs" />
     <Compile Include="Retriever\ReportServiceWrapper.cs" />
-    <Compile Include="Retriever\Test.cs" />
-    <Compile Include="Web References\com.google.adwords\Reference.cs">
+    <Compile Include="Web References\EasyForexBackOfficeAPI2\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
@@ -122,17 +121,6 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="https://adwords.google.com/api/adwords/cm/v200909/CampaignService%3fwsdl">
-      <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\com.google.adwords\</RelPath>
-      <UpdateFromURL>https://adwords.google.com/api/adwords/cm/v200909/CampaignService%3fwsdl</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>Edge_Services_DataRetrieval_com_google_adwords_CampaignService</CachedSettingsPropName>
-    </WebReferenceUrl>
     <WebReferenceUrl Include="https://adwords.google.com/api/adwords/v13/AccountService%3fwsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\GAdWordsAccountServiceV13\</RelPath>
@@ -166,23 +154,23 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>Edge_Services_DataRetrieval_EasyForexBackOfficeAPI_Marketing</CachedSettingsPropName>
     </WebReferenceUrl>
+    <WebReferenceUrl Include="https://classic.easy-forex.com/BackOffice/API/Marketing.asmx%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\EasyForexBackOfficeAPI2\</RelPath>
+      <UpdateFromURL>https://classic.easy-forex.com/BackOffice/API/Marketing.asmx%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Edge_Services_DataRetrieval_com_prp1_ezfx_classic_Marketing</CachedSettingsPropName>
+    </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\com.google.adwords\CampaignPage.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\com.google.adwords\CampaignReturnValue.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\com.google.adwords\CampaignService.wsdl" />
-    <None Include="Web References\com.google.adwords\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Web References\EasyForexBackOfficeAPI\Marketing.wsdl" />
     <None Include="Web References\EasyForexBackOfficeAPI\Reference.map">
@@ -224,6 +212,13 @@
       <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
       <Name>Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web References\EasyForexBackOfficeAPI2\Marketing.wsdl" />
+    <None Include="Web References\EasyForexBackOfficeAPI2\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="General\" />

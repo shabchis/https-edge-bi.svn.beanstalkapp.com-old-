@@ -150,14 +150,15 @@ namespace Easynet.Edge.Services.DataRetrieval.Processor
 				}
 				catch
 				{
-                    try
-                    {
-                        DataManager.Current.RollbackTransaction(); //fix by alon _transaction was null 25/1/2011
-                    }
-                    catch
-                    {              
-                    }
-					throw;
+                    throw;
+                    //try
+                    //{
+                    //    DataManager.Current.RollbackTransaction(); //fix by alon _transaction was null 25/1/2011
+                    //}
+                    //catch
+                    //{              
+                    //}
+					
 				}
 			}
 
@@ -625,9 +626,19 @@ namespace Easynet.Edge.Services.DataRetrieval.Processor
 		{
 			//***************************
 			// ANTI-YANIV HACK
+            ServiceInstanceInfo targetInstance = Instance;
+            string trackerParamsRaw = string.Empty;
 			if (sectionName == "GatewayName")
 			{
-				string trackerParamsRaw = Instance.Configuration.Options["TrackingParameters"];
+                while (targetInstance != null)
+                {
+                    trackerParamsRaw = targetInstance.Configuration.Options["TrackingParameters"];
+                    if (string.IsNullOrEmpty(trackerParamsRaw))
+                        targetInstance = targetInstance.ParentInstance;
+                    else
+                        break;                    
+                }
+				 
 				if (trackerParamsRaw != null)
 				{
 					string[] trackerParamPairs = trackerParamsRaw.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
