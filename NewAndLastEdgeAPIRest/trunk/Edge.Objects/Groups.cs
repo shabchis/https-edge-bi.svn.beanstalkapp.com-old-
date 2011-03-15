@@ -35,8 +35,8 @@ namespace Edge.Objects
 		public Dictionary<int, List<AssignedPermission>> AssignedPermissions = new Dictionary<int, List<AssignedPermission>>();
 
 		[DataMember(Order = 5)]
-		[DictionaryMap(Command = "SELECT T0.UserID,T1.Name FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_User T1 ON T0.UserID=T1.UserID WHERE T0.GroupID=@GroupID:Int", IsStoredProcedure = false, ValueIsGenericList = false, KeyName = "UserID", ValueFieldsName = "Name")]
-		public Dictionary<int, string> Members = new Dictionary<int, string>();
+		[ListMap(Command = "SELECT T0.UserID,T1.Name FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_User T1 ON T0.UserID=T1.UserID WHERE T0.GroupID=@GroupID:Int", IsStoredProcedure = false)]
+		public List<User> Members = new List<User>();
 		
 
 
@@ -168,14 +168,14 @@ namespace Edge.Objects
 						sqlCommand.ExecuteNonQuery();
 					}
 				}
-				foreach (int userID in this.Members.Keys)
+				foreach (User user in this.Members)
 				{
 					SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_GUI_UserGroupUser
 																	(GroupID,UserID)
 																	VALUES
 																	(@GroupID:Int,@UserID:Int)");
 					sqlCommand.Parameters["@GroupID"].Value = this.GroupID;
-					sqlCommand.Parameters["@UserID"].Value = userID;
+					sqlCommand.Parameters["@UserID"].Value = user.UserID;
 					sqlCommand.Connection = sqlConnection;
 					sqlCommand.Transaction = sqlTransaction;
 					sqlCommand.ExecuteNonQuery();

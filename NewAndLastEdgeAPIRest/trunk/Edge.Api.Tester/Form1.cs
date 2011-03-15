@@ -108,15 +108,15 @@ namespace NewRestApiTester__
 
 			string fullAddress = string.Format("{0}/{1}", server, service);
 
-			
+
 			HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(fullAddress);
 			request.Timeout = 130000;
 			request.Accept = "application/json";
 			request.ContentType = "application/json";
-			
+
 			request.Method = requestType;
-			
-			
+
+
 			foreach (ListViewItem item in HeaderslistView.Items)
 			{
 				request.Headers.Add(item.Text, item.SubItems[1].Text);
@@ -126,32 +126,63 @@ namespace NewRestApiTester__
 			if (requestType == "POST" || requestType == "PUT")
 			{
 				request.ContentLength = BodyTextBox.Text.Length;
-				request.Headers["ContentType"]="application/json";
+				request.Headers["ContentType"] = "application/json";
 				if (!string.IsNullOrEmpty(BodyTextBox.Text))
 					SetBodyForCollectRequest(ref request);
 
 			}
-
-
-			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-			using (StreamReader reader=new StreamReader(response.GetResponseStream()))
-			{
-
-				ResponseBodyRichTextBox.Text = reader.ReadToEnd();
-			}
+			HttpWebResponse response = null;
 			
-			ResponseHeaderTextBox.Text = string.Empty;
-			ResponseHeaderTextBox.Text += response.StatusCode + "\n";
-			ResponseHeaderTextBox.Text += response.StatusDescription + "\n";
-			ResponseHeaderTextBox.Text += response.LastModified+"\n";
-			foreach (var header in response.Headers)
+			bool error = false;
+			try
 			{
-				
-				ResponseHeaderTextBox.Text += string.Format(header+ "\n");
+				response = (HttpWebResponse)request.GetResponse();
 			}
-			AfterRespondEvents(service);
-			response.Close();
+			catch (WebException ex)
+			{
+				error = true;
+
+				using (WebResponse res = ex.Response)
+				{
+					using (StreamReader reader = new StreamReader(res.GetResponseStream()))
+					{
+						
+						ResponseBodyRichTextBox.Text = reader.ReadToEnd();
+					}
+					ResponseHeaderTextBox.Text = string.Empty;
+					ResponseHeaderTextBox.Text=ex.Status.ToString() + " " + ex.Message;
+
+					//ResponseHeaderTextBox.Text += response.StatusCode + "\n";
+					//ResponseHeaderTextBox.Text += response.StatusDescription + "\n";
+					//ResponseHeaderTextBox.Text += response.LastModified + "\n";
+				}
+				
+
+
+			}
+
+
+
+			if (error == false)
+			{
+				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+				{
+
+					ResponseBodyRichTextBox.Text = reader.ReadToEnd();
+				}
+
+				ResponseHeaderTextBox.Text = string.Empty;
+				ResponseHeaderTextBox.Text += response.StatusCode + "\n";
+				ResponseHeaderTextBox.Text += response.StatusDescription + "\n";
+				ResponseHeaderTextBox.Text += response.LastModified + "\n";
+				foreach (var header in response.Headers)
+				{
+
+					ResponseHeaderTextBox.Text += string.Format(header + "\n");
+				}
+				AfterRespondEvents(service);
+				response.Close();
+			}
 			/*
 			HttpClient client = new HttpClient();
 			HttpRequestMessage request = new HttpRequestMessage(requestType, fullAddress);
@@ -195,13 +226,13 @@ namespace NewRestApiTester__
 
 		private void SetBodyForCollectRequest(ref HttpWebRequest request)
 		{
-			using (StreamWriter writer=new StreamWriter(request.GetRequestStream()))
+			using (StreamWriter writer = new StreamWriter(request.GetRequestStream()))
 			{
 				writer.Write(BodyTextBox.Text);
 				//writer.Flush();
-				
+
 			}
-			
+
 		}
 
 		private void AfterRespondEvents(string service)
@@ -218,7 +249,7 @@ namespace NewRestApiTester__
 
 
 				}
-				if (sessionResponseData != null && !string.IsNullOrEmpty( sessionResponseData.Session))
+				if (sessionResponseData != null && !string.IsNullOrEmpty(sessionResponseData.Session))
 				{
 					HeaderslistView.Items["x-edgebi-session"].SubItems[1].Text = sessionResponseData.Session;
 					Registry.CurrentUser.OpenSubKey("Software", true).CreateSubKey("WcfRestTester").CreateSubKey("LastSession").SetValue("LastSession", sessionResponseData.Session);
@@ -269,18 +300,18 @@ namespace NewRestApiTester__
 							catch (Exception)
 							{
 								odoc = (XmlDocument)Newtonsoft.Json.JsonConvert.DeserializeXmlNode("{\"root\":" + convertText + "}", "root");
-								
+
 							}
 						}
 						else
-							odoc = (XmlDocument)Newtonsoft.Json.JsonConvert.DeserializeXmlNode(convertText);						
+							odoc = (XmlDocument)Newtonsoft.Json.JsonConvert.DeserializeXmlNode(convertText);
 						returnValue = FormatXml(odoc);
 					}
 					catch (Exception)
 					{
-						
-						
-						
+
+
+
 					}
 
 				}
@@ -293,14 +324,14 @@ namespace NewRestApiTester__
 						ms.Flush();
 						ms.Position = 0;
 
-						XmlDocument odoc=new XmlDocument();
+						XmlDocument odoc = new XmlDocument();
 						odoc.Load(ms);
-					returnValue = Newtonsoft.Json.JsonConvert.SerializeXmlNode(odoc.SelectSingleNode("root")).ToString();
+						returnValue = Newtonsoft.Json.JsonConvert.SerializeXmlNode(odoc.SelectSingleNode("root")).ToString();
 					}
 					catch (Exception)
 					{
-						
-						
+
+
 					}
 
 				}
