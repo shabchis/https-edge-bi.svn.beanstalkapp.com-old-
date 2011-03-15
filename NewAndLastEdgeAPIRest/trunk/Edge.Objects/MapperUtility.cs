@@ -150,149 +150,13 @@ namespace Edge.Objects
 			}
 
 			return (T)returnObject;
-		}
-		public static IList GetMenus<T>(object Key, bool recursive, Func<FieldInfo, IDataRecord, object> onApplyValue) where T : class, new()
-		{
-			StringBuilder cmdMainObject = new StringBuilder();
-			string tableName = string.Empty;
-			string KeyFieldName = string.Empty;
-			string KeyFieldType = string.Empty;
-			Type requestedType = typeof(T);
-			IList returnObject;
-			Type typeElement;
-
-			//init
-			if (requestedType.IsGenericType)
-			{
-				returnObject = (IList)Activator.CreateInstance(requestedType);
-				typeElement = returnObject.GetType().GetGenericArguments()[0];
-				if (Attribute.IsDefined(typeElement, typeof(TableMapAttribute)))
-				{
-
-					TableMapAttribute tableMapAttribute = (TableMapAttribute)Attribute.GetCustomAttribute(typeElement, typeof(TableMapAttribute));
-					tableName = tableMapAttribute.TableName; //Map the table name for the query
-
-				}
-				else
-					throw new InvalidOperationException("Class must have TableMap attribute defined");
-
-			}
-			else
-				throw new Exception("This is not generic type");
-			//Create query
-			//Table
-
-
-			List<FieldInfo> regularMapedFields = new List<FieldInfo>();
-			foreach (FieldInfo fieldInfo in typeElement.GetFields())
-			{
-
-				if (Attribute.IsDefined(fieldInfo, typeof(FieldMapAttribute))) //Check if the field is a table field if it is use it on the query
-				{
-					FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(FieldMapAttribute));
-					regularMapedFields.Add(fieldInfo);
-					if (fieldMapAttribute.IsKey)
-					{
-						KeyFieldName = fieldMapAttribute.FieldName;
-						KeyFieldType = Easynet.Edge.Core.Utilities.TypeConvertor.ToSqlDbType(fieldInfo.FieldType).ToString();
-					}
-
-				}
-
-			}
-			cmdMainObject.AppendLine("SELECT ");
-			cmdMainObject.Append(CreateSelectList(regularMapedFields));
-
-			cmdMainObject.AppendLine(string.Format(" FROM {0} ", tableName));
-			//Add the where clause
-			if (Key == null)
-			{
-				cmdMainObject.AppendLine(string.Format(" WHERE {0}  is null", KeyFieldName));
-			}
-			else
-			{
-				cmdMainObject.AppendLine(string.Format(" WHERE {0}=@PrimeryKey:{1} ", KeyFieldName, KeyFieldType));
-			}
-
-			using (DataManager.Current.OpenConnection())
-			{
-				using (SqlCommand sqlCommand = DataManager.CreateCommand(cmdMainObject.ToString()))
-				{
-					if (Key != null)
-						sqlCommand.Parameters["@PrimeryKey"].Value = Key;
-
-
-					using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
-					{
-						while (sqlDataReader.Read())
-						{
-							object currentItem = Activator.CreateInstance(typeElement);
-							foreach (FieldInfo fieldInfo in typeElement.GetFields())
-							{
-
-								if (Attribute.IsDefined(fieldInfo, typeof(FieldMapAttribute)))
-								{
-									FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(FieldMapAttribute));
-									object val;
-									if (fieldMapAttribute.UseApplyFunction && onApplyValue != null)
-										val = onApplyValue(fieldInfo, sqlDataReader);
-									else
-										val = sqlDataReader[fieldMapAttribute.FieldName];
-									if (val is DBNull)
-									{
-										fieldInfo.SetValue(currentItem, null);
-									}
-									else
-									{
-										fieldInfo.SetValue(currentItem, val);
-									}
-								}
-							}
-							returnObject.Add(currentItem);
-						}
-					}
-				}
-			}
-			if (recursive)
-			{
-
-				object recursiveLookupValue = null;
-				for (int i = 0; i < returnObject.Count; i++)
-				{
-					object currentItem = Activator.CreateInstance(returnObject[i].GetType());
-					Type currentType = currentItem.GetType();
-					FieldInfo childsField = null;
-					currentItem = returnObject[i];
-					foreach (FieldInfo fieldInfo in currentType.GetFields())
-					{
-						if (Attribute.IsDefined(fieldInfo, typeof(FieldMapAttribute)))
-						{
-							FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(FieldMapAttribute));
-							if (fieldMapAttribute.RecursiveLookupField)
-								recursiveLookupValue = fieldInfo.GetValue(currentItem);
-
-						}
-						if (Attribute.IsDefined(fieldInfo, typeof(HasChildOfTheSameAttribute)))
-							childsField = fieldInfo;
-
-					}
-					if (recursiveLookupValue != null)
-					{
-						if (childsField != null)
-							childsField.SetValue(currentItem, GetMenus<T>(recursiveLookupValue, recursive, onApplyValue));
-					}
-				}
-			}
-			return returnObject;
-
-		}
-		
+		}		
 		public static IList GetListObject(FieldInfo fieldInfo, IDataReader sqlDataReader)
 		{
 			if (!fieldInfo.FieldType.IsGenericType || fieldInfo.FieldType.GetGenericTypeDefinition() == typeof(IList))
 				throw new Exception("This is not generic list");
 			Type typeElement = fieldInfo.FieldType.GetGenericArguments()[0];
-			IList returnObject = (IList)Activator.CreateInstance(fieldInfo.GetType());
+			IList returnObject = (IList)Activator.CreateInstance(fieldInfo.FieldType);
 			//Get the inner type
 
 			while (sqlDataReader.Read())
@@ -303,13 +167,16 @@ namespace Edge.Objects
 					if (Attribute.IsDefined(f, typeof(FieldMapAttribute)))
 					{
 						FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(f, typeof(FieldMapAttribute));
-						object val = sqlDataReader[fieldMapAttribute.FieldName];
-						if (val is DBNull)
+						if (sqlDataReader.FieldExists(fieldMapAttribute.FieldName))
 						{
-							f.SetValue(currentItem, null);
+							object val = sqlDataReader[fieldMapAttribute.FieldName];
+							if (val is DBNull)
+							{
+								f.SetValue(currentItem, null);
+							}
+							else
+								f.SetValue(currentItem, val); 
 						}
-						else
-							f.SetValue(currentItem, val);
 					}
 				}
 				returnObject.Add(currentItem);
