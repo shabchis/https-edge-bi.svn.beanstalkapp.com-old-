@@ -23,7 +23,7 @@ namespace Edge.Api.Handlers.Template
 		static TemplateHandler()
 		{
 			TypeExpressions = new Dictionary<Type, string>();
-			TypeExpressions[typeof(string)] = @"[^\/\?]+";
+			TypeExpressions[typeof(string)] = @"[^\/\?\&]+";
 			TypeExpressions[typeof(int)] = "[1-9][0-9]*";
 		}
 
@@ -92,7 +92,7 @@ namespace Edge.Api.Handlers.Template
 					Match match = attr.Regex.Match(context.Request.Url.PathAndQuery);
 					if (match.Success)
 					{
-						if (match.Value.ToLower() == context.Request.Url.PathAndQuery.ToLower())
+						if (match.Value.ToLower() == context.Request.AppRelativeCurrentExecutionFilePath.Replace("~",string.Empty) + context.Request.Url.Query)//..Url.PathAndQuery.ToLower())
 						{
 							if (context.Request.HttpMethod == attr.Method)
 							{

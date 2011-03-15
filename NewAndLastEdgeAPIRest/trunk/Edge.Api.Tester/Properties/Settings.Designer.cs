@@ -37,7 +37,7 @@ namespace NewRestApiTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8080")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://AlonYa-PC/API3")]
         public string RemoteAdress {
             get {
                 return ((string)(this["RemoteAdress"]));
