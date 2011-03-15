@@ -15,7 +15,7 @@ namespace Edge.Api
 		public override void ProcessRequest(HttpContext context)
 		{
 			ObjectQueryInfo info = new ObjectQueryInfo(context.Request.Path, context.Request.QueryString);
-			SetResponse(context, System.Net.HttpStatusCode.OK, info);
+			HttpManager.SetResponse(context, System.Net.HttpStatusCode.OK, info);
 		}
 	}
 
