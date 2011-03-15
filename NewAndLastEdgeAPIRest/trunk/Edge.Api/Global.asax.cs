@@ -41,7 +41,7 @@ namespace Edge.Api
 			Server.ClearError();
 			
 			HttpManager.SetResponse(this.Context, System.Net.HttpStatusCode.Forbidden, ex);
-			Response.End();
+			//Response.End();
 		}
 
 		protected void Session_End(object sender, EventArgs e)

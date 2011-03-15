@@ -92,7 +92,7 @@ namespace Edge.Api.Handlers.Template
 					Match match = attr.Regex.Match(context.Request.Url.PathAndQuery);
 					if (match.Success)
 					{
-						if (match.Value == context.Request.Url.PathAndQuery)
+						if (match.Value.ToLower() == context.Request.Url.PathAndQuery.ToLower())
 						{
 							if (context.Request.HttpMethod == attr.Method)
 							{
@@ -187,6 +187,10 @@ namespace Edge.Api.Handlers.Template
 					}
 
 					targetRegexPattern += paramExpression;
+				}
+				if (urlToParse.Length > lastIndex)
+				{
+					targetRegexPattern +="/" + urlToParse.Substring(lastIndex, urlToParse.Length - lastIndex);
 				}
 
 				targetRegex = new Regex(targetRegexPattern);

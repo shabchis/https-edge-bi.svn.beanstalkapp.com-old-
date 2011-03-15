@@ -84,7 +84,7 @@ namespace Edge.Api.Handlers
 		#endregion
 
 		#region Groups
-		[UriMapping(Template = "groups/{ID}")]
+		[UriMapping(Template = "groups/{ID}", Method = "GET")]
 		public Group GetGroupByID(string ID)
 		{
 			int groupID;
@@ -111,7 +111,7 @@ namespace Edge.Api.Handlers
 
 		}
 
-		[UriMapping(Template = "groups")]
+		[UriMapping(Template = "groups",Method="GET")]
 		public List<Group> GetAllGroups()
 		{
 			List<Group> groups = null;
@@ -204,7 +204,7 @@ namespace Edge.Api.Handlers
 		}
 		 */
 
-		[UriMapping(Template = "groups/{ID}/users")]
+		[UriMapping(Template = "groups/{ID}/users",Method="GET")]
 		public List<User> GetGroupAssociateUsers(string ID)
 		{
 			List<User> users = null;
@@ -251,7 +251,7 @@ namespace Edge.Api.Handlers
 			return returnUser;
 		}
 
-		[UriMapping(Template = "users")]
+		[UriMapping(Template = "users",Method="GET")]
 		public List<User> GetAllUsers()
 		{
 			List<User> users = null;
@@ -285,7 +285,7 @@ namespace Edge.Api.Handlers
 
 		}
 
-		[UriMapping(Method = "PUT", Template = "users/{ID}")]
+		[UriMapping(Method = "PUT", Template = "users/{ID}", BodyParameter = "user")]
 		public int UpdateUser(string ID, User user)
 		{
 			int userID = -1;
@@ -344,7 +344,7 @@ namespace Edge.Api.Handlers
 
 		}
 		 * */
-		[UriMapping(Template = "users/{ID}/groups")]
+		[UriMapping(Template = "users/{ID}/groups",Method="GET")]
 		public List<Group> GetUserAssociateGroups(string ID)
 		{
 			List<Group> associateGroups = new List<Group>();
@@ -374,7 +374,7 @@ namespace Edge.Api.Handlers
 		#endregion
 
 		#region Menus
-		[UriMapping(Template = "menu")]
+		[UriMapping(Template = "menu",Method="GET")]
 		public List<Menu> GetMenu()
 		{
 			List<Menu> m = null;
@@ -388,9 +388,7 @@ namespace Edge.Api.Handlers
 			
 			return m;
 		}
-		#endregion
-
-		
+		#endregion		
 
 		#region permissions
 		[UriMapping(Method = "POST", Template = "permissions", BodyParameter = "permissionRequest")]
@@ -440,7 +438,7 @@ namespace Edge.Api.Handlers
 			return hasPermission;
 		}
 
-		[UriMapping(Template = "permissions/list")]
+		[UriMapping(Template = "permissions/list",Method="GET")]
 		public List<string> GetListOfAllPermissionType()
 		{
 			List<string> permissions = new List<string>();
@@ -458,7 +456,7 @@ namespace Edge.Api.Handlers
 			return permissions;
 		}
 
-		[UriMapping(Template = "permissions/tree")]
+		[UriMapping(Template = "permissions/tree",Method="GET")]
 		public List<Permission> GetTreeOfAllPermissionType()
 		{
 			List<Permission> returnObject = new List<Permission>();

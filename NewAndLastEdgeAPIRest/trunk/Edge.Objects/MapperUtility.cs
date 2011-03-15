@@ -127,6 +127,26 @@ namespace Edge.Objects
 						fieldInfo.SetValue(returnObject, GetDictionryObject(fieldInfo, sqlCommand.ExecuteReader()));
 					}
 				}
+				else if (Attribute.IsDefined(fieldInfo, typeof(ListMapAttribute)))
+				{
+					ListMapAttribute listMapAttribute = (ListMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(ListMapAttribute));
+					using (DataManager.Current.OpenConnection())
+					{
+						if (!listMapAttribute.IsStoredProcedure)
+							sqlCommand = DataManager.CreateCommand(listMapAttribute.Command);
+						else
+							sqlCommand = DataManager.CreateCommand(listMapAttribute.Command, CommandType.StoredProcedure);
+						foreach (SqlParameter param in sqlCommand.Parameters)
+						{
+							string fieldName = param.ParameterName.Substring(1); //without the "@"
+							param.Value = returnObject.GetType().GetField(fieldName).GetValue(returnObject);
+
+						}
+
+						fieldInfo.SetValue(returnObject, GetListObject(fieldInfo, sqlCommand.ExecuteReader()));
+					}
+
+				}
 			}
 
 			return (T)returnObject;
@@ -266,101 +286,7 @@ namespace Edge.Objects
 			return returnObject;
 
 		}
-		//public static object GetListObjectByKey(FieldInfo fieldInfo, object primeryKey)
-		//{
-		//    StringBuilder cmdListObject = new StringBuilder();
-		//    string tableName = string.Empty;
-		//    List<FieldInfo> regularMapedFields = new List<FieldInfo>();
-		//    string whereClause = string.Empty;
-		//    string orderbyClause = string.Empty;
-		//    string fromClouse = string.Empty;
-
-
-
-
-		//    if (!fieldInfo.FieldType.IsGenericType || fieldInfo.FieldType.GetGenericTypeDefinition() == typeof(IList))
-		//        throw new Exception("This is not generic list");
-
-
-		//    if (Attribute.IsDefined(fieldInfo, typeof(ListMapAttribute)))
-		//    {
-		//        ListMapAttribute listMapAttribute = (ListMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(ListMapAttribute));
-		//        if (!string.IsNullOrEmpty(listMapAttribute.WhereClause))
-		//            whereClause = string.Format("WHERE {0} ", listMapAttribute.WhereClause);
-		//        if (!string.IsNullOrEmpty(listMapAttribute.OrderBy))
-		//            orderbyClause = string.Format("ORDER BY {0} ", listMapAttribute.OrderBy);
-		//        tableName = listMapAttribute.TableName;
-
-
-		//    }
-		//    else
-		//        throw new Exception("listmapatrribute not defined");
-
-
-		//    Type typeElement = fieldInfo.FieldType.GetGenericArguments()[0];
-
-
-		//    foreach (FieldInfo f in typeElement.GetFields())  //
-		//    {
-
-		//        if (Attribute.IsDefined(f, typeof(FieldMapAttribute))) //Check if the field is a table field if it is use it on the query
-		//        {
-		//            regularMapedFields.Add(f);
-		//        }
-		//    }
-		//    cmdListObject.AppendLine("SELECT ");
-		//    cmdListObject.AppendLine(CreateSelectList(regularMapedFields));
-
-
-
-
-		//    //Add the from Clause
-		//    cmdListObject.AppendLine(string.Format(" FROM {0} ", tableName));
-
-		//    //Add the where clause
-		//    if (!string.IsNullOrEmpty(whereClause))
-		//        cmdListObject.AppendLine(whereClause);
-		//    if (!string.IsNullOrEmpty(orderbyClause))
-		//        cmdListObject.Append(orderbyClause);
-
-
-		//    IList returnObject = (IList)Activator.CreateInstance(fieldInfo.FieldType);
-		//    using (DataManager.Current.OpenConnection())
-		//    {
-		//        using (SqlCommand sqlCommand = DataManager.CreateCommand(cmdListObject.ToString()))
-		//        {
-		//            //sqlcommand parameters
-		//            sqlCommand.Parameters["@PrimeryKey"].Value = primeryKey;
-		//            using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
-		//            {
-		//                while (sqlDataReader.Read())
-		//                {
-		//                    object currentItem = Activator.CreateInstance(typeElement);
-
-		//                    foreach (FieldInfo f in typeElement.GetFields())
-		//                    {
-		//                        if (Attribute.IsDefined(f, typeof(FieldMapAttribute)))
-		//                        {
-		//                            FieldMapAttribute fieldMapAttribute = (FieldMapAttribute)Attribute.GetCustomAttribute(f, typeof(FieldMapAttribute));
-		//                            object val = sqlDataReader[fieldMapAttribute.FieldName];
-		//                            if (val is DBNull)
-		//                            {
-		//                                f.SetValue(currentItem, null);
-		//                            }
-		//                            else
-		//                                f.SetValue(currentItem, val);
-
-		//                        }
-
-		//                    }
-		//                    returnObject.Add(currentItem);
-		//                }
-		//            }
-		//        }
-		//    }
-
-		//    return returnObject;
-		//}
+		
 		public static IList GetListObject(FieldInfo fieldInfo, IDataReader sqlDataReader)
 		{
 			if (!fieldInfo.FieldType.IsGenericType || fieldInfo.FieldType.GetGenericTypeDefinition() == typeof(IList))
