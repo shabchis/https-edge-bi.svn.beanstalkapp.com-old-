@@ -9,8 +9,7 @@ namespace MyScheduler.Objects
 	public class ServiceConfiguration
 	{
 		public int ID;
-		public ServiceConfiguration BaseConfiguration;
-		public int ConfigurationID;		
+		public ServiceConfiguration BaseConfiguration;			
 		public string Name;
 		public int MaxConcurrent;
 		public int MaxCuncurrentPerProfile;

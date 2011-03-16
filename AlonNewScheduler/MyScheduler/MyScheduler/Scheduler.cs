@@ -7,6 +7,8 @@ using Easynet.Edge.Core.Configuration;
 using MyScheduler.Objects;
 using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
+using Easynet.Edge.Core.Services;
+
 
 namespace MyScheduler
 {
@@ -50,7 +52,7 @@ namespace MyScheduler
 			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
 			{
 				if (!_scheduledServices.ContainsKey(schedulingData))
-				{
+				{				
 				ServiceInstance serviceInstance = SchedulePerService(schedulingData);
 				KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
 				ScheduleService(serviceInstanceAndRuleHash);
@@ -421,13 +423,13 @@ namespace MyScheduler
 
 			//Get all services with same configurationID
 			var servicesWithSameConfiguration = from s in _scheduledServices
-												where s.Value.ConfigurationID == schedulingData.Configuration.BaseConfiguration.ConfigurationID
+												where s.Value.ConfigurationID == schedulingData.Configuration.BaseConfiguration.ID && (s.Value.State!=ServiceState.Ended && s.Value.State!=ServiceState.Waiting) //runnig or not started yet
 												orderby s.Value.StartTime ascending
 												select s;
 
 			//Get all services with same profileID
 			var servicesWithSameProfile = from s in _scheduledServices
-										  where s.Value.ProfileID == schedulingData.Configuration.SchedulingProfile.ID
+										  where s.Value.ProfileID == schedulingData.Configuration.SchedulingProfile.ID && (s.Value.State != ServiceState.Ended && s.Value.State != ServiceState.Waiting) //runnig or not started yet
 										  orderby s.Value.StartTime ascending
 										  select s;
 
@@ -469,7 +471,7 @@ namespace MyScheduler
 						scheduleInfo.Odds = Percentile;
 						scheduleInfo.ActualDeviation = calculatedStartTime.Subtract(baseStartTime);
 						scheduleInfo.Priority = schedulingData.Priority;
-						scheduleInfo.ConfigurationID = schedulingData.Configuration.ConfigurationID;
+						scheduleInfo.ConfigurationID = schedulingData.Configuration.ID;
 						scheduleInfo.ID = schedulingData.Configuration.ID;
 						scheduleInfo.MaxConcurrentPerConfiguration = schedulingData.Configuration.MaxConcurrent;
 						scheduleInfo.MaxCuncurrentPerProfile = schedulingData.Configuration.MaxCuncurrentPerProfile;
@@ -477,6 +479,7 @@ namespace MyScheduler
 						scheduleInfo.MaxDeviationBefore = schedulingData.Rule.MaxDeviationBefore;
 						scheduleInfo.ProfileID = schedulingData.Configuration.SchedulingProfile.ID;
 						scheduleInfo.ServiceName = schedulingData.Configuration.Name;
+						scheduleInfo.State = ServiceState.Uninitialized;
 						found = true;
 					}
 					else
@@ -551,12 +554,13 @@ namespace MyScheduler
 		/// </summary>
 		private void PrintSchduleTable()
 		{
-			Console.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", "Name".PadRight(25,' '), "start", "end", "diff", "odds", "priority");
+			Console.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}","SchedulidDataID", "Name".PadRight(25,' '), "start", "end", "diff", "odds", "priority");
 			Console.WriteLine("---------------------------------------------------------");
 			KeyValuePair<SchedulingData, ServiceInstance>? prev = null;
 			foreach (KeyValuePair<SchedulingData, ServiceInstance> scheduled in _scheduledServices.OrderBy(s => s.Value.StartTime))
 			{
-				Console.WriteLine("{0}\t{1:HH:mm}\t{2:HH:mm}\t{3:hh\\:mm}\t{4}\t{5}",
+				Console.WriteLine("{0}\t{1:HH:mm}\t{2:HH:mm}\t{3:hh\\:mm}\t{4}\t{5}\t{6}",
+					scheduled.Key.GetHashCode(),
 					scheduled.Value.ServiceName.PadRight(25,' '),
 					scheduled.Value.StartTime,
 					scheduled.Value.EndTime,
@@ -574,6 +578,24 @@ namespace MyScheduler
 			}
 			Console.ReadLine();
 		}
+		/// <summary>
+		/// Return all the services not started to run or did not finished runing
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> GetScheduldServicesStatusNotEndedOrNotStarted()
+		{
+			//Dictionary<SchedulingData, ServiceInstance> returnObject;
+			 var returnObject = from s in _scheduledServices
+						   where s.Value.State != ServiceState.Ended && s.Value.State != ServiceState.Uninitialized
+						   select s;
+			 return returnObject;	 
+
+		}
+		public void SetServiceState(SchedulingData scheduilngData)
+		{
+			_scheduledServices[scheduilngData].State = ServiceState.Ended;
+		}
+
 	}
 	/// <summary>
 	/// Date of scheduling
@@ -593,6 +615,8 @@ namespace MyScheduler
 		public TimeSpan MaxDeviationAfter;
 		public TimeSpan ActualDeviation;
 		public double Odds;
+		public ServiceState State;
+		public ServiceOutcome Result;
 	}
 	/// <summary>
 	/// service-hour 
@@ -602,4 +626,5 @@ namespace MyScheduler
 		public TimeSpan SuitableHour;
 		public SchedulingData Service;
 	}
+	
 }
