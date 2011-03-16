@@ -47,7 +47,7 @@ namespace Edge.Api.Accounts.Handlers
 		#endregion
 
 		#region Campaigns
-		[UriMapping(Method="GET",Template = "accounts/{accountID}/campaigns/channels/{channelID}")]
+		[UriMapping(Method="GET",Template = "accounts/{accountID}/campaigns?channel={channelID}")]
 		public List<Campaign> GetCampaignsByAccountIdAndChannel(string accountID, string channelID)
 		{
 			List<Campaign> campaigns = new List<Campaign>();
