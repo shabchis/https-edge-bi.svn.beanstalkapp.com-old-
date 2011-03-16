@@ -44,6 +44,26 @@ namespace Eggplant.Persistence.Providers.SqlServer
 		{
 			InternalTransaction.Rollback();
 		}
+
+		protected override void ExecuteQueryNoReturn(Model.Queries.Query query)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override object ExecuteQueryAsValue(Model.Queries.Query query)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override object[] ExecuteQueryAsArray(Model.Queries.Query query)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override Model.Queries.IQueryResultReader ExecuteQueryAsReader(Model.Queries.Query query)
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 

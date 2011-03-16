@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<PersistenceConfiguration
-	xmlns="http://Eggplant/ObjectMapping"
-	ProviderType="Edge.Core.Persistence.Providers.SqlServerProvider, Edge.Core"
-	ProviderName="oltp"
+<ObjectMappings
+	xmlns="http://schemas.eggplant-framework.org/1.0/providers/sqlserver/mappings"
 	>
 
 	<ObjectMapping For="Account">
@@ -188,4 +186,4 @@
 	</ObjectMapping>
 
 
-</PersistenceConfiguration>
+</ObjectMappings>

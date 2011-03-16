@@ -13,13 +13,18 @@ namespace Eggplant.Persistence.Providers.SqlServer
 {
 	public class SqlServerProvider: PersistenceProvider
 	{
-		public string ConnectionString { get; set; }
+		public string ConnectionString
+		{
+			get; set;
+		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="threadLocal"></param>
-		/// <returns></returns>
+		public SqlServerObjectMappings Mappings
+		{
+			get;
+			set;
+		}
+
+		
 		protected override PersistenceConnection CreateNewConnection()
 		{
 			SqlConnection cn = new SqlConnection(ConnectionString);
@@ -152,9 +157,9 @@ namespace Eggplant.Persistence.Providers.SqlServer
 			SqlCommand cmd = new SqlCommand(commandText);
 			cmd.CommandType = commandType;
 
-			if (Persistence.Connection is SqlServerConnection)
+			if (Persistence.Current is SqlServerConnection)
 			{
-				var conn = (SqlServerConnection) Persistence.Connection;
+				var conn = (SqlServerConnection)Persistence.Current;
 				cmd.Connection = conn.InternalConnection;
 				cmd.Transaction = conn.InternalTransaction;
 			}

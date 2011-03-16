@@ -3,13 +3,15 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Text;
 using System.Threading;
+using Eggplant.Model;
+using Eggplant.Model.Queries;
 
 namespace Eggplant.Persistence
 {
 	/// <summary>
-	/// Represents a connection with a persistence store.
+	/// Represents a connection to a persistence store.
 	/// </summary>
-	public class PersistenceConnection: IDisposable
+	public abstract class PersistenceConnection: IDisposable
 	{
 		#region Fields
 		/*=========================*/
@@ -121,6 +123,40 @@ namespace Eggplant.Persistence
 		public virtual void TransactionRollback()
 		{
 		}
+
+		internal object ExecuteQuery(Query query, QueryReturn returnType)
+		{
+			// EXCEPTION:
+			if (query.Connection != null && query.Connection != this)
+				throw new Exception("The query being executed is attached to a different connection.");
+
+			object val;
+			switch (returnType)
+			{
+				case QueryReturn.Nothing:
+					this.ExecuteQueryNoReturn(query);
+					val = null;
+					break;
+				case QueryReturn.Value:
+					val = this.ExecuteQueryAsValue(query);
+					break;
+				case QueryReturn.Array:
+					val = this.ExecuteQueryAsArray(query);
+					break;
+				case QueryReturn.Reader:
+					val = this.ExecuteQueryAsReader(query);
+					break;
+				default:
+					throw new NotSupportedException("Query return type not supported.");
+			}
+			return val;
+		}
+
+		protected abstract void ExecuteQueryNoReturn(Query query);
+		protected abstract object ExecuteQueryAsValue(Query query);
+		protected abstract object[] ExecuteQueryAsArray(Query query);
+		protected abstract IQueryResultReader ExecuteQueryAsReader(Query query);
+
 
 		/*=========================*/
 		#endregion

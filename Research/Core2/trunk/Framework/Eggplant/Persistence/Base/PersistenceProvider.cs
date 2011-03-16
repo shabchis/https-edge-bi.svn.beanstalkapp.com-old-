@@ -32,12 +32,6 @@ namespace Eggplant.Persistence
 			set;
 		}
 
-		public PersistenceConfiguration Mappings
-		{
-			get;
-			set;
-		}
-
 		public virtual bool AlwaysUsesTransactions
 		{
 			get { return false; }
@@ -68,10 +62,7 @@ namespace Eggplant.Persistence
 		/// </summary>
 		/// <param name="threadLocal"></param>
 		/// <returns></returns>
-		protected virtual PersistenceConnection CreateNewConnection()
-		{
-			return new PersistenceConnection(this);
-		}
+		protected abstract PersistenceConnection CreateNewConnection();
 		
 		/*=========================*/
 		#endregion
