@@ -17,10 +17,10 @@ namespace MyScheduler
 	{
 		#region members
 		private List<ServiceConfiguration> _toBeScheduleServices = new List<ServiceConfiguration>();
-		private Dictionary<string, ServiceInstance> _scheduledServices = new Dictionary<string, ServiceInstance>();
+		private Dictionary<SchedulingData, ServiceInstance> _scheduledServices = new Dictionary<SchedulingData, ServiceInstance>();
 		private Dictionary<int, ServiceConfiguration> _servicesPerConfigurationID = new Dictionary<int, ServiceConfiguration>();
 		private Dictionary<int, ServiceConfiguration> _servicesPerProfileID = new Dictionary<int, ServiceConfiguration>();
-		private Dictionary<string, ServiceInstance> _unscheduleServices = new Dictionary<string, ServiceInstance>();
+		private Dictionary<SchedulingData, ServiceInstance> _unscheduleServices = new Dictionary<SchedulingData, ServiceInstance>();
 		DateTime _scheduleFrom;
 		DateTime _scheduleTo;
 		private const int neededTimeLine = 120; //scheduling for the next xxx min....
@@ -47,10 +47,14 @@ namespace MyScheduler
 
 			//List<SchedulingData> toBeScheduledByTimeAndPriority = SortBySuitableSchedulingRuleAndPriority(servicesForNextTimeLine); //servicesForNextTimeLine.OrderBy(ordered => ordered.SchedulingRules[0].Hours[0]).ThenByDescending(ordered => ordered.priority);
 			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s => s.SelectedDay).ThenBy(s => s.SelectedHour).ThenBy(s => s.Priority);
-			foreach (var service in toBeScheduledByTimeAndPriority)
+			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
 			{
-				ServiceInstance serviceInstance = SchedulePerService(service);
-				ScheduleService(serviceInstance);
+				if (!_scheduledServices.ContainsKey(schedulingData))
+				{
+				ServiceInstance serviceInstance = SchedulePerService(schedulingData);
+				KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
+				ScheduleService(serviceInstanceAndRuleHash);
+				}
 			}
 			PrintSchduleTable();
 		}
@@ -395,14 +399,14 @@ namespace MyScheduler
 		/// <summary>
 		/// set the service instance on the right time get the service instance with all the data of scheduling and more
 		/// </summary>
-		/// <param name="serviceInstance"></param>
-		private void ScheduleService(ServiceInstance serviceInstance)
+		/// <param name="serviceInstanceAndRuleHash"></param>
+		private void ScheduleService(KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash)
 		{
-			if (serviceInstance.ActualDeviation > serviceInstance.MaxDeviationAfter)  // check if the waiting time is bigger then max waiting time.
-				_unscheduleServices.Add(serviceInstance.ServiceName, serviceInstance);
+			if (serviceInstanceAndRuleHash.Value.ActualDeviation > serviceInstanceAndRuleHash.Value.MaxDeviationAfter)  // check if the waiting time is bigger then max waiting time.
+				_unscheduleServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
 			else
 			{
-				_scheduledServices.Add(serviceInstance.ServiceName, serviceInstance);
+				_scheduledServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
 			}
 		}
 		/// <summary>
@@ -438,7 +442,7 @@ namespace MyScheduler
 		/// <param name="servicesWithSameProfile"></param>
 		/// <param name="schedulingData"></param>
 		/// <returns></returns>
-		private ServiceInstance FindFirstFreeTime(IOrderedEnumerable<KeyValuePair<string, ServiceInstance>> servicesWithSameConfiguration, IOrderedEnumerable<KeyValuePair<string, ServiceInstance>> servicesWithSameProfile, SchedulingData schedulingData)
+		private ServiceInstance FindFirstFreeTime(IOrderedEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> servicesWithSameConfiguration, IOrderedEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> servicesWithSameProfile, SchedulingData schedulingData)
 		{
 			ServiceInstance scheduleInfo = null;
 			TimeSpan suitableHour = schedulingData.SelectedHour;			
@@ -518,7 +522,7 @@ namespace MyScheduler
 		/// <param name="startTime"></param>
 		/// <param name="endTime"></param>
 		/// <param name="ExecutionTime"></param>
-		private static void GetNewStartEndTime(IOrderedEnumerable<KeyValuePair<string, ServiceInstance>> servicesWithSameProfile, ref DateTime startTime, ref DateTime endTime, int ExecutionTime)
+		private static void GetNewStartEndTime(IOrderedEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> servicesWithSameProfile, ref DateTime startTime, ref DateTime endTime, int ExecutionTime)
 		{
 			startTime = servicesWithSameProfile.Min(s => s.Value.EndTime);
 			//Get end time
@@ -530,7 +534,7 @@ namespace MyScheduler
 		/// <param name="servicesWithSameConfiguration"></param>
 		/// <param name="servicesWithSameProfile"></param>
 		/// <param name="startTime"></param>
-		private void RemoveBusyTime(ref IOrderedEnumerable<KeyValuePair<string, ServiceInstance>> servicesWithSameConfiguration, ref IOrderedEnumerable<KeyValuePair<string, ServiceInstance>> servicesWithSameProfile, DateTime startTime)
+		private void RemoveBusyTime(ref IOrderedEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> servicesWithSameConfiguration, ref IOrderedEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> servicesWithSameProfile, DateTime startTime)
 		{
 			servicesWithSameConfiguration = from s in servicesWithSameConfiguration
 											where s.Value.EndTime > startTime
@@ -549,8 +553,8 @@ namespace MyScheduler
 		{
 			Console.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", "Name".PadRight(25,' '), "start", "end", "diff", "odds", "priority");
 			Console.WriteLine("---------------------------------------------------------");
-			KeyValuePair<string, ServiceInstance>? prev = null;
-			foreach (KeyValuePair<string, ServiceInstance> scheduled in _scheduledServices.OrderBy(s => s.Value.StartTime))
+			KeyValuePair<SchedulingData, ServiceInstance>? prev = null;
+			foreach (KeyValuePair<SchedulingData, ServiceInstance> scheduled in _scheduledServices.OrderBy(s => s.Value.StartTime))
 			{
 				Console.WriteLine("{0}\t{1:HH:mm}\t{2:HH:mm}\t{3:hh\\:mm}\t{4}\t{5}",
 					scheduled.Value.ServiceName.PadRight(25,' '),
@@ -564,7 +568,7 @@ namespace MyScheduler
 			}
 			if (_unscheduleServices.Count > 0)
 				Console.WriteLine("---------------------Will not be scheduled--------------------------------------");
-			foreach (KeyValuePair<string, ServiceInstance> notScheduled in _unscheduleServices)
+			foreach (KeyValuePair<SchedulingData, ServiceInstance> notScheduled in _unscheduleServices)
 			{
 				Console.WriteLine("Service name: {0}\tBase start time:{1:hh:mm}\tschedule time is{2:hh:mm}\t maximum waiting time is{3}", notScheduled.Value.ServiceName, notScheduled.Value.EndTime, notScheduled.Value.StartTime, notScheduled.Value.MaxDeviationAfter);
 			}
