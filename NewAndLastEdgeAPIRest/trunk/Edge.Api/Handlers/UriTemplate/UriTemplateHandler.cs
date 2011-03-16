@@ -52,7 +52,7 @@ namespace Edge.Api.Handlers.Template
 
 			if (ShouldValidateSession)
 				{
-					if (context.Request.Path.ToLower() != LogIn.ToLower())
+					if (context.Request.AppRelativeCurrentExecutionFilePath.Replace("~", string.Empty).ToLower() != LogIn.ToLower())
 					{
 						int userCode;
 						string session = context.Request.Headers[SessionHeader];
@@ -87,20 +87,21 @@ namespace Edge.Api.Handlers.Template
 					// Assign the regex to the attribute for later use
 					attr.Regex = BuildRegex(method, attr);
 				}
-				if (!string.IsNullOrEmpty( attr.Regex.ToString()))
+				if (!string.IsNullOrEmpty(attr.Regex.ToString()))
 				{
-					Match match = attr.Regex.Match(context.Request.Url.PathAndQuery);
+					string netopath = context.Request.Url.PathAndQuery.Remove(0, context.Request.ApplicationPath.Length);
+					if (!netopath.StartsWith("/"))
+						netopath = '/' + netopath;
+
+					Match match = attr.Regex.Match(netopath);
 					if (match.Success)
 					{
-						if (match.Value.ToLower() == context.Request.AppRelativeCurrentExecutionFilePath.Replace("~",string.Empty) + context.Request.Url.Query)//..Url.PathAndQuery.ToLower())
+						if (context.Request.HttpMethod == attr.Method)
 						{
-							if (context.Request.HttpMethod == attr.Method)
-							{
-								foundMethod = method;
-								foundMatch = match;
-								foundAttribute = attr;
-								break;
-							} 
+							foundMethod = method;
+							foundMatch = match;
+							foundAttribute = attr;
+							break;
 						}
 					}
 				}
@@ -141,22 +142,28 @@ namespace Edge.Api.Handlers.Template
 		private static Regex BuildRegex(MethodInfo method, UriMappingAttribute attr)
 		{
 			Regex targetRegex;
-			string urlToParse = attr.Template;
-			MatchCollection paramMatches = FindParametersRegex.Matches(urlToParse);
+
+			MatchCollection paramMatches = FindParametersRegex.Matches(attr.Template);
 			if (paramMatches.Count < 1)
 			{
-				targetRegex = new Regex(string.Format(@"/{0}",urlToParse),RegexOptions.IgnoreCase);
+				targetRegex = new Regex(string.Format(@"^{1}{0}$",
+					attr.Template,
+					attr.Template.StartsWith("/") ? string.Empty : "/"
+					),
+				RegexOptions.IgnoreCase);
 			}
 			else
 			{
-				string targetRegexPattern = string.Empty;
+				// Always start URLs with a leading slash
+				string targetRegexPattern = "^" + (attr.Template.StartsWith("/") ? string.Empty : "/");
+
 				ParameterInfo[] parameters = method.GetParameters();
 				int lastIndex = 0;
 
 				foreach (Match m in paramMatches)
 				{
-					targetRegexPattern +=string.Format("/{0}", urlToParse.Substring(lastIndex, m.Index - lastIndex));
-					lastIndex = m.Index + m.Value.Length+1;
+					targetRegexPattern += Regex.Escape(string.Format("{0}", attr.Template.Substring(lastIndex, m.Index - lastIndex)));
+					lastIndex = m.Index + m.Value.Length;
 
 					ParameterInfo foundParam = null;
 					foreach (ParameterInfo param in parameters)
@@ -188,12 +195,13 @@ namespace Edge.Api.Handlers.Template
 
 					targetRegexPattern += paramExpression;
 				}
-				if (urlToParse.Length > lastIndex)
+
+				if (attr.Template.Length > lastIndex)
 				{
-					targetRegexPattern +="/" + urlToParse.Substring(lastIndex, urlToParse.Length - lastIndex);
+					targetRegexPattern += Regex.Escape(attr.Template.Substring(lastIndex, attr.Template.Length - lastIndex));
 				}
 
-				targetRegex = new Regex(targetRegexPattern);
+				targetRegex = new Regex(targetRegexPattern+"$");
 			}
 			return targetRegex;
 		}
