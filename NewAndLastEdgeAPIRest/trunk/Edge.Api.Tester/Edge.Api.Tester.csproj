@@ -74,10 +74,10 @@
       <HintPath>..\Dlls\Edge.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Http">
-      <HintPath>..\Dlls\Microsoft.Http.dll</HintPath>
+      <HintPath>..\Third Party\Microsoft.Http.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Dlls\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\Third Party\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

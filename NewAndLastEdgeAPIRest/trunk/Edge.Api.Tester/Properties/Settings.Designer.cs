@@ -25,19 +25,7 @@ namespace NewRestApiTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8080")]
-        public string LocalAdress {
-            get {
-                return ((string)(this["LocalAdress"]));
-            }
-            set {
-                this["LocalAdress"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://AlonYa-PC/API3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://bi_rnd:8080/API2")]
         public string RemoteAdress {
             get {
                 return ((string)(this["RemoteAdress"]));
@@ -86,13 +74,25 @@ namespace NewRestApiTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"users/{0},users,Menu,accounts,accounts/{0},permissions,permissions/list,permissions/tree,Sessions,groups,groups/{0},users/{0}/permissions,groups/{0}/permissions,Tools/refund,users/{0}/groups,groups/{0}/users,groups/{0}/users/{1},accounts/{0}/campaigns/channels/{1},accounts/{0}/campaigns/{1}")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"users/{0},users,Menu,accounts,accounts/{0},permissions,permissions/list,permissions/tree,Sessions,groups,groups/{0},users/{0}/permissions,groups/{0}/permissions,Tools/refund,users/{0}/groups,groups/{0}/users,groups/{0}/users/{1},accounts/{0}/campaigns?channel={1},accounts/{0}/campaigns/{1}")]
         public string Services {
             get {
                 return ((string)(this["Services"]));
             }
             set {
                 this["Services"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8080/")]
+        public string LocalAdress {
+            get {
+                return ((string)(this["LocalAdress"]));
+            }
+            set {
+                this["LocalAdress"] = value;
             }
         }
     }
