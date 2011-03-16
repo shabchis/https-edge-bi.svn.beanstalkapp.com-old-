@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Eggplant.Model.Queries;
+using Eggplant.Persistence;
+using Eggplant.Persistence.Providers.Xml;
 
 namespace Eggplant.Model
 {
 	public class ObjectModel
 	{
-		public Dictionary<string,ObjectDefinition> Definitions { get; }
+		public Dictionary<string,ObjectDefinition> Definitions { get; set; }
 
-		public static ObjectModel Load()
+		public static ObjectModel Load(string url)
 		{
+			XmlProvider provider = new XmlProvider(url, @"D:\Codebase\Edge 3.0\Framework\Eggplant\Model\ObjectModel.schema.xsd"); 
+
 			return (ObjectModel)
 				Eggplant.Persistence.Persistence
 				.Current
@@ -18,7 +23,8 @@ namespace Eggplant.Model
 				.Model
 				.For<ObjectModel>()
 				.Queries["Load"]
-				.GetSingle();
+				.Prepare()
+				.GetValue();
 		}
 
 		public ObjectDefinition For<T>()
@@ -36,25 +42,25 @@ namespace Eggplant.Model
 		public string Name { get; set; }
 		public string Namespace { get; set; }
 		public bool IsAbstract {get; set;}
-		public Type TargetType { get; }
+		public Type TargetType { get; set; }
 		public ObjectDefinition BaseDefinition { get; set; }
-		public Dictionary<string, PropertyDefinition> Properties { get; }
-		public Dictionary<string, QueryDefinition> Queries { get; }
+		public Dictionary<string, PropertyDefinition> Properties { get; set; }
+		public Dictionary<string, QueryDefinition> Queries { get; set; }
 	}
 
 	public abstract class PropertyDefinition
 	{
 		public string Name { get; set; }
 		
-		public Type Type { get; }
+		public Type Type { get; set; }
 		public string TypeName { get; set; }
-		public ObjectDefinition TypeDef { get; }
+		public ObjectDefinition TypeDef { get; set; }
 		
 		public PropertyAccess Access { get; set; }
 		public object EmptyValue {get; set;}
 		public object DefaultValue { get; set; }
 		public bool AllowEmpty { get; set; }
-		public List<PropertyConstraint> Constraints { get; }
+		public List<PropertyConstraint> Constraints { get; set; }
 	}
 
 	public class PropertyDefinition<T>:PropertyDefinition
@@ -100,13 +106,36 @@ namespace Eggplant.Model
 		ReadWriteDetached
 	}
 
-	public class QueryDefinition
+	public abstract class QueryDefinition
 	{
 		public string Name {get; set;}
 		public QueryScope Scope { get; set; }
 		public Type ReturnType { get; set; }
 		public ObjectDefinition ReturnTypeObjectDefinition { get; set; }
-		public List<QueryParameter> Parameters { get; }
+		public Dictionary<string, QueryParameter> Parameters { get; set; }
+
+		public Query Prepare(PersistenceConnection connection = null)
+		{
+			return OnPrepare(connection);
+		}
+
+		protected virtual Query OnPrepare(PersistenceConnection connection)
+		{
+			return new Query(this, connection);
+		}
+	}
+
+	public class QueryDefinition<T>:QueryDefinition
+	{
+		public new Query<T> Prepare(PersistenceConnection connection = null)
+		{
+			return (Query<T>)base.Prepare(connection);
+		}
+
+		protected override Query OnPrepare(PersistenceConnection connection)
+		{
+			return new Query<T>(this, connection);
+		}
 	}
 
 	public class QueryParameter

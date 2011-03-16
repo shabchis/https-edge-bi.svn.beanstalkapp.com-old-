@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ObjectSchema xmlns="http://eggplant/schema">
-
-	<ObjectSet Namespace="Edge.Models.UserModel">
+<ObjectModel xmlns="http://schemas.eggplant-framework.org/1.0/model" Namespace="Edge.Models.UserModel">
 
 		<Object Name="Account">
 			<Properties>
@@ -38,7 +36,7 @@
 			<Value Name="Allow" Value="-1"/>
 			<Value Name="Deny" Value="0"/>
 		</Enum>
-		
+
 		<Object Name="PermissionAssignment">
 			<Properties>
 				<Property Name="Target" Type="PermissionTarget"/>
@@ -46,7 +44,7 @@
 				<Property Name="Assignments" Type="Dictionary[string,PermissionAssignmentType]"/>
 			</Properties>
 		</Object>
-		
+
 		<Object Name="AccountPermission">
 			<Properties>
 				<Property Name="Account" Type="Account"/>
@@ -55,13 +53,13 @@
 				</Property>
 			</Properties>
 		</Object>
-		
+
 		<Object Name="PermissionTarget" Abstract="true">
 			<Properties>
 				<Property Name="ID" Type="int" Access="ReadOnly" EmptyValue="-1"/>
 				<Property Name="Permissions" Access="ReadOnly" Type="Dictionary[Account,AccountPermission]">
 					<Constraint Property="Target" Value="[this]"/>
-					
+
 					<!-- this is implied by the fact that the type is a ObjectDictionary
 					<Identities>
 						<Identity>
@@ -88,7 +86,7 @@
 			u.Permissions[a]["/equipment/guitar"] = PermissionAssignment.Allow;
 		]]>
 		-->
-		
+
 		<!-- User -->
 		<Object Name="User" BasedOn="PermissionTarget">
 			<Properties>
@@ -99,12 +97,12 @@
 			</Properties>
 		</Object>
 
-	
+
 		<!-- Channel -->
 		<Object Name="Channel">
 			<Properties>
 				<Property Name="ID" Type="int" Access="ReadOnly" EmptyValue="-1"/>
-				<Property Name="Name" Type="string" AllowEmpty="false"/>			
+				<Property Name="Name" Type="string" AllowEmpty="false"/>
 			</Properties>
 
 			<Queries>
@@ -174,32 +172,29 @@
 		</Object>
 
 		<!-- Creative -->
-		<Object Name="Creative" BasedOn="ObjectWithSegments" Abstract="true">
-			<Properties>
-				<Property Name="Title" Type="string" Access="ReadWriteDetached"  AllowEmpty="false"/>
-				<Property Name="Description1" Type="string" Access="ReadWriteDetached" />
-				<Property Name="Description2" Type="string" Access="ReadWriteDetached" />
-			</Properties>
-			
-			<Queries>
-				<Query Scope="Global" Name="GetByAccount">
-					<Parameters>
-						<Parameter Name="account" Type="Account"/>
-					</Parameters>
-				</Query>
-			</Queries>
+	<Object Name="Creative" BasedOn="ObjectWithSegments" Abstract="true">
+		<Properties>
+			<Property Name="Title" Type="string" Access="ReadWriteDetached"  AllowEmpty="false"/>
+			<Property Name="Description1" Type="string" Access="ReadWriteDetached" />
+			<Property Name="Description2" Type="string" Access="ReadWriteDetached" />
+		</Properties>
 
-			<Constructors HasDefault="false">
-				<Constructor>
-					<Parameter Name="title" MapsTo="Title"/>
-				</Constructor>
-			</Constructors>
-		</Object>
-		
-	</ObjectSet>
+		<Queries>
+			<Query Scope="Global" Name="GetByAccount">
+				<Parameters>
+					<Parameter Name="account" Type="Account"/>
+				</Parameters>
+			</Query>
+		</Queries>
 
+		<Constructors HasDefault="false">
+			<Constructor>
+				<Parameter Name="title" MapsTo="Title"/>
+			</Constructor>
+		</Constructors>
+	</Object>
 
-	<ObjectSet Namespace="Easynet.BusinessObjects.Paid">
+	<ObjectModel Namespace="Easynet.BusinessObjects.Paid">
 
 		<!-- Campaign -->
 		<Object Name="Campaign" BasedOn="ObjectWithSegments">
@@ -291,7 +286,7 @@
 				<Property Name="DisplayUrl" Type="string"/>
 			</Properties>
 		</Object>
+		
+	</ObjectModel>
 
-	</ObjectSet>
-
-</ObjectSchema>
+</ObjectModel>

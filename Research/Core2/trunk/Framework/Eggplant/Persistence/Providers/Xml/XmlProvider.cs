@@ -8,18 +8,47 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using System.Data;
 using System.Reflection;
+using System.IO;
+using System.Xml;
 
-namespace Eggplant.Persistence.Providers.SqlServer
+namespace Eggplant.Persistence.Providers.Xml
 {
 	public class XmlProvider: PersistenceProvider
 	{
-		public override bool AlwaysUsesTransactions
+		/*public readonly Stream Stream = null;*/
+		public readonly string Url = null;
+		public readonly string SchemaUrl = null;
+
+		public XmlProvider(string url, string schemaUrl)
 		{
-			get { return true; }
+			Url = url;
+			SchemaUrl = schemaUrl;
+			LoadMappingsFromXsd(schemaUrl);
+		}
+
+		internal void LoadMappingsFromXsd(string schemalUrl)
+		{
+			XmlTextReader reader = new XmlTextReader(schemalUrl);
+			reader.WhitespaceHandling = WhitespaceHandling.None;
+
+			while (!reader.EOF)
+			{
+				reader.Read();
+				if (reader.NodeType == XmlNodeType.Comment)
+					continue;
+
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					while (reader.MoveToNextAttribute())
+					{
+					}
+				}
+			}
 		}
 
 		protected override PersistenceConnection CreateNewConnection()
 		{
+			return new XmlConnection(this);
 		}
 	}
 }
