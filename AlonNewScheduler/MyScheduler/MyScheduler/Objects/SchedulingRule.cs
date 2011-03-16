@@ -22,6 +22,7 @@ namespace MyScheduler.Objects
 		public SchedulingRule Rule;
 		public int SelectedDay;
 		public TimeSpan SelectedHour;
+
 		public int Priority;
 		
 
@@ -62,7 +63,6 @@ namespace MyScheduler.Objects
 			return !sd1.Equals(sd2);
 		}
 	}
-
 	public enum SchedulingScope
 	{
 		Day,

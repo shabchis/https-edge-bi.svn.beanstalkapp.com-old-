@@ -9,11 +9,6 @@ namespace MyScheduler.Objects
 	{
 		public int ID;
 		public string Name;
-		public Dictionary<string,object> Settings;
-		
-		
-		
-
-		
+		public Dictionary<string,object> Settings;	
 	}
 }

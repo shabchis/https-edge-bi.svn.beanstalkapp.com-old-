@@ -12,13 +12,26 @@ namespace MyScheduler
 		{
 			
 
+			
+			Scheduler s = new Scheduler(true);
+			Console.WriteLine("Scheduling time is:{0}\n", DateTime.Now.TimeOfDay);
+			
+			Console.WriteLine("Press any N for next scheduling ,anything else to exit\n");
+			while (Console.ReadLine()=="n")
+			{
+				Console.WriteLine("Press any N for next scheduling ,anything else to exit\n");
+				s.CreateSchedule();
+			}
+
+
+
 			//List<ServiceConfigration> services = new List<ServiceConfigration>();
 
 
 			//ServiceConfigration sc1 = new ServiceConfigration() { ID = 1, ConfigurationID=77, Name="service1",priority=2, MaxConcurrentPerConfiguration = 1, MaxCuncurrentPerProfile = 1, SchedulingProfile = new Profile() { ID = 1 ,ProfileID=88}, Rule = new SchedulingRule() { time =new DateTime(2011, 01, 01, 00, 00, 00) } };
 			//services.Add(sc1);
 			//ServiceConfigration sc12 = new ServiceConfigration() { ID = 2, ConfigurationID = 77, Name = "service2", priority = 2, /*AverageExecutionTime = new TimeSpan(0, 5, 0),*/ MaxConcurrentPerConfiguration = 1, MaxCuncurrentPerProfile = 1, SchedulingProfile = new Profile() { ID = 2, ProfileID = 88 }, Rule = new SchedulingRule() { time = new DateTime(2011, 01, 01, 00, 00, 00) } };
-			
+
 			//services.Add(sc12);
 
 			//ServiceConfigration sc2 = new ServiceConfigration() { ID = 3, ConfigurationID = 77, Name = "service3", priority = 2, MaxConcurrentPerConfiguration = 1, MaxCuncurrentPerProfile = 1, SchedulingProfile = new Profile() { ID = 3, ProfileID = 88 }, Rule = new SchedulingRule() { time = new DateTime(2011, 01, 01, 00, 00, 00)/*.AddHours(1)*/ } };
@@ -65,10 +78,6 @@ namespace MyScheduler
 			//services.Add(new ServiceConfigration() { ID = 638, ConfigurationID = 77, Name = "service6", priority = 2, MaxConcurrentPerConfiguration = 1, MaxCuncurrentPerProfile = 1, SchedulingProfile = new Profile() { ID = 6, ProfileID = 88 }, Rule = new SchedulingRule() { time = new DateTime(2011, 01, 01, 00, 00, 00) } });
 			//services.Add(new ServiceConfigration() { ID = 699, ConfigurationID = 77, Name = "service6", priority = 2, MaxConcurrentPerConfiguration = 1, MaxCuncurrentPerProfile = 1, SchedulingProfile = new Profile() { ID = 6, ProfileID = 88 }, Rule = new SchedulingRule() { time = new DateTime(2011, 01, 01, 00, 00, 00) } });
 
-			Scheduler s = new Scheduler(true);
-
-			s.CreateSchedule();
-			Console.ReadLine();
 			
 		}
 	}
