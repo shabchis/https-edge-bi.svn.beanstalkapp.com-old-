@@ -37,7 +37,7 @@ namespace MyScheduler.Objects
 			s1.GetHashCode() == s2.GetHashCode(); // this is true!!
 			*/
 
-			return String.Format("{Configuration: 12, Rule: {Hours: 12323, ... }, SelectedDay: 12323}");
+			return String.Format("ConfigurationID:{0},SelectedDay:{1},SelectedHour:{2},RuleScope:{3}", Configuration.ID, SelectedDay, SelectedHour, Rule.Scope);
 		}
 
 		public override int GetHashCode()
