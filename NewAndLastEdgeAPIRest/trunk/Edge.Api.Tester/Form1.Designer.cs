@@ -72,6 +72,8 @@
 			// localCheckBox
 			// 
 			this.localCheckBox.AutoSize = true;
+			this.localCheckBox.Checked = true;
+			this.localCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.localCheckBox.Location = new System.Drawing.Point(12, 10);
 			this.localCheckBox.Name = "localCheckBox";
 			this.localCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;

@@ -2,11 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NewRestApiTester.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="LocalAdress" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://localhost:8080</Value>
-    </Setting>
     <Setting Name="RemoteAdress" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://AlonYa-PC/API3</Value>
+      <Value Profile="(Default)">http://bi_rnd:8080/API2</Value>
     </Setting>
     <Setting Name="BodyLogInJson" Type="System.String" Scope="User">
       <Value Profile="(Default)">{"OperationType":"New","email":"amir@seperia.com","Password":"123456",
@@ -19,7 +16,10 @@
       <Value Profile="(Default)">{"AccountID":"7","Path":"management"}</Value>
     </Setting>
     <Setting Name="Services" Type="System.String" Scope="User">
-      <Value Profile="(Default)">users/{0},users,Menu,accounts,accounts/{0},permissions,permissions/list,permissions/tree,Sessions,groups,groups/{0},users/{0}/permissions,groups/{0}/permissions,Tools/refund,users/{0}/groups,groups/{0}/users,groups/{0}/users/{1},accounts/{0}/campaigns/channels/{1},accounts/{0}/campaigns/{1}</Value>
+      <Value Profile="(Default)">users/{0},users,Menu,accounts,accounts/{0},permissions,permissions/list,permissions/tree,Sessions,groups,groups/{0},users/{0}/permissions,groups/{0}/permissions,Tools/refund,users/{0}/groups,groups/{0}/users,groups/{0}/users/{1},accounts/{0}/campaigns?channel={1},accounts/{0}/campaigns/{1}</Value>
+    </Setting>
+    <Setting Name="LocalAdress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://localhost:8080/</Value>
     </Setting>
   </Settings>
 </SettingsFile>
