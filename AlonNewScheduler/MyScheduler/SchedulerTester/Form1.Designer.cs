@@ -31,12 +31,12 @@
 			this.ScheduleBtn = new System.Windows.Forms.Button();
 			this.endServiceBtn = new System.Windows.Forms.Button();
 			this.scheduleInfoGrid = new System.Windows.Forms.DataGridView();
-			this.getServicesButton = new System.Windows.Forms.Button();
 			this.shceduledID = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.scheduledName = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.startOn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.endOn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.getServicesButton = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.scheduleInfoGrid)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -74,15 +74,6 @@
 			this.scheduleInfoGrid.Size = new System.Drawing.Size(716, 199);
 			this.scheduleInfoGrid.TabIndex = 2;
 			// 
-			// getServicesButton
-			// 
-			this.getServicesButton.Location = new System.Drawing.Point(466, 118);
-			this.getServicesButton.Name = "getServicesButton";
-			this.getServicesButton.Size = new System.Drawing.Size(138, 23);
-			this.getServicesButton.TabIndex = 3;
-			this.getServicesButton.Text = "Get Schedule Services";
-			this.getServicesButton.UseVisualStyleBackColor = true;
-			// 
 			// shceduledID
 			// 
 			this.shceduledID.HeaderText = "Shceduled ID";
@@ -112,6 +103,16 @@
 			this.status.HeaderText = "Status";
 			this.status.Name = "status";
 			this.status.ReadOnly = true;
+			// 
+			// getServicesButton
+			// 
+			this.getServicesButton.Location = new System.Drawing.Point(466, 118);
+			this.getServicesButton.Name = "getServicesButton";
+			this.getServicesButton.Size = new System.Drawing.Size(138, 23);
+			this.getServicesButton.TabIndex = 3;
+			this.getServicesButton.Text = "Get Schedule Services";
+			this.getServicesButton.UseVisualStyleBackColor = true;
+			this.getServicesButton.Click += new System.EventHandler(this.getServicesButton_Click);
 			// 
 			// Form1
 			// 
