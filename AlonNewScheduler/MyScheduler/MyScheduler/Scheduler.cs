@@ -610,8 +610,11 @@ namespace MyScheduler
 		{
 			List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(true);
 			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s => s.SelectedDay).ThenBy(s => s.SelectedHour).ThenBy(s => s.Priority);
+			//TODO: remove services that did not ran yet --AFTER LUNCH!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			
 			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
 			{
+				
 				if (!_scheduledServices.ContainsKey(schedulingData))
 				{
 					ServiceInstance serviceInstance = SchedulePerService(schedulingData);
