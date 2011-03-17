@@ -37,16 +37,17 @@
 			this.endOn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.getServicesButton = new System.Windows.Forms.Button();
+			this.rescheduleBtn = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.scheduleInfoGrid)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// ScheduleBtn
 			// 
-			this.ScheduleBtn.Location = new System.Drawing.Point(250, 119);
+			this.ScheduleBtn.Location = new System.Drawing.Point(33, 118);
 			this.ScheduleBtn.Name = "ScheduleBtn";
-			this.ScheduleBtn.Size = new System.Drawing.Size(79, 23);
+			this.ScheduleBtn.Size = new System.Drawing.Size(122, 23);
 			this.ScheduleBtn.TabIndex = 0;
-			this.ScheduleBtn.Text = "Schedule";
+			this.ScheduleBtn.Text = "New Schedule";
 			this.ScheduleBtn.UseVisualStyleBackColor = true;
 			this.ScheduleBtn.Click += new System.EventHandler(this.ScheduleBtn_Click);
 			// 
@@ -114,11 +115,22 @@
 			this.getServicesButton.UseVisualStyleBackColor = true;
 			this.getServicesButton.Click += new System.EventHandler(this.getServicesButton_Click);
 			// 
+			// rescheduleBtn
+			// 
+			this.rescheduleBtn.Location = new System.Drawing.Point(240, 118);
+			this.rescheduleBtn.Name = "rescheduleBtn";
+			this.rescheduleBtn.Size = new System.Drawing.Size(75, 23);
+			this.rescheduleBtn.TabIndex = 4;
+			this.rescheduleBtn.Text = "Reschedule";
+			this.rescheduleBtn.UseVisualStyleBackColor = true;
+			this.rescheduleBtn.Click += new System.EventHandler(this.rescheduleBtn_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(828, 437);
+			this.Controls.Add(this.rescheduleBtn);
 			this.Controls.Add(this.getServicesButton);
 			this.Controls.Add(this.scheduleInfoGrid);
 			this.Controls.Add(this.endServiceBtn);
@@ -142,6 +154,7 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn startOn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn endOn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn status;
+		private System.Windows.Forms.Button rescheduleBtn;
 	}
 }
 
