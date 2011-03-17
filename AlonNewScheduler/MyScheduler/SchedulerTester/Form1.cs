@@ -48,7 +48,7 @@ namespace SchedulerTester
 			{
 				if (!_scheduledServices.ContainsKey(scheduledService.Key))
 				_scheduledServices.Add(scheduledService.Key,scheduledService.Value);
-				scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.StartTime, scheduledService.Value.EndTime, scheduledService.Value.State });				
+				scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.StartTime.ToString("HH:mm"), scheduledService.Value.EndTime.ToString("HH:mm"), scheduledService.Value.State });				
 			}
 		}
 
@@ -62,11 +62,24 @@ namespace SchedulerTester
 				_scheduler.SetServiceState(scheduleData.First(), serviceStatus.Ended);
 
 			}
+			ReSchedule();
+			GetScheduleServices();
 			
+		}
+
+		private void ReSchedule()
+		{
+			_scheduler.ReSchedule();
 		}
 
 		private void getServicesButton_Click(object sender, EventArgs e)
 		{
+			GetScheduleServices();
+		}
+
+		private void rescheduleBtn_Click(object sender, EventArgs e)
+		{
+			ReSchedule();
 			GetScheduleServices();
 		}
 		

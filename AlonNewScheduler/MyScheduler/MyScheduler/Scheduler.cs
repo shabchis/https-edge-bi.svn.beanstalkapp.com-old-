@@ -45,9 +45,9 @@ namespace MyScheduler
 		/// </summary>
 		public void CreateSchedule()
 		{
-			List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(true);
+			List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(false);
 
-			//List<SchedulingData> toBeScheduledByTimeAndPriority = SortBySuitableSchedulingRuleAndPriority(servicesForNextTimeLine); //servicesForNextTimeLine.OrderBy(ordered => ordered.SchedulingRules[0].Hours[0]).ThenByDescending(ordered => ordered.priority);
+			
 			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s => s.SelectedDay).ThenBy(s => s.SelectedHour).ThenBy(s => s.Priority);
 			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
 			{
@@ -162,12 +162,15 @@ namespace MyScheduler
 			}
 			return suitHour;
 		}
-		private List<SchedulingData> GetServicesForNextTimeLine(bool b)
+		private List<SchedulingData> GetServicesForNextTimeLine(bool reschedule)
 		{
-			List<ServiceConfiguration> nextTimeLineServices = new List<ServiceConfiguration>();
-			int timeLineInMin = neededTimeLine;
-			_scheduleFrom = DateTime.Now;
-			_scheduleTo = DateTime.Now.AddMinutes(timeLineInMin);
+			if (!reschedule)
+			{
+				List<ServiceConfiguration> nextTimeLineServices = new List<ServiceConfiguration>();
+				int timeLineInMin = neededTimeLine;
+				_scheduleFrom = DateTime.Now;
+				_scheduleTo = DateTime.Now.AddMinutes(timeLineInMin);
+			}
 			List<SchedulingData> schedulingData = FindSuitableSchedulingRule();
 			return schedulingData;
 		}
@@ -423,7 +426,7 @@ namespace MyScheduler
 
 			//Get all services with same configurationID
 			var servicesWithSameConfiguration = from s in _scheduledServices
-												where s.Value.ConfigurationID == schedulingData.Configuration.BaseConfiguration.ID && (s.Value.State != serviceStatus.Ended) //runnig or not started yet
+												where s.Value.BaseConfigurationID == schedulingData.Configuration.BaseConfiguration.ID && (s.Value.State != serviceStatus.Ended) //runnig or not started yet
 												orderby s.Value.StartTime ascending
 												select s;
 
@@ -471,7 +474,7 @@ namespace MyScheduler
 						scheduleInfo.Odds = Percentile;
 						scheduleInfo.ActualDeviation = calculatedStartTime.Subtract(baseStartTime);
 						scheduleInfo.Priority = schedulingData.Priority;
-						scheduleInfo.ConfigurationID = schedulingData.Configuration.ID;
+						scheduleInfo.BaseConfigurationID = schedulingData.Configuration.BaseConfiguration.ID;
 						scheduleInfo.ID = schedulingData.Configuration.ID;
 						scheduleInfo.MaxConcurrentPerConfiguration = schedulingData.Configuration.MaxConcurrent;
 						scheduleInfo.MaxCuncurrentPerProfile = schedulingData.Configuration.MaxCuncurrentPerProfile;
@@ -602,6 +605,23 @@ namespace MyScheduler
 			_scheduledServices[scheduilngData].State = serviceStatus;
 		}
 
+
+		public void ReSchedule()
+		{
+			List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(true);
+			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s => s.SelectedDay).ThenBy(s => s.SelectedHour).ThenBy(s => s.Priority);
+			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
+			{
+				if (!_scheduledServices.ContainsKey(schedulingData))
+				{
+					ServiceInstance serviceInstance = SchedulePerService(schedulingData);
+					KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
+					ScheduleService(serviceInstanceAndRuleHash);
+				}
+			}
+			PrintSchduleTable();
+			
+		}
 	}
 	/// <summary>
 	/// Date of scheduling
@@ -610,7 +630,7 @@ namespace MyScheduler
 	{
 		public int ID;
 		public string ServiceName;
-		public int ConfigurationID;
+		public int BaseConfigurationID;
 		public int ProfileID;
 		public DateTime StartTime;
 		public DateTime EndTime;
