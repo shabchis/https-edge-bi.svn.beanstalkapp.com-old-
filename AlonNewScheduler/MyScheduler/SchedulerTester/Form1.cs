@@ -46,15 +46,9 @@ namespace SchedulerTester
 			scheduleInfoGrid.Rows.Clear();
 			foreach (var scheduledService in scheduledServices)
 			{
+				if (!_scheduledServices.ContainsKey(scheduledService.Key))
 				_scheduledServices.Add(scheduledService.Key,scheduledService.Value);
-				scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.StartTime, scheduledService.Value.EndTime, scheduledService.Value.State });
-				
-				
-			
-				
-			
-				
-				
+				scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.StartTime, scheduledService.Value.EndTime, scheduledService.Value.State });				
 			}
 		}
 
@@ -63,11 +57,17 @@ namespace SchedulerTester
 			foreach (DataGridViewRow row in scheduleInfoGrid.SelectedRows)
 			{
 				var scheduleData = from s in _scheduledServices
-								   where s.Key.GetHashCode() ==Convert.ToInt32( row.Cells["serviceID"].Value)
-								   select s.Key;
+								   where s.Key.GetHashCode() == Convert.ToInt32(row.Cells["shceduledID"].Value)
+								   select  s.Key;
+				_scheduler.SetServiceState(scheduleData.First(), serviceStatus.Ended);
 
 			}
 			
+		}
+
+		private void getServicesButton_Click(object sender, EventArgs e)
+		{
+			GetScheduleServices();
 		}
 		
 
