@@ -7,23 +7,23 @@ namespace MyScheduler
 {
 	class Program
 	{
-
+		
 		static void Main()
 		{
 			
 
 			
-			Scheduler s = new Scheduler(true);
-			Console.WriteLine("Scheduling time is:{0}\n", DateTime.Now.TimeOfDay);
+			//Scheduler s = new Scheduler(true);
+			//Console.WriteLine("Scheduling time is:{0}\n", DateTime.Now.TimeOfDay);
 			
-			Console.WriteLine("Press any N for next scheduling ,anything else to exit\n");
-			while (Console.ReadLine()=="n")
-			{
-				Console.WriteLine("Press any N for next scheduling ,anything else to exit\n");
-				s.CreateSchedule();
-			}
+			//Console.WriteLine("Press any N for next scheduling ,anything else to exit\n");
+			//while (Console.ReadLine()=="n")
+			//{
+			//    Console.WriteLine("Press any N for next scheduling ,anything else to exit\n");
+			//    s.CreateSchedule();
+			//}
 
-
+			Console.ReadLine();
 
 			//List<ServiceConfigration> services = new List<ServiceConfigration>();
 

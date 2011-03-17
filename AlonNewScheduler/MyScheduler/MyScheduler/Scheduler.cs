@@ -423,13 +423,13 @@ namespace MyScheduler
 
 			//Get all services with same configurationID
 			var servicesWithSameConfiguration = from s in _scheduledServices
-												where s.Value.ConfigurationID == schedulingData.Configuration.BaseConfiguration.ID && (s.Value.State!=ServiceState.Ended && s.Value.State!=ServiceState.Waiting) //runnig or not started yet
+												where s.Value.ConfigurationID == schedulingData.Configuration.BaseConfiguration.ID && (s.Value.State != serviceStatus.Ended) //runnig or not started yet
 												orderby s.Value.StartTime ascending
 												select s;
 
 			//Get all services with same profileID
 			var servicesWithSameProfile = from s in _scheduledServices
-										  where s.Value.ProfileID == schedulingData.Configuration.SchedulingProfile.ID && (s.Value.State != ServiceState.Ended && s.Value.State != ServiceState.Waiting) //runnig or not started yet
+										  where s.Value.ProfileID == schedulingData.Configuration.SchedulingProfile.ID && (s.Value.State != serviceStatus.Ended) //runnig or not started yet
 										  orderby s.Value.StartTime ascending
 										  select s;
 
@@ -479,7 +479,7 @@ namespace MyScheduler
 						scheduleInfo.MaxDeviationBefore = schedulingData.Rule.MaxDeviationBefore;
 						scheduleInfo.ProfileID = schedulingData.Configuration.SchedulingProfile.ID;
 						scheduleInfo.ServiceName = schedulingData.Configuration.Name;
-						scheduleInfo.State = ServiceState.Uninitialized;
+						scheduleInfo.State = serviceStatus.Scheduled;
 						found = true;
 					}
 					else
@@ -582,18 +582,24 @@ namespace MyScheduler
 		/// Return all the services not started to run or did not finished runing
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> GetScheduldServicesStatusNotEndedOrNotStarted()
+		public IEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> GetScheduldServicesStatusNotEnded()
 		{
 			//Dictionary<SchedulingData, ServiceInstance> returnObject;
 			 var returnObject = from s in _scheduledServices
-						   where s.Value.State != ServiceState.Ended && s.Value.State != ServiceState.Uninitialized
+						   where s.Value.State != serviceStatus.Ended
 						   select s;
 			 return returnObject;	 
 
 		}
-		public void SetServiceState(SchedulingData scheduilngData)
+		public IEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> GetAlllScheduldServices()
 		{
-			_scheduledServices[scheduilngData].State = ServiceState.Ended;
+			var returnObject = from s in _scheduledServices
+							   select s;
+			return returnObject;
+		}
+		public void SetServiceState(SchedulingData scheduilngData, serviceStatus serviceStatus)
+		{
+			_scheduledServices[scheduilngData].State = serviceStatus;
 		}
 
 	}
@@ -615,7 +621,7 @@ namespace MyScheduler
 		public TimeSpan MaxDeviationAfter;
 		public TimeSpan ActualDeviation;
 		public double Odds;
-		public ServiceState State;
+		public serviceStatus State;
 		public ServiceOutcome Result;
 	}
 	/// <summary>
@@ -625,6 +631,12 @@ namespace MyScheduler
 	{
 		public TimeSpan SuitableHour;
 		public SchedulingData Service;
+	}
+	public enum serviceStatus
+	{
+		Scheduled,
+		Runing,
+		Ended
 	}
 	
 }
