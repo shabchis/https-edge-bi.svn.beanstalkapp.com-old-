@@ -8,9 +8,9 @@ using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
 using System.Xml;
 
-namespace Services.Facebook.UpdateCampaignStatus
+namespace Services.UpdateCampaignStatus
 {
-	public class FacebookUpdateCampaignStatus : Service
+	public class UpdateCampaignStatus : Service
 	{
 		protected myFacebook.Session.ConnectSession connSession;
 		private Dictionary<string, string> _parameterList;
@@ -26,6 +26,7 @@ namespace Services.Facebook.UpdateCampaignStatus
 		private string _createExcelDirectoryPath = string.Empty;
 		private string _pipe = string.Empty;
 		private string _serviceType = string.Empty;
+		private int _channelID;
 		protected override void OnInit()
 		{
 
@@ -77,7 +78,7 @@ namespace Services.Facebook.UpdateCampaignStatus
 				//    _serviceType = Instance.ParentInstance.Configuration.Options["serviceType"].ToString();
 				//else
 				//    _serviceType = Instance.Configuration.Options["serviceType"].ToString();
-
+				_channelID =System.Convert.ToInt32( Instance.Configuration.Options["ChannelID"]);
 				connSession = new myFacebook.Session.ConnectSession(_apiKey, _ap_secret);
 				connSession.SessionKey = _session;
 				connSession.SessionSecret = _sessionSecret;
@@ -116,14 +117,16 @@ namespace Services.Facebook.UpdateCampaignStatus
 			using (DataManager.Current.OpenConnection())
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand(string.Format(@"SELECT T2.campaignid,T0.Hour{0} 
-																				FROM Facebook_Campaign_StatusByTime T0
+																				FROM Campaigns_Scheduling T0
 																				INNER JOIN User_GUI_Account T1 ON T0.Account_ID=T1.Account_ID
 																				INNER JOIN UserProcess_GUI_PaidCampaign T2 ON T0.Campaign_GK=T2.Campaign_GK
 																				WHERE T0.Day=@Day:Int AND T0.Account_ID=@Account_ID:Int 
 																				AND (T0.Hour{0} =1 OR T0.Hour{0}=2) AND
-																				T2.Channel_ID=6 AND T1.Status!=0 AND T2.campStatus<>3 AND T2.ScheduleEnabled=1", hourOfDay.ToString().PadLeft(2, '0')));
+																				T2.Channel_ID=@Channel_ID:Int AND T1.Status!=0 AND T2.campStatus<>3 AND T2.ScheduleEnabled=1", hourOfDay.ToString().PadLeft(2, '0')));
 				sqlCommand.Parameters["@Day"].Value = today;
 				sqlCommand.Parameters["@Account_ID"].Value = this.Instance.AccountID;
+				sqlCommand.Parameters["@Channel_ID"].Value = _channelID;
+
 
 				using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
 				{
@@ -139,6 +142,7 @@ namespace Services.Facebook.UpdateCampaignStatus
 				}
 			}
 
+		
 			/* For test only - capaign with deleted status
 			campaign_specs.Append("{\"campaign_id\":" + "60028003668686853" + ",\"campaign_status\":" + "2" + "},");
 			List<string> campaigns = GetCampaigns();*/
@@ -151,11 +155,12 @@ namespace Services.Facebook.UpdateCampaignStatus
 				campaign_specs = campaign_specs.Insert(0, '[');
 				campaign_specs = campaign_specs.Insert(campaign_specs.Length, ']');
 
-				string Errors = UpdateCampaignStatus(campaign_specs.ToString());
+				string Errors = UpdateStatus(campaign_specs.ToString());
 				if (!string.IsNullOrEmpty(Errors))
 				{
-					outcome = ServiceOutcome.Failure;
+					
 					Easynet.Edge.Core.Utilities.Log.Write(Errors, Easynet.Edge.Core.Utilities.LogMessageType.Error);
+					outcome = ServiceOutcome.Failure;
 
 
 				}
@@ -201,7 +206,7 @@ namespace Services.Facebook.UpdateCampaignStatus
 
 
 		}
-		private string UpdateCampaignStatus(string campaign_specs)
+		private string UpdateStatus(string campaign_specs)
 		{
 			StringBuilder errors = new StringBuilder();
 			System.Xml.XmlDocument retXml = new System.Xml.XmlDocument();
@@ -223,9 +228,13 @@ namespace Services.Facebook.UpdateCampaignStatus
 				Easynet.Edge.Core.Utilities.Log.Write("Error on respond from facebook", ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 				throw new Exception("Error on respond from facebook", ex);
 			}
-			foreach (XmlNode errorCampaign in retXml.ChildNodes[1].ChildNodes[1].ChildNodes)
+			foreach (XmlNode errorCampaign in retXml.DocumentElement["failed_campaigns"].ChildNodes)
 			{
 				errors.AppendFormat("{0},", errorCampaign.Attributes[0].Value);
+			}
+			if (!retXml.DocumentElement["updated_campaigns"].HasChildNodes)
+			{
+				errors.Append("All campaigns status were not updated from unknown reason");
 			}
 			if (!string.IsNullOrEmpty(errors.ToString()))
 				errors.Insert(0, "Failed Campaigns: ");
