@@ -392,7 +392,7 @@ namespace Edge.Api.Handlers
 
 		#region permissions
 		[UriMapping(Method = "POST", Template = "permissions", BodyParameter = "permissionRequest")]
-		public bool GetSpecificPermissionValue(PermissionRequest permissionRequest)
+		public bool GetSpecificPermissionValue(PermissionRequest permissionRequest) //TODO: CHANGE TO GET
 		{
 
 			bool hasPermission = false;
