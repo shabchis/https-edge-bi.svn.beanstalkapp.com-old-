@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Easynet.Edge.Core;
-using Easynet.Edge.Core.Configuration;
 using MyScheduler.Objects;
 using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
-using Easynet.Edge.Core.Services;
+using MyScheduler.Objects;
+using Easynet.Edge.Core.Configuration;
 
 
 namespace MyScheduler
@@ -44,7 +44,7 @@ namespace MyScheduler
 		/// <summary>
 		/// The main method of creating scheduler 
 		/// </summary>
-		public void CreateSchedule()
+		public void NewSchedule()
 		{
 			List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(false);
 
@@ -52,19 +52,90 @@ namespace MyScheduler
 			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s => s.SelectedDay).ThenBy(s => s.SelectedHour).ThenBy(s => s.Priority);
 			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
 			{
+				//if (_scheduledServices.ContainsKey(schedulingData) && _scheduledServices[schedulingData].State == serviceStatus.Scheduled)
+				//    _scheduledServices.Remove(schedulingData);
+
+				 //if key exist then this service has been ended and we can schedule again
+				if (!_scheduledServices.ContainsKey(schedulingData))
+				{				
+				ServiceInstance serviceInstance = ScheduleSpecificService(schedulingData);
+				KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
+				UpdateScheduleTable(serviceInstanceAndRuleHash);
+				}
+			}
+			PrintSchduleTable();
+		}
+
+		/// <summary>
+		/// reschedule
+		/// </summary>
+		public void ReSchedule()
+		{
+			List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(true);
+			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s => s.SelectedDay).ThenBy(s => s.SelectedHour).ThenBy(s => s.Priority);
+
+
+			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
+			{
+				//TODO: remove services that did not ran yet --AFTER LUNCH!!!!!!!!!!!!!!!!!!!!!!!!!!! and reschedule them
 				if (_scheduledServices.ContainsKey(schedulingData) && _scheduledServices[schedulingData].State == serviceStatus.Scheduled)
 					_scheduledServices.Remove(schedulingData);
 
 				if (!_scheduledServices.ContainsKey(schedulingData)) //if key exist then this service has been ended and we can schedule again
-				if (!_scheduledServices.ContainsKey(schedulingData))
-				{				
-				ServiceInstance serviceInstance = SchedulePerService(schedulingData);
-				KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
-				ScheduleService(serviceInstanceAndRuleHash);
+				{
+					ServiceInstance serviceInstance = ScheduleSpecificService(schedulingData);
+					KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
+					UpdateScheduleTable(serviceInstanceAndRuleHash);
 				}
 			}
 			PrintSchduleTable();
-		}		
+
+		}
+
+		/// <summary>
+		/// Return all the services not started to run or did not finished runing
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<KeyValuePair<SchedulingData, MyScheduler.Objects.ServiceInstance>> GetScheduldServicesWithStatusNotEnded()
+		{
+			//Dictionary<SchedulingData, ServiceInstance> returnObject;
+			var returnObject = from s in _scheduledServices
+							   where s.Value.State != serviceStatus.Ended
+							   select s;
+			return returnObject;
+
+		}
+
+		/// <summary>
+		/// returns all scheduled services
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> GetAlllScheduldServices()
+		{
+			var returnObject = from s in _scheduledServices
+							   select s;
+			return returnObject;
+		}
+
+		/// <summary>
+		/// set service state
+		/// </summary>
+		/// <param name="scheduilngData"></param>
+		/// <param name="serviceStatus"></param>
+		public void SetServiceState(SchedulingData scheduilngData, serviceStatus serviceStatus)
+		{
+			_scheduledServices[scheduilngData].State = serviceStatus;
+		}
+
+		/// <summary>
+		/// add unplanned service to schedule
+		/// </summary>
+		/// <param name="serviceConfiguration"></param>
+		public void AddNewServiceToSchedule(ServiceConfiguration serviceConfiguration)
+		{
+			_toBeScheduleServices.Add(serviceConfiguration);
+			ReSchedule();
+		}
 
 		/// <summary>
 		/// Get this time line services 
@@ -75,7 +146,7 @@ namespace MyScheduler
 		{
 			if (!reschedule)
 			{
-				List<ServiceConfiguration> nextTimeLineServices = new List<ServiceConfiguration>();
+				
 				int timeLineInMin = neededTimeLine;
 				_scheduleFrom = DateTime.Now;
 				_scheduleTo = DateTime.Now.AddMinutes(timeLineInMin);
@@ -254,7 +325,7 @@ namespace MyScheduler
 		/// set the service instance on the right time get the service instance with all the data of scheduling and more
 		/// </summary>
 		/// <param name="serviceInstanceAndRuleHash"></param>
-		private void ScheduleService(KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash)
+		private void UpdateScheduleTable(KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash)
 		{
 			if (serviceInstanceAndRuleHash.Value.ActualDeviation > serviceInstanceAndRuleHash.Value.MaxDeviationAfter)  // check if the waiting time is bigger then max waiting time.
 				_unscheduleServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
@@ -269,11 +340,8 @@ namespace MyScheduler
 		/// </summary>
 		/// <param name="schedulingData"></param>
 		/// <returns>service instance with scheduling data and more</returns>
-		private ServiceInstance SchedulePerService(SchedulingData schedulingData)
+		private ServiceInstance ScheduleSpecificService(SchedulingData schedulingData)
 		{
-
-
-
 			//Get all services with same configurationID
 			var servicesWithSameConfiguration = from s in _scheduledServices
 												where s.Value.BaseConfigurationID == schedulingData.Configuration.BaseConfiguration.ID && (s.Value.State != serviceStatus.Ended) //runnig or not started yet
@@ -437,88 +505,11 @@ namespace MyScheduler
 			Console.ReadLine();
 		}
 		
-		/// <summary>
-		/// Return all the services not started to run or did not finished runing
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> GetScheduldServicesStatusNotEnded()
-		{
-			//Dictionary<SchedulingData, ServiceInstance> returnObject;
-			 var returnObject = from s in _scheduledServices
-						   where s.Value.State != serviceStatus.Ended
-						   select s;
-			 return returnObject;	 
-
-		}
-		public IEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> GetAlllScheduldServices()
-		{
-			var returnObject = from s in _scheduledServices
-							   select s;
-			return returnObject;
-		}
-		public void SetServiceState(SchedulingData scheduilngData, serviceStatus serviceStatus)
-		{
-			_scheduledServices[scheduilngData].State = serviceStatus;
-		}
-
-
-		public void ReSchedule()
-		{
-			List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(true);
-			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s => s.SelectedDay).ThenBy(s => s.SelectedHour).ThenBy(s => s.Priority);
 		
-			
-			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
-			{
-				//TODO: remove services that did not ran yet --AFTER LUNCH!!!!!!!!!!!!!!!!!!!!!!!!!!! and reschedule them
-				if (_scheduledServices.ContainsKey(schedulingData) && _scheduledServices[schedulingData].State == serviceStatus.Scheduled)
-					_scheduledServices.Remove(schedulingData);
-				
-				if (!_scheduledServices.ContainsKey(schedulingData)) //if key exist then this service has been ended and we can schedule again
-				{
-					ServiceInstance serviceInstance = SchedulePerService(schedulingData);
-					KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
-					ScheduleService(serviceInstanceAndRuleHash);
-				}
-			}
-			PrintSchduleTable();
-			
-		}
+
+		
 	}
-	/// <summary>
-	/// Date of scheduling
-	/// </summary>
-	public class ServiceInstance
-	{
-		public int ID;
-		public string ServiceName;
-		public int BaseConfigurationID;
-		public int ProfileID;
-		public DateTime StartTime;
-		public DateTime EndTime;
-		public int MaxConcurrentPerConfiguration;
-		public int MaxCuncurrentPerProfile;
-		public int Priority;
-		public TimeSpan MaxDeviationBefore;
-		public TimeSpan MaxDeviationAfter;
-		public TimeSpan ActualDeviation;
-		public double Odds;
-		public serviceStatus State;
-		public ServiceOutcome Result;
-	}
-	/// <summary>
-	/// service-hour 
-	/// </summary>
-	public struct ServiceHourStruct
-	{
-		public TimeSpan SuitableHour;
-		public SchedulingData Service;
-	}
-	public enum serviceStatus
-	{
-		Scheduled,
-		Runing,
-		Ended
-	}
+	
+	
 	
 }

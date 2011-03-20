@@ -34,9 +34,6 @@
     <StartupObject>MyScheduler.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Edge.Core">
-      <HintPath>..\..\Codebase-2010\Core\Core\bin\Debug\Edge.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -49,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="Objects\SchedulingRule.cs" />
+    <Compile Include="Objects\ServiceInstance.cs" />
     <Compile Include="Scheduler.cs" />
     <Compile Include="Objects\Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -58,6 +56,12 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Core\Core.csproj">
+      <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
