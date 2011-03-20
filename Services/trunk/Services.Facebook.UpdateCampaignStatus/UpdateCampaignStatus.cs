@@ -208,6 +208,7 @@ namespace Services.UpdateCampaignStatus
 		}
 		private string UpdateStatus(string campaign_specs)
 		{
+			bool errorConnectToFaceBook = false;
 			StringBuilder errors = new StringBuilder();
 			System.Xml.XmlDocument retXml = new System.Xml.XmlDocument();
 			string result;
@@ -226,18 +227,25 @@ namespace Services.UpdateCampaignStatus
 			catch (Exception ex)
 			{
 				Easynet.Edge.Core.Utilities.Log.Write("Error on respond from facebook", ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
-				throw new Exception("Error on respond from facebook", ex);
+				errors.Append(ex.Message);
+				errors.Insert(0, "error conetting facebook: ");
+				errorConnectToFaceBook = true;
+				
 			}
-			foreach (XmlNode errorCampaign in retXml.DocumentElement["failed_campaigns"].ChildNodes)
+			if (!errorConnectToFaceBook)
 			{
-				errors.AppendFormat("{0},", errorCampaign.Attributes[0].Value);
+
+				foreach (XmlNode errorCampaign in retXml.DocumentElement["failed_campaigns"].ChildNodes)
+				{
+					errors.AppendFormat("{0},", errorCampaign.Attributes[0].Value);
+				}
+				if (!retXml.DocumentElement["updated_campaigns"].HasChildNodes)
+				{
+					errors.Append("All campaigns status were not updated from unknown reason");
+				}
+				if (!string.IsNullOrEmpty(errors.ToString()))
+					errors.Insert(0, "Failed Campaigns: ");
 			}
-			if (!retXml.DocumentElement["updated_campaigns"].HasChildNodes)
-			{
-				errors.Append("All campaigns status were not updated from unknown reason");
-			}
-			if (!string.IsNullOrEmpty(errors.ToString()))
-				errors.Insert(0, "Failed Campaigns: ");
 
 			return errors.ToString();
 
