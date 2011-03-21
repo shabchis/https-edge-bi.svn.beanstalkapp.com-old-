@@ -118,40 +118,73 @@ namespace Easynet.Edge.Services.Facebook
                
                 int xmlCampaingCount = xmlCampaing.ChildNodes[1].ChildNodes.Count;
                 List<Dictionary<string, System.Xml.XmlNode>> ListOfCampaigns = new List<Dictionary<string, System.Xml.XmlNode>>();
+
+                //...........
+                // for API bug 2011-03-21
+                List<string> campaignArrays = new List<string>();
+                string campaignArray = null;
+                int campaignArrayIndex = 0;
+                int maxCampaignsPerRequest = Instance.Configuration.Options["MaxCampaignsForAdGroupCreativesReport"] != null ? 
+                    Int32.Parse(Instance.Configuration.Options["MaxCampaignsForAdGroupCreativesReport"]):
+                    Int32.MaxValue;
+                //...........
+
                 for (int i = 0; i < xmlCampaingCount; i++)
                 {
                     Dictionary<string, System.Xml.XmlNode> newItem = new Dictionary<string, System.Xml.XmlNode>();
-                    newItem.Add(xmlCampaing.ChildNodes[1].ChildNodes[i].ChildNodes[1].InnerText, xmlCampaing.ChildNodes[1].ChildNodes[i]);
+                    string crazyNoam_campaignID = xmlCampaing.ChildNodes[1].ChildNodes[i].ChildNodes[1].InnerText;
+                    newItem.Add(crazyNoam_campaignID, xmlCampaing.ChildNodes[1].ChildNodes[i]);
                     ListOfCampaigns.Add(newItem);
-                }
+
+                    //...........
+                    // for API bug 2011-03-21
+                    if (campaignArray == null)
+                        campaignArray = "[";
+                    campaignArray += (campaignArray.Length > 1 ? "," : "") + crazyNoam_campaignID;
+                    campaignArrayIndex++;
+                    if (campaignArrayIndex == maxCampaignsPerRequest || i == xmlCampaingCount - 1)
+                    {
+                        campaignArray += "]";
+                        campaignArrayIndex = 0;
+                        campaignArrays.Add(campaignArray);
+                        campaignArray = null;
+                    }
+                    //...........
+                }    
+
                 //~ //GetCampain Data
                 //======================================================================
 
 
                 //======================================================================               
                 //GetAdGroupCreatives Data
-                parameterList.Clear();
-                parameterList.Add("include_deleted", "true");
-                parameterList.Add("campaign_ids", "");
-                parameterList.Add("account_id", _FBaccountID);
-                parameterList.Add("method", "facebook.Ads.getAdGroupCreatives");
-				string res3 = SendFacebookRequest(_facebookAPI, parameterList);
-                System.Xml.XmlDocument xmlCreative = new System.Xml.XmlDocument();
-                xmlCreative.LoadXml(res3);
-
-                int xmlCreativeCount = xmlCreative.ChildNodes[1].ChildNodes.Count;
+                
                 List<Dictionary<string, System.Xml.XmlNode>> ListOfCreative = new List<Dictionary<string, System.Xml.XmlNode>>();
-                 for (int i = 0; i < xmlCreativeCount; i++)                 
-                {    
-                   //  xmlCreative.ChildNodes[1].ChildNodes[i].OuterXml
-                    Dictionary<string, System.Xml.XmlNode> newItem = new Dictionary<string, System.Xml.XmlNode>();
-                 //   System.Xml.XmlNode sr =  xmlCreative.ChildNodes[1].ChildNodes[i].SelectSingleNode("/adgroup_id");
-                    string adgourp_id = FindIAdgroupID(xmlCreative.ChildNodes[1].ChildNodes[i]);
-                  //  var elements = System.Xml.Linq.XDocument.Parse(xmlCreative.ChildNodes[1].ChildNodes[i].OuterXml).Descendants("adgroup_id").Select(e => e.Value);
+
+                for (int j = 0; j < campaignArrays.Count; j++)
+                {
+                    parameterList.Clear();
+                    parameterList.Add("include_deleted", "true");
+                    parameterList.Add("campaign_ids", campaignArrays[j]);
+                    parameterList.Add("account_id", _FBaccountID);
+                    parameterList.Add("method", "facebook.Ads.getAdGroupCreatives");
+                    string res3 = SendFacebookRequest(_facebookAPI, parameterList, "-" + (j+1).ToString());
+                    System.Xml.XmlDocument xmlCreative = new System.Xml.XmlDocument();
+                    xmlCreative.LoadXml(res3);
+
+                    int xmlCreativeCount = xmlCreative.ChildNodes[1].ChildNodes.Count;
+                    for (int i = 0; i < xmlCreativeCount; i++)
+                    {
+                        //  xmlCreative.ChildNodes[1].ChildNodes[i].OuterXml
+                        Dictionary<string, System.Xml.XmlNode> newItem = new Dictionary<string, System.Xml.XmlNode>();
+                        //   System.Xml.XmlNode sr =  xmlCreative.ChildNodes[1].ChildNodes[i].SelectSingleNode("/adgroup_id");
+                        string adgourp_id = FindIAdgroupID(xmlCreative.ChildNodes[1].ChildNodes[i]);
+                        //  var elements = System.Xml.Linq.XDocument.Parse(xmlCreative.ChildNodes[1].ChildNodes[i].OuterXml).Descendants("adgroup_id").Select(e => e.Value);
 
 
-                    newItem.Add(adgourp_id, xmlCreative.ChildNodes[1].ChildNodes[i]);
-                    ListOfCreative.Add(newItem);
+                        newItem.Add(adgourp_id, xmlCreative.ChildNodes[1].ChildNodes[i]);
+                        ListOfCreative.Add(newItem);
+                    }
                 }
                 //~GetAdGroupCreatives Data
                 //======================================================================

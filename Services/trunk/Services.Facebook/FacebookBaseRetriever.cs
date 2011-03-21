@@ -123,7 +123,11 @@ namespace Easynet.Edge.Services.Facebook
         }
 
 		static string ResultOutputPath = AppSettings.Get(typeof(FacebookBaseRetriever), "ResultOutputPath");
-		protected string SendFacebookRequest(myFacebook.Rest.Api facebookAPI, Dictionary<string, string> parameterList)
+        protected string SendFacebookRequest(myFacebook.Rest.Api facebookAPI, Dictionary<string, string> parameterList)
+        {
+            return SendFacebookRequest(facebookAPI, parameterList, null);
+        }
+        protected string SendFacebookRequest(myFacebook.Rest.Api facebookAPI, Dictionary<string, string> parameterList, string fileSuffix)
 		{
 			string paramsOutput = "";
 			foreach (KeyValuePair<string,string> entry in parameterList)
@@ -140,10 +144,11 @@ namespace Easynet.Edge.Services.Facebook
 			if (!Directory.Exists(outputDir))
 				Directory.CreateDirectory(outputDir);
 
-			string outputPath = Path.Combine(outputDir, String.Format("{1:00000}@{0:hhmm} {2}.xml",
+			string outputPath = Path.Combine(outputDir, String.Format("{1:00000}@{0:hhmm} {2}{3}.xml",
 				DateTime.Now,
 				Instance.AccountID,
-				parameterList.ContainsKey("method") ? parameterList["method"] : "(no method)"
+				parameterList.ContainsKey("method") ? parameterList["method"] : "(no method)",
+                fileSuffix
 			));
 
 			try
