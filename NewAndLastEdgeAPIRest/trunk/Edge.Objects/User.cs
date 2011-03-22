@@ -50,10 +50,13 @@ namespace Edge.Objects
 		[DictionaryMap(Command = "User_AssignedPermission(@UserID:Int)", IsStoredProcedure = true, ValueIsGenericList = true, KeyName = "AccountID", ValueFieldsName = "PermissionName,PermissionType,Value")]
 		public Dictionary<int, List<AssignedPermission>> AssignedPermissions = new Dictionary<int, List<AssignedPermission>>();
 
-		[DataMember(Order = 6)]
-		[DictionaryMap(Command = "SELECT T0.GroupID,T1.Name FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID WHERE T0.UserID=@UserID:Int", IsStoredProcedure = false, ValueIsGenericList = false, KeyName = "GroupID", ValueFieldsName = "Name")]
-		public Dictionary<int, string> AssignedToGroups = new Dictionary<int, string>();
+		//[DataMember(Order = 6)]
+		//[DictionaryMap(Command = "SELECT T0.GroupID,T1.Name FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID WHERE T0.UserID=@UserID:Int", IsStoredProcedure = false, ValueIsGenericList = false, KeyName = "GroupID", ValueFieldsName = "Name")]
+		//public Dictionary<int, string> AssignedToGroups = new Dictionary<int, string>();
 
+		[DataMember(Order = 6)]
+		[ListMap(Command = "SELECT T0.GroupID,T1.Name FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID WHERE T0.UserID=@UserID:Int", IsStoredProcedure = false)]
+		public List<Group> AssignedToGroups = new List<Group>();
 
 		public static User GetUserByID(int id)
 		{
@@ -143,13 +146,13 @@ namespace Edge.Objects
 					}
 				}
 
-				foreach (int groupId in this.AssignedToGroups.Keys)
+				foreach (Group group in this.AssignedToGroups)
 				{
 					SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_GUI_UserGroupUser
 																	(GroupID,UserID)
 																	VALUES
 																	(@GroupID:Int,@UserID:Int)");
-					sqlCommand.Parameters["@GroupID"].Value = groupId;
+					sqlCommand.Parameters["@GroupID"].Value = group.GroupID;
 					sqlCommand.Parameters["@UserID"].Value = this.UserID;
 					sqlCommand.Connection = sqlConnection;
 					sqlCommand.Transaction = sqlTransaction;
