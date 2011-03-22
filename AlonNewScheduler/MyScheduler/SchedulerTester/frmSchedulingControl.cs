@@ -14,6 +14,7 @@ namespace SchedulerTester
 {
 	public partial class frmSchedulingControl : Form
 	{
+		StringBuilder _str = new StringBuilder();
 		private Scheduler _scheduler;
 		private Dictionary<SchedulingData, ServiceInstance> _scheduledServices = new Dictionary<SchedulingData, ServiceInstance>();
 		public frmSchedulingControl()
@@ -25,19 +26,33 @@ namespace SchedulerTester
 		{
 			_scheduler = new Scheduler(true);
 			_scheduler.TimeToRunEventHandler += new EventHandler(_scheduler_TimeToRunEventHandler);
+			_scheduler.ServiceNotScheduledHandler += new EventHandler(_scheduler_ServiceNotScheduledHandler);
 			_scheduler.Start();
 			
 		}
 
+		void _scheduler_ServiceNotScheduledHandler(object sender, EventArgs e)
+		{
+			ServiceNotScheduledEventArgs ee=(ServiceNotScheduledEventArgs)e;
+			_str.AppendLine(string.Format("Service {0} not scheduled",ee.NotScheduledInformation.Value.ServiceName));
+		}
+
 		void _scheduler_TimeToRunEventHandler(object sender, EventArgs e)
 		{
+			TimeToRunEventArgs ee = (TimeToRunEventArgs)e;
 			MessageBox.Show("cought");
 		}
 
 		private void ScheduleBtn_Click(object sender, EventArgs e)
 		{
+			_str.Clear();
 			_scheduler.NewSchedule();
 			GetScheduleServices();
+			if (!string.IsNullOrEmpty(_str.ToString()))
+			{
+				frmNotSched frm = new frmNotSched(_str.ToString());
+				frm.Show();
+			}
 			
 		}
 
