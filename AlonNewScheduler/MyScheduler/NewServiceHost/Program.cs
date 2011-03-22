@@ -16,9 +16,19 @@ namespace NewServiceHost
 			ServiceBase[] ServicesToRun;
 			ServicesToRun = new ServiceBase[] 
 			{ 
-				new Service1() 
+				new NewServiceHost() 
 			};
+#if DEBUG
+			{
+				NewServiceHost sh = new NewServiceHost();
+				sh.InitalizeService();
+			
+			}
+#else 
+			{
 			ServiceBase.Run(ServicesToRun);
+			}
+#endif
 		}
 	}
 }
