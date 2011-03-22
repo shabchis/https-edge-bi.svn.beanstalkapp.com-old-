@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Easynet.Edge.Core.Configuration;
 
 
 namespace MyScheduler.Objects
@@ -17,7 +18,8 @@ namespace MyScheduler.Objects
 		public List<SchedulingRule> SchedulingRules=new List<SchedulingRule>();
 		public bool Scheduled = false;
 		public TimeSpan AverageExecutionTime=new TimeSpan(0,30,0);
-		public TimeSpan MaxExecutionTime = new TimeSpan(0,60, 0);		
+		public TimeSpan MaxExecutionTime = new TimeSpan(0,60, 0);
+		public ActiveServiceElement LegacyConfiguration;
 		public int priority;
 	}
 
