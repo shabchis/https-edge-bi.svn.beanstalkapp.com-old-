@@ -13,7 +13,7 @@ using Easynet.Edge.Core.Configuration;
 
 namespace MyScheduler
 {
-	public delegate void TimeToRunEventHandler(object sender, EventArgs e);
+
 	/// <summary>
 	/// The new scheduler
 	/// </summary>
@@ -31,6 +31,7 @@ namespace MyScheduler
 		private const int Percentile = 80; //execution time of specifc service on sprcific Percentile
 		private Thread thread;
 		public event EventHandler TimeToRunEventHandler;
+		public event EventHandler ServiceNotScheduledHandler;
 
 
 
@@ -60,7 +61,7 @@ namespace MyScheduler
 			List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(false);
 
 
-			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s => s.SelectedDay).ThenBy(s => s.SelectedHour).ThenBy(s => s.Priority);
+			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s =>s.TimeToRun).ThenBy(s => s.Priority);
 			ClearServicesforReschedule(toBeScheduledByTimeAndPriority);
 			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
 			{
@@ -201,16 +202,23 @@ namespace MyScheduler
 										if ((_timeLineFrom.TimeOfDay <= _timeLineTo.TimeOfDay && hour >= _timeLineFrom.TimeOfDay) || //same day
 											(_timeLineFrom.TimeOfDay >= _timeLineTo.TimeOfDay && (hour <= _timeLineFrom.TimeOfDay && hour >= _timeLineTo.TimeOfDay))) //diffarent day
 										{
-											Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration };
+											Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = DateTime.Today + hour };
 											foundedSchedulingdata.Add(Schedulingdata);
-											
+
 										}
 										if (_timeLineFrom.DayOfWeek != _timeLineTo.DayOfWeek) //maybe the same service is relevant for tommorw so..if
 										{
-											if (hour <= _timeLineTo.TimeOfDay)
-											{
-												Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 2, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration };
-												foundedSchedulingdata.Add(Schedulingdata);
+
+											int i = _timeLineTo.DayOfWeek - _timeLineFrom.DayOfWeek;
+											while (i > 0)
+											{												
+													if (hour <= _timeLineTo.TimeOfDay)
+													{
+														Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 2, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = DateTime.Today.AddDays(i) + hour };
+														foundedSchedulingdata.Add(Schedulingdata);
+													}
+													i--;
+												
 											}
 
 										}
@@ -220,9 +228,10 @@ namespace MyScheduler
 									{
 										foreach (int day in schedulingRule.Days)
 										{
+											//todo: get the day to run
 											if (day == (int)_timeLineFrom.DayOfWeek + 1 || day == (int)_timeLineTo.DayOfWeek + 1)
 											{
-												if ((_timeLineFrom.TimeOfDay <= _timeLineTo.TimeOfDay && hour >= _timeLineFrom.TimeOfDay ) || //same day
+												if ((_timeLineFrom.TimeOfDay <= _timeLineTo.TimeOfDay && hour >= _timeLineFrom.TimeOfDay) || //same day
 													(_timeLineFrom.TimeOfDay >= _timeLineTo.TimeOfDay && (hour <= _timeLineFrom.TimeOfDay && hour >= _timeLineTo.TimeOfDay))) //diffarent day
 												{
 													Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = day, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration };
@@ -370,8 +379,12 @@ namespace MyScheduler
 		/// <param name="serviceInstanceAndRuleHash"></param>
 		private void UpdateScheduleTable(KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash)
 		{
-			if (serviceInstanceAndRuleHash.Value.ActualDeviation > serviceInstanceAndRuleHash.Value.MaxDeviationAfter)  // check if the waiting time is bigger then max waiting time.
+			if (serviceInstanceAndRuleHash.Value.ActualDeviation > serviceInstanceAndRuleHash.Value.MaxDeviationAfter)
+			{
+				// check if the waiting time is bigger then max waiting time.
 				_unscheduleServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
+				OnServiceNotScheduled(new ServiceNotScheduledEventArgs() { NotScheduledInformation = serviceInstanceAndRuleHash });
+			}
 			else
 			{
 				_scheduledServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
@@ -423,10 +436,11 @@ namespace MyScheduler
 		{
 			ServiceInstance scheduleInfo = null;
 			TimeSpan suitableHour = schedulingData.SelectedHour;
+
 			int executionTimeInMin = 0;
 			executionTimeInMin = GetAverageExecutionTime(schedulingData.Configuration.ID);
 			//TODO: CHECK WITH DORON LEAKING YEARS MONTH DAY FOR THE NEXT ROW
-			DateTime baseStartTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, suitableHour.Hours, suitableHour.Minutes, 0);
+			DateTime baseStartTime = schedulingData.TimeToRun;
 			DateTime baseEndTime = baseStartTime.AddMinutes(executionTimeInMin);
 			DateTime calculatedStartTime = baseStartTime;
 			DateTime calculatedEndTime = baseEndTime;
@@ -452,6 +466,7 @@ namespace MyScheduler
 						scheduleInfo.MaxConcurrentPerConfiguration = schedulingData.Configuration.MaxConcurrent;
 						scheduleInfo.MaxCuncurrentPerProfile = schedulingData.Configuration.MaxCuncurrentPerProfile;
 						scheduleInfo.MaxDeviationAfter = schedulingData.Rule.MaxDeviationAfter;
+						scheduleInfo.ActualDeviation = calculatedStartTime.Subtract(baseStartTime);
 						scheduleInfo.MaxDeviationBefore = schedulingData.Rule.MaxDeviationBefore;
 						scheduleInfo.ProfileID = schedulingData.Configuration.SchedulingProfile.ID;
 						scheduleInfo.LegacyConfiguration = schedulingData.LegacyConfiguration;
@@ -602,6 +617,10 @@ namespace MyScheduler
 
 
 		}
+		public void OnServiceNotScheduled(ServiceNotScheduledEventArgs e)
+		{
+			ServiceNotScheduledHandler(this, e);
+		}
 
 
 
@@ -610,6 +629,10 @@ namespace MyScheduler
 	public class TimeToRunEventArgs : EventArgs
 	{
 		public List<ActiveServiceElement> ActiveServiceElements;
+	}
+	public class ServiceNotScheduledEventArgs : EventArgs
+	{
+		public KeyValuePair<SchedulingData, ServiceInstance> NotScheduledInformation;
 	}
 
 
