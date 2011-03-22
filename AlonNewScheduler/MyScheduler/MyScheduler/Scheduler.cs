@@ -25,9 +25,9 @@ namespace MyScheduler
 		private Dictionary<int, ServiceConfiguration> _servicesPerConfigurationID = new Dictionary<int, ServiceConfiguration>();
 		private Dictionary<int, ServiceConfiguration> _servicesPerProfileID = new Dictionary<int, ServiceConfiguration>();
 		private Dictionary<SchedulingData, ServiceInstance> _unscheduleServices = new Dictionary<SchedulingData, ServiceInstance>();
-		DateTime _scheduleFrom;
-		DateTime _scheduleTo;
-		private const int neededTimeLine =1440; //scheduling for the next xxx min....
+		DateTime _timeLineFrom;
+		DateTime _timeLineTo;
+		private const int neededTimeLine = 1440; //scheduling for the next xxx min....
 		private const int Percentile = 80; //execution time of specifc service on sprcific Percentile
 		private Thread thread;
 		public event EventHandler TimeToRunEventHandler;
@@ -170,8 +170,8 @@ namespace MyScheduler
 			{
 
 				int timeLineInMin = neededTimeLine;
-				_scheduleFrom = DateTime.Now;
-				_scheduleTo = DateTime.Now.AddMinutes(timeLineInMin);
+				_timeLineFrom = DateTime.Now;
+				_timeLineTo = DateTime.Now.AddMinutes(timeLineInMin);
 			}
 			List<SchedulingData> schedulingData = FindSuitableSchedulingRule();
 			return schedulingData;
@@ -193,43 +193,63 @@ namespace MyScheduler
 					{
 						foreach (TimeSpan hour in schedulingRule.Hours)
 						{
-							if (hour >= _scheduleFrom.TimeOfDay && hour <= _scheduleTo.TimeOfDay)
-							{
-								switch (schedulingRule.Scope)
-								{
-									case SchedulingScope.Day:
-										{
-											Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration=service.LegacyConfiguration };
 
+							switch (schedulingRule.Scope)
+							{
+								case SchedulingScope.Day:
+									{
+										if ((_timeLineFrom.TimeOfDay <= _timeLineTo.TimeOfDay && hour >= _timeLineFrom.TimeOfDay) || //same day
+											(_timeLineFrom.TimeOfDay >= _timeLineTo.TimeOfDay && (hour <= _timeLineFrom.TimeOfDay && hour >= _timeLineTo.TimeOfDay))) //diffarent day
+										{
+											Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration };
 											foundedSchedulingdata.Add(Schedulingdata);
-											break;
+											
 										}
-									case SchedulingScope.Week:
+										if (_timeLineFrom.DayOfWeek != _timeLineTo.DayOfWeek) //maybe the same service is relevant for tommorw so..if
 										{
-											foreach (int day in schedulingRule.Days)
+											if (hour <= _timeLineTo.TimeOfDay)
 											{
-												if (day == (int)_scheduleFrom.DayOfWeek + 1 || day == (int)_scheduleTo.DayOfWeek + 1)
+												Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 2, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration };
+												foundedSchedulingdata.Add(Schedulingdata);
+											}
+
+										}
+										break;
+									}
+								case SchedulingScope.Week:
+									{
+										foreach (int day in schedulingRule.Days)
+										{
+											if (day == (int)_timeLineFrom.DayOfWeek + 1 || day == (int)_timeLineTo.DayOfWeek + 1)
+											{
+												if ((_timeLineFrom.TimeOfDay <= _timeLineTo.TimeOfDay && hour >= _timeLineFrom.TimeOfDay ) || //same day
+													(_timeLineFrom.TimeOfDay >= _timeLineTo.TimeOfDay && (hour <= _timeLineFrom.TimeOfDay && hour >= _timeLineTo.TimeOfDay))) //diffarent day
 												{
 													Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = day, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration };
 													foundedSchedulingdata.Add(Schedulingdata);
 												}
 											}
-											break;
 										}
-									case SchedulingScope.Month://TODO: 31,30,29 of month can be problematicly
+										break;
+									}
+								case SchedulingScope.Month://TODO: 31,30,29 of month can be problematicly
+									{
+										foreach (int day in schedulingRule.Days)
 										{
-											foreach (int day in schedulingRule.Days)
+											if (day == _timeLineFrom.Day + 1 || day == _timeLineTo.Day + 1)
 											{
-												if (day == _scheduleFrom.Day + 1 || day == _scheduleTo.Day + 1)
+												if ((_timeLineFrom.TimeOfDay <= _timeLineTo.TimeOfDay && hour >= _timeLineFrom.TimeOfDay) || //same day
+											(_timeLineFrom.TimeOfDay >= _timeLineTo.TimeOfDay && (hour <= _timeLineFrom.TimeOfDay && hour >= _timeLineTo.TimeOfDay))) //diffarent day
 												{
 													Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = day, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration };
 													foundedSchedulingdata.Add(Schedulingdata);
 												}
 											}
-											break;
 										}
-								}
+										break;
+									}
 							}
+
 						}
 					}
 				}
@@ -272,7 +292,7 @@ namespace MyScheduler
 					serviceConfiguration.Name = string.Format("{0}-{1}", account.ID, serviceUse.Name);
 					serviceConfiguration.ID = GetServceConfigruationIDByName(serviceConfiguration.Name);
 					serviceConfiguration.MaxConcurrent = (activeServiceElement.MaxInstances == 0) ? 9999 : activeServiceElement.MaxInstances;
-					serviceConfiguration.MaxCuncurrentPerProfile = (activeServiceElement.MaxInstancesPerAccount==0)? 9999: activeServiceElement.MaxInstancesPerAccount;
+					serviceConfiguration.MaxCuncurrentPerProfile = (activeServiceElement.MaxInstancesPerAccount == 0) ? 9999 : activeServiceElement.MaxInstancesPerAccount;
 					serviceConfiguration.LegacyConfiguration = activeServiceElement;
 					//scheduling rules 
 					foreach (SchedulingRuleElement schedulingRuleElement in activeServiceElement.SchedulingRules)
@@ -552,21 +572,21 @@ namespace MyScheduler
 		}
 		private void CheckIfItsTimeToRun()
 		{
-			List<ActiveServiceElement> activeServiceElements=new List<ActiveServiceElement>();
+			List<ActiveServiceElement> activeServiceElements = new List<ActiveServiceElement>();
 			while (true)
 			{
 				//DO some checks
-				
+
 				foreach (var scheduleService in _scheduledServices)
 				{
-					if (scheduleService.Key.SelectedDay==((int)DateTime.Now.DayOfWeek)+1) //same day
+					if (scheduleService.Key.SelectedDay == ((int)DateTime.Now.DayOfWeek) + 1) //same day
 					{
-						TimeSpan now=new TimeSpan(DateTime.Now.Hour,DateTime.Now.Minute,0);
+						TimeSpan now = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
 						if (scheduleService.Key.SelectedHour == now)
 						{
-							activeServiceElements.Add(scheduleService.Value.LegacyConfiguration);							
-						}						
-					}				
+							activeServiceElements.Add(scheduleService.Value.LegacyConfiguration);
+						}
+					}
 				}
 				if (activeServiceElements.Count > 0)
 					OnTimeToRun(new TimeToRunEventArgs() { ActiveServiceElements = activeServiceElements });
@@ -579,7 +599,7 @@ namespace MyScheduler
 		public void OnTimeToRun(TimeToRunEventArgs e)
 		{
 			TimeToRunEventHandler(this, e);
-			
+
 
 		}
 
