@@ -27,7 +27,7 @@ namespace MyScheduler
 		private Dictionary<SchedulingData, ServiceInstance> _unscheduleServices = new Dictionary<SchedulingData, ServiceInstance>();
 		DateTime _scheduleFrom;
 		DateTime _scheduleTo;
-		private const int neededTimeLine = 120; //scheduling for the next xxx min....
+		private const int neededTimeLine =1440; //scheduling for the next xxx min....
 		private const int Percentile = 80; //execution time of specifc service on sprcific Percentile
 		private Thread thread;
 		public event EventHandler TimeToRunEventHandler;
@@ -271,8 +271,8 @@ namespace MyScheduler
 					ServiceConfiguration serviceConfiguration = new ServiceConfiguration();
 					serviceConfiguration.Name = string.Format("{0}-{1}", account.ID, serviceUse.Name);
 					serviceConfiguration.ID = GetServceConfigruationIDByName(serviceConfiguration.Name);
-					serviceConfiguration.MaxConcurrent = activeServiceElement.MaxInstances;
-					serviceConfiguration.MaxCuncurrentPerProfile = activeServiceElement.MaxInstancesPerAccount;
+					serviceConfiguration.MaxConcurrent = (activeServiceElement.MaxInstances == 0) ? 9999 : activeServiceElement.MaxInstances;
+					serviceConfiguration.MaxCuncurrentPerProfile = (activeServiceElement.MaxInstancesPerAccount==0)? 9999: activeServiceElement.MaxInstancesPerAccount;
 					serviceConfiguration.LegacyConfiguration = activeServiceElement;
 					//scheduling rules 
 					foreach (SchedulingRuleElement schedulingRuleElement in activeServiceElement.SchedulingRules)
