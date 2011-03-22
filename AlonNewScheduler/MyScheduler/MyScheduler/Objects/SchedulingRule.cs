@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MyScheduler;
+using Easynet.Edge.Core.Configuration;
 
 namespace MyScheduler.Objects
 {
@@ -22,6 +23,7 @@ namespace MyScheduler.Objects
 		public SchedulingRule Rule;
 		public int SelectedDay;
 		public TimeSpan SelectedHour;
+		public ActiveServiceElement LegacyConfiguration;
 
 		public int Priority;
 		

@@ -1,6 +1,6 @@
 ﻿namespace SchedulerTester
 {
-	partial class Form1
+	partial class frmSchedulingControl
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -38,12 +38,13 @@
 			this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.getServicesButton = new System.Windows.Forms.Button();
 			this.rescheduleBtn = new System.Windows.Forms.Button();
+			this.button1 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.scheduleInfoGrid)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// ScheduleBtn
 			// 
-			this.ScheduleBtn.Location = new System.Drawing.Point(33, 118);
+			this.ScheduleBtn.Location = new System.Drawing.Point(23, 231);
 			this.ScheduleBtn.Name = "ScheduleBtn";
 			this.ScheduleBtn.Size = new System.Drawing.Size(122, 23);
 			this.ScheduleBtn.TabIndex = 0;
@@ -53,7 +54,7 @@
 			// 
 			// endServiceBtn
 			// 
-			this.endServiceBtn.Location = new System.Drawing.Point(372, 118);
+			this.endServiceBtn.Location = new System.Drawing.Point(256, 231);
 			this.endServiceBtn.Name = "endServiceBtn";
 			this.endServiceBtn.Size = new System.Drawing.Size(75, 23);
 			this.endServiceBtn.TabIndex = 1;
@@ -70,7 +71,7 @@
             this.startOn,
             this.endOn,
             this.status});
-			this.scheduleInfoGrid.Location = new System.Drawing.Point(23, 187);
+			this.scheduleInfoGrid.Location = new System.Drawing.Point(23, 12);
 			this.scheduleInfoGrid.Name = "scheduleInfoGrid";
 			this.scheduleInfoGrid.Size = new System.Drawing.Size(716, 199);
 			this.scheduleInfoGrid.TabIndex = 2;
@@ -107,7 +108,7 @@
 			// 
 			// getServicesButton
 			// 
-			this.getServicesButton.Location = new System.Drawing.Point(466, 118);
+			this.getServicesButton.Location = new System.Drawing.Point(349, 231);
 			this.getServicesButton.Name = "getServicesButton";
 			this.getServicesButton.Size = new System.Drawing.Size(138, 23);
 			this.getServicesButton.TabIndex = 3;
@@ -117,7 +118,7 @@
 			// 
 			// rescheduleBtn
 			// 
-			this.rescheduleBtn.Location = new System.Drawing.Point(240, 118);
+			this.rescheduleBtn.Location = new System.Drawing.Point(163, 231);
 			this.rescheduleBtn.Name = "rescheduleBtn";
 			this.rescheduleBtn.Size = new System.Drawing.Size(75, 23);
 			this.rescheduleBtn.TabIndex = 4;
@@ -125,17 +126,28 @@
 			this.rescheduleBtn.UseVisualStyleBackColor = true;
 			this.rescheduleBtn.Click += new System.EventHandler(this.rescheduleBtn_Click);
 			// 
-			// Form1
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(506, 231);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(186, 23);
+			this.button1.TabIndex = 5;
+			this.button1.Text = "Add UnPlaned Service to Schedule";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
+			// 
+			// frmSchedulingControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(828, 437);
+			this.Controls.Add(this.button1);
 			this.Controls.Add(this.rescheduleBtn);
 			this.Controls.Add(this.getServicesButton);
 			this.Controls.Add(this.scheduleInfoGrid);
 			this.Controls.Add(this.endServiceBtn);
 			this.Controls.Add(this.ScheduleBtn);
-			this.Name = "Form1";
+			this.Name = "frmSchedulingControl";
 			this.Text = "Form1";
 			this.Load += new System.EventHandler(this.Form1_Load);
 			((System.ComponentModel.ISupportInitialize)(this.scheduleInfoGrid)).EndInit();
@@ -155,6 +167,7 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn endOn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn status;
 		private System.Windows.Forms.Button rescheduleBtn;
+		private System.Windows.Forms.Button button1;
 	}
 }
 
