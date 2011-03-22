@@ -23,6 +23,7 @@ namespace MyScheduler.Objects
 		public SchedulingRule Rule;
 		public int SelectedDay;
 		public TimeSpan SelectedHour;
+		public DateTime TimeToRun;
 		public ActiveServiceElement LegacyConfiguration;
 
 		public int Priority;
@@ -39,7 +40,7 @@ namespace MyScheduler.Objects
 			s1.GetHashCode() == s2.GetHashCode(); // this is true!!
 			*/
 
-			return String.Format("ConfigurationID:{0},SelectedDay:{1},SelectedHour:{2},RuleScope:{3}", Configuration.ID, SelectedDay, SelectedHour, Rule.Scope);
+			return String.Format("ConfigurationID:{0},SelectedDay:{1},SelectedHour:{2},RuleScope:{3},TimeToRun:{4}", Configuration.ID, SelectedDay, SelectedHour, Rule.Scope,TimeToRun);
 		}
 
 		public override int GetHashCode()
