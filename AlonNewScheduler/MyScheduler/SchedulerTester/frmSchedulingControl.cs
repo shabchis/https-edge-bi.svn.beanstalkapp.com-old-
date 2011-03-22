@@ -55,7 +55,7 @@ namespace SchedulerTester
 			{
 				if (!_scheduledServices.ContainsKey(scheduledService.Key))
 				_scheduledServices.Add(scheduledService.Key,scheduledService.Value);
-				scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.StartTime.ToString("HH:mm"), scheduledService.Value.EndTime.ToString("HH:mm"), scheduledService.Value.State });				
+				scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), scheduledService.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), scheduledService.Value.State,scheduledService.Key.Rule.Scope });				
 			}
 		}
 

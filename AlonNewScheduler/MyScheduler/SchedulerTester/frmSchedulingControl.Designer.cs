@@ -31,14 +31,16 @@
 			this.ScheduleBtn = new System.Windows.Forms.Button();
 			this.endServiceBtn = new System.Windows.Forms.Button();
 			this.scheduleInfoGrid = new System.Windows.Forms.DataGridView();
-			this.shceduledID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.scheduledName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.startOn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.endOn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.getServicesButton = new System.Windows.Forms.Button();
 			this.rescheduleBtn = new System.Windows.Forms.Button();
 			this.button1 = new System.Windows.Forms.Button();
+			this.shceduledID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.scheduledName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.accountID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.startOn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.endOn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.scope = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.scheduleInfoGrid)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -68,43 +70,15 @@
 			this.scheduleInfoGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.shceduledID,
             this.scheduledName,
+            this.accountID,
             this.startOn,
             this.endOn,
-            this.status});
-			this.scheduleInfoGrid.Location = new System.Drawing.Point(23, 12);
+            this.status,
+            this.scope});
+			this.scheduleInfoGrid.Location = new System.Drawing.Point(3, 12);
 			this.scheduleInfoGrid.Name = "scheduleInfoGrid";
-			this.scheduleInfoGrid.Size = new System.Drawing.Size(716, 199);
+			this.scheduleInfoGrid.Size = new System.Drawing.Size(823, 199);
 			this.scheduleInfoGrid.TabIndex = 2;
-			// 
-			// shceduledID
-			// 
-			this.shceduledID.HeaderText = "Shceduled ID";
-			this.shceduledID.Name = "shceduledID";
-			this.shceduledID.ReadOnly = true;
-			// 
-			// scheduledName
-			// 
-			this.scheduledName.HeaderText = "Scheduled Name";
-			this.scheduledName.Name = "scheduledName";
-			this.scheduledName.ReadOnly = true;
-			// 
-			// startOn
-			// 
-			this.startOn.HeaderText = "Start On";
-			this.startOn.Name = "startOn";
-			this.startOn.ReadOnly = true;
-			// 
-			// endOn
-			// 
-			this.endOn.HeaderText = "End On";
-			this.endOn.Name = "endOn";
-			this.endOn.ReadOnly = true;
-			// 
-			// status
-			// 
-			this.status.HeaderText = "Status";
-			this.status.Name = "status";
-			this.status.ReadOnly = true;
 			// 
 			// getServicesButton
 			// 
@@ -136,6 +110,46 @@
 			this.button1.UseVisualStyleBackColor = true;
 			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
+			// shceduledID
+			// 
+			this.shceduledID.HeaderText = "Shceduled ID";
+			this.shceduledID.Name = "shceduledID";
+			this.shceduledID.ReadOnly = true;
+			// 
+			// scheduledName
+			// 
+			this.scheduledName.HeaderText = "Scheduled Name";
+			this.scheduledName.Name = "scheduledName";
+			this.scheduledName.ReadOnly = true;
+			// 
+			// accountID
+			// 
+			this.accountID.HeaderText = "Account ID";
+			this.accountID.Name = "accountID";
+			// 
+			// startOn
+			// 
+			this.startOn.HeaderText = "Start On";
+			this.startOn.Name = "startOn";
+			this.startOn.ReadOnly = true;
+			// 
+			// endOn
+			// 
+			this.endOn.HeaderText = "End On";
+			this.endOn.Name = "endOn";
+			this.endOn.ReadOnly = true;
+			// 
+			// status
+			// 
+			this.status.HeaderText = "Status";
+			this.status.Name = "status";
+			this.status.ReadOnly = true;
+			// 
+			// scope
+			// 
+			this.scope.HeaderText = "Scope";
+			this.scope.Name = "scope";
+			// 
 			// frmSchedulingControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -161,13 +175,15 @@
 		private System.Windows.Forms.Button endServiceBtn;
 		private System.Windows.Forms.DataGridView scheduleInfoGrid;
 		private System.Windows.Forms.Button getServicesButton;
+		private System.Windows.Forms.Button rescheduleBtn;
+		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.DataGridViewTextBoxColumn shceduledID;
 		private System.Windows.Forms.DataGridViewTextBoxColumn scheduledName;
+		private System.Windows.Forms.DataGridViewTextBoxColumn accountID;
 		private System.Windows.Forms.DataGridViewTextBoxColumn startOn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn endOn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn status;
-		private System.Windows.Forms.Button rescheduleBtn;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.DataGridViewTextBoxColumn scope;
 	}
 }
 
