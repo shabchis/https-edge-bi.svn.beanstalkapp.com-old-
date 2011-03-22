@@ -1,6 +1,6 @@
 ﻿namespace NewServiceHost
 {
-	partial class Service1
+	partial class NewServiceHost
 	{
 		/// <summary> 
 		/// Required designer variable.
