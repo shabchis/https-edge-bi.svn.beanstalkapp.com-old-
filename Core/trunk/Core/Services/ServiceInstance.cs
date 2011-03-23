@@ -292,8 +292,8 @@ namespace Easynet.Edge.Core.Services
 			bool isInsert = this.InstanceID < 0;
 			string cmdText = isInsert ?
 				@"
-				insert into CORE_ServiceInstance (AccountID, ParentInstanceID, ServiceName, TimeScheduled, TimeStarted, Priority, State, Progress, Outcome, ServiceUrl, Configuration, ActiveRule)
-				values (@accountID:Int, @parentInstanceID:BigInt, @serviceName:NVarChar, @timeScheduled:DateTime, @timeStarted:DateTime, @priority:Int, @state:Int, @progress:Float, @outcome:Int, @serviceUrl:NVarChar, @configuration:Xml, @activeRule:Xml);
+				insert into CORE_ServiceInstance (AccountID, ParentInstanceID, ServiceName, TimeScheduled, TimeStarted, TimeEnded, Priority, State, Progress, Outcome, ServiceUrl, Configuration, ActiveRule)
+				values (@accountID:Int, @parentInstanceID:BigInt, @serviceName:NVarChar, @timeScheduled:DateTime, @timeStarted:DateTime, @timeEnded:DateTime, @priority:Int, @state:Int, @progress:Float, @outcome:Int, @serviceUrl:NVarChar, @configuration:Xml, @activeRule:Xml);
 				select scope_identity();
 				" :
 				this.State == ServiceState.Uninitialized || this.State == ServiceState.Initializing ? 
@@ -302,6 +302,7 @@ namespace Easynet.Edge.Core.Services
 						ServiceName = @serviceName:NVarChar,
 						TimeScheduled = @timeScheduled:DateTime,
 						TimeStarted = @timeStarted:DateTime,
+						TimeEnded = @timeEnded:DateTime,
 						Priority = @priority:Int,
 						State = @state:Int,
 						Progress = @progress:Float,
