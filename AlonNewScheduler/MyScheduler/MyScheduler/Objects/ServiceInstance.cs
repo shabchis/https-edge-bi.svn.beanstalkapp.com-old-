@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Easynet.Edge.Core.Services;
+using Legacy = Easynet.Edge.Core.Services; 
 using Easynet.Edge.Core.Configuration;
 
 namespace MyScheduler.Objects
@@ -25,9 +26,16 @@ namespace MyScheduler.Objects
 		public TimeSpan MaxDeviationAfter;
 		public TimeSpan ActualDeviation;
 		public double Odds;
-		public serviceStatus State;
-		public ServiceOutcome Result;
-		internal ActiveServiceElement LegacyConfiguration;
+		public ServiceStatus State;
+		
+		public Legacy.ServiceInstance LegacyInstance;
+		
+		public ServiceOutcome Outcome
+		{
+			get { return this.LegacyInstance.Outcome; }
+		}
+		//internal ActiveServiceElement LegacyConfiguration;
+		
 	}
 	/// <summary>
 	/// service-hour 
@@ -37,10 +45,10 @@ namespace MyScheduler.Objects
 		public TimeSpan SuitableHour;
 		public SchedulingData Service;
 	}
-	public enum serviceStatus
+	public enum ServiceStatus
 	{
 		Scheduled,
-		Runing,
+		Running,
 		Ended
 	}
 }
