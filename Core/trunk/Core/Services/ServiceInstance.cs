@@ -289,7 +289,7 @@ namespace Easynet.Edge.Core.Services
 		[Obsolete("Temporary method of saving, should be changed to use Persistence model")]
 		public new void Save()
 		{
-			bool isInsert = this.InstanceID < 0;
+			bool isInsert = this.InstanceID < 0; 
 			string cmdText = isInsert ?
 				@"
 				insert into CORE_ServiceInstance (AccountID, ParentInstanceID, ServiceName, TimeScheduled, TimeStarted, TimeEnded, Priority, State, Progress, Outcome, ServiceUrl, Configuration, ActiveRule)
