@@ -152,6 +152,14 @@ namespace Easynet.Edge.Core.Services
 		/// <summary>
 		/// 
 		/// </summary>
+		public DateTime TimeEnded
+		{
+			get { return TimeEndedProperty.GetValue(this); }
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public DateTime TimeScheduled
 		{
 			get { return TimeScheduledProperty.GetValue(this); }
@@ -215,6 +223,7 @@ namespace Easynet.Edge.Core.Services
 		static readonly EntityProperty<ServiceInstance, ServiceOutcome> OutcomeProperty = new EntityProperty<ServiceInstance, ServiceOutcome>(ServiceOutcome.Unspecified);
 		static readonly EntityProperty<ServiceInstance, float> ProgressProperty = new EntityProperty<ServiceInstance, float>(0);
 		static readonly EntityProperty<ServiceInstance, DateTime> TimeStartedProperty = new EntityProperty<ServiceInstance, DateTime>(DateTime.MinValue);
+		static readonly EntityProperty<ServiceInstance, DateTime> TimeEndedProperty = new EntityProperty<ServiceInstance, DateTime>(DateTime.MinValue);
 		static readonly EntityProperty<ServiceInstance, DateTime> TimeScheduledProperty = new EntityProperty<ServiceInstance, DateTime>(DateTime.MinValue);
 		static readonly EntityProperty<ServiceInstance, ActiveServiceElement> ActiveConfigurationProperty = new EntityProperty<ServiceInstance, ActiveServiceElement>();
 		static readonly EntityProperty<ServiceInstance, SchedulingRuleElement> ActiveRuleProperty = new EntityProperty<ServiceInstance, SchedulingRuleElement>();
@@ -302,10 +311,11 @@ namespace Easynet.Edge.Core.Services
 						ActiveRule = @activeRule:Xml
 					where
 						InstanceID = @instanceID:BigInt
-					" : 
+					" :
 					@"
 					update CORE_ServiceInstance set
 						TimeStarted = @timeStarted:DateTime,
+						TimeEnded = @timeEnded:DateTime,
 						State = @state:Int,
 						Progress = @progress:Float,
 						Outcome = @outcome:Int,
@@ -321,7 +331,8 @@ namespace Easynet.Edge.Core.Services
 			cmd.Parameters["@state"].Value = this.State;
 			cmd.Parameters["@progress"].Value = this.Progress;
 			cmd.Parameters["@outcome"].Value = this.Outcome;
-			cmd.Parameters["@timeStarted"].Value = this.TimeStarted == DateTime.MinValue ? (object) DBNull.Value : (object) this.TimeStarted;
+			cmd.Parameters["@timeStarted"].Value = this.TimeStarted == DateTime.MinValue ? (object)DBNull.Value : (object)this.TimeStarted;
+			cmd.Parameters["@timeEnded"].Value = this.TimeEnded == DateTime.MinValue ? (object)DBNull.Value : (object)this.TimeEnded;
 			cmd.Parameters["@serviceUrl"].Value = this.ServiceUrl == null ? (object) DBNull.Value : (object) this.ServiceUrl;
 
 			// Set only when uninitialized
@@ -567,6 +578,9 @@ namespace Easynet.Edge.Core.Services
 		{
 			ServiceState before = this.State;
 			StateProperty.SetValue(this, state);
+			if (state == ServiceState.Ended)
+				TimeEndedProperty.SetValue(this, DateTime.Now);
+
 			this.Save();
 
 			if (this.StateChanged != null)
