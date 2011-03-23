@@ -33,7 +33,7 @@ namespace MyScheduler
 		private const int TimeBetweenNewSchedule = 60000;
 		private Thread _findRequiredServicesthread;
 		private Thread _newSchedulethread;
-		public event EventHandler ServiceRequired;
+		public event EventHandler ServiceRunRequired;
 		public event EventHandler ServiceNotScheduledEvent;
 
 
@@ -66,16 +66,19 @@ namespace MyScheduler
 
 			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s => s.TimeToRun).ThenBy(s => s.Priority);
 			ClearServicesforReschedule(toBeScheduledByTimeAndPriority);
-			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
+			lock (_scheduledServices)
 			{
-
-				//if key exist then this service is runing or ednededule again
-				if (!_scheduledServices.ContainsKey(schedulingData))
+				foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
 				{
-					ServiceInstance serviceInstance = ScheduleSpecificService(schedulingData);
-					KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
-					UpdateScheduleTable(serviceInstanceAndRuleHash);
-				}
+
+					//if key exist then this service is runing or ednededule again
+					if (!_scheduledServices.ContainsKey(schedulingData))
+					{
+						ServiceInstance serviceInstance = ScheduleSpecificService(schedulingData);
+						KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
+						UpdateScheduleTable(serviceInstanceAndRuleHash);
+					}
+				} 
 			}
 			PrintSchduleTable();
 		}
@@ -561,6 +564,16 @@ namespace MyScheduler
 		}
 		public void Start()
 		{
+			_newSchedulethread = new Thread(new ThreadStart(delegate()
+			{
+				while (true)
+				{
+					NewSchedule();
+					Thread.Sleep(TimeBetweenNewSchedule);
+				}
+			}
+			));
+
 			_findRequiredServicesthread = new Thread(new ThreadStart(delegate()
 			{
 				List<ServiceInstance> instancesToRun = new List<ServiceInstance>();
@@ -592,27 +605,19 @@ namespace MyScheduler
 
 
 			_findRequiredServicesthread.Start();
+			_newSchedulethread.Start();
 
 		}
 		public void Stop()
 		{
 			_findRequiredServicesthread.Abort();
+			_newSchedulethread.Abort();
 
 		}
-		public void NewScheduleTimer()
-		{
-			_newSchedulethread = new Thread(NewSchedule);
-			while (true)
-			{
-				_newSchedulethread.Start();
-				Thread.Sleep(TimeBetweenNewSchedule);
-			}
-
-		}
-
+		
 		public void OnTimeToRun(TimeToRunEventArgs e)
 		{
-			ServiceRequired(this, e);
+			ServiceRunRequired(this, e);
 
 		}
 		public void OnServiceNotScheduled(ServiceNotScheduledEventArgs e)
