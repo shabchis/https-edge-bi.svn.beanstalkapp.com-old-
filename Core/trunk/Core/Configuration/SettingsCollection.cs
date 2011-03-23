@@ -23,24 +23,7 @@ namespace Easynet.Edge.Core
 		/// The regular expression that parses a definition string to retrieve settings.
 		/// </summary>
 		/// <remarks>
-		/// <para>The format is: \b[A-Za-z]+[A-Za-z0-9-_/=\+]*\s*:[^;:]*</para>
-		/// <para>
-		///	At least one letter character followed by alphanumeric characters and/or dashes (setting name),
-		///	followed by any number of whitespace characters, a colon, and then any number of characters other
-		///	than colon or semi-colon (setting value).
-		///	</para>
-		/// </remarks>
-		private static Regex _settingParser = new Regex(@"\b[A-Za-z]+[A-Za-z0-9-_/=\+]*\s*:[^;:]*");
-
-		/// <summary>
-		/// The regular expression that extracts setting names from a name/value pair.
-		/// </summary>
-		private static Regex _keyParser = new Regex(@"^\b[A-Za-z]+[A-Za-z0-9-_/=\+]*");
-
-		/// <summary>
-		/// The regular expression that extracts setting values from a name/value pair.
-		/// </summary>
-		private static Regex _valueParser  = new Regex(@"[^;:]*$");
+		private static Regex _settingParser = new Regex(@"\b([A-Za-z]+[A-Za-z0-9-_/=\+]*)\s*:\s*([^;]*)");
 
 		/// <summary>
 		/// The regular expression that extracts comments from the entire definition string.
@@ -103,21 +86,12 @@ namespace Easynet.Edge.Core
 				// Iterate the key/value pairs found by the regular expression
 				foreach (Match setting in _settingParser.Matches(input))
 				{
+					if (setting.Groups.Count != 3)
+						continue;
+
 					string key, val;
-
-					// Extract the key
-					Match keyMatch = _keyParser.Match(setting.Value);
-					if (keyMatch.Success)
-						key = keyMatch.Value.Trim();
-					else
-						continue;
-
-					// Extract the value
-					Match valMatch = _valueParser.Match(setting.Value);
-					if (valMatch.Success)
-						val = valMatch.Value.Trim();
-					else
-						continue;
+					key = setting.Groups[1].Value;
+					val = setting.Groups[2].Value;
 
 					// Add the setting to the collection
 					this.Add(key, val);
@@ -164,6 +138,18 @@ namespace Easynet.Edge.Core
 			{
 				this[entry.Key] = (string) entry.Value;
 			}
+		}
+
+		public Dictionary<string, string> ToDictionary()
+		{
+			Dictionary<string, string> dict = new Dictionary<string, string>();
+
+			foreach (KeyValuePair<string, string> entry in this)
+			{
+				dict[entry.Key] = (string)entry.Value;
+			}
+
+			return dict;
 		}
 	}
 }
