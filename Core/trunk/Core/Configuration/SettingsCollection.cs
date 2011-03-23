@@ -140,6 +140,12 @@ namespace Easynet.Edge.Core
 			}
 		}
 
+		// This is for backwards compatibility with old assemblies.
+		public void Merge(SettingsCollection otherCollection)
+		{
+			Merge(otherCollection);
+		}
+
 		public Dictionary<string, string> ToDictionary()
 		{
 			Dictionary<string, string> dict = new Dictionary<string, string>();
