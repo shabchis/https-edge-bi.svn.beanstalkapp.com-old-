@@ -40,6 +40,12 @@ namespace Easynet.Edge.Core.Utilities
 			return encrypted.ToHex();
 		}
 
+		// For backwards compatibility.
+		public static string Encrypt(string str, string notInUse)
+		{
+			return Encrypt(str);
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -52,6 +58,12 @@ namespace Easynet.Edge.Core.Utilities
 
 			Easynet.Edge.Core.Encryption.Data decrypted = _globalEncryptor.Decrypt(encrypted);
 			return decrypted.ToString();
+		}
+
+		// For backwards compatibility.
+		public static string Decrypt(string str, string notInUse)
+		{
+			return Decrypt(str);
 		}
 
 		//==============================
