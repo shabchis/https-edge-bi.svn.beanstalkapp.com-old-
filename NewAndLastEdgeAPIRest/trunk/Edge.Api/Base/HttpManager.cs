@@ -32,6 +32,7 @@ namespace Edge.Api
 		public static void SetResponse(HttpContext context, HttpStatusCode status, string message = null, string contentType = null)
 		{
 			// Set status if not set yet
+			context.Response.TrySkipIisCustomErrors = true;
 			context.Response.StatusCode = (int)status;
 			context.Response.StatusDescription = StatusDescriptions.ContainsKey(status) ? StatusDescriptions[status] : null;
 			context.Response.ContentType = contentType;
@@ -46,6 +47,7 @@ namespace Edge.Api
 
 		public static void SetResponse(HttpContext context, HttpStatusCode status, object jsonObject, string contentType = "application/json")
 		{
+			context.Response.TrySkipIisCustomErrors = true;
 			SetResponse(context: context, status: status, contentType: contentType);
 			SerializeToOutput(context, jsonObject);
 		}
