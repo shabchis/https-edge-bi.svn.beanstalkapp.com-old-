@@ -100,11 +100,11 @@ namespace MyScheduler
 
 			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
 			{
-				//TODO: remove services that did not ran yet --AFTER LUNCH!!!!!!!!!!!!!!!!!!!!!!!!!!! and reschedule them
+			
 				if (_scheduledServices.ContainsKey(schedulingData) && _scheduledServices[schedulingData].State == serviceStatus.Scheduled)
 					_scheduledServices.Remove(schedulingData);
 
-				if (!_scheduledServices.ContainsKey(schedulingData)) //if key exist then this service has been ended and we can schedule again
+				if (!_scheduledServices.ContainsKey(schedulingData)) //if key exist then this service has been ended and we can schedule again or it's runing and we can't use this time line
 				{
 					ServiceInstance serviceInstance = ScheduleSpecificService(schedulingData);
 					KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
@@ -199,7 +199,7 @@ namespace MyScheduler
 							{
 								case SchedulingScope.Day:
 									{
-										if ((_timeLineFrom.TimeOfDay <= _timeLineTo.TimeOfDay && hour >= _timeLineFrom.TimeOfDay) || //same day
+										if ((_timeLineFrom.TimeOfDay <= _timeLineTo.TimeOfDay && hour >= _timeLineFrom.TimeOfDay) || //same day //todo: check this with doron
 											(_timeLineFrom.TimeOfDay >= _timeLineTo.TimeOfDay && (hour <= _timeLineFrom.TimeOfDay && hour >= _timeLineTo.TimeOfDay))) //diffarent day
 										{
 											Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = DateTime.Today + hour };
@@ -439,7 +439,7 @@ namespace MyScheduler
 
 			int executionTimeInMin = 0;
 			executionTimeInMin = GetAverageExecutionTime(schedulingData.Configuration.ID);
-			//TODO: CHECK WITH DORON LEAKING YEARS MONTH DAY FOR THE NEXT ROW
+		
 			DateTime baseStartTime = schedulingData.TimeToRun;
 			DateTime baseEndTime = baseStartTime.AddMinutes(executionTimeInMin);
 			DateTime calculatedStartTime = baseStartTime;
@@ -587,7 +587,7 @@ namespace MyScheduler
 		}
 		private void CheckIfItsTimeToRun()
 		{
-			List<ActiveServiceElement> activeServiceElements = new List<ActiveServiceElement>();
+			Dictionary<SchedulingData, ActiveServiceElement> activeServiceElements = new Dictionary<SchedulingData, ActiveServiceElement>();
 			while (true)
 			{
 				//DO some checks
@@ -599,7 +599,7 @@ namespace MyScheduler
 						TimeSpan now = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
 						if (scheduleService.Key.SelectedHour == now)
 						{
-							activeServiceElements.Add(scheduleService.Value.LegacyConfiguration);
+							activeServiceElements.Add(scheduleService.Key,scheduleService.Value.LegacyConfiguration);
 						}
 					}
 				}
@@ -628,7 +628,7 @@ namespace MyScheduler
 	}
 	public class TimeToRunEventArgs : EventArgs
 	{
-		public List<ActiveServiceElement> ActiveServiceElements;
+		public  Dictionary<SchedulingData,ActiveServiceElement> ActiveServiceElements;
 	}
 	public class ServiceNotScheduledEventArgs : EventArgs
 	{
