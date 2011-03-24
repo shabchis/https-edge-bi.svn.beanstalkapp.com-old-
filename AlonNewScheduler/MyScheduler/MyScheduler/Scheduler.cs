@@ -66,7 +66,7 @@ namespace MyScheduler
 			List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(false);
 			BuildScheduleFromNextTimeLineServices(servicesForNextTimeLine);
 			OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation=_unscheduleServices,ScheduleInformation=_scheduledServices});
-			Log.Write("New Schedule Created", LogMessageType.Information);
+			Log.Write(this.ToString(),"New Schedule Created", LogMessageType.Information);
 			//PrintSchduleTable();
 		}
 
@@ -126,7 +126,7 @@ namespace MyScheduler
 
 			BuildScheduleFromNextTimeLineServices(servicesForNextTimeLine);
 			OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation = _unscheduleServices, ScheduleInformation = _scheduledServices });
-			Log.Write("ReSchedule Created", LogMessageType.Information);
+			Log.Write(this.ToString(),"ReSchedule Created", LogMessageType.Information);
 			//PrintSchduleTable();
 
 		}
@@ -372,7 +372,7 @@ namespace MyScheduler
 			{
 				// check if the waiting time is bigger then max waiting time.
 				_unscheduleServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
-				Log.Write(string.Format("Service {0} not schedule since it's scheduling exceed max MaxDeviation", serviceInstanceAndRuleHash.Value.ServiceName), LogMessageType.Warning);
+				Log.Write(this.ToString(),string.Format("Service {0} not schedule since it's scheduling exceed max MaxDeviation", serviceInstanceAndRuleHash.Value.ServiceName), LogMessageType.Warning);
 				
 			}
 			else
@@ -570,7 +570,7 @@ namespace MyScheduler
 		}
 		public void Start()
 		{
-			Log.Write("Timer for new scheduling and required services has been started",LogMessageType.Information);
+			Log.Write(this.ToString(),"Timer for new scheduling and required services has been started",LogMessageType.Information);
 			_newSchedulethread = new Thread(new ThreadStart(delegate()
 			{
 				while (true)
@@ -617,7 +617,7 @@ namespace MyScheduler
 		}
 		public void Stop()
 		{
-			Log.Write("Timer for new scheduling and required services has been stoped", LogMessageType.Information);
+			Log.Write(this.ToString(),"Timer for new scheduling and required services has been stoped", LogMessageType.Information);
 			_findRequiredServicesthread.Abort();
 			_newSchedulethread.Abort();
 
@@ -625,6 +625,11 @@ namespace MyScheduler
 
 		public void OnTimeToRun(TimeToRunEventArgs e)
 		{
+			foreach (ServiceInstance serviceToRun in e.ServicesToRun)
+			{
+				Log.Write(this.ToString(),string.Format("Service {0} required to run", serviceToRun.ServiceName), LogMessageType.Information);
+				
+			}
 			ServiceRunRequiredEvent(this, e);
 
 		}
