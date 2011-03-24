@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using MyScheduler;
 using MyScheduler.Objects;
 using System.IO;
+using legacy = Easynet.Edge.Core.Services;
 
 
 namespace SchedulerTester
@@ -35,7 +36,7 @@ namespace SchedulerTester
 		void _scheduler_ServiceRunRequiredEvent(object sender, EventArgs e)
 		{
 			//todo: log2
-			_scheduler.Stop();
+
 
 			TimeToRunEventArgs args = (TimeToRunEventArgs)e;
 			foreach (MyScheduler.Objects.ServiceInstance serviceInstance in args.ServicesToRun)
@@ -51,23 +52,34 @@ namespace SchedulerTester
 				serviceInstance.LegacyInstance.Initialize();
 				this.Invoke(new MethodInvoker(delegate()
 				{
-					
+
 					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} initalized {1}\r\n", serviceInstance.ServiceName, DateTime.Now.ToString("dd/MM/yy HH:mm")));
 				}));
 				Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), string.Format("Service: {0} initalized", serviceInstance.ServiceName), Easynet.Edge.Core.Utilities.LogMessageType.Information);
 
 
 			}
+
 		}
 
 		void LegacyInstance_ChildServiceRequested(object sender, Easynet.Edge.Core.Services.ServiceRequestedEventArgs e)
 		{
+			legacy.ServiceInstance instance = (legacy.ServiceInstance)sender;
+			this.Invoke(new MethodInvoker(delegate()
+				{
+					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nchild Service: {0} requestedd {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
+				}));
+			e.RequestedService.ChildServiceRequested += new EventHandler<legacy.ServiceRequestedEventArgs>(LegacyInstance_ChildServiceRequested);
+			e.RequestedService.StateChanged += new EventHandler<legacy.ServiceStateChangedEventArgs>(LegacyInstance_StateChanged);				
 			e.RequestedService.Initialize();
 		}
 
+	
+
 		void LegacyInstance_StateChanged(object sender, Easynet.Edge.Core.Services.ServiceStateChangedEventArgs e)
 		{
-			Easynet.Edge.Core.Services.ServiceInstance instance = (Easynet.Edge.Core.Services.ServiceInstance)sender;
+
+			legacy.ServiceInstance instance = (Easynet.Edge.Core.Services.ServiceInstance)sender;
 			switch (e.StateAfter)
 			{
 				case Easynet.Edge.Core.Services.ServiceState.Uninitialized:
@@ -76,7 +88,15 @@ namespace SchedulerTester
 					break;
 				case Easynet.Edge.Core.Services.ServiceState.Ready:
 					{
+						this.Invoke(new MethodInvoker(delegate()
+				{
+					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is ready {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
+				}));
 						instance.Start();
+						this.Invoke(new MethodInvoker(delegate()
+				{
+					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is Started/waiting {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
+				}));
 						break;
 					}
 				case Easynet.Edge.Core.Services.ServiceState.Starting:
@@ -85,7 +105,7 @@ namespace SchedulerTester
 					break;
 				case Easynet.Edge.Core.Services.ServiceState.Waiting:
 					break;
-				case Easynet.Edge.Core.Services.ServiceState.Ended:
+				case Easynet.Edge.Core.Services.ServiceState.Ended:				
 					break;
 				case Easynet.Edge.Core.Services.ServiceState.Aborting:
 					break;
@@ -138,8 +158,6 @@ namespace SchedulerTester
 			}
 
 		}
-
-
 
 		private void ScheduleBtn_Click(object sender, EventArgs e)
 		{
@@ -216,6 +234,7 @@ namespace SchedulerTester
 		{
 
 		}
+
 		private void AddUnplanedServiceConfiguration()
 		{
 
@@ -241,7 +260,7 @@ namespace SchedulerTester
 		private void startBtn_Click(object sender, EventArgs e)
 		{
 			_scheduler.Start();
-			
+
 			logtextBox.Text = logtextBox.Text.Insert(0, "Timer Started:" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\r\n");
 			using (StreamWriter writer = new StreamWriter(Path.Combine(Application.StartupPath, "log.txt"), true, Encoding.Unicode))
 			{
