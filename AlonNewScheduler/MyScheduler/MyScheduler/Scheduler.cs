@@ -462,7 +462,8 @@ namespace MyScheduler
 						scheduleInfo.ActualDeviation = calculatedStartTime.Subtract(baseStartTime);
 						scheduleInfo.MaxDeviationBefore = schedulingData.Rule.MaxDeviationBefore;
 						scheduleInfo.ProfileID = schedulingData.Configuration.SchedulingProfile.ID;
-						scheduleInfo.LegacyInstance = Legacy.Service.CreateInstance(schedulingData.LegacyConfiguration);
+						scheduleInfo.LegacyInstance = Legacy.Service.CreateInstance(schedulingData.LegacyConfiguration);						
+						scheduleInfo.LegacyInstance.StateChanged += new EventHandler<Legacy.ServiceStateChangedEventArgs>(LegacyInstance_StateChanged);
 						scheduleInfo.ServiceName = schedulingData.Configuration.Name;
 						scheduleInfo.State = ServiceStatus.Scheduled;
 						found = true;
@@ -484,6 +485,14 @@ namespace MyScheduler
 			}
 			return scheduleInfo;
 		}
+
+		void LegacyInstance_StateChanged(object sender, Legacy.ServiceStateChangedEventArgs e)
+		{
+			if (e.StateAfter == Legacy.ServiceState.Ended)
+				ReSchedule();
+		}
+		
+		
 
 		/// <summary>
 		/// Get the average time of service run by configuration id and wanted percentile
@@ -575,8 +584,11 @@ namespace MyScheduler
 			{
 				while (true)
 				{
-					NewSchedule();
-					Thread.Sleep(TimeBetweenNewSchedule);
+					lock (_scheduledServices)
+					{
+						NewSchedule();
+						Thread.Sleep(TimeBetweenNewSchedule); 
+					}
 				}
 			}
 			));
@@ -594,9 +606,13 @@ namespace MyScheduler
 							if (scheduleService.Key.SelectedDay == ((int)DateTime.Now.DayOfWeek) + 1) //same day
 							{
 								TimeSpan now = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
-								if (scheduleService.Key.SelectedHour == now)
+								if (scheduleService.Value.LegacyInstance.State==Legacy.ServiceState.Uninitialized)
 								{
-									instancesToRun.Add(scheduleService.Value);
+									if (scheduleService.Key.TimeToRun.Hour == now.Hours)
+									{
+										if (scheduleService.Key.TimeToRun.Minute == now.Minutes || scheduleService.Key.TimeToRun.Minute == now.Minutes - 1 || scheduleService.Key.TimeToRun.Minute == now.Minutes + 1)
+											instancesToRun.Add(scheduleService.Value);
+									} 
 								}
 							}
 						}
@@ -641,6 +657,8 @@ namespace MyScheduler
 		{		
 				_scheduledServices[schedulingData].LegacyInstance.Abort();			
 		}
+
+		
 	}
 	public class TimeToRunEventArgs : EventArgs
 	{
