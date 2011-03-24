@@ -23,7 +23,7 @@ namespace MyScheduler
 			//    s.CreateSchedule();
 			//}
 
-			Console.ReadLine();
+		//	Console.ReadLine();
 
 			//List<ServiceConfigration> services = new List<ServiceConfigration>();
 

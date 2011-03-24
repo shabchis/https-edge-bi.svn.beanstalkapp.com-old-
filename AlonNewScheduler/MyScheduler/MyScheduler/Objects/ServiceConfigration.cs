@@ -21,6 +21,7 @@ namespace MyScheduler.Objects
 		public TimeSpan MaxExecutionTime = new TimeSpan(0,60, 0);
 		public ActiveServiceElement LegacyConfiguration;
 		public int priority;
+		
 	}
 
 
