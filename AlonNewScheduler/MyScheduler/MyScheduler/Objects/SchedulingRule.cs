@@ -28,6 +28,7 @@ namespace MyScheduler.Objects
 		public ActiveServiceElement LegacyConfiguration;
 		public int Priority;
 		
+		
 
 		public override string ToString()
 		{

@@ -9,6 +9,7 @@ using MyScheduler.Objects;
 using System.Threading;
 using Easynet.Edge.Core.Configuration;
 using Legacy = Easynet.Edge.Core.Services;
+using Easynet.Edge.Core.Utilities;
 
 
 
@@ -33,8 +34,9 @@ namespace MyScheduler
 		private const int TimeBetweenNewSchedule = 60000;
 		private Thread _findRequiredServicesthread;
 		private Thread _newSchedulethread;
-		public event EventHandler ServiceRunRequired;
-		public event EventHandler ServiceNotScheduledEvent;
+		public event EventHandler ServiceRunRequiredEvent;
+		//public event EventHandler ServiceNotScheduledEvent;
+		public event EventHandler NewScheduleCreatedEvent;
 
 
 
@@ -62,8 +64,14 @@ namespace MyScheduler
 		public void NewSchedule()
 		{
 			List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(false);
+			BuildScheduleFromNextTimeLineServices(servicesForNextTimeLine);
+			OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation=_unscheduleServices,ScheduleInformation=_scheduledServices});
+			Log.Write("New Schedule Created", LogMessageType.Information);
+			//PrintSchduleTable();
+		}
 
-
+		private void BuildScheduleFromNextTimeLineServices(List<SchedulingData> servicesForNextTimeLine)
+		{
 			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s => s.TimeToRun).ThenBy(s => s.Priority);
 			ClearServicesforReschedule(toBeScheduledByTimeAndPriority);
 			lock (_scheduledServices)
@@ -74,14 +82,16 @@ namespace MyScheduler
 					//if key exist then this service is runing or ednededule again
 					if (!_scheduledServices.ContainsKey(schedulingData))
 					{
-						ServiceInstance serviceInstance = ScheduleSpecificService(schedulingData);
-						KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
-						UpdateScheduleTable(serviceInstanceAndRuleHash);
+						
+							ServiceInstance serviceInstance = ScheduleSpecificService(schedulingData);
+							KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
+							UpdateScheduleTable(serviceInstanceAndRuleHash);
+						
 					}
-				} 
+				}
 			}
-			PrintSchduleTable();
 		}
+		
 
 		private void ClearServicesforReschedule(IOrderedEnumerable<Objects.SchedulingData> toBeScheduledByTimeAndPriority)
 		{
@@ -89,8 +99,12 @@ namespace MyScheduler
 			{
 				if (_scheduledServices.ContainsKey(schedulingData))
 				{
-					if (_scheduledServices[schedulingData].LegacyInstance.State == Legacy.ServiceState.Uninitialized)
-						_scheduledServices.Remove(schedulingData);
+
+					if (_scheduledServices[schedulingData].Deleted==false)
+					{
+						if (_scheduledServices[schedulingData].LegacyInstance.State == Legacy.ServiceState.Uninitialized)
+							_scheduledServices.Remove(schedulingData); 
+					}
 				}
 
 
@@ -110,19 +124,10 @@ namespace MyScheduler
 			else
 				servicesForNextTimeLine = GetServicesForNextTimeLine(true);
 
-			var toBeScheduledByTimeAndPriority = servicesForNextTimeLine.OrderBy(s => s.TimeToRun).ThenBy(s => s.Priority);
-			ClearServicesforReschedule(toBeScheduledByTimeAndPriority);
-
-			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
-			{
-				if (!_scheduledServices.ContainsKey(schedulingData)) //if key exist then this service has been ended and we can schedule again or it's runing and we can't use this time line
-				{
-					ServiceInstance serviceInstance = ScheduleSpecificService(schedulingData);
-					KeyValuePair<SchedulingData, ServiceInstance> serviceInstanceAndRuleHash = new KeyValuePair<SchedulingData, ServiceInstance>(schedulingData, serviceInstance);
-					UpdateScheduleTable(serviceInstanceAndRuleHash);
-				}
-			}
-			PrintSchduleTable();
+			BuildScheduleFromNextTimeLineServices(servicesForNextTimeLine);
+			OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation = _unscheduleServices, ScheduleInformation = _scheduledServices });
+			Log.Write("ReSchedule Created", LogMessageType.Information);
+			//PrintSchduleTable();
 
 		}
 
@@ -357,9 +362,6 @@ namespace MyScheduler
 				}
 			}
 		}
-
-
-
 		/// <summary>
 		/// set the service instance on the right time get the service instance with all the data of scheduling and more
 		/// </summary>
@@ -370,12 +372,17 @@ namespace MyScheduler
 			{
 				// check if the waiting time is bigger then max waiting time.
 				_unscheduleServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
-				OnServiceNotScheduled(new ServiceNotScheduledEventArgs() { NotScheduledInformation = serviceInstanceAndRuleHash });
+				Log.Write(string.Format("Service {0} not schedule since it's scheduling exceed max MaxDeviation", serviceInstanceAndRuleHash.Value.ServiceName), LogMessageType.Warning);
+				
 			}
 			else
 			{
 				_scheduledServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
 			}
+		}
+		public void DeleteScpecificServiceInstance(SchedulingData schedulingData)
+		{
+			_scheduledServices[schedulingData].Deleted = true;
 		}
 
 		/// <summary>
@@ -387,7 +394,9 @@ namespace MyScheduler
 		{
 			//Get all services with same configurationID
 			var servicesWithSameConfiguration = from s in _scheduledServices
-												where s.Value.BaseConfigurationID == schedulingData.Configuration.BaseConfiguration.ID && (s.Value.LegacyInstance.State != Legacy.ServiceState.Ended) //runnig or not started yet
+												where s.Value.BaseConfigurationID == schedulingData.Configuration.BaseConfiguration.ID &&
+												s.Value.LegacyInstance.State != Legacy.ServiceState.Ended &&
+												s.Value.Deleted == false //runnig or not started yet
 												orderby s.Value.StartTime ascending
 												select s;
 
@@ -396,16 +405,13 @@ namespace MyScheduler
 			var servicesWithSameProfile = from s in _scheduledServices
 										  where s.Value.ProfileID == schedulingData.Configuration.SchedulingProfile.ID &&
 										  s.Value.BaseConfigurationID == schedulingData.Configuration.BaseConfiguration.ID &&
-										  (s.Value.LegacyInstance.State != Legacy.ServiceState.Ended) //runnig or not started yet
+										  s.Value.LegacyInstance.State != Legacy.ServiceState.Ended &&
+										  s.Value.Deleted == false //not deleted
 										  orderby s.Value.StartTime ascending
 										  select s;
 
 
-			//this is old before fixing the same account bug
-			//var servicesWithSameProfile = from s in _scheduledServices
-			//                              where s.Value.ProfileID == schedulingData.Configuration.SchedulingProfile.ID && (s.Value.State != serviceStatus.Ended) //runnig or not started yet
-			//                              orderby s.Value.StartTime ascending
-			//                              select s;
+
 
 			ServiceInstance serviceInstance = FindFirstFreeTime(servicesWithSameConfiguration, servicesWithSameProfile, schedulingData);
 
@@ -564,6 +570,7 @@ namespace MyScheduler
 		}
 		public void Start()
 		{
+			Log.Write("Timer for new scheduling and required services has been started",LogMessageType.Information);
 			_newSchedulethread = new Thread(new ThreadStart(delegate()
 			{
 				while (true)
@@ -610,32 +617,34 @@ namespace MyScheduler
 		}
 		public void Stop()
 		{
+			Log.Write("Timer for new scheduling and required services has been stoped", LogMessageType.Information);
 			_findRequiredServicesthread.Abort();
 			_newSchedulethread.Abort();
 
 		}
-		
+
 		public void OnTimeToRun(TimeToRunEventArgs e)
 		{
-			ServiceRunRequired(this, e);
+			ServiceRunRequiredEvent(this, e);
 
 		}
-		public void OnServiceNotScheduled(ServiceNotScheduledEventArgs e)
+		public void OnNewScheduleCreated(ScheduledInformationEventArgs e)
 		{
-			ServiceNotScheduledEvent(this, e);
+			NewScheduleCreatedEvent(this, e);
 		}
-
-
-
-
+		public void AbortRuningService(SchedulingData schedulingData)
+		{		
+				_scheduledServices[schedulingData].LegacyInstance.Abort();			
+		}
 	}
 	public class TimeToRunEventArgs : EventArgs
 	{
 		public ServiceInstance[] ServicesToRun;
 	}
-	public class ServiceNotScheduledEventArgs : EventArgs
+	public class ScheduledInformationEventArgs : EventArgs
 	{
-		public KeyValuePair<SchedulingData, ServiceInstance> NotScheduledInformation;
+		public Dictionary<SchedulingData, ServiceInstance> ScheduleInformation;
+		public Dictionary<SchedulingData, ServiceInstance> NotScheduledInformation;
 	}
 
 
