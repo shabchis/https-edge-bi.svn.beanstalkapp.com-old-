@@ -26,20 +26,88 @@ namespace SchedulerTester
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			_scheduler = new Scheduler(true);
-			_scheduler.ServiceRunRequiredEvent += new EventHandler(_scheduler_TimeToRunEventHandler);
+			_scheduler.ServiceRunRequiredEvent += new EventHandler(_scheduler_ServiceRunRequiredEvent);
 			_scheduler.NewScheduleCreatedEvent += new EventHandler(_scheduler_NewScheduleCreatedEventHandler);
 			//	_scheduler.Start();
 
 		}
 
+		void _scheduler_ServiceRunRequiredEvent(object sender, EventArgs e)
+		{
+			//todo: log2
+			_scheduler.Stop();
+
+			TimeToRunEventArgs args = (TimeToRunEventArgs)e;
+			foreach (MyScheduler.Objects.ServiceInstance serviceInstance in args.ServicesToRun)
+			{
+				this.Invoke(new MethodInvoker(delegate()
+				{
+					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("Service: {0} is required for running time {1}\r\n", serviceInstance.ServiceName, DateTime.Now.ToString("dd/MM/yy HH:mm")));
+				}));
+				//FURTURE: ask system control if it's ok to run the service
+				////if ok then
+				serviceInstance.LegacyInstance.StateChanged += new EventHandler<Easynet.Edge.Core.Services.ServiceStateChangedEventArgs>(LegacyInstance_StateChanged);
+				serviceInstance.LegacyInstance.ChildServiceRequested += new EventHandler<Easynet.Edge.Core.Services.ServiceRequestedEventArgs>(LegacyInstance_ChildServiceRequested);
+				serviceInstance.LegacyInstance.Initialize();
+				this.Invoke(new MethodInvoker(delegate()
+				{
+					
+					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} initalized {1}\r\n", serviceInstance.ServiceName, DateTime.Now.ToString("dd/MM/yy HH:mm")));
+				}));
+				Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), string.Format("Service: {0} initalized", serviceInstance.ServiceName), Easynet.Edge.Core.Utilities.LogMessageType.Information);
+
+
+			}
+		}
+
+		void LegacyInstance_ChildServiceRequested(object sender, Easynet.Edge.Core.Services.ServiceRequestedEventArgs e)
+		{
+			e.RequestedService.Initialize();
+		}
+
+		void LegacyInstance_StateChanged(object sender, Easynet.Edge.Core.Services.ServiceStateChangedEventArgs e)
+		{
+			Easynet.Edge.Core.Services.ServiceInstance instance = (Easynet.Edge.Core.Services.ServiceInstance)sender;
+			switch (e.StateAfter)
+			{
+				case Easynet.Edge.Core.Services.ServiceState.Uninitialized:
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Initializing:
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Ready:
+					{
+						instance.Start();
+						break;
+					}
+				case Easynet.Edge.Core.Services.ServiceState.Starting:
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Running:
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Waiting:
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Ended:
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Aborting:
+					break;
+				default:
+					break;
+			}
+
+		}
+
 		void _scheduler_NewScheduleCreatedEventHandler(object sender, EventArgs e)
 		{
+
+			this.Invoke(new MethodInvoker(delegate()
+				{
+					logtextBox.Text = logtextBox.Text.Insert(0, "Schedule Created:" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\r\n");
+				}));
 			using (StreamWriter writer = new StreamWriter(Path.Combine(Application.StartupPath, "log.txt"), true, Encoding.Unicode))
 			{
 				ScheduledInformationEventArgs ee = (ScheduledInformationEventArgs)e;
 				_str.Clear();
 				_scheduledServices.Clear();
-				logtextBox.Text.Insert(0, "Schedule Created" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\n");
+
 
 
 				writer.WriteLine("Schedule Created" + DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
@@ -55,7 +123,7 @@ namespace SchedulerTester
 				foreach (KeyValuePair<SchedulingData, ServiceInstance> SchedInfo in ee.ScheduleInformation)
 				{
 
-					writer.WriteLine(string.Format("ScheduleInfoID:{0}\tService Name:{1}\tAccountID:{2}\tStartTime:{3}\tEndTime\tStatus:{4}\tScope{5}\tDeleted:{6}",SchedInfo.Key.GetHashCode(), SchedInfo.Value.ServiceName, SchedInfo.Value.ProfileID, SchedInfo.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.LegacyInstance.State, SchedInfo.Key.Rule.Scope, SchedInfo.Value.Deleted));
+					writer.WriteLine(string.Format("ScheduleInfoID:{0}\tService Name:{1}\tAccountID:{2}\tStartTime:{3}\tEndTime\tStatus:{4}\tScope{5}\tDeleted:{6}", SchedInfo.Key.GetHashCode(), SchedInfo.Value.ServiceName, SchedInfo.Value.ProfileID, SchedInfo.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.LegacyInstance.State, SchedInfo.Key.Rule.Scope, SchedInfo.Value.Deleted));
 
 
 					_scheduledServices.Add(SchedInfo.Key, SchedInfo.Value);
@@ -71,11 +139,7 @@ namespace SchedulerTester
 
 		}
 
-		void _scheduler_TimeToRunEventHandler(object sender, EventArgs e)
-		{
-			TimeToRunEventArgs ee = (TimeToRunEventArgs)e;
 
-		}
 
 		private void ScheduleBtn_Click(object sender, EventArgs e)
 		{
@@ -95,13 +159,16 @@ namespace SchedulerTester
 
 		private void SetGridData(IEnumerable<KeyValuePair<MyScheduler.Objects.SchedulingData, ServiceInstance>> scheduledServices)
 		{
-			scheduleInfoGrid.Rows.Clear();
-			foreach (var scheduledService in scheduledServices.OrderBy(s => s.Value.StartTime))
+			this.Invoke(new MethodInvoker(delegate()
 			{
-				if (!_scheduledServices.ContainsKey(scheduledService.Key))
-					_scheduledServices.Add(scheduledService.Key, scheduledService.Value);
-				scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), scheduledService.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted });
-			}
+				scheduleInfoGrid.Rows.Clear();
+				foreach (var scheduledService in scheduledServices.OrderBy(s => s.Value.StartTime))
+				{
+					if (!_scheduledServices.ContainsKey(scheduledService.Key))
+						_scheduledServices.Add(scheduledService.Key, scheduledService.Value);
+					scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), scheduledService.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted });
+				}
+			}));
 		}
 
 		private void endServiceBtn_Click(object sender, EventArgs e)
@@ -174,7 +241,8 @@ namespace SchedulerTester
 		private void startBtn_Click(object sender, EventArgs e)
 		{
 			_scheduler.Start();
-			logtextBox.Text.Insert(0, "Timer Started" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\n");
+			
+			logtextBox.Text = logtextBox.Text.Insert(0, "Timer Started:" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\r\n");
 			using (StreamWriter writer = new StreamWriter(Path.Combine(Application.StartupPath, "log.txt"), true, Encoding.Unicode))
 			{
 				writer.WriteLine("Timer Started" + DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
@@ -184,7 +252,10 @@ namespace SchedulerTester
 		private void EndBtn_Click(object sender, EventArgs e)
 		{
 			_scheduler.Stop();
-			logtextBox.Text.Insert(0, "Timer Stoped" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\n");
+			this.Invoke(new MethodInvoker(delegate()
+				{
+					logtextBox.Text = logtextBox.Text.Insert(0, "Timer Stoped" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "r\n");
+				}));
 			using (StreamWriter writer = new StreamWriter(Path.Combine(Application.StartupPath, "log.txt"), true, Encoding.Unicode))
 			{
 				writer.WriteLine("Timer Stoped" + DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
