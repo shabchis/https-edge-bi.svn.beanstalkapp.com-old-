@@ -64,10 +64,11 @@ namespace SchedulerTester
 
 		void LegacyInstance_ChildServiceRequested(object sender, Easynet.Edge.Core.Services.ServiceRequestedEventArgs e)
 		{
+			
 			legacy.ServiceInstance instance = (legacy.ServiceInstance)sender;
 			this.Invoke(new MethodInvoker(delegate()
 				{
-					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nchild Service: {0} requestedd {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
+					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nChild Service: {0} requestedd {1}\r\n",e.RequestedService.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
 				}));
 			e.RequestedService.ChildServiceRequested += new EventHandler<legacy.ServiceRequestedEventArgs>(LegacyInstance_ChildServiceRequested);
 			e.RequestedService.StateChanged += new EventHandler<legacy.ServiceStateChangedEventArgs>(LegacyInstance_StateChanged);
@@ -85,6 +86,12 @@ namespace SchedulerTester
 				case Easynet.Edge.Core.Services.ServiceState.Uninitialized:
 					break;
 				case Easynet.Edge.Core.Services.ServiceState.Initializing:
+					{
+						this.Invoke(new MethodInvoker(delegate()
+						{
+							logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is Initalizing {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
+						}));
+					}
 					break;
 				case Easynet.Edge.Core.Services.ServiceState.Ready:
 					{
@@ -92,20 +99,40 @@ namespace SchedulerTester
 				{
 					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is ready {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
 				}));
-						instance.Start();
-						this.Invoke(new MethodInvoker(delegate()
-				{
-					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is Started/waiting {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
-				}));
+						instance.Start();				
 						break;
 					}
 				case Easynet.Edge.Core.Services.ServiceState.Starting:
-					break;
+					{
+						this.Invoke(new MethodInvoker(delegate()
+						{
+							logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is Started {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
+						}));
+						break;
+					}
 				case Easynet.Edge.Core.Services.ServiceState.Running:
-					break;
+					{
+						this.Invoke(new MethodInvoker(delegate()
+						{
+							logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is Runing {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
+						}));
+						break;
+					}
 				case Easynet.Edge.Core.Services.ServiceState.Waiting:
+					{
+						this.Invoke(new MethodInvoker(delegate()
+						{
+							logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is waiting {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
+						}));
+					}
 					break;
 				case Easynet.Edge.Core.Services.ServiceState.Ended:
+					{
+						this.Invoke(new MethodInvoker(delegate()
+						{
+							logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is ended {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
+						}));
+					}
 					break;
 				case Easynet.Edge.Core.Services.ServiceState.Aborting:
 					break;
@@ -143,7 +170,7 @@ namespace SchedulerTester
 				foreach (KeyValuePair<SchedulingData, ServiceInstance> SchedInfo in ee.ScheduleInformation)
 				{
 
-					writer.WriteLine(string.Format("ScheduleInfoID:{0}\tService Name:{1}\tAccountID:{2}\tStartTime:{3}\tEndTime\tStatus:{4}\tScope{5}\tDeleted:{6}", SchedInfo.Key.GetHashCode(), SchedInfo.Value.ServiceName, SchedInfo.Value.ProfileID, SchedInfo.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.LegacyInstance.State, SchedInfo.Key.Rule.Scope, SchedInfo.Value.Deleted));
+					writer.WriteLine(string.Format("ScheduleInfoID:{0}\tService Name:{1}\tAccountID:{2}\tStartTime:{3}\tEndTime\tStatus:{4}\tScope{5}\tDeleted:{6}\tResult:{7}", SchedInfo.Key.GetHashCode(), SchedInfo.Value.ServiceName, SchedInfo.Value.ProfileID, SchedInfo.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.LegacyInstance.State, SchedInfo.Key.Rule.Scope, SchedInfo.Value.Deleted,SchedInfo.Value.LegacyInstance.Outcome));
 
 
 					_scheduledServices.Add(SchedInfo.Key, SchedInfo.Value);
@@ -170,8 +197,12 @@ namespace SchedulerTester
 
 		private void GetScheduleServices()
 		{
-			var scheduledServices = _scheduler.GetAlllScheduldServices();
-			SetGridData(scheduledServices);
+			lock (_scheduledServices)
+			{
+				var scheduledServices = _scheduler.GetAlllScheduldServices();
+				SetGridData(scheduledServices);
+			}
+			
 
 		}
 
