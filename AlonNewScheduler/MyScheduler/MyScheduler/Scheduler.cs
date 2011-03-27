@@ -29,7 +29,7 @@ namespace MyScheduler
 		private Dictionary<SchedulingData, ServiceInstance> _unscheduleServices = new Dictionary<SchedulingData, ServiceInstance>();
 		DateTime _timeLineFrom;
 		DateTime _timeLineTo;
-		private const int NeededTimeLine = 120; //scheduling for the next xxx min....
+		private const int NeededTimeLine = 1440; //scheduling for the next xxx min....
 		private const int Percentile = 80; //execution time of specifc service on sprcific Percentile
 		private const int TimeBetweenNewSchedule = 60000;
 		private Thread _findRequiredServicesthread;
@@ -92,7 +92,10 @@ namespace MyScheduler
 			}
 		}
 		
-
+		/// <summary>
+		/// Clear Services for reschedule them-it will only clean the services that is in the next time line.
+		/// </summary>
+		/// <param name="toBeScheduledByTimeAndPriority"></param>
 		private void ClearServicesforReschedule(IOrderedEnumerable<Objects.SchedulingData> toBeScheduledByTimeAndPriority)
 		{
 			foreach (SchedulingData schedulingData in toBeScheduledByTimeAndPriority)
@@ -154,17 +157,7 @@ namespace MyScheduler
 			var returnObject = from s in _scheduledServices
 							   select s;
 			return returnObject;
-		}
-
-		/// <summary>
-		/// set service state
-		/// </summary>
-		/// <param name="scheduilngData"></param>
-		/// <param name="serviceStatus"></param>
-		//public void SetServiceState(SchedulingData scheduilngData, ServiceStatus serviceStatus)
-		//{
-		//    _scheduledServices[scheduilngData].State = serviceStatus;
-		//}
+		}		
 
 		/// <summary>
 		/// add unplanned service to schedule
@@ -352,6 +345,7 @@ namespace MyScheduler
 				}
 			}
 		}
+
 		/// <summary>
 		/// set the service instance on the right time get the service instance with all the data of scheduling and more
 		/// </summary>
@@ -370,6 +364,11 @@ namespace MyScheduler
 				_scheduledServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
 			}
 		}
+
+		/// <summary>
+		/// Delete specific instance of service (service for specific time not all the services)
+		/// </summary>
+		/// <param name="schedulingData"></param>
 		public void DeleteScpecificServiceInstance(SchedulingData schedulingData)
 		{
 			_scheduledServices[schedulingData].Deleted = true;
@@ -454,8 +453,7 @@ namespace MyScheduler
 						scheduleInfo.ProfileID = schedulingData.Configuration.SchedulingProfile.ID;
 						scheduleInfo.LegacyInstance = Legacy.Service.CreateInstance(schedulingData.LegacyConfiguration);						
 						scheduleInfo.LegacyInstance.StateChanged += new EventHandler<Legacy.ServiceStateChangedEventArgs>(LegacyInstance_StateChanged);
-						scheduleInfo.ServiceName = schedulingData.Configuration.Name;
-						scheduleInfo.State = ServiceStatus.Scheduled;
+						scheduleInfo.ServiceName = schedulingData.Configuration.Name;					
 						found = true;
 					}
 					else
@@ -476,13 +474,16 @@ namespace MyScheduler
 			return scheduleInfo;
 		}
 
+		/// <summary>
+		/// event handler for change of the state of servics
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		void LegacyInstance_StateChanged(object sender, Legacy.ServiceStateChangedEventArgs e)
 		{
 			if (e.StateAfter == Legacy.ServiceState.Ended)
 				ReSchedule();
-		}
-		
-		
+		}		
 
 		/// <summary>
 		/// Get the average time of service run by configuration id and wanted percentile
@@ -567,6 +568,10 @@ namespace MyScheduler
 			}
 			Console.ReadLine();
 		}
+
+		/// <summary>
+		/// start the timers of new scheduling and services required to run
+		/// </summary>
 		public void Start()
 		{
 			Log.Write(this.ToString(),"Timer for new scheduling and required services has been started",LogMessageType.Information);
@@ -621,6 +626,10 @@ namespace MyScheduler
 			_newSchedulethread.Start();
 
 		}
+
+		/// <summary>
+		///  stop the timers of new scheduling and services required to run
+		/// </summary>
 		public void Stop()
 		{
 			Log.Write(this.ToString(),"Timer for new scheduling and required services has been stoped", LogMessageType.Information);
@@ -629,6 +638,10 @@ namespace MyScheduler
 
 		}
 
+		/// <summary>
+		/// send event for the services which need to be runing
+		/// </summary>
+		/// <param name="e"></param>
 		public void OnTimeToRun(TimeToRunEventArgs e)
 		{
 			foreach (ServiceInstance serviceToRun in e.ServicesToRun)
@@ -639,10 +652,20 @@ namespace MyScheduler
 			ServiceRunRequiredEvent(this, e);
 
 		}
+
+		/// <summary>
+		/// set event new schedule created
+		/// </summary>
+		/// <param name="e"></param>
 		public void OnNewScheduleCreated(ScheduledInformationEventArgs e)
 		{
 			NewScheduleCreatedEvent(this, e);
 		}
+
+		/// <summary>
+		/// abort runing service
+		/// </summary>
+		/// <param name="schedulingData"></param>
 		public void AbortRuningService(SchedulingData schedulingData)
 		{		
 				_scheduledServices[schedulingData].LegacyInstance.Abort();			

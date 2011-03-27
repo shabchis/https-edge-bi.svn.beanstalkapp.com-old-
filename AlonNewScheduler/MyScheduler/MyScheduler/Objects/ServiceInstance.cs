@@ -25,8 +25,7 @@ namespace MyScheduler.Objects
 		public TimeSpan MaxDeviationBefore;
 		public TimeSpan MaxDeviationAfter;
 		public TimeSpan ActualDeviation;
-		public double Odds;
-		public ServiceStatus State;
+		public double Odds;		
 		public bool Deleted;
 		
 		public Legacy.ServiceInstance LegacyInstance;
