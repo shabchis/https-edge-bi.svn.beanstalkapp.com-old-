@@ -35,6 +35,9 @@
 			this.rescheduleBtn = new System.Windows.Forms.Button();
 			this.button1 = new System.Windows.Forms.Button();
 			this.deleteServiceFromScheduleBtn = new System.Windows.Forms.Button();
+			this.startBtn = new System.Windows.Forms.Button();
+			this.EndBtn = new System.Windows.Forms.Button();
+			this.logtextBox = new System.Windows.Forms.TextBox();
 			this.shceduledID = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.scheduledName = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.accountID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -43,9 +46,7 @@
 			this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.scope = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.deleted = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.startBtn = new System.Windows.Forms.Button();
-			this.EndBtn = new System.Windows.Forms.Button();
-			this.logtextBox = new System.Windows.Forms.TextBox();
+			this.outCome = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.scheduleInfoGrid)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -80,7 +81,8 @@
             this.endOn,
             this.status,
             this.scope,
-            this.deleted});
+            this.deleted,
+            this.outCome});
 			this.scheduleInfoGrid.Location = new System.Drawing.Point(3, 12);
 			this.scheduleInfoGrid.Name = "scheduleInfoGrid";
 			this.scheduleInfoGrid.Size = new System.Drawing.Size(968, 273);
@@ -125,6 +127,34 @@
 			this.deleteServiceFromScheduleBtn.Text = "Delete Service From Schedule";
 			this.deleteServiceFromScheduleBtn.UseVisualStyleBackColor = true;
 			this.deleteServiceFromScheduleBtn.Click += new System.EventHandler(this.deleteServiceFromScheduleBtn_Click);
+			// 
+			// startBtn
+			// 
+			this.startBtn.Location = new System.Drawing.Point(4, 291);
+			this.startBtn.Name = "startBtn";
+			this.startBtn.Size = new System.Drawing.Size(75, 23);
+			this.startBtn.TabIndex = 7;
+			this.startBtn.Text = "StartTimer";
+			this.startBtn.UseVisualStyleBackColor = true;
+			this.startBtn.Click += new System.EventHandler(this.startBtn_Click);
+			// 
+			// EndBtn
+			// 
+			this.EndBtn.Location = new System.Drawing.Point(85, 291);
+			this.EndBtn.Name = "EndBtn";
+			this.EndBtn.Size = new System.Drawing.Size(75, 23);
+			this.EndBtn.TabIndex = 8;
+			this.EndBtn.Text = "StopTimer";
+			this.EndBtn.UseVisualStyleBackColor = true;
+			this.EndBtn.Click += new System.EventHandler(this.EndBtn_Click);
+			// 
+			// logtextBox
+			// 
+			this.logtextBox.Location = new System.Drawing.Point(4, 321);
+			this.logtextBox.Multiline = true;
+			this.logtextBox.Name = "logtextBox";
+			this.logtextBox.Size = new System.Drawing.Size(590, 227);
+			this.logtextBox.TabIndex = 9;
 			// 
 			// shceduledID
 			// 
@@ -171,33 +201,10 @@
 			this.deleted.HeaderText = "Deleted";
 			this.deleted.Name = "deleted";
 			// 
-			// startBtn
+			// outCome
 			// 
-			this.startBtn.Location = new System.Drawing.Point(4, 291);
-			this.startBtn.Name = "startBtn";
-			this.startBtn.Size = new System.Drawing.Size(75, 23);
-			this.startBtn.TabIndex = 7;
-			this.startBtn.Text = "StartTimer";
-			this.startBtn.UseVisualStyleBackColor = true;
-			this.startBtn.Click += new System.EventHandler(this.startBtn_Click);
-			// 
-			// EndBtn
-			// 
-			this.EndBtn.Location = new System.Drawing.Point(85, 291);
-			this.EndBtn.Name = "EndBtn";
-			this.EndBtn.Size = new System.Drawing.Size(75, 23);
-			this.EndBtn.TabIndex = 8;
-			this.EndBtn.Text = "StopTimer";
-			this.EndBtn.UseVisualStyleBackColor = true;
-			this.EndBtn.Click += new System.EventHandler(this.EndBtn_Click);
-			// 
-			// logtextBox
-			// 
-			this.logtextBox.Location = new System.Drawing.Point(4, 321);
-			this.logtextBox.Multiline = true;
-			this.logtextBox.Name = "logtextBox";
-			this.logtextBox.Size = new System.Drawing.Size(590, 227);
-			this.logtextBox.TabIndex = 9;
+			this.outCome.HeaderText = "Result";
+			this.outCome.Name = "outCome";
 			// 
 			// frmSchedulingControl
 			// 
@@ -232,6 +239,9 @@
 		private System.Windows.Forms.Button rescheduleBtn;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Button deleteServiceFromScheduleBtn;
+		private System.Windows.Forms.Button startBtn;
+		private System.Windows.Forms.Button EndBtn;
+		private System.Windows.Forms.TextBox logtextBox;
 		private System.Windows.Forms.DataGridViewTextBoxColumn shceduledID;
 		private System.Windows.Forms.DataGridViewTextBoxColumn scheduledName;
 		private System.Windows.Forms.DataGridViewTextBoxColumn accountID;
@@ -240,9 +250,7 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn status;
 		private System.Windows.Forms.DataGridViewTextBoxColumn scope;
 		private System.Windows.Forms.DataGridViewTextBoxColumn deleted;
-		private System.Windows.Forms.Button startBtn;
-		private System.Windows.Forms.Button EndBtn;
-		private System.Windows.Forms.TextBox logtextBox;
+		private System.Windows.Forms.DataGridViewTextBoxColumn outCome;
 	}
 }
 
