@@ -19,9 +19,22 @@ namespace SchedulerTester
 		StringBuilder _str = new StringBuilder();
 		private Scheduler _scheduler;
 		private Dictionary<SchedulingData, ServiceInstance> _scheduledServices = new Dictionary<SchedulingData, ServiceInstance>();
+		public delegate void SetLogMethod(string lineText);
+		public delegate void UpdateGridMethod(int accountId, string serviceName, legacy.ServiceState state);
+		SetLogMethod setLogMethod;
+		UpdateGridMethod updateGridMethod;
 		public frmSchedulingControl()
 		{
 			InitializeComponent();
+			
+			setLogMethod = new SetLogMethod(SetLogTextBox);
+			updateGridMethod = new UpdateGridMethod(UpdateGridData);
+			this.FormClosed += new FormClosedEventHandler(frmSchedulingControl_FormClosed);
+		}
+
+		void frmSchedulingControl_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			_scheduler.Stop();
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
@@ -41,20 +54,16 @@ namespace SchedulerTester
 			TimeToRunEventArgs args = (TimeToRunEventArgs)e;
 			foreach (MyScheduler.Objects.ServiceInstance serviceInstance in args.ServicesToRun)
 			{
-				this.Invoke(new MethodInvoker(delegate()
-				{
-					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("Service: {0} is required for running time {1}\r\n", serviceInstance.ServiceName, DateTime.Now.ToString("dd/MM/yy HH:mm")));
-				}));
+
+				this.Invoke(setLogMethod, new Object[] { string.Format("Service: {0} is required for running time {1}\r\n", serviceInstance.ServiceName, DateTime.Now.ToString("dd/MM/yy HH:mm")) });
+
 				//FURTURE: ask system control if it's ok to run the service
 				////if ok then
 				serviceInstance.LegacyInstance.StateChanged += new EventHandler<Easynet.Edge.Core.Services.ServiceStateChangedEventArgs>(LegacyInstance_StateChanged);
 				serviceInstance.LegacyInstance.ChildServiceRequested += new EventHandler<Easynet.Edge.Core.Services.ServiceRequestedEventArgs>(LegacyInstance_ChildServiceRequested);
 				serviceInstance.LegacyInstance.Initialize();
-				this.Invoke(new MethodInvoker(delegate()
-				{
+				this.Invoke(setLogMethod, new Object[] { string.Format("\nService: {0} initalized {1}\r\n", serviceInstance.ServiceName, DateTime.Now.ToString("dd/MM/yy HH:mm")) });
 
-					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} initalized {1}\r\n", serviceInstance.ServiceName, DateTime.Now.ToString("dd/MM/yy HH:mm")));
-				}));
 				Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), string.Format("Service: {0} initalized", serviceInstance.ServiceName), Easynet.Edge.Core.Utilities.LogMessageType.Information);
 
 
@@ -64,12 +73,10 @@ namespace SchedulerTester
 
 		void LegacyInstance_ChildServiceRequested(object sender, Easynet.Edge.Core.Services.ServiceRequestedEventArgs e)
 		{
-			
+
 			legacy.ServiceInstance instance = (legacy.ServiceInstance)sender;
-			this.Invoke(new MethodInvoker(delegate()
-				{
-					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nChild Service: {0} requestedd {1}\r\n",e.RequestedService.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
-				}));
+			this.Invoke(setLogMethod, new Object[] { string.Format("\nChild Service: {0} requestedd {1}\r\n", e.RequestedService.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")) });
+
 			e.RequestedService.ChildServiceRequested += new EventHandler<legacy.ServiceRequestedEventArgs>(LegacyInstance_ChildServiceRequested);
 			e.RequestedService.StateChanged += new EventHandler<legacy.ServiceStateChangedEventArgs>(LegacyInstance_StateChanged);
 			e.RequestedService.Initialize();
@@ -81,74 +88,19 @@ namespace SchedulerTester
 		{
 
 			legacy.ServiceInstance instance = (Easynet.Edge.Core.Services.ServiceInstance)sender;
-			switch (e.StateAfter)
-			{
-				case Easynet.Edge.Core.Services.ServiceState.Uninitialized:
-					break;
-				case Easynet.Edge.Core.Services.ServiceState.Initializing:
-					{
-						this.Invoke(new MethodInvoker(delegate()
-						{
-							logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is Initalizing {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
-						}));
-					}
-					break;
-				case Easynet.Edge.Core.Services.ServiceState.Ready:
-					{
-						this.Invoke(new MethodInvoker(delegate()
-				{
-					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is ready {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
-				}));
-						instance.Start();				
-						break;
-					}
-				case Easynet.Edge.Core.Services.ServiceState.Starting:
-					{
-						this.Invoke(new MethodInvoker(delegate()
-						{
-							logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is Started {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
-						}));
-						break;
-					}
-				case Easynet.Edge.Core.Services.ServiceState.Running:
-					{
-						this.Invoke(new MethodInvoker(delegate()
-						{
-							logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is Runing {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
-						}));
-						break;
-					}
-				case Easynet.Edge.Core.Services.ServiceState.Waiting:
-					{
-						this.Invoke(new MethodInvoker(delegate()
-						{
-							logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is waiting {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
-						}));
-					}
-					break;
-				case Easynet.Edge.Core.Services.ServiceState.Ended:
-					{
-						this.Invoke(new MethodInvoker(delegate()
-						{
-							logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nService: {0} is ended {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
-						}));
-					}
-					break;
-				case Easynet.Edge.Core.Services.ServiceState.Aborting:
-					break;
-				default:
-					break;
-			}
+			this.Invoke(updateGridMethod, new Object[] { instance.AccountID, instance.Configuration.Name, e.StateAfter });
+
+
+			this.Invoke(setLogMethod, new Object[] { string.Format("\n{0}: {1} is {2} {3}\r\n", instance.AccountID, instance.Configuration.Name, e.StateAfter, DateTime.Now.ToString("dd/MM/yy HH:mm")) });
+			if (e.StateAfter == legacy.ServiceState.Ready)
+				instance.Start();
 
 		}
 
 		void _scheduler_NewScheduleCreatedEventHandler(object sender, EventArgs e)
 		{
+			this.Invoke(setLogMethod, new Object[] { "Schedule Created:" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\r\n" });
 
-			this.Invoke(new MethodInvoker(delegate()
-				{
-					logtextBox.Text = logtextBox.Text.Insert(0, "Schedule Created:" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\r\n");
-				}));
 			using (StreamWriter writer = new StreamWriter(Path.Combine(Application.StartupPath, "log.txt"), true, Encoding.Unicode))
 			{
 				ScheduledInformationEventArgs ee = (ScheduledInformationEventArgs)e;
@@ -170,7 +122,7 @@ namespace SchedulerTester
 				foreach (KeyValuePair<SchedulingData, ServiceInstance> SchedInfo in ee.ScheduleInformation)
 				{
 
-					writer.WriteLine(string.Format("ScheduleInfoID:{0}\tService Name:{1}\tAccountID:{2}\tStartTime:{3}\tEndTime\tStatus:{4}\tScope{5}\tDeleted:{6}\tResult:{7}", SchedInfo.Key.GetHashCode(), SchedInfo.Value.ServiceName, SchedInfo.Value.ProfileID, SchedInfo.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.LegacyInstance.State, SchedInfo.Key.Rule.Scope, SchedInfo.Value.Deleted,SchedInfo.Value.LegacyInstance.Outcome));
+					writer.WriteLine(string.Format("ScheduleInfoID:{0}\tService Name:{1}\tAccountID:{2}\tStartTime:{3}\tEndTime\tStatus:{4}\tScope{5}\tDeleted:{6}\tResult:{7}", SchedInfo.Key.GetHashCode(), SchedInfo.Value.ServiceName, SchedInfo.Value.ProfileID, SchedInfo.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.LegacyInstance.State, SchedInfo.Key.Rule.Scope, SchedInfo.Value.Deleted, SchedInfo.Value.LegacyInstance.Outcome));
 
 
 					_scheduledServices.Add(SchedInfo.Key, SchedInfo.Value);
@@ -197,52 +149,77 @@ namespace SchedulerTester
 
 		private void GetScheduleServices()
 		{
-			lock (_scheduledServices)
-			{
-				var scheduledServices = _scheduler.GetAlllScheduldServices();
-				SetGridData(scheduledServices);
-			}
-			
+			var scheduledServices = _scheduler.GetAlllScheduldServices();
+			this.Invoke(new Action<IEnumerable<KeyValuePair<MyScheduler.Objects.SchedulingData, ServiceInstance>>>(SetGridData), scheduledServices);
+		}
 
+		
+		private void UpdateGridData(int accountId, string serviceName, legacy.ServiceState state)
+		{
+			foreach (DataGridViewRow row in scheduleInfoGrid.Rows)
+			{
+				if (Object.Equals(row.Cells["accountID"].Value, accountId) && Object.Equals(row.Cells["scheduledName"].Value, serviceName))
+				{
+					row.Cells["dynamicStaus"].Value = state;
+
+					Color color = GetColorByState(state);
+					row.DefaultCellStyle.BackColor = color;
+				}
+			}
+
+		}
+
+		private static Color GetColorByState(legacy.ServiceState state)
+		{
+			Color color = Color.White;
+			switch (state)
+			{
+
+				case Easynet.Edge.Core.Services.ServiceState.Uninitialized:
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Initializing:
+					color = Color.FromArgb(0xdd, 0xdd, 0xdd); // light gray
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Ready:
+					color = Color.FromArgb(0xee, 0xee, 0xff); // light blue
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Starting:
+					color = Color.Green; // green
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Running:
+					color = Color.FromArgb(0xe0, 0xff, 0xe0); // light green
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Waiting:
+					color = Color.FromArgb(0xee, 0xff, 0xee); // light green (a little lighter)
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Ended:
+					color = Color.Turquoise;
+					break;
+				case Easynet.Edge.Core.Services.ServiceState.Aborting:
+					color = Color.Red;
+					break;
+				default:
+					break;
+			}
+			return color;
 		}
 
 		private void SetGridData(IEnumerable<KeyValuePair<MyScheduler.Objects.SchedulingData, ServiceInstance>> scheduledServices)
 		{
-			this.Invoke(new MethodInvoker(delegate()
-			{
+			
+
 				scheduleInfoGrid.Rows.Clear();
 				foreach (var scheduledService in scheduledServices.OrderBy(s => s.Value.StartTime))
 				{
 					if (!_scheduledServices.ContainsKey(scheduledService.Key))
 						_scheduledServices.Add(scheduledService.Key, scheduledService.Value);
-					int row = scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), scheduledService.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted,scheduledService.Value.LegacyInstance.Outcome });
-					switch (scheduledService.Value.LegacyInstance.State)
-					{
-						case Easynet.Edge.Core.Services.ServiceState.Uninitialized:
-							break;
-						case Easynet.Edge.Core.Services.ServiceState.Initializing:
-							break;
-						case Easynet.Edge.Core.Services.ServiceState.Ready:
-							break;
-						case Easynet.Edge.Core.Services.ServiceState.Starting:
-							break;
-						case Easynet.Edge.Core.Services.ServiceState.Running:
-							scheduleInfoGrid.Rows[row].DefaultCellStyle.BackColor = Color.Yellow;
-							break;
-						case Easynet.Edge.Core.Services.ServiceState.Waiting:
-							break;
-						case Easynet.Edge.Core.Services.ServiceState.Ended:
-							scheduleInfoGrid.Rows[row].DefaultCellStyle.BackColor = Color.Turquoise;
-							break;
-						case Easynet.Edge.Core.Services.ServiceState.Aborting:
-							break;
-						default:
-							break;
-					}
+					int row = scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("HH:mm"), scheduledService.Value.EndTime.ToString("HH:mm"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted, scheduledService.Value.LegacyInstance.Outcome, scheduledService.Value.LegacyInstance.State });
+					scheduleInfoGrid.Rows[row].DefaultCellStyle.BackColor = GetColorByState(scheduledService.Value.LegacyInstance.State);
 
 
 				}
-			}));
+
+			
 		}
 
 		private void endServiceBtn_Click(object sender, EventArgs e)
@@ -327,13 +304,20 @@ namespace SchedulerTester
 		private void EndBtn_Click(object sender, EventArgs e)
 		{
 			_scheduler.Stop();
-			this.Invoke(new MethodInvoker(delegate()
-				{
-					logtextBox.Text = logtextBox.Text.Insert(0, "Timer Stoped" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "r\n");
-				}));
+			this.Invoke(setLogMethod, new Object[] { "Timer Stoped" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "r\n" });
+
 			using (StreamWriter writer = new StreamWriter(Path.Combine(Application.StartupPath, "log.txt"), true, Encoding.Unicode))
 			{
 				writer.WriteLine("Timer Stoped" + DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
+			}
+		}
+
+		private void SetLogTextBox(string lineText)
+		{
+
+			lock (logtextBox)
+			{
+				logtextBox.Text = logtextBox.Text.Insert(0, lineText);
 			}
 		}
 
