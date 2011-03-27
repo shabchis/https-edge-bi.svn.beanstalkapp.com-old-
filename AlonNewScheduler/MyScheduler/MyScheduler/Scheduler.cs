@@ -31,7 +31,8 @@ namespace MyScheduler
 		DateTime _timeLineTo;
 		private const int NeededTimeLine = 1440; //scheduling for the next xxx min....
 		private const int Percentile = 80; //execution time of specifc service on sprcific Percentile
-		private const int TimeBetweenNewSchedule = 60000;
+		private static readonly int TimeBetweenNewSchedule =Convert.ToInt32( TimeSpan.FromHours(1).TotalMilliseconds);
+		private static readonly TimeSpan FindServicesToRunInterval = TimeSpan.FromMinutes(1);
 		private Thread _findRequiredServicesthread;
 		private Thread _newSchedulethread;
 		public event EventHandler ServiceRunRequiredEvent;
@@ -427,11 +428,10 @@ namespace MyScheduler
 			ServiceInstance scheduleInfo = null;
 			TimeSpan suitableHour = schedulingData.SelectedHour;
 
-			long executionTimeInSeconds = 0;
-			executionTimeInSeconds = GetAverageExecutionTime(schedulingData.Configuration.Name, schedulingData.Configuration.SchedulingProfile.ID, Percentile);
+			TimeSpan executionTimeInSeconds = GetAverageExecutionTime(schedulingData.Configuration.Name, schedulingData.Configuration.SchedulingProfile.ID, Percentile);
 
 			DateTime baseStartTime = schedulingData.TimeToRun;
-			DateTime baseEndTime = baseStartTime.AddSeconds(executionTimeInSeconds);
+			DateTime baseEndTime = baseStartTime.Add(executionTimeInSeconds);
 			DateTime calculatedStartTime = baseStartTime;
 			DateTime calculatedEndTime = baseEndTime;
 			bool found = false;
@@ -444,7 +444,7 @@ namespace MyScheduler
 				{
 					int countedPerProfile = servicesWithSameProfile.Count(s => (calculatedStartTime >= s.Value.StartTime && calculatedStartTime <= s.Value.EndTime) || (calculatedEndTime >= s.Value.StartTime && calculatedEndTime <= s.Value.EndTime));
 					if (countedPerProfile < schedulingData.Configuration.MaxCuncurrentPerProfile)
-					{
+					{					
 						scheduleInfo = new ServiceInstance();
 						scheduleInfo.StartTime = calculatedStartTime;
 						scheduleInfo.EndTime = calculatedEndTime;
@@ -459,8 +459,9 @@ namespace MyScheduler
 						scheduleInfo.ActualDeviation = calculatedStartTime.Subtract(baseStartTime);
 						scheduleInfo.MaxDeviationBefore = schedulingData.Rule.MaxDeviationBefore;
 						scheduleInfo.ProfileID = schedulingData.Configuration.SchedulingProfile.ID;
-						scheduleInfo.LegacyInstance = Legacy.Service.CreateInstance(schedulingData.LegacyConfiguration);
+						scheduleInfo.LegacyInstance = Legacy.Service.CreateInstance(schedulingData.LegacyConfiguration,scheduleInfo.ProfileID);
 						scheduleInfo.LegacyInstance.StateChanged += new EventHandler<Legacy.ServiceStateChangedEventArgs>(LegacyInstance_StateChanged);
+						scheduleInfo.LegacyInstance.TimeScheduled = calculatedStartTime;
 						scheduleInfo.ServiceName = schedulingData.Configuration.Name;
 						found = true;
 					}
@@ -498,7 +499,7 @@ namespace MyScheduler
 		/// </summary>
 		/// <param name="configurationID"></param>
 		/// <returns></returns>
-		private long GetAverageExecutionTime(string configurationName, int AccountID, int Percentile)
+		private TimeSpan GetAverageExecutionTime(string configurationName, int AccountID, int Percentile)
 		{
 			long averageExacutionTime;
 			using (DataManager.Current.OpenConnection())
@@ -511,7 +512,7 @@ namespace MyScheduler
 					averageExacutionTime = System.Convert.ToInt32(sqlCommand.ExecuteScalar());
 				}
 			}
-			return averageExacutionTime;
+			return TimeSpan.FromMinutes(Math.Ceiling(TimeSpan.FromSeconds(averageExacutionTime).TotalMinutes));
 		}
 
 		/// <summary>
@@ -521,11 +522,14 @@ namespace MyScheduler
 		/// <param name="startTime"></param>
 		/// <param name="endTime"></param>
 		/// <param name="ExecutionTime"></param>
-		private static void GetNewStartEndTime(IOrderedEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> servicesWithSameProfile, ref DateTime startTime, ref DateTime endTime, long ExecutionTime)
+		private static void GetNewStartEndTime(IOrderedEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> servicesWithSameProfile, ref DateTime startTime, ref DateTime endTime, TimeSpan ExecutionTime)
 		{
 			startTime = servicesWithSameProfile.Min(s => s.Value.EndTime);
+			if (startTime < DateTime.Now)
+				startTime = DateTime.Now;
+
 			//Get end time
-			endTime = startTime.AddSeconds(ExecutionTime);
+			endTime = startTime.Add(ExecutionTime);
 		}
 
 		/// <summary>
@@ -582,53 +586,58 @@ namespace MyScheduler
 		/// </summary>
 		public void Start()
 		{
+			NewSchedule();
+			NotifyServicesToRun();
+
 			Log.Write(this.ToString(), "Timer for new scheduling and required services has been started", LogMessageType.Information);
 			_newSchedulethread = new Thread(new ThreadStart(delegate()
 			{
 				while (true)
 				{
-					NewSchedule();
 					Thread.Sleep(TimeBetweenNewSchedule);
+					NewSchedule();
 				}
 			}
 			));
 
 			_findRequiredServicesthread = new Thread(new ThreadStart(delegate()
 			{
-				List<ServiceInstance> instancesToRun = new List<ServiceInstance>();
 				while (true)
 				{
-					//DO some checks
-
-					foreach (var scheduleService in _scheduledServices)
-					{
-						if (scheduleService.Key.SelectedDay == ((int)DateTime.Now.DayOfWeek) + 1) //same day
-						{
-							TimeSpan now = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
-							if (scheduleService.Value.LegacyInstance.State == Legacy.ServiceState.Uninitialized)
-							{
-								if (scheduleService.Key.TimeToRun.Hour == now.Hours)
-								{
-									if (scheduleService.Key.TimeToRun.Minute == now.Minutes || scheduleService.Key.TimeToRun.Minute == now.Minutes - 1 || scheduleService.Key.TimeToRun.Minute == now.Minutes + 1)
-										instancesToRun.Add(scheduleService.Value);
-								}
-							}
-						}
-					}
-
-					if (instancesToRun.Count > 0)
-						OnTimeToRun(new TimeToRunEventArgs() { ServicesToRun = instancesToRun.ToArray() });
-
-
-					Thread.Sleep(TimeSpan.FromMinutes(1));//TODO: ADD CONST
-					instancesToRun.Clear();
+					Thread.Sleep(FindServicesToRunInterval);//TODO: ADD CONST
+					NotifyServicesToRun();
 				}
 			}));
-
 
 			_newSchedulethread.Start();
 			_findRequiredServicesthread.Start();
 
+		}
+
+		private void NotifyServicesToRun()
+		{
+			//DO some checks
+			List<ServiceInstance> instancesToRun = new List<ServiceInstance>();
+			lock (_scheduledServices)
+			{
+				foreach (var scheduleService in _scheduledServices)
+				{
+					if (scheduleService.Key.SelectedDay == ((int)DateTime.Now.DayOfWeek) + 1) //same day
+					{
+						// find unitialized services scheduled since the last interval
+						if (scheduleService.Value.StartTime > DateTime.Now - FindServicesToRunInterval-FindServicesToRunInterval &&
+							scheduleService.Value.StartTime <= DateTime.Now &&
+							scheduleService.Value.LegacyInstance.State == Legacy.ServiceState.Uninitialized)
+						{
+							instancesToRun.Add(scheduleService.Value);
+						}
+					}
+				}
+			}
+
+			if (instancesToRun.Count > 0)
+				OnTimeToRun(new TimeToRunEventArgs() { ServicesToRun = instancesToRun.ToArray() });
+			instancesToRun.Clear();
 		}
 
 		/// <summary>
@@ -637,8 +646,11 @@ namespace MyScheduler
 		public void Stop()
 		{
 			Log.Write(this.ToString(), "Timer for new scheduling and required services has been stoped", LogMessageType.Information);
-			_findRequiredServicesthread.Abort();
-			_newSchedulethread.Abort();
+			if (_findRequiredServicesthread != null)
+				_findRequiredServicesthread.Abort();
+
+			if (_newSchedulethread != null)
+				_newSchedulethread.Abort();
 
 		}
 
