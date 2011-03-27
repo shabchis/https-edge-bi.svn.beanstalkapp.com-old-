@@ -70,11 +70,11 @@ namespace SchedulerTester
 					logtextBox.Text = logtextBox.Text.Insert(0, string.Format("\nchild Service: {0} requestedd {1}\r\n", instance.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")));
 				}));
 			e.RequestedService.ChildServiceRequested += new EventHandler<legacy.ServiceRequestedEventArgs>(LegacyInstance_ChildServiceRequested);
-			e.RequestedService.StateChanged += new EventHandler<legacy.ServiceStateChangedEventArgs>(LegacyInstance_StateChanged);				
+			e.RequestedService.StateChanged += new EventHandler<legacy.ServiceStateChangedEventArgs>(LegacyInstance_StateChanged);
 			e.RequestedService.Initialize();
 		}
 
-	
+
 
 		void LegacyInstance_StateChanged(object sender, Easynet.Edge.Core.Services.ServiceStateChangedEventArgs e)
 		{
@@ -105,7 +105,7 @@ namespace SchedulerTester
 					break;
 				case Easynet.Edge.Core.Services.ServiceState.Waiting:
 					break;
-				case Easynet.Edge.Core.Services.ServiceState.Ended:				
+				case Easynet.Edge.Core.Services.ServiceState.Ended:
 					break;
 				case Easynet.Edge.Core.Services.ServiceState.Aborting:
 					break;
@@ -184,7 +184,32 @@ namespace SchedulerTester
 				{
 					if (!_scheduledServices.ContainsKey(scheduledService.Key))
 						_scheduledServices.Add(scheduledService.Key, scheduledService.Value);
-					scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), scheduledService.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted });
+					int row = scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), scheduledService.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted,scheduledService.Value.LegacyInstance.Outcome });
+					switch (scheduledService.Value.LegacyInstance.State)
+					{
+						case Easynet.Edge.Core.Services.ServiceState.Uninitialized:
+							break;
+						case Easynet.Edge.Core.Services.ServiceState.Initializing:
+							break;
+						case Easynet.Edge.Core.Services.ServiceState.Ready:
+							break;
+						case Easynet.Edge.Core.Services.ServiceState.Starting:
+							break;
+						case Easynet.Edge.Core.Services.ServiceState.Running:
+							scheduleInfoGrid.Rows[row].DefaultCellStyle.BackColor = Color.Yellow;
+							break;
+						case Easynet.Edge.Core.Services.ServiceState.Waiting:
+							break;
+						case Easynet.Edge.Core.Services.ServiceState.Ended:
+							scheduleInfoGrid.Rows[row].DefaultCellStyle.BackColor = Color.Turquoise;
+							break;
+						case Easynet.Edge.Core.Services.ServiceState.Aborting:
+							break;
+						default:
+							break;
+					}
+
+
 				}
 			}));
 		}
