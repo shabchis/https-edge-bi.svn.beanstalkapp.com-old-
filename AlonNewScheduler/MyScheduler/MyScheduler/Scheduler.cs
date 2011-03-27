@@ -29,7 +29,7 @@ namespace MyScheduler
 		private Dictionary<SchedulingData, ServiceInstance> _unscheduleServices = new Dictionary<SchedulingData, ServiceInstance>();
 		DateTime _timeLineFrom;
 		DateTime _timeLineTo;
-		private const int NeededTimeLine = 1440; //scheduling for the next xxx min....
+		private const int NeededTimeLine = 120; //scheduling for the next xxx min....
 		private const int Percentile = 80; //execution time of specifc service on sprcific Percentile
 		private const int TimeBetweenNewSchedule = 60000;
 		private Thread _findRequiredServicesthread;
@@ -215,37 +215,27 @@ namespace MyScheduler
 							{
 								case SchedulingScope.Day:
 									{
-										if ((_timeLineFrom.TimeOfDay <= _timeLineTo.TimeOfDay && hour >= _timeLineFrom.TimeOfDay) || //same day //todo: check this with doron
-											(_timeLineFrom.TimeOfDay >= _timeLineTo.TimeOfDay && (hour <= _timeLineFrom.TimeOfDay && hour >= _timeLineTo.TimeOfDay))) //diffarent day
+										DateTime timeToRun=_timeLineFrom.Date;
+										
+										timeToRun = timeToRun + hour;
+										while (timeToRun.Date <= _timeLineTo.Date)
 										{
-											Schedulingdata = new SchedulingData() { Configuration = service, profileID = service.SchedulingProfile.ID, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = DateTime.Today + hour };
-											foundedSchedulingdata.Add(Schedulingdata);
-
-										}
-										if (_timeLineFrom.DayOfWeek != _timeLineTo.DayOfWeek) //maybe the same service is relevant for tommorw so..if
-										{
-
-											int i = _timeLineTo.DayOfWeek - _timeLineFrom.DayOfWeek;
-											while (i > 0)
+											if (timeToRun >= _timeLineFrom && timeToRun <= _timeLineTo)
 											{
-												if (hour <= _timeLineTo.TimeOfDay)
-												{
-
-													Schedulingdata = new SchedulingData() { Configuration = service, profileID = service.SchedulingProfile.ID, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 2, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = DateTime.Today.AddDays(i) + hour };
-													foundedSchedulingdata.Add(Schedulingdata);
-												}
-												i--;
+												Schedulingdata = new SchedulingData() { Configuration = service, profileID = service.SchedulingProfile.ID, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = timeToRun };
+												foundedSchedulingdata.Add(Schedulingdata);
 
 											}
-
+											timeToRun = timeToRun.AddDays(1);
 										}
+										
 										break;
 									}
 								case SchedulingScope.Week:
 									{
 										foreach (int day in schedulingRule.Days)
 										{
-											//todo: get the day to run
+											//todo: make the week and moth good as the day scope
 											if (day == (int)_timeLineFrom.DayOfWeek + 1 || day == (int)_timeLineTo.DayOfWeek + 1)
 											{
 												if ((_timeLineFrom.TimeOfDay <= _timeLineTo.TimeOfDay && hour >= _timeLineFrom.TimeOfDay) || //same day
