@@ -218,9 +218,10 @@ namespace MyScheduler
 										timeToRun = timeToRun + hour;
 										while (timeToRun.Date <= _timeLineTo.Date)
 										{
-											if (timeToRun >= _timeLineFrom && timeToRun <= _timeLineTo)
+											if (timeToRun >= _timeLineFrom && timeToRun <= _timeLineTo || timeToRun<=_timeLineFrom && timeToRun.Add(schedulingRule.MaxDeviationAfter)>=DateTime.Now)
 											{
 												Schedulingdata = new SchedulingData() { Configuration = service, profileID = service.SchedulingProfile.ID, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = timeToRun };
+												if (!CheckIfSpecificSchedulingRuleDidNotRunYet(Schedulingdata));
 												foundedSchedulingdata.Add(Schedulingdata);
 
 											}
@@ -269,6 +270,12 @@ namespace MyScheduler
 				}
 			}
 			return foundedSchedulingdata;
+		}
+
+		private bool CheckIfSpecificSchedulingRuleDidNotRunYet(SchedulingData Schedulingdata)
+		{
+			//TODO: CHECK ON THE DATABASE THAT SERVICE DID NOT RUN YET
+			return false; //NOT RUN YET
 		}
 
 		/// <summary>
@@ -325,7 +332,9 @@ namespace MyScheduler
 							case CalendarUnit.Week:
 								rule.Scope = SchedulingScope.Week;
 								break;
-							default:
+							case CalendarUnit.AlwaysOn:
+							case CalendarUnit.ReRun:
+								continue; //not supported right now!
 								break;
 						}
 
@@ -430,7 +439,7 @@ namespace MyScheduler
 
 			TimeSpan executionTimeInSeconds = GetAverageExecutionTime(schedulingData.Configuration.Name, schedulingData.Configuration.SchedulingProfile.ID, Percentile);
 
-			DateTime baseStartTime = schedulingData.TimeToRun;
+			DateTime baseStartTime = (schedulingData.TimeToRun<DateTime.Now)?DateTime.Now : schedulingData.TimeToRun;
 			DateTime baseEndTime = baseStartTime.Add(executionTimeInSeconds);
 			DateTime calculatedStartTime = baseStartTime;
 			DateTime calculatedEndTime = baseEndTime;
@@ -636,7 +645,10 @@ namespace MyScheduler
 			}
 
 			if (instancesToRun.Count > 0)
+			{
+				instancesToRun = (List<ServiceInstance>)instancesToRun.OrderBy(s => s.StartTime).ToList<ServiceInstance>();
 				OnTimeToRun(new TimeToRunEventArgs() { ServicesToRun = instancesToRun.ToArray() });
+			}
 			instancesToRun.Clear();
 		}
 
