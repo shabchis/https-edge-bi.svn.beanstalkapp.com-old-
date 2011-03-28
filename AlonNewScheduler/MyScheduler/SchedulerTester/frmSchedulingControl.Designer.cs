@@ -31,6 +31,13 @@
 			this.ScheduleBtn = new System.Windows.Forms.Button();
 			this.endServiceBtn = new System.Windows.Forms.Button();
 			this.scheduleInfoGrid = new System.Windows.Forms.DataGridView();
+			this.getServicesButton = new System.Windows.Forms.Button();
+			this.rescheduleBtn = new System.Windows.Forms.Button();
+			this.button1 = new System.Windows.Forms.Button();
+			this.deleteServiceFromScheduleBtn = new System.Windows.Forms.Button();
+			this.startBtn = new System.Windows.Forms.Button();
+			this.EndBtn = new System.Windows.Forms.Button();
+			this.logtextBox = new System.Windows.Forms.TextBox();
 			this.shceduledID = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.scheduledName = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.accountID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -41,13 +48,6 @@
 			this.deleted = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.outCome = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dynamicStaus = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.getServicesButton = new System.Windows.Forms.Button();
-			this.rescheduleBtn = new System.Windows.Forms.Button();
-			this.button1 = new System.Windows.Forms.Button();
-			this.deleteServiceFromScheduleBtn = new System.Windows.Forms.Button();
-			this.startBtn = new System.Windows.Forms.Button();
-			this.EndBtn = new System.Windows.Forms.Button();
-			this.logtextBox = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.scheduleInfoGrid)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -97,61 +97,6 @@
 			this.scheduleInfoGrid.ReadOnly = true;
 			this.scheduleInfoGrid.Size = new System.Drawing.Size(1100, 273);
 			this.scheduleInfoGrid.TabIndex = 2;
-			// 
-			// shceduledID
-			// 
-			this.shceduledID.HeaderText = "Shceduled ID";
-			this.shceduledID.Name = "shceduledID";
-			this.shceduledID.ReadOnly = true;
-			// 
-			// scheduledName
-			// 
-			this.scheduledName.HeaderText = "Scheduled Name";
-			this.scheduledName.Name = "scheduledName";
-			this.scheduledName.ReadOnly = true;
-			// 
-			// accountID
-			// 
-			this.accountID.HeaderText = "Account ID";
-			this.accountID.Name = "accountID";
-			// 
-			// startOn
-			// 
-			this.startOn.HeaderText = "Start On";
-			this.startOn.Name = "startOn";
-			this.startOn.ReadOnly = true;
-			// 
-			// endOn
-			// 
-			this.endOn.HeaderText = "End On";
-			this.endOn.Name = "endOn";
-			this.endOn.ReadOnly = true;
-			// 
-			// status
-			// 
-			this.status.HeaderText = "Status";
-			this.status.Name = "status";
-			this.status.ReadOnly = true;
-			// 
-			// scope
-			// 
-			this.scope.HeaderText = "Scope";
-			this.scope.Name = "scope";
-			// 
-			// deleted
-			// 
-			this.deleted.HeaderText = "Deleted";
-			this.deleted.Name = "deleted";
-			// 
-			// outCome
-			// 
-			this.outCome.HeaderText = "Result";
-			this.outCome.Name = "outCome";
-			// 
-			// dynamicStaus
-			// 
-			this.dynamicStaus.HeaderText = "Dynamic Status";
-			this.dynamicStaus.Name = "dynamicStaus";
 			// 
 			// getServicesButton
 			// 
@@ -229,6 +174,66 @@
 			this.logtextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.logtextBox.Size = new System.Drawing.Size(1099, 227);
 			this.logtextBox.TabIndex = 9;
+			// 
+			// shceduledID
+			// 
+			this.shceduledID.HeaderText = "Shceduled ID";
+			this.shceduledID.Name = "shceduledID";
+			this.shceduledID.ReadOnly = true;
+			// 
+			// scheduledName
+			// 
+			this.scheduledName.HeaderText = "Scheduled Name";
+			this.scheduledName.Name = "scheduledName";
+			this.scheduledName.ReadOnly = true;
+			// 
+			// accountID
+			// 
+			this.accountID.HeaderText = "Account ID";
+			this.accountID.Name = "accountID";
+			this.accountID.ReadOnly = true;
+			// 
+			// startOn
+			// 
+			this.startOn.HeaderText = "Start On";
+			this.startOn.Name = "startOn";
+			this.startOn.ReadOnly = true;
+			// 
+			// endOn
+			// 
+			this.endOn.HeaderText = "End On";
+			this.endOn.Name = "endOn";
+			this.endOn.ReadOnly = true;
+			// 
+			// status
+			// 
+			this.status.HeaderText = "Status";
+			this.status.Name = "status";
+			this.status.ReadOnly = true;
+			// 
+			// scope
+			// 
+			this.scope.HeaderText = "Scope";
+			this.scope.Name = "scope";
+			this.scope.ReadOnly = true;
+			// 
+			// deleted
+			// 
+			this.deleted.HeaderText = "Deleted";
+			this.deleted.Name = "deleted";
+			this.deleted.ReadOnly = true;
+			// 
+			// outCome
+			// 
+			this.outCome.HeaderText = "Result";
+			this.outCome.Name = "outCome";
+			this.outCome.ReadOnly = true;
+			// 
+			// dynamicStaus
+			// 
+			this.dynamicStaus.HeaderText = "Dynamic Status";
+			this.dynamicStaus.Name = "dynamicStaus";
+			this.dynamicStaus.ReadOnly = true;
 			// 
 			// frmSchedulingControl
 			// 
