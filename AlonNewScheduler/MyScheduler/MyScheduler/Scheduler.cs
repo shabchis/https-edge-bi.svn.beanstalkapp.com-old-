@@ -29,10 +29,10 @@ namespace MyScheduler
 		private Dictionary<SchedulingData, ServiceInstance> _unscheduleServices = new Dictionary<SchedulingData, ServiceInstance>();
 		DateTime _timeLineFrom;
 		DateTime _timeLineTo;
-		private const int NeededTimeLine = 1440; //scheduling for the next xxx min....
-		private const int Percentile = 80; //execution time of specifc service on sprcific Percentile
-		private static readonly int TimeBetweenNewSchedule =Convert.ToInt32( TimeSpan.FromHours(1).TotalMilliseconds);
-		private static readonly TimeSpan FindServicesToRunInterval = TimeSpan.FromMinutes(1);
+		private TimeSpan _neededScheduleTimeLine; //scheduling for the next xxx min....
+		private  int _percentile = 80; //execution time of specifc service on sprcific Percentile
+		private  TimeSpan _intervalBetweenNewSchedule; 
+		private  TimeSpan _findServicesToRunInterval; 
 		private Thread _findRequiredServicesthread;
 		private Thread _newSchedulethread;
 		public event EventHandler ServiceRunRequiredEvent;
@@ -52,7 +52,10 @@ namespace MyScheduler
 			if (getServicesFromConfigFile)
 				GetServicesFromConfigurationFile();
 
-
+			_percentile =int.Parse( AppSettings.Get(this, "Percentile"));
+			_neededScheduleTimeLine=TimeSpan.Parse(AppSettings.Get(this,"NeededScheduleTimeLine"));
+			_intervalBetweenNewSchedule = TimeSpan.Parse(AppSettings.Get(this, "IntervalBetweenNewSchedule"));
+			_findServicesToRunInterval = TimeSpan.Parse(AppSettings.Get(this, "FindServicesToRunInterval"));
 
 
 
@@ -199,9 +202,9 @@ namespace MyScheduler
 			if (!reschedule)
 			{
 
-				int timeLineInMin = NeededTimeLine;
+				
 				_timeLineFrom = DateTime.Now;
-				_timeLineTo = DateTime.Now.AddMinutes(timeLineInMin);
+				_timeLineTo = DateTime.Now.Add(_neededScheduleTimeLine);
 			}
 			List<SchedulingData> schedulingData = FindSuitableSchedulingRule();
 			return schedulingData;
@@ -451,7 +454,7 @@ namespace MyScheduler
 		private ServiceInstance FindFirstFreeTime(IOrderedEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> servicesWithSameConfiguration, IOrderedEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> servicesWithSameProfile, SchedulingData schedulingData)
 		{
 			ServiceInstance scheduleInfo = null;
-			TimeSpan executionTimeInSeconds = GetAverageExecutionTime(schedulingData.Configuration.Name, schedulingData.Configuration.SchedulingProfile.ID, Percentile);
+			TimeSpan executionTimeInSeconds = GetAverageExecutionTime(schedulingData.Configuration.Name, schedulingData.Configuration.SchedulingProfile.ID, _percentile);
 
 			DateTime baseStartTime = (schedulingData.TimeToRun<DateTime.Now)?DateTime.Now : schedulingData.TimeToRun;
 			DateTime baseEndTime = baseStartTime.Add(executionTimeInSeconds);
@@ -471,7 +474,7 @@ namespace MyScheduler
 						scheduleInfo = new ServiceInstance();
 						scheduleInfo.StartTime = calculatedStartTime;
 						scheduleInfo.EndTime = calculatedEndTime;
-						scheduleInfo.Odds = Percentile;
+						scheduleInfo.Odds = _percentile;
 						scheduleInfo.ActualDeviation = calculatedStartTime.Subtract(schedulingData.TimeToRun);
 						scheduleInfo.Priority = schedulingData.Priority;
 						scheduleInfo.BaseConfigurationID = schedulingData.Configuration.BaseConfiguration.ID;
@@ -620,7 +623,7 @@ namespace MyScheduler
 			{
 				while (true)
 				{
-					Thread.Sleep(TimeBetweenNewSchedule);
+					Thread.Sleep(_intervalBetweenNewSchedule);
 					NewSchedule();
 				}
 			}
@@ -630,7 +633,7 @@ namespace MyScheduler
 			{
 				while (true)
 				{
-					Thread.Sleep(FindServicesToRunInterval);//TODO: ADD CONST
+					Thread.Sleep(_findServicesToRunInterval);//TODO: ADD CONST
 					NotifyServicesToRun();
 				}
 			}));
