@@ -116,8 +116,23 @@ namespace MyScheduler
 
 
 				}
+				lock (_unscheduleServices)
+				{
+					_unscheduleServices.Clear();
+					foreach (KeyValuePair<SchedulingData, ServiceInstance> scheduldService in _scheduledServices) //services that did not run because their base time + maxdiviation<datetime.now should have been rub but from some reason did not run
+					{
+						if (scheduldService.Key.TimeToRun.Add(scheduldService.Key.Rule.MaxDeviationAfter) < DateTime.Now && scheduldService.Value.LegacyInstance.State==Legacy.ServiceState.Uninitialized)
+							_unscheduleServices.Add(scheduldService.Key, scheduldService.Value);
+
+					}
+					foreach (KeyValuePair<SchedulingData, ServiceInstance> unScheduledService in _unscheduleServices) //clar the services that will not be run
+					{
+						_scheduledServices.Remove(unScheduledService.Key);
+					}
+				}
+				
 			}
-			_unscheduleServices.Clear();
+			
 
 		}
 
@@ -221,7 +236,7 @@ namespace MyScheduler
 											if (timeToRun >= _timeLineFrom && timeToRun <= _timeLineTo || timeToRun<=_timeLineFrom && timeToRun.Add(schedulingRule.MaxDeviationAfter)>=DateTime.Now)
 											{
 												Schedulingdata = new SchedulingData() { Configuration = service, profileID = service.SchedulingProfile.ID, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = timeToRun };
-												if (!CheckIfSpecificSchedulingRuleDidNotRunYet(Schedulingdata));
+												if (!CheckIfSpecificSchedulingRuleDidNotRunYet(Schedulingdata))
 												foundedSchedulingdata.Add(Schedulingdata);
 
 											}
@@ -318,6 +333,7 @@ namespace MyScheduler
 					//scheduling rules 
 					foreach (SchedulingRuleElement schedulingRuleElement in activeServiceElement.SchedulingRules)
 					{
+						
 						SchedulingRule rule = new SchedulingRule();
 						switch (schedulingRuleElement.CalendarUnit)
 						{
@@ -435,8 +451,6 @@ namespace MyScheduler
 		private ServiceInstance FindFirstFreeTime(IOrderedEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> servicesWithSameConfiguration, IOrderedEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> servicesWithSameProfile, SchedulingData schedulingData)
 		{
 			ServiceInstance scheduleInfo = null;
-			TimeSpan suitableHour = schedulingData.SelectedHour;
-
 			TimeSpan executionTimeInSeconds = GetAverageExecutionTime(schedulingData.Configuration.Name, schedulingData.Configuration.SchedulingProfile.ID, Percentile);
 
 			DateTime baseStartTime = (schedulingData.TimeToRun<DateTime.Now)?DateTime.Now : schedulingData.TimeToRun;
@@ -458,7 +472,7 @@ namespace MyScheduler
 						scheduleInfo.StartTime = calculatedStartTime;
 						scheduleInfo.EndTime = calculatedEndTime;
 						scheduleInfo.Odds = Percentile;
-						scheduleInfo.ActualDeviation = calculatedStartTime.Subtract(baseStartTime);
+						scheduleInfo.ActualDeviation = calculatedStartTime.Subtract(schedulingData.TimeToRun);
 						scheduleInfo.Priority = schedulingData.Priority;
 						scheduleInfo.BaseConfigurationID = schedulingData.Configuration.BaseConfiguration.ID;
 						scheduleInfo.ID = schedulingData.Configuration.ID;
@@ -468,7 +482,7 @@ namespace MyScheduler
 						scheduleInfo.ActualDeviation = calculatedStartTime.Subtract(baseStartTime);
 						scheduleInfo.MaxDeviationBefore = schedulingData.Rule.MaxDeviationBefore;
 						scheduleInfo.ProfileID = schedulingData.Configuration.SchedulingProfile.ID;
-						scheduleInfo.LegacyInstance = Legacy.Service.CreateInstance(schedulingData.LegacyConfiguration,scheduleInfo.ProfileID);
+						scheduleInfo.LegacyInstance = Legacy.Service.CreateInstance(schedulingData.LegacyConfiguration,scheduleInfo.ProfileID);						
 						scheduleInfo.LegacyInstance.StateChanged += new EventHandler<Legacy.ServiceStateChangedEventArgs>(LegacyInstance_StateChanged);
 						scheduleInfo.LegacyInstance.TimeScheduled = calculatedStartTime;
 						scheduleInfo.ServiceName = schedulingData.Configuration.Name;
@@ -533,7 +547,10 @@ namespace MyScheduler
 		/// <param name="ExecutionTime"></param>
 		private static void GetNewStartEndTime(IOrderedEnumerable<KeyValuePair<SchedulingData, ServiceInstance>> servicesWithSameProfile, ref DateTime startTime, ref DateTime endTime, TimeSpan ExecutionTime)
 		{
-			startTime = servicesWithSameProfile.Min(s => s.Value.EndTime);
+
+			//startTime = servicesWithSameProfile.Min(s => s.Value.EndTime);
+			DateTime calculatedStartTime=startTime;
+			startTime = servicesWithSameProfile.Where(s => s.Value.EndTime > calculatedStartTime).Min(s=>s.Value.EndTime);
 			if (startTime < DateTime.Now)
 				startTime = DateTime.Now;
 
@@ -629,14 +646,17 @@ namespace MyScheduler
 			List<ServiceInstance> instancesToRun = new List<ServiceInstance>();
 			lock (_scheduledServices)
 			{
-				foreach (var scheduleService in _scheduledServices)
+				foreach (var scheduleService in _scheduledServices.OrderBy(s=>s.Value.StartTime))
 				{
-					if (scheduleService.Key.SelectedDay == ((int)DateTime.Now.DayOfWeek) + 1) //same day
+					if (scheduleService.Value.StartTime.Day == DateTime.Now.Day) //same day
 					{
 						// find unitialized services scheduled since the last interval
-						if (scheduleService.Value.StartTime > DateTime.Now - FindServicesToRunInterval-FindServicesToRunInterval &&
-							scheduleService.Value.StartTime <= DateTime.Now &&
-							scheduleService.Value.LegacyInstance.State == Legacy.ServiceState.Uninitialized)
+						//if (scheduleService.Value.StartTime > DateTime.Now - FindServicesToRunInterval-FindServicesToRunInterval &&
+						//    scheduleService.Value.StartTime <= DateTime.Now &&
+						//    scheduleService.Value.LegacyInstance.State == Legacy.ServiceState.Uninitialized)
+						if (scheduleService.Value.StartTime<=DateTime.Now &&
+							scheduleService.Key.TimeToRun.Add(scheduleService.Key.Rule.MaxDeviationAfter)>=DateTime.Now &&
+						   scheduleService.Value.LegacyInstance.State == Legacy.ServiceState.Uninitialized)
 						{
 							instancesToRun.Add(scheduleService.Value);
 						}
