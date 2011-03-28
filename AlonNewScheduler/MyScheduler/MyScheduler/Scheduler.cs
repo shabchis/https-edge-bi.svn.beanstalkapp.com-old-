@@ -283,15 +283,29 @@ namespace MyScheduler
 									}
 								case SchedulingScope.Month://TODO: 31,30,29 of month can be problematicly
 									{
+										DateTime timeToRunFrom = _timeLineFrom.Date+hour;
+										DateTime timeToRunTo = _timeLineTo.Date+hour;
 										foreach (int day in schedulingRule.Days)
 										{
-											if (day == _timeLineFrom.Day + 1 || day == _timeLineTo.Day + 1)
+
+											if (day == timeToRunFrom.Day)
 											{
-												if ((_timeLineFrom.TimeOfDay <= _timeLineTo.TimeOfDay && hour >= _timeLineFrom.TimeOfDay) || //same day
-											(_timeLineFrom.TimeOfDay >= _timeLineTo.TimeOfDay && (hour <= _timeLineFrom.TimeOfDay && hour >= _timeLineTo.TimeOfDay))) //diffarent day
+												if (timeToRunFrom >= _timeLineFrom && timeToRunFrom <= _timeLineTo || timeToRunFrom <= _timeLineFrom && timeToRunFrom.Add(schedulingRule.MaxDeviationAfter) >= DateTime.Now)
 												{
-													Schedulingdata = new SchedulingData() { Configuration = service, Rule = schedulingRule, SelectedDay = day, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration };
-													foundedSchedulingdata.Add(Schedulingdata);
+													Schedulingdata = new SchedulingData() { Configuration = service, profileID = service.SchedulingProfile.ID, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = timeToRunFrom };
+													if (!CheckIfSpecificSchedulingRuleDidNotRunYet(Schedulingdata))
+														foundedSchedulingdata.Add(Schedulingdata);
+
+												}
+											}
+											if (day == (int)timeToRunTo.DayOfWeek )
+											{
+												if (timeToRunTo >= _timeLineFrom && timeToRunTo <= _timeLineTo || timeToRunTo <= _timeLineFrom && timeToRunTo.Add(schedulingRule.MaxDeviationAfter) >= DateTime.Now)
+												{
+													Schedulingdata = new SchedulingData() { Configuration = service, profileID = service.SchedulingProfile.ID, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = timeToRunTo };
+													if (!CheckIfSpecificSchedulingRuleDidNotRunYet(Schedulingdata))
+														foundedSchedulingdata.Add(Schedulingdata);
+
 												}
 											}
 										}
