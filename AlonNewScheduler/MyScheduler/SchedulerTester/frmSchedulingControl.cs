@@ -20,7 +20,7 @@ namespace SchedulerTester
 		private Scheduler _scheduler;
 		private Dictionary<SchedulingData, ServiceInstance> _scheduledServices = new Dictionary<SchedulingData, ServiceInstance>();
 		public delegate void SetLogMethod(string lineText);
-		public delegate void UpdateGridMethod(int accountId, string serviceName, legacy.ServiceState state);
+		public delegate void UpdateGridMethod(legacy.ServiceInstance serviceInstance);
 		SetLogMethod setLogMethod;
 		UpdateGridMethod updateGridMethod;
 		public frmSchedulingControl()
@@ -88,7 +88,7 @@ namespace SchedulerTester
 		{
 
 			legacy.ServiceInstance instance = (Easynet.Edge.Core.Services.ServiceInstance)sender;
-			this.Invoke(updateGridMethod, new Object[] { instance.AccountID, instance.Configuration.Name, e.StateAfter });
+			this.Invoke(updateGridMethod, new Object[] { instance });
 
 
 			this.Invoke(setLogMethod, new Object[] { string.Format("\n{0}: {1} is {2} {3}\r\n", instance.AccountID, instance.Configuration.Name, e.StateAfter, DateTime.Now.ToString("dd/MM/yy HH:mm")) });
@@ -154,22 +154,22 @@ namespace SchedulerTester
 		}
 
 		
-		private void UpdateGridData(int accountId, string serviceName, legacy.ServiceState state)
+		private void UpdateGridData(legacy.ServiceInstance serviceInstance)
 		{
 			foreach (DataGridViewRow row in scheduleInfoGrid.Rows)
 			{
-				if (Object.Equals(row.Cells["accountID"].Value, accountId) && Object.Equals(row.Cells["scheduledName"].Value, serviceName))
+				if (Object.Equals(row.Tag, serviceInstance))
 				{
-					row.Cells["dynamicStaus"].Value = state;
+					row.Cells["dynamicStaus"].Value = serviceInstance.State;
 
-					Color color = GetColorByState(state);
+					Color color = GetColorByState(serviceInstance.State, serviceInstance.Outcome);
 					row.DefaultCellStyle.BackColor = color;
 				}
 			}
 
 		}
 
-		private static Color GetColorByState(legacy.ServiceState state)
+		private static Color GetColorByState(legacy.ServiceState state,legacy.ServiceOutcome outCome)
 		{
 			Color color = Color.White;
 			switch (state)
@@ -193,8 +193,19 @@ namespace SchedulerTester
 					color = Color.FromArgb(0xee, 0xff, 0xee); // light green (a little lighter)
 					break;
 				case Easynet.Edge.Core.Services.ServiceState.Ended:
-					color = Color.Turquoise;
-					break;
+					{
+						if (outCome == legacy.ServiceOutcome.Success)
+							color = Color.Turquoise;
+						else if (outCome == legacy.ServiceOutcome.Failure)
+							color = Color.DarkRed;
+						else if (outCome == legacy.ServiceOutcome.Unspecified)
+							color = Color.Orange;
+						else if (outCome == legacy.ServiceOutcome.Aborted)
+							color = Color.Purple;
+						break;
+
+					}
+					
 				case Easynet.Edge.Core.Services.ServiceState.Aborting:
 					color = Color.Red;
 					break;
@@ -213,9 +224,9 @@ namespace SchedulerTester
 				{
 					if (!_scheduledServices.ContainsKey(scheduledService.Key))
 						_scheduledServices.Add(scheduledService.Key, scheduledService.Value);
-					int row = scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("HH:mm"), scheduledService.Value.EndTime.ToString("HH:mm"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted, scheduledService.Value.LegacyInstance.Outcome, scheduledService.Value.LegacyInstance.State });
-					scheduleInfoGrid.Rows[row].DefaultCellStyle.BackColor = GetColorByState(scheduledService.Value.LegacyInstance.State);
-
+					int row = scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("dd/MM/yyy HH:mm"), scheduledService.Value.EndTime.ToString("dd/MM/yyy HH:mm"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted, scheduledService.Value.LegacyInstance.Outcome, scheduledService.Value.LegacyInstance.State });
+					scheduleInfoGrid.Rows[row].DefaultCellStyle.BackColor = GetColorByState(scheduledService.Value.LegacyInstance.State,scheduledService.Value.LegacyInstance.Outcome);
+					scheduleInfoGrid.Rows[row].Tag = scheduledService.Value.LegacyInstance;
 
 				}
 

@@ -19,7 +19,8 @@ namespace SchedulerTester
 			{
 				SqlCommand sqlCommand=DataManager.CreateCommand(@"SELECT [Value]
 																  FROM [testdb].[dbo].[ServiceConfigExecutionTimes] 
-																  [ConfigName]=@ConfigName:NvarChar AND [ProfileID]=@ProfileID:Int");
+																  WHERE [ConfigName]=@ConfigName:NvarChar AND 
+																  [ProfileID]=@ProfileID:Int");
 					sqlCommand.Parameters["@ConfigName"].Value=serviceName;
 					sqlCommand.Parameters["@ProfileID"].Value=accountID;
 			TimeSpan timeOut=new TimeSpan(0,0,0,Convert.ToInt32(sqlCommand.ExecuteScalar()));
