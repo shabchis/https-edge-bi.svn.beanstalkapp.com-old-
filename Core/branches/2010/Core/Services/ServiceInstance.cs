@@ -21,15 +21,15 @@ namespace Easynet.Edge.Core.Services
 	/// <summary>
 	/// Core class of the service-oriented architecture.
 	/// </summary>
-	[CallbackBehavior(UseSynchronizationContext=false, ConcurrencyMode=ConcurrencyMode.Single)]
-	public class ServiceInstance: Entity, IServiceInstance, IServiceSubscriber, IDisposable
+	[CallbackBehavior(UseSynchronizationContext = false, ConcurrencyMode = ConcurrencyMode.Single)]
+	public class ServiceInstance : Entity, IServiceInstance, IServiceSubscriber, IDisposable
 	{
 		#region Fields
 		/*=========================*/
 
 		ActiveServiceElement _config;
 		SchedulingRuleElement _activeRule;
-		
+
 		EventHandler<ServiceStateChangedEventArgs> _childStateHandler;
 		EventHandler _childOutcomeHandler;
 
@@ -44,7 +44,7 @@ namespace Easynet.Edge.Core.Services
 
 		#region Events
 		/*=========================*/
-		
+
 		public event EventHandler<ServiceStateChangedEventArgs> StateChanged;
 		public event EventHandler OutcomeReported;
 		public event EventHandler ProgressReported;
@@ -55,7 +55,7 @@ namespace Easynet.Edge.Core.Services
 
 		#region Constructor
 		/*=========================*/
-		
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -217,7 +217,7 @@ namespace Easynet.Edge.Core.Services
 		static readonly EntityProperty<ServiceInstance, int> AccountIDProperty = new EntityProperty<ServiceInstance, int>(-1);
 		static readonly EntityProperty<ServiceInstance, long> InstanceIDProperty = new EntityProperty<ServiceInstance, long>(-1);
 		static readonly EntityProperty<ServiceInstance, string> ServiceUrlProperty = new EntityProperty<ServiceInstance, string>();
-		static readonly EntityReferenceProperty<ServiceInstance, ServiceInstance, long> ParentInstanceProperty = new EntityReferenceProperty<ServiceInstance,ServiceInstance,long>(ServiceInstance.InstanceIDProperty);
+		static readonly EntityReferenceProperty<ServiceInstance, ServiceInstance, long> ParentInstanceProperty = new EntityReferenceProperty<ServiceInstance, ServiceInstance, long>(ServiceInstance.InstanceIDProperty);
 		static readonly EntityProperty<ServiceInstance, ServicePriority> PriorityProperty = new EntityProperty<ServiceInstance, ServicePriority>(ServicePriority.Normal);
 		static readonly EntityProperty<ServiceInstance, ServiceState> StateProperty = new EntityProperty<ServiceInstance, ServiceState>(ServiceState.Uninitialized);
 		static readonly EntityProperty<ServiceInstance, ServiceOutcome> OutcomeProperty = new EntityProperty<ServiceInstance, ServiceOutcome>(ServiceOutcome.Unspecified);
@@ -245,33 +245,33 @@ namespace Easynet.Edge.Core.Services
 
 		static void ActiveConfigurationProperty_Getting(object sender, ValueTranslationEventArgs e)
 		{
-			ServiceInstance current = (ServiceInstance) e.Entity;
+			ServiceInstance current = (ServiceInstance)e.Entity;
 			e.Output = current._config;
 		}
 
 		static void ActiveConfigurationProperty_Setting(object sender, ValueTranslationEventArgs e)
 		{
-			ServiceInstance current = (ServiceInstance) e.Entity;
-			if ((int) current.State > (int) ServiceState.Uninitialized)
+			ServiceInstance current = (ServiceInstance)e.Entity;
+			if ((int)current.State > (int)ServiceState.Uninitialized)
 				throw new InvalidOperationException("Cannot change properties after Initialize has been called.");
 
-			current._config = (ActiveServiceElement) e.Input;
+			current._config = (ActiveServiceElement)e.Input;
 			e.Output = null;
 		}
 
 		static void ActiveRuleProperty_Getting(object sender, ValueTranslationEventArgs e)
 		{
-			ServiceInstance current = (ServiceInstance) e.Entity;
+			ServiceInstance current = (ServiceInstance)e.Entity;
 			e.Output = current._activeRule;
 		}
 
 		static void ActiveRuleProperty_Setting(object sender, ValueTranslationEventArgs e)
 		{
-			ServiceInstance current = (ServiceInstance) e.Entity;
-			if ((int)current.State > (int) ServiceState.Uninitialized)
+			ServiceInstance current = (ServiceInstance)e.Entity;
+			if ((int)current.State > (int)ServiceState.Uninitialized)
 				throw new InvalidOperationException("Cannot change properties after Initialize has been called.");
 
-			current._activeRule = (SchedulingRuleElement) e.Input;
+			current._activeRule = (SchedulingRuleElement)e.Input;
 			e.Output = null;
 		}
 
@@ -282,7 +282,7 @@ namespace Easynet.Edge.Core.Services
 
 		static void TimeStartedProperty_Setting(object sender, ValueTranslationEventArgs e)
 		{
-			if (TimeStartedProperty.GetValue((ServiceInstance) e.Entity) > DateTime.MinValue)
+			if (TimeStartedProperty.GetValue((ServiceInstance)e.Entity) > DateTime.MinValue)
 				e.Cancel = true;
 		}
 
@@ -404,13 +404,13 @@ namespace Easynet.Edge.Core.Services
 
 			// Get the right constructor
 			if (config is ServiceElement)
-				activeConfig = new ActiveServiceElement((ServiceElement) config);
+				activeConfig = new ActiveServiceElement((ServiceElement)config);
 			else if (config is ExecutionStepElement)
-				activeConfig = new ActiveServiceElement((ExecutionStepElement) config);
+				activeConfig = new ActiveServiceElement((ExecutionStepElement)config);
 			else if (config is AccountServiceElement)
-				activeConfig = new ActiveServiceElement((AccountServiceElement) config);
+				activeConfig = new ActiveServiceElement((AccountServiceElement)config);
 			else if (config is AccountServiceSettingsElement)
-				activeConfig = new ActiveServiceElement((AccountServiceSettingsElement) config);
+				activeConfig = new ActiveServiceElement((AccountServiceSettingsElement)config);
 			else
 				throw new ArgumentException("Configuration is an unrecognized class.", "config");
 
@@ -490,7 +490,7 @@ namespace Easynet.Edge.Core.Services
 					{
 						// Unload app domain because we can't use it anymore
 						AppDomain.Unload(_appDomain);
-						
+
 						// Report failure
 						State = ServiceState.Ended;
 						OnOutcomeReported(ServiceOutcome.Failure);
@@ -502,7 +502,7 @@ namespace Easynet.Edge.Core.Services
 					// Try to open it again now that the service is running
 					OpenChannelAndSubscribe();
 				}
-				),null);
+				), null);
 			}
 		}
 
@@ -513,7 +513,7 @@ namespace Easynet.Edge.Core.Services
 		{
 			// Make sure the underlying service is available
 			ThrowIfServiceUnavailable();
-	
+
 			// EXCEPTION:
 			if (State != ServiceState.Ready)
 				throw new InvalidOperationException("Service can only be started when it has reached a Ready state.");
@@ -579,6 +579,9 @@ namespace Easynet.Edge.Core.Services
 		{
 			ServiceState before = this.State;
 			StateProperty.SetValue(this, state);
+			if (state == ServiceState.Ended)
+				TimeEndedProperty.SetValue(this, DateTime.Now);
+
 			this.Save();
 
 			if (this.StateChanged != null)
@@ -636,16 +639,16 @@ namespace Easynet.Edge.Core.Services
 		{
 			// Get the step configuration elements
 			ExecutionStepElement stepConfig = this.Configuration.ExecutionSteps[stepNumber];
-			AccountServiceSettingsElement stepSettings = 
-				this.Configuration.StepSettings != null ? 
-				this.Configuration.StepSettings[stepConfig] : 
+			AccountServiceSettingsElement stepSettings =
+				this.Configuration.StepSettings != null ?
+				this.Configuration.StepSettings[stepConfig] :
 				null;
 
 			// Generate a child instance
 			ServiceInstance child = Service.CreateInstance(
 				stepSettings != null ?
-					(EnabledConfigurationElement) stepSettings :
-					(EnabledConfigurationElement) stepConfig,
+					(EnabledConfigurationElement)stepSettings :
+					(EnabledConfigurationElement)stepConfig,
 				this,
 				this.AccountID);
 
@@ -656,7 +659,7 @@ namespace Easynet.Edge.Core.Services
 			if (ChildServiceRequested != null)
 				ChildServiceRequested(this, new ServiceRequestedEventArgs(child, attemptNumber));
 		}
-		
+
 		void IServiceSubscriber.ProgressReported(float progress)
 		{
 			OnProgressReported(progress);
@@ -674,7 +677,7 @@ namespace Easynet.Edge.Core.Services
 
 		void ChildOutcomeReported(object sender, EventArgs e)
 		{
-			ServiceInstance child = (ServiceInstance) sender;
+			ServiceInstance child = (ServiceInstance)sender;
 
 			child.StateChanged -= _childStateHandler;
 			child.OutcomeReported -= _childOutcomeHandler;
@@ -687,7 +690,7 @@ namespace Easynet.Edge.Core.Services
 
 		void ChildStateChanged(object sender, ServiceStateChangedEventArgs e)
 		{
-			ServiceInstance child = (ServiceInstance) sender;
+			ServiceInstance child = (ServiceInstance)sender;
 
 			if (_commChannel != null && _commChannel.State == CommunicationState.Opened)
 				_commChannel.Engine.ChildServiceStateChanged(_childServices[child], e.StateAfter);
@@ -727,7 +730,7 @@ namespace Easynet.Edge.Core.Services
 	/// Contains read-only service instance info.
 	/// </summary>
 	[Serializable]
-	public class ServiceInstanceInfo: IServiceInstance
+	public class ServiceInstanceInfo : IServiceInstance
 	{
 		#region Fields
 		/*=========================*/
@@ -824,7 +827,7 @@ namespace Easynet.Edge.Core.Services
 				this.Configuration.Name :
 				String.Format("{0} ({1})", this.Configuration.Name, this.InstanceID);
 		}
-		
+
 		/*=========================*/
 		#endregion
 	}
@@ -832,7 +835,7 @@ namespace Easynet.Edge.Core.Services
 	/// <summary>
 	/// Duplex client for instance-to-engine communication.
 	/// </summary>
-	internal class ServiceEngineCommChannel: DuplexClientBase<IServiceEngine>
+	internal class ServiceEngineCommChannel : DuplexClientBase<IServiceEngine>
 	{
 		#region Constructor
 		/*=========================*/
@@ -870,13 +873,13 @@ namespace Easynet.Edge.Core.Services
 			ConstructorInfo constructor = defaultBindingType == null ? null : defaultBindingType.GetConstructor(new Type[] { typeof(string) });
 
 			Binding binding = constructor != null ?
-						(Binding) constructor.Invoke(new object[] { "edgeServiceCommBinding" }) : 
-						(Binding) new NetTcpBinding("edgeServiceCommBinding");
+						(Binding)constructor.Invoke(new object[] { "edgeServiceCommBinding" }) :
+						(Binding)new NetTcpBinding("edgeServiceCommBinding");
 
 			// Enable port sharing
 			if (binding is NetTcpBinding)
 			{
-				NetTcpBinding tcpBinding = ((NetTcpBinding) binding);
+				NetTcpBinding tcpBinding = ((NetTcpBinding)binding);
 				if (!tcpBinding.PortSharingEnabled)
 				{
 					string msg = "Port sharing is required for NetTcpBinding-based communication; turning on PortSharingEnabled.";
