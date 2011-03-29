@@ -47,7 +47,7 @@
 			this.ClientSize = new System.Drawing.Size(490, 517);
 			this.Controls.Add(this.textBox1);
 			this.Name = "frmNotSched";
-			this.Text = "frmNotSched";
+			this.Text = "Edge Scheuler-Un Scheduled Services";
 			this.Load += new System.EventHandler(this.frmNotSched_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
