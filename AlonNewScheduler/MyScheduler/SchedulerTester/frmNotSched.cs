@@ -14,13 +14,30 @@ namespace SchedulerTester
 		string notSched;
 		public frmNotSched(string notSched)
 		{
-			InitializeComponent();
-			this.notSched = notSched;
+			try
+			{
+				InitializeComponent();
+				this.notSched = notSched;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+
+
 		}
 
 		private void frmNotSched_Load(object sender, EventArgs e)
 		{
-			textBox1.Text = notSched;
+			try
+			{
+				textBox1.Text = notSched;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+
 		}
 
 	}
