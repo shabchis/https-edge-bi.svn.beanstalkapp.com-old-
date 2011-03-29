@@ -36,7 +36,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+                Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
 
@@ -49,7 +49,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
 
@@ -96,7 +96,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 
 		}
@@ -115,7 +115,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
 
@@ -136,7 +136,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 
 		}
@@ -185,7 +185,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 
 		}
@@ -201,7 +201,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 
 
@@ -217,7 +217,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
 
@@ -240,7 +240,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 
 		}
@@ -296,7 +296,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write("GetColorByState", ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 			return color;
 		}
@@ -321,7 +321,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
 
@@ -352,7 +352,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 
 		}
@@ -366,7 +366,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
 
@@ -379,7 +379,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
 
@@ -393,7 +393,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 
 		}
@@ -428,7 +428,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 
 		}
@@ -448,7 +448,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
 
@@ -467,7 +467,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
 
@@ -483,7 +483,7 @@ namespace SchedulerTester
 			catch (Exception ex)
 			{
 
-				MessageBox.Show(ex.Message);
+				 Easynet.Edge.Core.Utilities.Log.Write(this.ToString(), ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
 
