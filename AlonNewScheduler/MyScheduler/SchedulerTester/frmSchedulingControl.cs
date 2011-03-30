@@ -126,6 +126,7 @@ namespace SchedulerTester
 			try
 			{
 				legacy.ServiceInstance instance = (Easynet.Edge.Core.Services.ServiceInstance)sender;
+                instance.OutcomeReported += new EventHandler(instance_OutcomeReported);
 				this.Invoke(updateGridMethod, new Object[] { instance });
 
 
@@ -140,6 +141,12 @@ namespace SchedulerTester
 			}
 
 		}
+
+        void instance_OutcomeReported(object sender, EventArgs e)
+        {
+            legacy.ServiceInstance instance = (Easynet.Edge.Core.Services.ServiceInstance)sender;
+            this.Invoke(updateGridMethod, new Object[] { instance });
+        }
 
 		void _scheduler_NewScheduleCreatedEventHandler(object sender, EventArgs e)
 		{
@@ -231,7 +238,7 @@ namespace SchedulerTester
 					if (Object.Equals(row.Tag, serviceInstance))
 					{
                         row.Cells["dynamicStaus"].Value = serviceInstance.State;
-                        row.Cells["outCome"].Value = outCome;
+                        row.Cells["outCome"].Value = serviceInstance.Outcome;
 
                         Color color = GetColorByState(serviceInstance.State, serviceInstance.Outcome);
 						row.DefaultCellStyle.BackColor = color;
