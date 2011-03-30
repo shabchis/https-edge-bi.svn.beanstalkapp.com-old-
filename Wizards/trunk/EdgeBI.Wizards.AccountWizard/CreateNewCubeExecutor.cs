@@ -15,17 +15,19 @@ namespace EdgeBI.Wizards.AccountWizard
     {
 
         private const string C_AccSettClientSpecific = "AccountSettings.Client Specific";
-        private const string C_AccSettNewUser = "AccountSettings.New Users";
-        private const string C_AccSettNewActiveUser = "AccountSettings.New Active Users";
+        private const string C_AccSettACQ = "AccountSettings.ACQ";
+        private const string C_AccSettTargetACQ = "AccountSettings.TargetACQ";
         private const string C_AccSettStringReplacemnet = "AccountSettings.StringReplacment.";
 
 
         protected override Easynet.Edge.Core.Services.ServiceOutcome DoWork()
         {
-
+            
             Log.Write("Getting collected data from suitable collector", LogMessageType.Information);
 
-            Dictionary<string, object> collectedData = this.GetStepCollectedData(Instance.Configuration.Options["CollectorStep"]);
+            Dictionary<string, object> collectedData = this.GetCollectedData();
+            if (collectedData.ContainsKey(ApplicationIDKey))
+                SetAccountWizardSettingsByApllicationID(Convert.ToInt32(collectedData[ApplicationIDKey]));
             this.ReportProgress(0.1f);
 
             Log.Write("Creating Cube/s on analysis server", LogMessageType.Information);
@@ -34,26 +36,30 @@ namespace EdgeBI.Wizards.AccountWizard
             Log.Write("Cube Created", LogMessageType.Information);
 
             Log.Write("Update OLTP datbase", LogMessageType.Information);
-            UpdateOltpDataBASE(collectedData);
+           // UpdateOltpDataBASE(collectedData);
+            UpdateOltpDataBase(collectedData);
             this.ReportProgress(1);
 
             return base.DoWork();
         }
         private void CreateCube(Dictionary<string, object> collectedData)
         {
+            
             //Connect To analysisServer
             using (Server analysisServer = new Server())
             {
                 Dictionary<string, object> executorData = new Dictionary<string, object>();  //dictionary for save executors data for next steps
+                if (!collectedData.ContainsKey(ApplicationIDKey))
+                    executorData.Add(ApplicationIDKey, collectedData[ApplicationIDKey]);
 
-                analysisServer.Connect(AppSettings.Get(this, "AnalysisServer.ConnectionString"));
+                analysisServer.Connect(accountWizardSettings.Get("AnalysisServer.ConnectionString"));
 
                 //Get the database
-                Database analysisDatabase = analysisServer.Databases.GetByName(AppSettings.Get(this, "AnalysisServer.Database"));
+                Database analysisDatabase = analysisServer.Databases.GetByName(accountWizardSettings.Get("AnalysisServer.Database"));
 
                 #region CreateBoCube
                 //Create bo cube
-                Cube boCubeTemplate = analysisDatabase.Cubes[AppSettings.Get(this, "Cube.Templates.BOTemplate")];
+                Cube boCubeTemplate = analysisDatabase.Cubes[accountWizardSettings.Get("Cube.Templates.BOTemplate")];
 
 
                 Cube newBOCube = boCubeTemplate.Clone();
@@ -61,70 +67,71 @@ namespace EdgeBI.Wizards.AccountWizard
 
 
                 ////change cube name and id
-                newBOCube.Name = AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.BO.Name.Perfix") + collectedData["AccountSettings.CubeName"].ToString();
+                newBOCube.Name = accountWizardSettings.Get("Cube.BO.Name.Perfix") + collectedData["AccountSettings.CubeName"].ToString();
 
 
                 executorData.Add("AccountSettings.CubeName", collectedData["AccountSettings.CubeName"].ToString()); //for next step
-                newBOCube.ID = AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.BO.Name.Perfix") + collectedData["AccountSettings.CubeID"].ToString();
+                newBOCube.ID = accountWizardSettings.Get("Cube.BO.Name.Perfix") + collectedData["AccountSettings.CubeID"].ToString();
 
-                //change client specific measures
+                //change  measures
                 foreach (MeasureGroup measureGroup in newBOCube.MeasureGroups)
                 {
 
                     foreach (KeyValuePair<string, object> input in collectedData)
                     {
-                        //NEW USERS - 
+                        
                         if (input.Value is Replacment)
                         {
                             Replacment replacement = (Replacment)input.Value;
-
-                            if (input.Key.ToUpper() == C_AccSettNewUser.ToUpper())
+                            //AcquisitionS 
+                            if (input.Key.ToUpper().StartsWith(C_AccSettACQ.ToUpper()))
                             {
-
-
-
-                                Measure measure = measureGroup.Measures.Find(replacement.ReplaceFrom);
-                                if (measure != null)
-                                {                                                                     //perfix of new useres /regs
-                                    if (!replacement.CalcMembersOnly)
-                                    {
-                                        if (measureGroup.Measures.FindByName(replacement.ReplaceTo) == null) //check if their is no measure with the same name
+                                string[] acquisitions = accountWizardSettings.Get(input.Key).Split(',');
+                                foreach (string acquisition in acquisitions)
+                                {
+                                    Measure measure = measureGroup.Measures.FindByName(acquisition);
+                                    if (measure != null)
+                                    {                                                                     //perfix of new useres /regs
+                                        if (!replacement.CalcMembersOnly)
                                         {
-                                            measure.Name = replacement.ReplaceTo;
+                                            if (measureGroup.Measures.FindByName(replacement.ReplaceTo) == null) //check if their is no measure with the same name
+                                            {
+                                                measure.Name = replacement.ReplaceTo;
+                                            }
                                         }
                                     }
-
-
                                 }
-
-
+                               
                             }
-                            //NEW ACTIVE USERS
-                            else if (input.Key.ToUpper() == C_AccSettNewActiveUser.ToUpper())
+                            //Target AcquisitionS
+                            else if (input.Key.ToUpper().StartsWith(C_AccSettTargetACQ.ToUpper()))
                             {
-
-                                Measure measure = measureGroup.Measures.Find(replacement.ReplaceFrom);
-                                if (measure != null)
-                                {                                                                  //key of new active useres /actives
-                                    if (!replacement.CalcMembersOnly)
-                                    {
-                                        if (measureGroup.Measures.FindByName(replacement.ReplaceTo) == null) //check if their is no measure with the same name
+                                string[] targetAcquisitions = accountWizardSettings.Get(input.Key).Split(',');
+                                foreach (string targetAcquisition in targetAcquisitions)
+                                {
+                                    Measure measure = measureGroup.Measures.FindByName(targetAcquisition);
+                                    if (measure != null)
+                                    {                                                                  //key of new active useres /actives
+                                        if (!replacement.CalcMembersOnly)
                                         {
-                                            measure.Name = replacement.ReplaceTo;
+                                            if (measureGroup.Measures.FindByName(replacement.ReplaceTo) == null) //check if their is no measure with the same name
+                                            {
+                                                measure.Name = replacement.ReplaceTo;
+                                            }
                                         }
-                                    }
 
 
+                                    } 
                                 }
 
                             }
-                            //MEASURES CLIENT SPECIFIC
+                            // CLIENT SPECIFIC
                             else if (input.Key.StartsWith(C_AccSettClientSpecific, true, null))
                             {
 
                                 if (!replacement.CalcMembersOnly)
                                 {
-                                    Measure measure = measureGroup.Measures.Find(replacement.ReplaceFrom);
+                                    Measure measure = measureGroup.Measures.FindByName(replacement.ReplaceFrom);
                                     if (measure != null)
                                     {
                                         if (measureGroup.Measures.FindByName(replacement.ReplaceTo) == null) //check if their is no measure with the same name
@@ -140,7 +147,7 @@ namespace EdgeBI.Wizards.AccountWizard
                                 if (!replacement.CalcMembersOnly)
                                 {
 
-                                    Measure measure = measureGroup.Measures.Find(replacement.ReplaceFrom);
+                                    Measure measure = measureGroup.Measures.FindByName(replacement.ReplaceFrom);
                                     if (measure != null)
                                     {
                                         if (measureGroup.Measures.FindByName(replacement.ReplaceTo) == null) //check if their is no measure with the same name
@@ -175,7 +182,7 @@ namespace EdgeBI.Wizards.AccountWizard
                             //remove all scope_id
                             queryBinding.QueryDefinition = queryBinding.QueryDefinition.Remove(indexScope_id, spacesUntillEndOfQuery);
                             //insert new scope_id
-                            queryBinding.QueryDefinition = queryBinding.QueryDefinition.Insert(queryBinding.QueryDefinition.Length, string.Format(" Scope_ID={0}", collectedData["AccountSettings.Scope_ID"].ToString()));
+                            queryBinding.QueryDefinition = queryBinding.QueryDefinition.Insert(queryBinding.QueryDefinition.Length, string.Format(" Scope_ID={0}", collectedData["AccountSettings.BI_Scope_ID"].ToString()));
                             // 
                         }
                     }
@@ -197,20 +204,28 @@ namespace EdgeBI.Wizards.AccountWizard
                                 Replacment replacment = (Replacment)input.Value;
                                 if (input.Key.StartsWith(C_AccSettClientSpecific, true, null))
                                 {
-                                    //Client specifixc x (measureres but this time by name + bo)
-                                    CalculatedMembersCollection.ReplaceCalculatedMembersStrings("BO " + replacment.ReplaceFrom, replacment.ReplaceTo);
+                                   
+                                    CalculatedMembersCollection.ReplaceCalculatedMembersStrings(replacment.ReplaceFrom, replacment.ReplaceTo);
 
                                 }
-                                else if (input.Key.ToUpper() == C_AccSettNewUser.ToUpper()) //cpa 1
+                                else if (input.Key.ToUpper().StartsWith(C_AccSettACQ.ToUpper())) //acquisitions
                                 {
+                                    string[] acquisitions = accountWizardSettings.Get(input.Key).Split(',');
 
-                                    CalculatedMembersCollection.ReplaceCalculatedMembersStrings("Regs", replacment.ReplaceTo);
+                                    foreach (string acquisition in acquisitions)
+                                    {
+                                        CalculatedMembersCollection.ReplaceCalculatedMembersStrings(acquisition, replacment.ReplaceTo); 
+                                    }
 
                                 }
-                                else if (input.Key.ToUpper() == C_AccSettNewActiveUser.ToUpper()) //cpa 2
+                                else if (input.Key.ToUpper().StartsWith(C_AccSettTargetACQ.ToUpper())) //target acquisitions
                                 {
+                                    string[] targetAcquisitions = accountWizardSettings.Get(input.Key).Split(',');
 
-                                    CalculatedMembersCollection.ReplaceCalculatedMembersStrings("Actives", replacment.ReplaceTo);
+                                    foreach (string targetAcquisition in targetAcquisitions)
+                                    {
+                                        CalculatedMembersCollection.ReplaceCalculatedMembersStrings(targetAcquisition, replacment.ReplaceTo); 
+                                    }
 
                                 }
                                 else if (input.Key.StartsWith(C_AccSettStringReplacemnet)) //string replacement
@@ -229,9 +244,9 @@ namespace EdgeBI.Wizards.AccountWizard
                 //Add last step created role (for this test some existing  role role 8 which not exist in the template) 
 
                 //Get the roleID from last step collector
-                Dictionary<string, object> roleData = GetStepCollectedData("CreateRoleStepCollector");
+                //Dictionary<string, object> roleData = GetCollectedData();
 
-                CubePermission cubePermission = new CubePermission(roleData["AccountSettings.RoleID"].ToString(), AppSettings.Get(this, "Cube.CubePermission.ID"), AppSettings.Get(this, "Cube.CubePermission.Name"));
+                CubePermission cubePermission = new CubePermission(collectedData["AccountSettings.RoleID"].ToString(), accountWizardSettings.Get("Cube.CubePermission.ID"), accountWizardSettings.Get("Cube.CubePermission.Name"));
                 cubePermission.Read = ReadAccess.Allowed;
                 newBOCube.CubePermissions.Add(cubePermission);
 
@@ -260,7 +275,7 @@ namespace EdgeBI.Wizards.AccountWizard
                 {
                     //Add Content Cube
                     //Create bo cube
-                    Cube ContentCubeTemplate = analysisDatabase.Cubes[AppSettings.Get(this, "Cube.Templates.ContentTemplate")];
+                    Cube ContentCubeTemplate = analysisDatabase.Cubes[accountWizardSettings.Get("Cube.Templates.ContentTemplate")];
 
 
                     Cube newContentCube = ContentCubeTemplate.Clone();
@@ -268,10 +283,10 @@ namespace EdgeBI.Wizards.AccountWizard
 
 
                     ////change cube name and id
-                    newContentCube.Name = AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.Content.Name.Perfix") + collectedData["AccountSettings.CubeName"].ToString();
-                    newContentCube.ID = AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.Content.Name.Perfix") + collectedData["AccountSettings.CubeID"].ToString();
+                    newContentCube.Name = accountWizardSettings.Get("Cube.Content.Name.Perfix") + collectedData["AccountSettings.CubeName"].ToString();
+                    newContentCube.ID = accountWizardSettings.Get("Cube.Content.Name.Perfix") + collectedData["AccountSettings.CubeID"].ToString();
                     //Get google values for replacments;
-                    string[] googleConversions = AppSettings.GetAbsolute("EdgeBI.Wizards.GoogleConversions").Split(',');
+                    string[] googleConversions = accountWizardSettings.Get("EdgeBI.Wizards.GoogleConversions").Split(',');
 
                     foreach (MeasureGroup measureGroup in newContentCube.MeasureGroups)
                     {
@@ -287,13 +302,13 @@ namespace EdgeBI.Wizards.AccountWizard
                                     {
                                         if (replacement.ReplaceFrom == googleConversion)
                                         {
-                                            //Chek with amit about calcmembers only
-                                            Measure measure = measureGroup.Measures.Find(replacement.ReplaceFrom);
+                                           
+                                            Measure measure = measureGroup.Measures.FindByName(replacement.ReplaceFrom);
                                             if (measure != null)
                                             {
                                                 if (measureGroup.Measures.FindByName(replacement.ReplaceTo) == null) //check if their is no measure with the same name
                                                 {
-                                                    measure.Name = AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.Content.Name.Perfix") + " " + replacement.ReplaceTo;
+                                                    measure.Name = replacement.ReplaceTo.Replace(accountWizardSettings.Get("Cube.BO.Name.Perfix"), accountWizardSettings.Get("Cube.Content.Name.Perfix"));
                                                 }
                                             }
 
@@ -318,7 +333,7 @@ namespace EdgeBI.Wizards.AccountWizard
                                 //remove all scope_id
                                 queryBinding.QueryDefinition = queryBinding.QueryDefinition.Remove(indexScope_id, spacesUntillEndOfQuery);
                                 //insert new scope_id
-                                queryBinding.QueryDefinition = queryBinding.QueryDefinition.Insert(queryBinding.QueryDefinition.Length, string.Format(" Scope_ID={0}", collectedData["AccountSettings.Scope_ID"].ToString()));
+                                queryBinding.QueryDefinition = queryBinding.QueryDefinition.Insert(queryBinding.QueryDefinition.Length, string.Format(" Scope_ID={0}", collectedData["AccountSettings.BI_Scope_ID"].ToString()));
 
                             }
                         }
@@ -352,7 +367,7 @@ namespace EdgeBI.Wizards.AccountWizard
                     }
 
                     //add last step role (cube permission
-                    cubePermission = new CubePermission(roleData["AccountSettings.RoleID"].ToString(), AppSettings.Get(this, "Cube.CubePermission.ID"), AppSettings.Get(this, "Cube.CubePermission.Name"));
+                    cubePermission = new CubePermission(collectedData["AccountSettings.RoleID"].ToString(), accountWizardSettings.Get("Cube.CubePermission.ID"), accountWizardSettings.Get("Cube.CubePermission.Name"));
                     cubePermission.Read = ReadAccess.Allowed;
                     newContentCube.CubePermissions.Add(cubePermission);
 
@@ -379,53 +394,7 @@ namespace EdgeBI.Wizards.AccountWizard
                 SaveExecutorData(executorData);
             }
         }
-        private void UpdateOltpDataBASE(Dictionary<string, object> collectedData)
-        {
-            using (SqlConnection sqlConnection = new SqlConnection(AppSettings.Get(this, "OLTP.Connection.string")))
-            {
-                sqlConnection.Open();
-                foreach (KeyValuePair<string, object> input in collectedData)
-                {
-                    if (input.Key.StartsWith("AccountSettings"))
-                    {
-
-
-                        using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_Gui_AccountSettings
-																			(ScopeID,AccountID,Name,Value,sys_creation_date)
-																			Values
-																			(@ScopeID:Int,
-																			 @AccountID:NVarchar,
-																			 @Name:NVarchar,
-																			 @Value:NVarchar,
-																			 @sys_creation_date:DateTime)"))
-                        {
-                            sqlCommand.Connection = sqlConnection;
-                            sqlCommand.Parameters["@ScopeID"].Value = 3861; //TODO: TEMPORARLY WILL COME FROM OTHER COLLECTOR (GENERAL COLLECTOR-ASK DORON)
-                            sqlCommand.Parameters["@AccountID"].Value = DBNull.Value; //TODO: CHECK THIS FOR NOW IT'S NULL
-                            sqlCommand.Parameters["@Name"].Value = input.Key;
-                            if (input.Value is Replacment)
-                            {
-                                Replacment replacement = (Replacment)input.Value;
-                                sqlCommand.Parameters["@Value"].Value = replacement.ReplaceTo;
-
-                            }
-                            else
-                            {
-                                sqlCommand.Parameters["@Value"].Value = input.Value;
-
-                            }
-                            sqlCommand.Parameters["@sys_creation_date"].Value = DateTime.Now;
-
-                            sqlCommand.ExecuteNonQuery();
-
-                        }
-                    }
-
-
-                }
-            }
-        }
-
+//      
 
 
     }

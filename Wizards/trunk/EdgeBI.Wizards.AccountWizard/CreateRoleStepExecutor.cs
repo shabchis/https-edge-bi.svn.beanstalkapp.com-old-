@@ -23,7 +23,9 @@ namespace EdgeBI.Wizards.AccountWizard
 			
 			Log.Write("Getting collected data from suitable collector", LogMessageType.Information);
 
-			Dictionary<string, object> collectedData = this.GetStepCollectedData(Instance.Configuration.Options["CollectorStep"]);
+			Dictionary<string, object> collectedData = this.GetCollectedData();
+            if (collectedData.ContainsKey(ApplicationIDKey))
+                SetAccountWizardSettingsByApllicationID(Convert.ToInt32(collectedData[ApplicationIDKey]));
 			this.ReportProgress(0.1f);
 			Log.Write("Creating role on analysis server", LogMessageType.Information);
 			CreateRole(collectedData);
@@ -37,40 +39,7 @@ namespace EdgeBI.Wizards.AccountWizard
 			return base.DoWork();
 		}
 
-		private void UpdateOltpDataBase(Dictionary<string, object> collectedData)
-		{
-
-			using (SqlConnection sqlConnection = new SqlConnection(AppSettings.Get(this, "OLTP.Connection.string")))
-			{
-				sqlConnection.Open();
-				foreach (KeyValuePair<string, object> input in collectedData)
-				{
-					if (input.Key.StartsWith("AccountSettings"))
-					{
-						using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_Gui_AccountSettings
-																			(ScopeID,AccountID,Name,Value,sys_creation_date)
-																			Values
-																			(@ScopeID:Int,
-																			 @AccountID:NVarchar,
-																			 @Name:NVarchar,
-																			 @Value:NVarchar,
-																			 @sys_creation_date:DateTime)"))
-						{
-							sqlCommand.Connection = sqlConnection;
-							sqlCommand.Parameters["@ScopeID"].Value = 3861; //TODO: TEMPORARLY WILL COME FROM OTHER COLLECTOR (GENERAL COLLECTOR-ASK DORON)
-							sqlCommand.Parameters["@AccountID"].Value = DBNull.Value; //TODO: CHECK THIS FOR NOW IT'S NULL
-							sqlCommand.Parameters["@Name"].Value = input.Key;
-							sqlCommand.Parameters["@Value"].Value = input.Value; ;
-							sqlCommand.Parameters["@sys_creation_date"].Value = DateTime.Now;
-
-							sqlCommand.ExecuteNonQuery();
-
-						}
-					}
-
-				}
-			}
-		}
+//     
 
 		private void CreateRole(Dictionary<string, object> collectedData)
 		{
@@ -82,7 +51,7 @@ namespace EdgeBI.Wizards.AccountWizard
                 try
                 {
                     
-                    analysisServer.Connect(AppSettings.GetAbsolute( "EdgeBI.Wizards.StepExecuter.AnalysisServer.ConnectionString"));
+                    analysisServer.Connect(accountWizardSettings.Get("AnalysisServer.ConnectionString"));
                 }
                 catch (Exception ex)
                 {
@@ -91,7 +60,7 @@ namespace EdgeBI.Wizards.AccountWizard
                 }
 
 				//Get the database
-				Database analysisDatabase = analysisServer.Databases.GetByName(AppSettings.Get(this, "AnalysisServer.Database"));
+                Database analysisDatabase = analysisServer.Databases.GetByName(accountWizardSettings.Get("AnalysisServer.Database"));
 
 				//Create new role
 				Role newRole;

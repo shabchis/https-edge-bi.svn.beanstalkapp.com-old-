@@ -14,6 +14,8 @@ namespace EdgeBI.Wizards.AccountWizard
     {
         protected override Dictionary<string, string> Validate(Dictionary<string, object> inputValues)
         {
+            if (inputValues.ContainsKey(ApplicationIDKey))
+                SetAccountWizardSettingsByApllicationID(Convert.ToInt32(inputValues[ApplicationIDKey]));
             Dictionary<string, string> errors = null;
             foreach (KeyValuePair<string, object> input in inputValues)
             {
@@ -47,12 +49,22 @@ namespace EdgeBI.Wizards.AccountWizard
                             }
                         case "AccountSettings.RoleMemberName":
                             {
-                                //if (!IsExistActiveDirectoryUser(input.Value.ToString()))
-                                //{
-                                //    if (errors == null)
-                                //        errors = new Dictionary<string, string>();
-                                //    errors.Add(input.Key, string.Format(@"Role with ID\Name: ""{0}"" already exists"));
-                                //}
+                                if (!string.IsNullOrEmpty(input.Value.ToString()))
+                                {
+                                    //if (!IsExistActiveDirectoryUser(input.Value.ToString()))
+                                    //{
+                                    //    if (errors == null)
+                                    //        errors = new Dictionary<string, string>();
+                                    //    errors.Add(input.Key, string.Format(@"Role with ID\Name: ""{0}"" already exists"));
+                                    //} 
+                                }
+                                else
+                                {
+                                     if (errors == null)
+                                         errors = new Dictionary<string, string>();
+                                     errors.Add(input.Key, "Role can not be empty");
+
+                                }
                                 break;
                             }
 
@@ -72,9 +84,9 @@ namespace EdgeBI.Wizards.AccountWizard
 
         private bool IsExistActiveDirectoryUser(string ActiveDirectoryUserName)
         {
-            string ldapPath = Encryptor.Decrypt(AppSettings.GetAbsolute("EdgeBI.Wizards.ActiveDirectoryStepExecutor.LDAP.Path"));
-            string ldapUserName = Encryptor.Decrypt(AppSettings.GetAbsolute("EdgeBI.Wizards.ActiveDirectoryStepExecutor.LDAP.UserName"));
-            string ldapPassword = Encryptor.Decrypt(AppSettings.GetAbsolute("EdgeBI.Wizards.ActiveDirectoryStepExecutor.LDAP.Passwrod"));
+            string ldapPath = Encryptor.Decrypt(accountWizardSettings.Get("ActiveDirectoryStepExecutor.LDAP.Path"));
+            string ldapUserName = Encryptor.Decrypt(accountWizardSettings.Get("ActiveDirectoryStepExecutor.LDAP.UserName"));
+            string ldapPassword = Encryptor.Decrypt(accountWizardSettings.Get("ActiveDirectoryStepExecutor.LDAP.Passwrod"));
 
 
             DirectoryEntry obDirEntry = new DirectoryEntry(ldapPath, ldapUserName, ldapPassword);
@@ -114,7 +126,7 @@ namespace EdgeBI.Wizards.AccountWizard
                 try
                 {
 
-                    analysisServer.Connect(AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.AnalysisServer.ConnectionString"));
+                    analysisServer.Connect(accountWizardSettings.Get("AnalysisServer.ConnectionString"));
                 }
                 catch (Exception ex)
                 {
@@ -123,7 +135,7 @@ namespace EdgeBI.Wizards.AccountWizard
                 }
 
                 //Get the database
-                Database analysisDatabase = analysisServer.Databases.GetByName(AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.AnalysisServer.Database"));
+                Database analysisDatabase = analysisServer.Databases.GetByName(accountWizardSettings.Get("AnalysisServer.Database"));
                 if (analysisDatabase.Roles.Contains(RoleNameID) || analysisDatabase.Roles.ContainsName(RoleNameID))
                 {
                     exists = true;
