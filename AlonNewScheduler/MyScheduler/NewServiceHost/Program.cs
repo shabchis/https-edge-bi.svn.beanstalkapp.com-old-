@@ -21,6 +21,7 @@ namespace NewServiceHost
 #if DEBUG
 			{
 				NewServiceHost sh = new NewServiceHost();
+				Console.WriteLine("bla bla");
 				sh.InitalizeService();
 			
 			}
