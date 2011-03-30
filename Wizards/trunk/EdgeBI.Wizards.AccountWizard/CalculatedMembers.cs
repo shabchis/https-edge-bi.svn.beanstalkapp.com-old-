@@ -9,6 +9,14 @@ namespace EdgeBI.Wizards.AccountWizard
 {
     class CalculatedMember
     {
+        private string x;
+
+        public string X
+        {
+            get { return x; }
+            set { x = value; }
+        }
+        
         public string Name { get; set; }
         public string Expression { get; set; }
         public string ParentHierarchy { get; set; }

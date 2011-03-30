@@ -7,23 +7,27 @@ using System.IO;
 using Easynet.Edge.Core.Configuration;
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
 
 namespace EdgeBI.Wizards.AccountWizard
 {
 	class CreatePanoramaBookExecutor : StepExecuter
 	{
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool TerminateProcess(IntPtr hprocess, uint uExitCode);
 		private const string AccSettClientSpecific = "AccountSettings.Client Specific";
-		private const string AccSettNewUser = "AccountSettings.New Users";
-		private const string AccSettNewActiveUser = "AccountSettings.New Active Users";
+        private const string C_AccSettACQ = "AccountSettings.ACQ";
+        private const string C_AccSettTargetACQ = "AccountSettings.TargetACQ";
+        
 		protected override Easynet.Edge.Core.Services.ServiceOutcome DoWork()
 		{
 			//Log.Write("Getting collected data from suitable collector", LogMessageType.Information);
 
-			/*Dictionary<string, object> collectedData = this.GetStepCollectedData(Instance.Configuration.Options["CollectorStep"]); no data to collect from this
-			 * collector since the data came from other step and executor*/
+			Dictionary<string, object> collectedData = this.GetCollectedData(); 
 			this.ReportProgress(0.1f);
 			Log.Write("Adding new book to panorama", LogMessageType.Information);
-			AddNewBook();
+            AddNewBook(collectedData);
 
 			this.ReportProgress(0.7f);
 			Log.Write("book Created", LogMessageType.Information);
@@ -35,13 +39,15 @@ namespace EdgeBI.Wizards.AccountWizard
 			return base.DoWork();
 		}
 
-		private void AddNewBook()
+		private void AddNewBook(Dictionary<string,object> collectedData)
 		{
-			Dictionary<string, object> lastExecutorStepData = GetExecutorData("CreateNewCubeExecutor");
+
+            if (collectedData.ContainsKey(ApplicationIDKey))
+                SetAccountWizardSettingsByApllicationID(Convert.ToInt32(collectedData[ApplicationIDKey]));
 
 			// COPY THE TEMPLATE BOOK (PATH ON APP.CONFIG FOLDER AND RENAME IT'S NAME TO BO+NEW ACCOUNT NAME
-			DirectoryInfo templateSourceDirectory = new DirectoryInfo(Path.Combine(AppSettings.Get(this, "Folder.PanoramaBooks"), AppSettings.Get(this, "Folder.PanoramaBookTemplate"))); //source path
-            DirectoryInfo targetDirectory = new DirectoryInfo(Path.Combine(AppSettings.Get(this, "Folder.PanoramaBooks"), AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.BO.Name.Perfix") + lastExecutorStepData["AccountSettings.CubeName"].ToString()));  //target path
+            DirectoryInfo templateSourceDirectory = new DirectoryInfo(Path.Combine(accountWizardSettings.Get("Folder.PanoramaBooks"), accountWizardSettings.Get("Folder.PanoramaBookTemplate"))); //source path
+            DirectoryInfo targetDirectory = new DirectoryInfo(Path.Combine(accountWizardSettings.Get("Folder.PanoramaBooks"), accountWizardSettings.Get("Cube.BO.Name.Perfix") + collectedData["AccountSettings.CubeName"].ToString()));  //target path
 
 			// Check if the target directory exists, if not, create it.
 			if (!Directory.Exists(targetDirectory.FullName))
@@ -52,11 +58,11 @@ namespace EdgeBI.Wizards.AccountWizard
 					string newUsersChanged = string.Empty;
                     bool copyContent = false;
 					string newActiveUsersChanged = string.Empty;
-					if (lastExecutorStepData.ContainsKey("AccountSettings.New Users"))
-						newUsersChanged = ((Replacment)lastExecutorStepData["AccountSettings.New Users"]).ReplaceTo;
-                    if (lastExecutorStepData.ContainsKey("AccountSettings.New Active Users"))
-                        newActiveUsersChanged = ((Replacment)lastExecutorStepData["AccountSettings.New Active Users"]).ReplaceTo;
-                    if (bool.Parse(lastExecutorStepData["AccountSettings.AddContentCube"].ToString()) == true)
+                    if (collectedData.ContainsKey(C_AccSettACQ + "1"))
+                        newUsersChanged = ((Replacment)collectedData[C_AccSettACQ + "1"]).ReplaceTo;
+                    if (collectedData.ContainsKey(C_AccSettACQ + "2"))
+                        newActiveUsersChanged = ((Replacment)collectedData[C_AccSettACQ + "2"]).ReplaceTo;
+                    if (bool.Parse(collectedData["AccountSettings.AddContentCube"].ToString()) == true)
                         copyContent = true;
                
 					CopyAllFilesAndFolders(templateSourceDirectory, targetDirectory,newUsersChanged,newActiveUsersChanged,copyContent);					
@@ -74,18 +80,18 @@ namespace EdgeBI.Wizards.AccountWizard
 
 
 			//CHANGE THE RELEVANT PROPERTIES ON ALL XML FILES IN THE DIRECTORY (EXCLUDE THE SCHEMA XML AND PROPERTIES XML
-			UpdateRelevantPropertiesOnXml(targetDirectory, lastExecutorStepData);
+            UpdateRelevantPropertiesOnXml(targetDirectory, collectedData);
 
 			//GET THE APPLICATION.XML FROM DEFINED PATH ON APP.CONFIG AND ADD THE NEW BOOK (CHANGE RELEVANT PROPERTIES ON THIS XML)
 
-			XDocument applicationXml = XDocument.Load(AppSettings.Get(this, "Folder.File.AplicationXml"));
+            XDocument applicationXml = XDocument.Load(accountWizardSettings.Get("Folder.File.AplicationXml"));
 			XElement applicationElement = applicationXml.Element("pnView").Element("Applications");
 			int numberOfItemElements = applicationElement.Elements().Count();//since the first element is not an item element but Properties element
 			//So the next item element to be add is numberOfItemElements +1
 
 			applicationElement.Add(new XElement(string.Format("Item{0}", numberOfItemElements),
 				new XElement("Properties",
-                    new XAttribute("Name", AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.BO.Name.Perfix") + lastExecutorStepData["AccountSettings.CubeName"].ToString()),
+                    new XAttribute("Name", accountWizardSettings.Get("Cube.BO.Name.Perfix") + collectedData["AccountSettings.CubeName"].ToString()),
 					new XAttribute("Path", Path.Combine(targetDirectory.FullName, "schema.xml")),
 					new XAttribute("Description", string.Empty),
 					new XAttribute("Flags", "1"),
@@ -94,19 +100,24 @@ namespace EdgeBI.Wizards.AccountWizard
 					new XElement("Properties",
 						new XAttribute("Value", "Pn0102{}")))));
 			//save and overite th file
-			applicationXml.Save(AppSettings.Get(this, "Folder.File.AplicationXml"));
+            applicationXml.Save(accountWizardSettings.Get("Folder.File.AplicationXml"));
 
 			//REFRESH PANORAMA ADMIN CONNECTION BY OPENING THE FILE WITH PROCCES (THE PATH DEFINE ON APP.CONFIG)
 
 			System.Diagnostics.Process Proc = new System.Diagnostics.Process();
-			Proc.StartInfo.FileName = AppSettings.Get(this, "Folder.File.PanoramaMsc");
+            Proc.StartInfo.FileName = accountWizardSettings.Get("Folder.File.PanoramaMsc");
+            Proc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
 			
 
             try
             {
                 Proc.Start();
                 System.Threading.Thread.Sleep(4000);
-                Proc.Kill();
+                uint code=(uint)Proc.ExitCode;
+                if (!Proc.HasExited)
+                    Proc.Kill();
+                else
+                    TerminateProcess(Proc.Handle, code);
             }
             catch (Exception)
             {
@@ -123,7 +134,7 @@ namespace EdgeBI.Wizards.AccountWizard
             string pattern;
 			foreach (FileInfo file in targetDirectory.GetFiles())
 			{
-				if (file.Name.ToLower() == "schema.xml" || file.Name.ToLower() == "properties.xml")
+				if (file.Name.ToLower() == "schema.xml" || file.Name.ToLower() == "properties.xml" || file.Name.ToLower()== "refreshbook")
 					continue;
 				else
 				{
@@ -136,23 +147,23 @@ namespace EdgeBI.Wizards.AccountWizard
 
 						
 					}
-                    pattern = RegxUtils.CreateExactMatchWholeWordRegExpression(AppSettings.Get(this, "Panorama.ServerToReplace")); //replace server 
+                    pattern = RegxUtils.CreateExactMatchWholeWordRegExpression(accountWizardSettings.Get("Panorama.ServerToReplace")); //replace server 
 					//CubeAdress
-					fileString = Regex.Replace(fileString, pattern, AppSettings.Get(this, "AnalysisServer.ConnectionString").Replace("DataSource=", string.Empty), RegexOptions.IgnoreCase);
+                    fileString = Regex.Replace(fileString, pattern, accountWizardSettings.Get("AnalysisServer.ConnectionString").Replace("DataSource=", string.Empty), RegexOptions.IgnoreCase);
 					//CubeName //few options here
 
-                    pattern = RegxUtils.CreateExactMatchWholeWordRegExpression(AppSettings.Get(this, "Panorama.ContentCubeToReplace"));//ContentCubeToReplace
+                    pattern = RegxUtils.CreateExactMatchWholeWordRegExpression(accountWizardSettings.Get("Panorama.ContentCubeToReplace"));//ContentCubeToReplace
 
-                    fileString = Regex.Replace(fileString, pattern, AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.Content.Name.Perfix") + lastExecutorStepData["AccountSettings.CubeName"].ToString(), RegexOptions.IgnoreCase);
+                    fileString = Regex.Replace(fileString, pattern, accountWizardSettings.Get("Cube.Content.Name.Perfix") + lastExecutorStepData["AccountSettings.CubeName"].ToString(), RegexOptions.IgnoreCase);
 
-                    pattern = RegxUtils.CreateExactMatchWholeWordRegExpression( AppSettings.Get(this, "Panorama.BoCubeToReplace")); //BoCubeToReplace
-                    fileString = Regex.Replace(fileString, pattern, AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.BO.Name.Perfix") + lastExecutorStepData["AccountSettings.CubeName"].ToString(), RegexOptions.IgnoreCase);
+                    pattern = RegxUtils.CreateExactMatchWholeWordRegExpression(accountWizardSettings.Get("Panorama.BoCubeToReplace")); //BoCubeToReplace
+                    fileString = Regex.Replace(fileString, pattern, accountWizardSettings.Get("Cube.BO.Name.Perfix") + lastExecutorStepData["AccountSettings.CubeName"].ToString(), RegexOptions.IgnoreCase);
 
 
-                    pattern = RegxUtils.CreateExactMatchWholeWordRegExpression(AppSettings.Get(this, "Panorama.CubeDbtoReplace"));//CubeDbtoReplace
-					fileString = Regex.Replace(fileString, pattern, AppSettings.Get(this,"AnalysisServer.Database"), RegexOptions.IgnoreCase);
-					
-					//Replace client specific measures +new active users+new users
+                    pattern = RegxUtils.CreateExactMatchWholeWordRegExpression(accountWizardSettings.Get("Panorama.CubeDbtoReplace"));//CubeDbtoReplace
+                    fileString = Regex.Replace(fileString, pattern, accountWizardSettings.Get("AnalysisServer.Database"), RegexOptions.IgnoreCase);
+
+                    //Replace client specific measures +Acquisitions +target AcquisitionS
 
 					foreach (KeyValuePair<string,object> input in lastExecutorStepData)
 					{
@@ -162,7 +173,7 @@ namespace EdgeBI.Wizards.AccountWizard
                             Replacment replacment = (Replacment)input.Value;
                             if (input.Key.StartsWith(AccSettClientSpecific, true, null))//measures
                             {
-                                pattern = RegxUtils.CreateExactMatchWholeWordRegExpression( "BO " + replacment.ReplaceFrom);
+                                pattern = RegxUtils.CreateExactMatchWholeWordRegExpression(replacment.ReplaceFrom);
                                 fileString = Regex.Replace(fileString, pattern, replacment.ReplaceTo, RegexOptions.IgnoreCase);
 
                             }
@@ -172,25 +183,30 @@ namespace EdgeBI.Wizards.AccountWizard
                                 fileString = Regex.Replace(fileString, pattern, replacment.ReplaceTo, RegexOptions.IgnoreCase);
 
                             }
-                            else if (input.Key == "AccountSettings.New Active Users")// replace new active users
+                            else if (input.Key.StartsWith(C_AccSettACQ))// Acquisitions
                             {
                                 if (input.Value.ToString() != " ")
                                 {
-
-                                    pattern = @"\bActives\b";
-                                    fileString = Regex.Replace(fileString, pattern, replacment.ReplaceTo, RegexOptions.IgnoreCase);
-
+                                    string[] acquisitions = accountWizardSettings.Get(input.Key).Split(',');
+                                    foreach (string acquisition in acquisitions)
+                                    {
+                                        pattern = @"\b" + acquisition + @"\b";
+                                        fileString = Regex.Replace(fileString, pattern, replacment.ReplaceTo, RegexOptions.IgnoreCase);
+                                    }
                                 }
 
                             }
-                            else if (input.Key == "AccountSettings.New Users") //new users Regs!!!!
+                            else if (input.Key.StartsWith(C_AccSettTargetACQ)) //TARGET Acquisitions
                             {
                                 if (input.Value.ToString() != " ")
                                 {
-                                    pattern = @"\bRegs\b";
-                                    fileString = Regex.Replace(fileString, pattern, replacment.ReplaceTo, RegexOptions.IgnoreCase);
+                                    string[] targetAcquisitions = accountWizardSettings.Get(input.Key).Split(',');
+                                    foreach (string targetAcquisition in targetAcquisitions)
+                                    {
+                                        pattern = @"\b" + targetAcquisition +@"\b";
+                                        fileString = Regex.Replace(fileString, pattern, replacment.ReplaceTo, RegexOptions.IgnoreCase);
+                                    }
                                 }
-
                             }						 
                         }
 					}				
@@ -207,12 +223,14 @@ namespace EdgeBI.Wizards.AccountWizard
 
 		private void CopyAllFilesAndFolders(DirectoryInfo templateSourceDirectory, DirectoryInfo targetDirectory,string newUsersChanged,string newActiverUsersChanged ,bool copyContent)
 		{
+            
+            
 			foreach (FileInfo file in templateSourceDirectory.GetFiles() )
 			{
-				if  ( file.Name.Equals("2. ROI by Actives.xml") && !string.IsNullOrEmpty(newUsersChanged)) //regs				
+                if (file.Name.Equals(accountWizardSettings.Get("Panorama.ROIViewsRegs")) && !string.IsNullOrEmpty(newUsersChanged)) //regs				
 					file.CopyTo(Path.Combine(targetDirectory.ToString(),string.Format("2. ROI by {0}.xml",newUsersChanged)), true);
 
-                else if (file.Name.Equals("2. ROI by Regs.xml") && !string.IsNullOrEmpty(newActiverUsersChanged)) //actives				
+                else if (file.Name.Equals(accountWizardSettings.Get("Panorama.ROIViewsActives")) && !string.IsNullOrEmpty(newActiverUsersChanged)) //actives				
                     file.CopyTo(Path.Combine(targetDirectory.ToString(), string.Format("2. ROI by {0}.xml", newActiverUsersChanged)), true);
                 else
                 {
@@ -222,7 +240,7 @@ namespace EdgeBI.Wizards.AccountWizard
                     }
                     else
                     {
-                        string[] contentFiles = AppSettings.Get(this, "Panorama.ContentViews").Split(',');
+                        string[] contentFiles = accountWizardSettings.Get("Panorama.ContentViews").Split(',');
                         bool copyFile = true;                        
                         foreach (string contentFile in contentFiles)
                         {

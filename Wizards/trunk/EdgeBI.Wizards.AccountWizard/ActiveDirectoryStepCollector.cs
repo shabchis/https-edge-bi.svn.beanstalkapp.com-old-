@@ -12,34 +12,39 @@ namespace EdgeBI.Wizards.AccountWizard
 		#region Protected mehods
 		protected override Dictionary<string, string> Validate(Dictionary<string, object> inputValues)
 		{
-			Dictionary<string, string> errors = new Dictionary<string, string>();
-			foreach (KeyValuePair<string, object> input in inputValues)
-			{
-				switch (input.Key)
-				{
-					case "UserName":
-						{
-							//Just example
-							if (input.Value.ToString().Length>20)
-							{
-								errors.Add(input.Key, "UserName is too long");
+            if (inputValues.ContainsKey(ApplicationIDKey))
+                SetAccountWizardSettingsByApllicationID(Convert.ToInt32(inputValues[ApplicationIDKey]));
+			Dictionary<string, string> errors=null; 
+            foreach (KeyValuePair<string, object> input in inputValues)
+            {
+                switch (input.Key)
+                {
+                    case "ActiveDirectory.UserName":
+                        {
+                            //Just example
+                            if (input.Value.ToString().Length>20)
+                            {
+                                if (errors == null)
+                                    errors = new Dictionary<string, string>();
+                                
+                                errors.Add(input.Key, "UserName is too long must be less then 20 char");
 								
-							}
-							break;
-						}
-					case "Password":
-						{
-							//errors.Add(input.Key, "Error test");
-							break;
-						}
-					case "FullName":
-						{
-							break;
-						}
-				}
+                            }
+                            break;
+                        }
+                    case "Password":
+                        {
+                            //errors.Add(input.Key, "Error test");
+                            break;
+                        }
+                    case "FullName":
+                        {
+                            break;
+                        }
+                }
 
 				
-			}
+            }
 			return errors;
 		}
 		protected override void OnInit()

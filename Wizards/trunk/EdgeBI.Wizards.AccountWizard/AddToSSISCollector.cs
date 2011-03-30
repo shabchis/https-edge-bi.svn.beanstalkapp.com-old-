@@ -9,6 +9,8 @@ namespace EdgeBI.Wizards.AccountWizard
 	{
 		protected override Dictionary<string, string> Validate(Dictionary<string, object> inputValues)
 		{
+            if (inputValues.ContainsKey(ApplicationIDKey))
+                SetAccountWizardSettingsByApllicationID(Convert.ToInt32(inputValues[ApplicationIDKey]));
 			return null;
 		}
 		protected override void OnInit()

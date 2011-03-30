@@ -14,20 +14,22 @@ namespace EdgeBI.Wizards.AccountWizard
         {
             Log.Write("Getting Create Cube executor data", LogMessageType.Information);
             this.ReportProgress(0.1f);
-            Dictionary<string, object> lastExecutorStepData = GetExecutorData("CreateNewCubeExecutor");
-            if (bool.Parse(lastExecutorStepData["AccountSettings.ProcessCubes"].ToString()) == true)
+            Dictionary<string, object> collectedData = this.GetCollectedData();
+            if (collectedData.ContainsKey(ApplicationIDKey))
+                SetAccountWizardSettingsByApllicationID(Convert.ToInt32(collectedData[ApplicationIDKey]));
+            if (bool.Parse(collectedData["AccountSettings.ProcessCubes"].ToString()) == true)
             {
 
 
                 using (Server analysisServer = new Server())
                 {
-                    analysisServer.Connect(AppSettings.Get(this, "AnalysisServer.ConnectionString"));
+                    analysisServer.Connect(accountWizardSettings.Get("AnalysisServer.ConnectionString"));
                     this.ReportProgress(0.2f);
-                     Database analysisDatabase = analysisServer.Databases.GetByName(AppSettings.Get(this, "AnalysisServer.Database"));
-                     
-                    Cube boCube =analysisDatabase.Cubes.Find( AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.BO.Name.Perfix") + lastExecutorStepData["AccountSettings.CubeName"].ToString());
-                   
-                    Cube contentCube = analysisDatabase.Cubes.Find(AppSettings.GetAbsolute("EdgeBI.Wizards.StepExecuter.Cube.Content.Name.Perfix") + lastExecutorStepData["AccountSettings.CubeName"].ToString());
+                    Database analysisDatabase = analysisServer.Databases.GetByName(accountWizardSettings.Get("AnalysisServer.Database"));
+
+                    Cube boCube = analysisDatabase.Cubes.Find(accountWizardSettings.Get("Cube.BO.Name.Perfix") + collectedData["AccountSettings.CubeName"].ToString());
+
+                    Cube contentCube = analysisDatabase.Cubes.Find(accountWizardSettings.Get("Cube.Content.Name.Perfix") + collectedData["AccountSettings.CubeName"].ToString());
 
                     try
                     {
@@ -44,6 +46,7 @@ namespace EdgeBI.Wizards.AccountWizard
                     catch (Exception ex)
                     {
                         Log.Write("Problem Prosessing BOCube", ex);
+                        throw;
                        
 
                     }
@@ -62,7 +65,7 @@ namespace EdgeBI.Wizards.AccountWizard
                     {
 
                         Log.Write("Problem Prosessing ContentCube", ex);
-                       
+                        throw;
                     }
                     this.ReportProgress(1);
 

@@ -8,7 +8,6 @@ using Easynet.Edge.Core.Services;
 using EdgeBI.Wizards.AccountWizard;
 using System.DirectoryServices;
 
-
 namespace EdgeBI.Wizards.AccountWizard
 {
 	class ActiveDirectoryStepExecutor : StepExecuter
@@ -20,15 +19,22 @@ namespace EdgeBI.Wizards.AccountWizard
 			
 			Log.Write("Getting collected data from suitable collector", LogMessageType.Information);
 
-			Dictionary<string, object> collectedData = this.GetStepCollectedData(Instance.Configuration.Options["ActiveDirectoryStepCollector"]);
+            Dictionary<string, object> collectedData = this.GetCollectedData();
+            if (collectedData.ContainsKey(ApplicationIDKey))
+                SetAccountWizardSettingsByApllicationID(Convert.ToInt32(collectedData[ApplicationIDKey]));
 			this.ReportProgress(0.5f);
 			
 			Log.Write("Creating user in active directory", LogMessageType.Information);
 			try
 			{
-				AddNewActiveDirectoryUser(collectedData["ActiveDirectory.UserName"].ToString(), collectedData["ActiveDirectory.Password"].ToString(), collectedData["ActiveDirectory.FullName"].ToString(), true);
-                this.SaveExecutorData(collectedData);
-                this.ReportProgress((float)0.5);
+                if (!string.IsNullOrEmpty(collectedData["ActiveDirectory.Password"].ToString()))
+                {
+                    AddNewActiveDirectoryUser(collectedData["ActiveDirectory.UserName"].ToString(), collectedData["ActiveDirectory.Password"].ToString(), collectedData["ActiveDirectory.FullName"].ToString(), true);
+                  //  this.SaveExecutorData(collectedData); todo: check why i did this line look like i dont need it
+                    UpdateOltpDataBase(collectedData);
+                    this.ReportProgress((float)0.9);
+                }
+                this.ReportProgress((float)1);
 			}
 			catch (Exception ex)
 			{
@@ -42,10 +48,12 @@ namespace EdgeBI.Wizards.AccountWizard
 				this.ReportProgress((float)1);
 
 			}
-			Log.Write(string.Format("User {0} created in active directory",collectedData["UserName"].ToString()), LogMessageType.Information);
+            Log.Write(string.Format("User {0} created in active directory", collectedData["ActiveDirectory.UserName"].ToString()), LogMessageType.Information);
 			
 			return base.DoWork();
 		}
+
+        
 		/// <summary>
 		/// The AddNew function will add new user acount to Active Directory
 		/// </summary>
@@ -55,9 +63,9 @@ namespace EdgeBI.Wizards.AccountWizard
 		/// <param name="AccountActive"></param>
 		public void AddNewActiveDirectoryUser(string strLogin, string strPwd, string strFullName, bool AccountActive)
 		{
-			string ldapPath=Encryptor.Decrypt(AppSettings.Get(this,"LDAP.Path"));
-			string ldapUserName=Encryptor.Decrypt(AppSettings.Get(this,"LDAP.UserName"));
-			string ldapPassword = Encryptor.Decrypt(AppSettings.Get(this, "LDAP.Passwrod"));
+			string ldapPath=accountWizardSettings.Get("LDAP.Path");
+            string ldapUserName = Encryptor.Decrypt(accountWizardSettings.Get( "LDAP.UserName"));
+            string ldapPassword = Encryptor.Decrypt(accountWizardSettings.Get("LDAP.Passwrod"));
 			
 
 			DirectoryEntry obDirEntry = new DirectoryEntry(ldapPath, ldapUserName, ldapPassword);
@@ -78,14 +86,15 @@ namespace EdgeBI.Wizards.AccountWizard
 			if (!userFound) //If User Not Found In System
 			{
 				DirectoryEntry obUser = obDirEntry.Children.Add("CN=" + strLogin, "user");
-
+                
 				obUser.Properties["sAMAccountName"].Add(strLogin);
-
+                obUser.Properties["userPrincipalName"].Value = strLogin + "@Edge.BI"; 
 				obUser.CommitChanges();
 				object[] oPassword = new object[] { strPwd };
 				object ret = obUser.Invoke("SetPassword", strPwd);
 
 				obUser.CommitChanges();
+                
 				//UF_DONT_EXPIRE_PASSWD 0x10000
 				UserAccountControlFlags exp = (UserAccountControlFlags)obUser.Properties["userAccountControl"].Value;
 				obUser.Properties["userAccountControl"].Value = exp | UserAccountControlFlags.UF_DONT_EXPIRE_PASSWD; //what is this?
@@ -97,6 +106,7 @@ namespace EdgeBI.Wizards.AccountWizard
 					obUser.Properties["userAccountControl"].Value = val & ~UserAccountControlFlags.UF_ACCOUNTDISABLE;  //what is this?
 					obUser.CommitChanges();
 				}
+                
 				obUser.Close();
 				obUser.Dispose();
 			}
@@ -110,6 +120,7 @@ namespace EdgeBI.Wizards.AccountWizard
 	[Flags]
 	public enum UserAccountControlFlags
 	{
+        PASSWD_CANT_CHANGE=0x0040,
 		UF_DONT_EXPIRE_PASSWD = 0x10000,
 		UF_ACCOUNTDISABLE = 0x00002
 	}
