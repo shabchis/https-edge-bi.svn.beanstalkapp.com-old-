@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7746C0C3-F73D-4B0F-A52E-FA635083BD72}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MyNewWizard</RootNamespace>
+    <AssemblyName>MyNewWizard</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="accountWizardSettings.cs" />
+    <Compile Include="ActiveDirectoryStep.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ActiveDirectoryStep.Designer.cs">
+      <DependentUpon>ActiveDirectoryStep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateAccount.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CreateAccount.Designer.cs">
+      <DependentUpon>CreateAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateNewCube.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CreateNewCube.Designer.cs">
+      <DependentUpon>CreateNewCube.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateNewRole.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CreateNewRole.Designer.cs">
+      <DependentUpon>CreateNewRole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExecutePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExecutePage.Designer.cs">
+      <DependentUpon>ExecutePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmWizard.Designer.cs">
+      <DependentUpon>FrmWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StartPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StartPage.Designer.cs">
+      <DependentUpon>StartPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Summary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Summary.Designer.cs">
+      <DependentUpon>Summary.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="ActiveDirectoryStep.resx">
+      <DependentUpon>ActiveDirectoryStep.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateAccount.resx">
+      <DependentUpon>CreateAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateNewCube.resx">
+      <DependentUpon>CreateNewCube.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateNewRole.resx">
+      <DependentUpon>CreateNewRole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExecutePage.resx">
+      <DependentUpon>ExecutePage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmWizard.resx">
+      <DependentUpon>FrmWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="StartPage.resx">
+      <DependentUpon>StartPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Summary.resx">
+      <DependentUpon>Summary.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Core\Core.csproj">
+      <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EdgeBI.Wizards\EdgeBI.Wizards.csproj">
+      <Project>{8485D1C5-BFFF-4A48-AD8E-224CBA161265}</Project>
+      <Name>EdgeBI.Wizards</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WizardForm\WizardForm.csproj">
+      <Project>{E74B8C29-AC83-40E2-8F63-6E0FF58D9EF7}</Project>
+      <Name>WizardForm</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
