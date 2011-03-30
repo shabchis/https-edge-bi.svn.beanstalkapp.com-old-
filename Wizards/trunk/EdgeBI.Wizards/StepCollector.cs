@@ -37,6 +37,7 @@ namespace EdgeBI.Wizards
     {
         #region consts
         protected const string System_Field_Step_Description = "StepDescription";
+        protected const string ApplicationIDKey = "AccountSettings.ApplicationID";
         #endregion
 
         #region Fields
@@ -44,6 +45,7 @@ namespace EdgeBI.Wizards
         protected ServiceHost StepCollectorHost;
         protected string StepName;
         protected string StepDescription;
+        protected AccountWizardSettings accountWizardSettings;
         /// <summary>
         /// Return the wizard session data
         /// </summary>
@@ -182,9 +184,28 @@ namespace EdgeBI.Wizards
 
 
             StepCollectorHost.Open();
+            WriteInstanceData(WizardSession.SessionID, Instance.InstanceID);
 
 
 
+        }
+        private void WriteInstanceData(int sessionID, long instanceID)
+        {
+            using (DataManager.Current.OpenConnection())
+            {
+                using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO Session_Instance_Data
+                                                                         (Session,InstanceID)
+                                                                         VALUES
+                                                                        (@Session:Int,@InstanceID:bigint)"))
+                {
+                    sqlCommand.Parameters["@Session"].Value = sessionID;
+                    sqlCommand.Parameters["@InstanceID"].Value = instanceID;
+                    sqlCommand.ExecuteNonQuery();
+
+
+                }
+
+            }
         }
         protected override ServiceOutcome DoWork()
         {
@@ -252,6 +273,10 @@ namespace EdgeBI.Wizards
         {
             if (StepCollectorHost != null && StepCollectorHost.State == System.ServiceModel.CommunicationState.Opened)
                 StepCollectorHost.Close();
+        }
+        protected void SetAccountWizardSettingsByApllicationID(int apllicationID)
+        {
+            accountWizardSettings = new AccountWizardSettings(apllicationID);
         }
         #endregion
 
