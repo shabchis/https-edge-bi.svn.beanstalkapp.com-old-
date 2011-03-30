@@ -20,7 +20,7 @@ namespace SchedulerTester
 		private Scheduler _scheduler;
 		private Dictionary<SchedulingData, ServiceInstance> _scheduledServices = new Dictionary<SchedulingData, ServiceInstance>();
 		public delegate void SetLogMethod(string lineText);
-		public delegate void UpdateGridMethod(legacy.ServiceInstance serviceInstance);
+		public delegate void UpdateGridMethod(legacy.ServiceInstance serviceInstance,legacy.ServiceState stateAfter);
 		SetLogMethod setLogMethod;
 		UpdateGridMethod updateGridMethod;
 		public frmSchedulingControl()
@@ -126,7 +126,7 @@ namespace SchedulerTester
 			try
 			{
 				legacy.ServiceInstance instance = (Easynet.Edge.Core.Services.ServiceInstance)sender;
-				this.Invoke(updateGridMethod, new Object[] { instance });
+				this.Invoke(updateGridMethod, new Object[] { instance,e.StateAfter });
 
 
 				this.Invoke(setLogMethod, new Object[] { string.Format("\n{0}: {1} is {2} {3}\r\n", instance.AccountID, instance.Configuration.Name, e.StateAfter, DateTime.Now.ToString("dd/MM/yy HH:mm")) });
@@ -222,7 +222,7 @@ namespace SchedulerTester
 		}
 
 
-		private void UpdateGridData(legacy.ServiceInstance serviceInstance)
+		private void UpdateGridData(legacy.ServiceInstance serviceInstance, legacy.ServiceState stateAfter)
 		{
 			try
 			{
@@ -230,9 +230,9 @@ namespace SchedulerTester
 				{
 					if (Object.Equals(row.Tag, serviceInstance))
 					{
-						row.Cells["dynamicStaus"].Value = serviceInstance.State;
+						row.Cells["dynamicStaus"].Value = stateAfter;
 
-						Color color = GetColorByState(serviceInstance.State, serviceInstance.Outcome);
+                        Color color = GetColorByState(stateAfter, serviceInstance.Outcome);
 						row.DefaultCellStyle.BackColor = color;
 					}
 				}
