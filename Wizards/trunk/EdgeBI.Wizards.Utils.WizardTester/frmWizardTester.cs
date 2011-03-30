@@ -476,6 +476,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
             stepCollectRequest.StepName = _nextStepName;
             stepCollectRequest.CollectedValues = new Dictionary<string, object>();
             Dictionary<string, object> collectedValues = new Dictionary<string, object>();
+            collectedValues.Add("AccountSettings.BI_Scope_ID", txtScopeID.Text.Trim());
             collectedValues.Add("ActiveDirectory.UserName", txtUserName.Text.Trim());
             collectedValues.Add("ActiveDirectory.Password", txtPassword.Text.Trim());
             collectedValues.Add("ActiveDirectory.FullName", txtFullName.Text.Trim());
@@ -589,9 +590,15 @@ namespace EdgeBI.Wizards.Utils.WizardTester
             stepCollectRequest.StepName = _nextStepName;
             stepCollectRequest.CollectedValues = new Dictionary<string, object>();
             Dictionary<string, object> collectedValues = new Dictionary<string, object>();
+            collectedValues.Add("AccountSettings.BI_Scope_ID", txtScopeID.Text.Trim());
             collectedValues.Add("AccountSettings.RoleName", txtRoleName.Text.Trim());
             collectedValues.Add("AccountSettings.RoleID", txtRoleID.Text.Trim());
-            collectedValues.Add("AccountSettings.RoleMemberName", txtRoleMemberName.Text.Trim());
+            if (!string.IsNullOrEmpty(txtRoleMemberName.Text.Trim()))
+            {
+                collectedValues.Add("AccountSettings.RoleMemberName", txtRoleMemberName.Text.Trim());
+                
+            }
+           
             stepCollectRequest.CollectedValues = collectedValues;
 
 
@@ -648,7 +655,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
                                 }
                             case StepResult.Done:
                                 {
-                                    txtLog.Text = "Finsish collecting from all steps\nready to get summary or execute:";
+                                    
 
                                     break;
                                 }
@@ -776,7 +783,7 @@ namespace EdgeBI.Wizards.Utils.WizardTester
 
 
 
-            collectedValues.Add("AccountSettings.Scope_ID", txtScopeID.Text.Trim());
+            collectedValues.Add("AccountSettings.BI_Scope_ID", txtScopeID.Text.Trim());
             collectedValues.Add("AccountSettings.CubeName", txtCubeName.Text.Trim());
             collectedValues.Add("AccountSettings.CubeID", txtCubeName.Text.Trim());
 
@@ -1084,8 +1091,10 @@ namespace EdgeBI.Wizards.Utils.WizardTester
                 request.Method = "POST";
                 request.ContentType = "application/xml";
                 request.ContentLength = 0;
-                WebResponse response = request.GetResponse();
+                request.Timeout = 200000;
                 
+                WebResponse response = request.GetResponse();
+              
                 _testerTimer.Interval = 10000;
                 _testerTimer.SourceObject = "Execute";
                 _testerTimer.Start();
@@ -1569,6 +1578,16 @@ namespace EdgeBI.Wizards.Utils.WizardTester
             }
            
             
+        }
+
+        private void txtScopName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtScopeID_TextChanged(object sender, EventArgs e)
+        {
+
         }
        
 
