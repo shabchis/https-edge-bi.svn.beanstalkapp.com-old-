@@ -35,13 +35,11 @@ namespace Easynet.Edge.Core
 		/// </summary>
 		public event EventHandler Changed;
 
-		public SettingsCollection()
-			: base(StringComparer.InvariantCultureIgnoreCase)
+		public SettingsCollection(): base(StringComparer.InvariantCultureIgnoreCase)
 		{
 		}
 
-		public SettingsCollection(string definition)
-			: this()
+		public SettingsCollection(string definition): this()
 		{
 			this.Definition = definition;
 		}
@@ -134,12 +132,18 @@ namespace Easynet.Edge.Core
 			}
 		}
 
-		public void Merge(SettingsCollection otherCollection)
+		public void Merge(Dictionary<string,string> otherCollection)
 		{
 			foreach (KeyValuePair<string, string> entry in otherCollection)
 			{
 				this[entry.Key] = (string)entry.Value;
 			}
+		}
+
+		// This is for backwards compatibility with old assemblies.
+		public void Merge(SettingsCollection otherCollection)
+		{
+			Merge(otherCollection);
 		}
 
 		public Dictionary<string, string> ToDictionary()
