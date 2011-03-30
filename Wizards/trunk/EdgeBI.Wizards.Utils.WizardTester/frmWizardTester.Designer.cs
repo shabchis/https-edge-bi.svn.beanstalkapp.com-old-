@@ -172,6 +172,7 @@
             // 
             this.txtPassword.Location = new System.Drawing.Point(140, 48);
             this.txtPassword.Name = "txtPassword";
+            this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(186, 20);
             this.txtPassword.TabIndex = 1;
             // 
@@ -805,6 +806,7 @@
             this.txtScopName.Name = "txtScopName";
             this.txtScopName.Size = new System.Drawing.Size(186, 20);
             this.txtScopName.TabIndex = 0;
+            this.txtScopName.TextChanged += new System.EventHandler(this.txtScopName_TextChanged);
             this.txtScopName.Leave += new System.EventHandler(this.txtScopName_Leave);
             // 
             // label16
@@ -846,6 +848,7 @@
             this.txtScopeID.Name = "txtScopeID";
             this.txtScopeID.Size = new System.Drawing.Size(186, 20);
             this.txtScopeID.TabIndex = 1;
+            this.txtScopeID.TextChanged += new System.EventHandler(this.txtScopeID_TextChanged);
             this.txtScopeID.Leave += new System.EventHandler(this.txtScopeID_Leave);
             this.txtScopeID.Validated += new System.EventHandler(this.txtScopeID_Validated);
             // 
@@ -987,6 +990,7 @@
             // 
             // prgOverAll
             // 
+            this.prgOverAll.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.prgOverAll.Location = new System.Drawing.Point(222, 724);
             this.prgOverAll.Name = "prgOverAll";
             this.prgOverAll.Size = new System.Drawing.Size(558, 23);

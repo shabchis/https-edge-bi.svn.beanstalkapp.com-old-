@@ -123,6 +123,10 @@
       <Project>{8485D1C5-BFFF-4A48-AD8E-224CBA161265}</Project>
       <Name>EdgeBI.Wizards</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WizardForm\WizardForm.csproj">
+      <Project>{E74B8C29-AC83-40E2-8F63-6E0FF58D9EF7}</Project>
+      <Name>WizardForm</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
