@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MyNewWizard.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CubeNameStartWith" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BO</Value>
+    </Setting>
+    <Setting Name="RoleMemberName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Edge\BIadmin</Value>
+    </Setting>
+    <Setting Name="targetCPADefault" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Target {0} CPA</Value>
+    </Setting>
+    <Setting Name="FloatDiagram" Type="System.String" Scope="User">
+      <Value Profile="(Default)">CubeBuilderFlow.pdf</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
