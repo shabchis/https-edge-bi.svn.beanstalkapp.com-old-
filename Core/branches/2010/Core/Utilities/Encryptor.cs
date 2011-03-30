@@ -32,7 +32,7 @@ namespace Easynet.Edge.Core.Utilities
 		/// <param name="str"></param>
 		/// <param name="offsets"></param>
 		/// <returns></returns>
-		public static string Enc(string str)
+		public static string Encrypt(string str)
 		{
 			Easynet.Edge.Core.Encryption.Data raw = new Easynet.Edge.Core.Encryption.Data(str);
 			Easynet.Edge.Core.Encryption.Data encrypted = _globalEncryptor.Encrypt(raw);
@@ -40,18 +40,30 @@ namespace Easynet.Edge.Core.Utilities
 			return encrypted.ToHex();
 		}
 
+		// For backwards compatibility.
+		public static string Encrypt(string str, string notInUse)
+		{
+			return Encrypt(str);
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="encodedStr"></param>
 		/// <returns></returns>
-		public static string Dec(string encodedStr)
+		public static string Decrypt(string encodedStr)
 		{
 			Easynet.Edge.Core.Encryption.Data encrypted = new Easynet.Edge.Core.Encryption.Data();
 			encrypted.Hex = encodedStr;
 
 			Easynet.Edge.Core.Encryption.Data decrypted = _globalEncryptor.Decrypt(encrypted);
 			return decrypted.ToString();
+		}
+
+		// For backwards compatibility.
+		public static string Decrypt(string str, string notInUse)
+		{
+			return Decrypt(str);
 		}
 
 		//==============================
@@ -68,7 +80,7 @@ namespace Easynet.Edge.Core.Utilities
 			_instanceEncryptor.Key = new Easynet.Edge.Core.Encryption.Data(key);
 		}
 
-		public string Encrypt(string str)
+		public string Enc(string str)
 		{
 			Easynet.Edge.Core.Encryption.Data raw = new Easynet.Edge.Core.Encryption.Data(str);
 			Easynet.Edge.Core.Encryption.Data encrypted = _instanceEncryptor.Encrypt(raw);
@@ -76,7 +88,7 @@ namespace Easynet.Edge.Core.Utilities
 			return encrypted.ToHex();
 		}
 
-		public string Decrypt(string encodedStr)
+		public string Dec(string encodedStr)
 		{
 			Easynet.Edge.Core.Encryption.Data encrypted = new Easynet.Edge.Core.Encryption.Data();
 			encrypted.Hex = encodedStr;
