@@ -23,6 +23,7 @@ namespace Easynet.Edge.Services.Reports
 						//Create Data Row
 						foreach (ReportRowEntity row in report)
 						{
+							
 							StringBuilder _row = new StringBuilder();
 							//_row.Append(); // AccountName
 							//_row.Append("\t" + _curDate.ToString());
