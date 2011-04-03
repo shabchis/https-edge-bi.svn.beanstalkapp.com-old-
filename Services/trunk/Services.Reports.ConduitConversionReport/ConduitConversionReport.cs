@@ -12,7 +12,7 @@ using Easynet.Edge.Core.Utilities;
 
 namespace Easynet.Edge.Services.Reports
 {
-	public class ConduitConversionReport : Service   
+	public class ConduitConversionReport : Service
 	{
 		SqlCommand _cmd;
 
