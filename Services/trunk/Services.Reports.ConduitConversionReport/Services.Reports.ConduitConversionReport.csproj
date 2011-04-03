@@ -8,8 +8,8 @@
     <ProjectGuid>{1BF3AF37-9626-45F9-9CFE-0E285C86F9CF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Services.Reports.ConduitConversionReport</RootNamespace>
-    <AssemblyName>Services.Reports.ConduitConversionReport</AssemblyName>
+    <RootNamespace>Edge.Services.Reports.ConduitConversionReport</RootNamespace>
+    <AssemblyName>Edge.Services.Reports.ConduitConversionReport</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,8 +32,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -61,7 +65,9 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
+    -->
   <Target Name="AfterBuild">
+  <Copy SkipUnchangedFiles="false" SourceFiles="$(TargetPath)" DestinationFiles="..\..\Applications\EdgeServiceHost\bin\Debug\Services\$(TargetFileName)" />
   </Target>
-  -->
+
 </Project>

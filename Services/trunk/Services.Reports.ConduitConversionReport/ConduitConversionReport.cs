@@ -9,8 +9,9 @@ using System.Text.RegularExpressions;
 using System.Reflection;
 using Easynet.Edge.Core.Configuration;
 using Easynet.Edge.Core.Utilities;
+using Services.Reports.ConduitConversionReport;
 
-namespace Services.Reports.ConduitConversionReport
+namespace Easynet.Edge.Services.Reports
 {
 	public class ConduitConversionReport : Service   
 	{
@@ -95,9 +96,10 @@ namespace Services.Reports.ConduitConversionReport
 						}
 					}
 				}
-
+				
 				param.Value = value;
-				Log.Write(string.Format("ExecuteStoredProcedureService Value{0} ", value), LogMessageType.Information);
+				
+				Log.Write(string.Format("ExecuteStoredProcedureService Value{0} ", value), LogMessageType.QA);
 			}
 
 		}
