@@ -50,9 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConduitConversionReport.cs" />
+    <Compile Include="FileUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report.cs" />
     <Compile Include="ReportRowEntity.cs" />
+    <Compile Include="Smtp.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core\Core.csproj">
@@ -67,7 +69,6 @@
   </Target>
     -->
   <Target Name="AfterBuild">
-  <Copy SkipUnchangedFiles="false" SourceFiles="$(TargetPath)" DestinationFiles="..\..\Applications\EdgeServiceHost\bin\Debug\Services\$(TargetFileName)" />
+    <Copy SkipUnchangedFiles="false" SourceFiles="$(TargetPath)" DestinationFiles="..\..\Applications\EdgeServiceHost\bin\Debug\Services\$(TargetFileName)" />
   </Target>
-
 </Project>
