@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
 
-namespace Services.Reports.ConduitConversionReport
+namespace Easynet.Edge.Services.Reports
 {
 	public class ReportRowEntity
 	{
