@@ -41,12 +41,13 @@ namespace MyScheduler.Objects
 			s1.GetHashCode() == s2.GetHashCode(); // this is true!!
 			*/
 
-			return String.Format("ConfigurationID:{0},SelectedDay:{1},SelectedHour:{2},RuleScope:{3},TimeToRun:{4},ProfileID:{5}", Configuration.ID, SelectedDay, SelectedHour, Rule.Scope,TimeToRun,profileID);
+			return String.Format("ConfigurationName:{0},SelectedDay:{1},SelectedHour:{2},RuleScope:{3},TimeToRun:{4},ProfileID:{5}", Configuration.BaseConfiguration.Name, SelectedDay, SelectedHour, Rule.Scope,TimeToRun,profileID);
 		}
 
 		public override int GetHashCode()
 		{
-			return this.ToString().GetHashCode();
+            int returnType=this.ToString().GetHashCode();
+            return returnType;
 		}
 
 		public override bool Equals(object obj)
