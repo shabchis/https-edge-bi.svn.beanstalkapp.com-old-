@@ -14,7 +14,7 @@ namespace Services.Reports.ConduitConversionReport
 		}
 		public ReportRowEntity(SqlDataReader reader)
 		{
-			DayCode = Convert.ToUInt16(reader[0]);
+			DayCode = Convert.ToUInt64(reader[0]);
 			Campaign = Convert.ToString(reader[1]);
 			AdGroup = Convert.ToString(reader[2]);
 			DestUrl = Convert.ToString(reader[3]);
@@ -25,7 +25,7 @@ namespace Services.Reports.ConduitConversionReport
 			SignUpConv = Convert.ToUInt64(reader[8]);
 		}
 
-		UInt16 DayCode { get; set; }
+		UInt64 DayCode { get; set; }
 		String Campaign { get; set; }
 		String AdGroup { get; set; }
 		String DestUrl { get; set; }
