@@ -16,7 +16,7 @@ namespace SchedulerTester
 {
 	public partial class frmSchedulingControl : Form
 	{
-		StringBuilder _str = new StringBuilder();
+		StringBuilder _strNotScheduled = new StringBuilder();
 		private Scheduler _scheduler;
 		private Dictionary<SchedulingData, ServiceInstance> _scheduledServices = new Dictionary<SchedulingData, ServiceInstance>();
 		public delegate void SetLogMethod(string lineText);
@@ -107,7 +107,7 @@ namespace SchedulerTester
 			{
 				legacy.ServiceInstance instance = (legacy.ServiceInstance)sender;
 				this.Invoke(setLogMethod, new Object[] { string.Format("\nChild Service: {0} requestedd {1}\r\n", e.RequestedService.Configuration.Name, DateTime.Now.ToString("dd/MM/yy HH:mm")) });
-
+                
 				e.RequestedService.ChildServiceRequested += new EventHandler<legacy.ServiceRequestedEventArgs>(LegacyInstance_ChildServiceRequested);
 				e.RequestedService.StateChanged += new EventHandler<legacy.ServiceStateChangedEventArgs>(LegacyInstance_StateChanged);
 				e.RequestedService.Initialize();
@@ -157,7 +157,7 @@ namespace SchedulerTester
 				using (StreamWriter writer = new StreamWriter(Path.Combine(Application.StartupPath, "log.txt"), true, Encoding.Unicode))
 				{
 					ScheduledInformationEventArgs ee = (ScheduledInformationEventArgs)e;
-					_str.Clear();
+				
 					_scheduledServices.Clear();
 
 
@@ -166,7 +166,7 @@ namespace SchedulerTester
 
 					foreach (KeyValuePair<SchedulingData, ServiceInstance> notSchedInfo in ee.NotScheduledInformation)
 					{
-						_str.AppendLine(string.Format("Service {0} with profile {1} not scheduled", notSchedInfo.Value.ServiceName, notSchedInfo.Key.profileID));
+						_strNotScheduled.AppendLine(string.Format("Service {0} with profile {1} not scheduled", notSchedInfo.Value.ServiceName, notSchedInfo.Key.profileID));
 
 						writer.WriteLine(string.Format("Service {0} with profile {1} not scheduled", notSchedInfo.Value.ServiceName, notSchedInfo.Key.profileID));
 
@@ -182,10 +182,9 @@ namespace SchedulerTester
 					}
 					GetScheduleServices();
 
-					if (!string.IsNullOrEmpty(_str.ToString()))
+					if (!string.IsNullOrEmpty(_strNotScheduled.ToString()))
 					{
-						frmNotSched frm = new frmNotSched(_str.ToString());
-						frm.Show();
+                        this.Invoke(setLogMethod, new Object[] { _strNotScheduled.ToString()});
 					}
 				}
 			}
@@ -201,7 +200,7 @@ namespace SchedulerTester
 		{
 			try
 			{
-				_str.Clear();
+				_strNotScheduled.Clear();
 				_scheduledServices.Clear();
 				_scheduler.NewSchedule();
 			}
@@ -395,7 +394,7 @@ namespace SchedulerTester
 		{
 			try
 			{
-				_str.Clear();
+				_strNotScheduled.Clear();
 				_scheduledServices.Clear();
 			}
 			catch (Exception ex)
