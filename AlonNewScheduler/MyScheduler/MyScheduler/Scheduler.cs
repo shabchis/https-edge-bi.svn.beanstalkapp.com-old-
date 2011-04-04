@@ -450,7 +450,7 @@ namespace MyScheduler
 		{
 			//Get all services with same configurationID
 			var servicesWithSameConfiguration = from s in _scheduledServices
-												where s.Value.BaseConfigurationID == schedulingData.Configuration.BaseConfiguration.ID &&
+												where s.Key.Configuration.Name == schedulingData.Configuration.BaseConfiguration.Name && //should be id but no id yet
 												s.Value.LegacyInstance.State != Legacy.ServiceState.Ended &&
 												s.Value.Deleted == false //runnig or not started yet
 												orderby s.Value.StartTime ascending
@@ -460,7 +460,7 @@ namespace MyScheduler
 
 			var servicesWithSameProfile = from s in _scheduledServices
 										  where s.Value.ProfileID == schedulingData.Configuration.SchedulingProfile.ID &&
-										  s.Value.BaseConfigurationID == schedulingData.Configuration.BaseConfiguration.ID &&
+                                          s.Key.Configuration.Name == schedulingData.Configuration.BaseConfiguration.Name &&
 										  s.Value.LegacyInstance.State != Legacy.ServiceState.Ended &&
 										  s.Value.Deleted == false //not deleted
 										  orderby s.Value.StartTime ascending
