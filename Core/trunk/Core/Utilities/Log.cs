@@ -34,7 +34,8 @@ namespace Easynet.Edge.Core.Utilities
 	{
 		Error = 1,
 		Warning = 2,
-		Information = 3
+		Information = 3,
+		QA = 4
 	};
 
 	internal class LogEntry
