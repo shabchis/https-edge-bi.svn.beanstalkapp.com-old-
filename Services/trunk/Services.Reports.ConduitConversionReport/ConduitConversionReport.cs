@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Reflection;
 using Easynet.Edge.Core.Configuration;
 using Easynet.Edge.Core.Utilities;
+using System.IO;
 
 namespace Easynet.Edge.Services.Reports
 {
@@ -108,9 +109,9 @@ namespace Easynet.Edge.Services.Reports
 		{
 			// Check for a File save path string
 			string path = Instance.Configuration.Options["FileSavePath"];
+			string file="";
 			if (String.IsNullOrEmpty(path))
 				throw new ConfigurationException("Missing configuration option \"FileSavePath\".");
-			//Regex.Replace
 			using (DataManager.Current.OpenConnection())
 			{
 				Report _report = new Report();
@@ -128,9 +129,12 @@ namespace Easynet.Edge.Services.Reports
 				}
 				if (_report.rows.Count > 0)
 				{
-					CsvFile.CreateUnicode(_report.rows, path);
+					file = CsvFile.CreateUnicode(_report.rows, path);
 				}
+				path = System.IO.Path.Combine(path,file);
 
+				if (path.EndsWith("csv"))
+					Smtp.Send("Conduit Daily Report", false, null, path);
 			}
 
 			return ServiceOutcome.Success;

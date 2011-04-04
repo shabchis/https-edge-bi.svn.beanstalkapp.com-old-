@@ -27,23 +27,22 @@ namespace Easynet.Edge.Services.Reports
 						{
 							StringBuilder _row = new StringBuilder();
 							_row.Append(row.DayCode);
-							_row.Append(row.Campaign);
-							_row.Append(row.AdGroup);
-							_row.Append(row.DestUrl);
-							_row.Append(row.Imps);
-							_row.Append(row.Clicks);
-							_row.Append(row.CTR);
-							_row.Append(row.Cost);
-							_row.Append(row.SignUpConv);
+							_row.Append("\t"+row.Campaign);
+							_row.Append("\t" + row.AdGroup);
+							_row.Append("\t" + row.DestUrl);
+							_row.Append("\t" + row.Imps.ToString());
+							_row.Append("\t" + row.Clicks.ToString());
+							_row.Append("\t" + row.CTR.ToString());
+							_row.Append("\t" + row.Cost.ToString());
+							_row.Append("\t" + row.SignUpConv.ToString());
 							sw.WriteLine(_row);
 						}
 						sw.Close();
 					}
 				}
-
+				return _path + _fileName + ".csv";
 			}
 			return "";
-
 		}
 
 		private string CreateHeaders()
