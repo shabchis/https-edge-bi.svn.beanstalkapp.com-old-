@@ -25,15 +25,15 @@ namespace Easynet.Edge.Services.Reports
 			SignUpConv = Convert.ToUInt64(reader[8]);
 		}
 
-		UInt64 DayCode { get; set; }
-		String Campaign { get; set; }
-		String AdGroup { get; set; }
-		String DestUrl { get; set; }
-		UInt64 Imps { get; set; }
-		UInt64 Clicks { get; set; }
-		UInt64 CTR { get; set; }
-		UInt64 Cost { get; set; }
-		UInt64 SignUpConv { get; set; }
+		public UInt64 DayCode { get; set; }
+		public String Campaign { get; set; }
+		public String AdGroup { get; set; }
+		public String DestUrl { get; set; }
+		public UInt64 Imps { get; set; }
+		public UInt64 Clicks { get; set; }
+		public UInt64 CTR { get; set; }
+		public UInt64 Cost { get; set; }
+		public UInt64 SignUpConv { get; set; }
 
 	}
 }

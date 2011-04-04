@@ -8,26 +8,33 @@ namespace Easynet.Edge.Services.Reports
 {
 	public class FileUtils
 	{
+		string _fileName = "ConduitReport" + DateTime.Now.ToLongDateString();
 		public string CreateUnicode(List<ReportRowEntity> report, string _path)
 		{
 			if (!string.IsNullOrEmpty(_path))
 			{
-
 				var _headers = CreateHeaders();
-				var fi = new FileInfo(_path + "filename" + ".xls");
+				var fi = new FileInfo(_path + _fileName + ".csv");
 				using (var stream = fi.Open(FileMode.Create, FileAccess.Write))
 				{
 					using (StreamWriter sw = new StreamWriter(stream, Encoding.Unicode))
 					{
+						//Write Headers to file
 						sw.WriteLine(_headers);
-						//Create Data Row
+
+						//Write Rows to file
 						foreach (ReportRowEntity row in report)
 						{
-							
 							StringBuilder _row = new StringBuilder();
-							//_row.Append(); // AccountName
-							//_row.Append("\t" + _curDate.ToString());
-							//_row.Append("\t" + gw.ToString()); 
+							_row.Append(row.DayCode);
+							_row.Append(row.Campaign);
+							_row.Append(row.AdGroup);
+							_row.Append(row.DestUrl);
+							_row.Append(row.Imps);
+							_row.Append(row.Clicks);
+							_row.Append(row.CTR);
+							_row.Append(row.Cost);
+							_row.Append(row.SignUpConv);
 							sw.WriteLine(_row);
 						}
 						sw.Close();
@@ -45,8 +52,9 @@ namespace Easynet.Edge.Services.Reports
 			List<string> Row = new List<string>();
 
 			//TO DO:  Get Headers from config file section conduit report email
+	
 			List<string> Headers = new List<string>(){
-				"AccountName","Day_Code","Gateway_id"
+				"DayCode","Campaign","AdGroup","DestUrl","Imps","Clicks","CTR","Cost","SignUpConv"
 			};
 			foreach (var h in Headers)
 			{

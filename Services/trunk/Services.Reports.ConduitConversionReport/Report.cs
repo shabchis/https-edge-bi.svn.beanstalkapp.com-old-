@@ -18,7 +18,7 @@ namespace Easynet.Edge.Services.Reports
 			rows.Add(row);
 		}
 
-		List<ReportRowEntity> rows;
+		public List<ReportRowEntity> rows;
 	}
 	
 }
