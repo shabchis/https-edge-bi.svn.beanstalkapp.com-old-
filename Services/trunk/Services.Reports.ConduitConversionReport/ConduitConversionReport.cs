@@ -27,6 +27,7 @@ namespace Easynet.Edge.Services.Reports
 			if (Instance.Configuration.Options.TryGetValue("ConnectionString", out conn))
 				DataManager.ConnectionString = conn;
 
+			
 			// Check for a custom timeout
 			string timeoutStr;
 			TimeSpan _cmdTimeOut;
@@ -105,9 +106,15 @@ namespace Easynet.Edge.Services.Reports
 
 		protected override ServiceOutcome DoWork()
 		{
+			// Check for a File save path string
+			string path = Instance.Configuration.Options["FileSavePath"];
+			if (String.IsNullOrEmpty(path))
+				throw new ConfigurationException("Missing configuration option \"FileSavePath\".");
+			\\Regex.Replace
 			using (DataManager.Current.OpenConnection())
 			{
 				Report _report = new Report();
+				FileUtils CsvFile = new FileUtils();
 				DataManager.Current.AssociateCommands(_cmd);
 				//Log.Write(_cmd.ToString(), LogMessageType.Information);
 				//_cmd.ExecuteNonQuery();
@@ -118,6 +125,10 @@ namespace Easynet.Edge.Services.Reports
 						{
 							_report.AddRow(_reader);
 						}
+				}
+				if (_report.rows.Count > 0)
+				{
+					CsvFile.CreateUnicode(_report.rows, path);
 				}
 
 			}
