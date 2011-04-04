@@ -134,7 +134,7 @@ namespace Easynet.Edge.Services.Reports
 				path = System.IO.Path.Combine(path,file);
 
 				if (path.EndsWith("csv"))
-					Smtp.Send("Conduit Daily Report", false, null, path);
+					Smtp.Send("Conduit Daily Report - Edge.BI", false, null, path);
 			}
 
 			return ServiceOutcome.Success;
