@@ -8,7 +8,7 @@ namespace Easynet.Edge.Services.Reports
 {
 	public class FileUtils
 	{
-		string _fileName = "ConduitReport" + DateTime.Now.ToLongDateString();
+		string _fileName = "ConduitReport" + DateTime.Now.ToString("yyyyMMddhhmmssffffff");
 		public string CreateUnicode(List<ReportRowEntity> report, string _path)
 		{
 			if (!string.IsNullOrEmpty(_path))
