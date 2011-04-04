@@ -110,7 +110,7 @@ namespace Easynet.Edge.Services.Reports
 			string path = Instance.Configuration.Options["FileSavePath"];
 			if (String.IsNullOrEmpty(path))
 				throw new ConfigurationException("Missing configuration option \"FileSavePath\".");
-			\\Regex.Replace
+			//Regex.Replace
 			using (DataManager.Current.OpenConnection())
 			{
 				Report _report = new Report();
