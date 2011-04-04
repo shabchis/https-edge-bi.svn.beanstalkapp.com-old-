@@ -12,7 +12,7 @@ namespace Easynet.Edge.Services.Reports
 	public class Smtp
 	{
 		internal static void Send(string subject, bool highPriority,
-										string? body, string? attachment)
+										string body, string attachment)
 		{
 			string _toAddress, _fromAddress;
 			System.Net.Mail.MailMessage msg = new MailMessage();
@@ -21,14 +21,14 @@ namespace Easynet.Edge.Services.Reports
 				msg.Priority = MailPriority.High;
 			try
 			{
-				if (null != body) 
-					msg.Body = body.Value;
+				if (!String.IsNullOrEmpty(body)) 
+					msg.Body = body;
 				SmtpClient smtp = Smtp.GetSmtpConnection(out _toAddress, out _fromAddress);
 				msg.To.Add(_toAddress);
 				msg.From = new MailAddress(_fromAddress);
-				if (null != attachment)
+				if (!String.IsNullOrEmpty(attachment))
 				{ 
-					msg.Attachments.Add(new Attachment(attachment.Value));
+					msg.Attachments.Add(new Attachment(attachment));
 				}
 				smtp.Send(msg);
 			}
