@@ -45,8 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="ExecuteStoredProcedureService.cs" />
+    <Compile Include="AccountDownloadValidationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Smtp.cs" />
   </ItemGroup>
