@@ -160,7 +160,7 @@ namespace SchedulerTester
 				
 					_scheduledServices.Clear();
 
-
+                    _strNotScheduled.Clear();
 
 					writer.WriteLine("Schedule Created" + DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
 
