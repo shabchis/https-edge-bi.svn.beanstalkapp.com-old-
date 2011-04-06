@@ -124,7 +124,7 @@ namespace MyScheduler
 					_unscheduleServices.Clear();
 					foreach (KeyValuePair<SchedulingData, ServiceInstance> scheduldService in _scheduledServices) //services that did not run because their base time + maxdiviation<datetime.now should have been rub but from some reason did not run
 					{
-						if (scheduldService.Key.TimeToRun.Add(scheduldService.Key.Rule.MaxDeviationAfter) < DateTime.Now && scheduldService.Value.LegacyInstance.State==Legacy.ServiceState.Uninitialized)
+						if (scheduldService.Key.TimeToRun.Add(scheduldService.Key.Rule.MaxDeviationAfter) > DateTime.Now && scheduldService.Value.LegacyInstance.State==Legacy.ServiceState.Uninitialized)
 							_unscheduleServices.Add(scheduldService.Key, scheduldService.Value);
 
 					}
