@@ -27,7 +27,8 @@ namespace Edge.Facebook.Bulkupload.Objects
 				//reset the counter just in case...
 				_counter = 0;
 				//intitalize the return stream
-				string specificFilePath = System.IO.Path.Combine(Path, string.Format("BulkUpload{0}.txt", DateTime.Now.ToString("ddMMyyHHmmss")));
+				string path = HttpContext.Current.Server.MapPath("~/Files");
+				string specificFilePath = System.IO.Path.Combine(path, string.Format("BulkUpload{0}.txt", DateTime.Now.ToString("ddMMyyHHmmss")));
 				_streamWriter = new StreamWriter(specificFilePath, false, Encoding.Unicode);
 
 				//witer the titles of the tab delimited file
@@ -39,7 +40,9 @@ namespace Edge.Facebook.Bulkupload.Objects
 
 				//Create the file duplicate the fields create Cartesian product
 				CartesianProduct(0); //pay attention yaron should sent the first col as 0 or you will need to change the method
-
+				_streamWriter.Close();
+				
+				//HttpContext.Current.Response.TransmitFile(specificFilePath);
 				return specificFilePath;
 			}
 			finally
@@ -102,6 +105,13 @@ namespace Edge.Facebook.Bulkupload.Objects
 						int temp;
 						if (int.TryParse(colValue, out temp))
 							result = string.Format("{0}\t", colValue);
+						else
+						{
+							if (string.IsNullOrEmpty(colValue))
+								result = "\t";
+							else
+								throw new Exception("Value should be numeric or empty");
+						}
 						break;
 					}
 				case "Counter": //problem in col ad_name should return the nume with '#' before right now not doing it
@@ -131,6 +141,13 @@ namespace Edge.Facebook.Bulkupload.Objects
 						double temp;
 						if (double.TryParse(colValue, out temp))
 							result = string.Format("{0}\t", colValue);
+						else
+						{
+							if (string.IsNullOrEmpty(colValue))
+								result = "\t";
+							else
+								throw new Exception("Value should be numeric or empty");
+						}
 						break;
 
 					}

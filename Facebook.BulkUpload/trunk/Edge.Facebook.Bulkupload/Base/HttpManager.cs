@@ -15,7 +15,7 @@ namespace Edge.Facebook.Bulkupload.Base
 		static HttpManager()
 		{
 			Serializers.Add("application/json", new JsonSerializer());
-
+			Serializers.Add("application/json; charset=UTF-8", new JsonSerializer());
 			StatusDescriptions.Add(HttpStatusCode.OK, "OK");
 			StatusDescriptions.Add(HttpStatusCode.NoContent, "No Content");
 			StatusDescriptions.Add(HttpStatusCode.PartialContent, "Partial Content");
