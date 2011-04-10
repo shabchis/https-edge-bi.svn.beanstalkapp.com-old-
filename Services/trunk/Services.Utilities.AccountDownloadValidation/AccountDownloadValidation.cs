@@ -15,7 +15,7 @@ namespace Easynet.Edge.Services.Utilities
 {
 	public class AccountDownloadValidation : Service
     {
-        SqlCommand _LogCmd ,_baseCmd,_setCmd;
+        SqlCommand _LogCmd ,_baseCmd,_setCmd,sp;
 		string SourceConn,conn;
 		
 
@@ -26,12 +26,18 @@ namespace Easynet.Edge.Services.Utilities
             if (String.IsNullOrEmpty(SourceConn))
 				throw new System.Configuration.ConfigurationException("Missing configuration appSettings SourceConnectionString");
 						
-            DataManager.ConnectionString = SourceConn;
+            
 			_LogCmd = DataManager.CreateCommand("SELECT [Account_ID],[DayCode],[Service] FROM [Source].[dbo].[AccountsServicesLog] WHERE Status = 0");
 			_setCmd = DataManager.CreateCommand("Update [Source].[dbo].[AccountsServicesLog] set [status] = 9 where [Account_ID]=@account_id:int "
 												+ "and [DayCode] = @day_code:int and [Service] = @service:int");
 			//_baseCmd.Parameters["@ACCOUNT_ID"].Value =7;
-
+			sp = DataManager.CreateCommand("Validate_Account()", System.Data.CommandType.StoredProcedure);
+			using (DataManager.Current.OpenConnection())
+			{
+				DataManager.Current.AssociateCommands(sp);
+				sp.ExecuteNonQuery();
+			}
+			DataManager.ConnectionString = SourceConn;
 		}
 		
         protected override ServiceOutcome DoWork()
