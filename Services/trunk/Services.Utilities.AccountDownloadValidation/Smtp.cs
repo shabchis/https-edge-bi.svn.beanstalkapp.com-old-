@@ -5,7 +5,6 @@ using System.Text;
 using System.Collections;
 using System.Net.Mail;
 using System.Net;
-using Edge.Services.Reports;
 
 namespace Services.Utilities.AccountDownloadValidation
 {
