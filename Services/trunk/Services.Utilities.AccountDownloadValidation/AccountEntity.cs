@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
 
-namespace Services.Utilities
+namespace Easynet.Edge.Services.Utilities
 {
 	public class AccountEntity
 	{

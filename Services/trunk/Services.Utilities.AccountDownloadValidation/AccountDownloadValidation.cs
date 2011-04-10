@@ -11,7 +11,7 @@ using Easynet.Edge.Core.Configuration;
 using Easynet.Edge.Core.Utilities;
 using System.Configuration;
 
-namespace Services.Utilities
+namespace Easynet.Edge.Services.Utilities
 {
 	public class AccountDownloadValidation : Service
     {

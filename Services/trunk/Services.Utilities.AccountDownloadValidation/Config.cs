@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Configuration;
 
-namespace Services.Utilities
+namespace Easynet.Edge.Services.Utilities
 {
     static class Config
     {
