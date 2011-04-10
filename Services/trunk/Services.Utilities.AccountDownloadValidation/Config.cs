@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Configuration;
 
-namespace Services.Utilities.AccountDownloadValidation
+namespace Services.Utilities
 {
     static class Config
     {

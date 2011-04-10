@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountDownloadValidationService.cs" />
+    <Compile Include="AccountDownloadValidation.cs" />
     <Compile Include="AccountEntity.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,7 +70,6 @@
   <Target Name="BeforeBuild">
   </Target>-->
   <Target Name="AfterBuild">
-	  <Copy SkipUnchangedFiles="false" SourceFiles="$(TargetPath)" DestinationFiles="..\..\Applications\EdgeServiceHost\bin\Debug\Services\$(TargetFileName)" />
+    <Copy SkipUnchangedFiles="false" SourceFiles="$(TargetPath)" DestinationFiles="..\..\Applications\EdgeServiceHost\bin\Debug\Services\$(TargetFileName)" />
   </Target>
-  
 </Project>
