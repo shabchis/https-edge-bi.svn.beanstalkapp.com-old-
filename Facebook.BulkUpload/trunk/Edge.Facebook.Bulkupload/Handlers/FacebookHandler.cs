@@ -14,7 +14,7 @@ namespace Edge.Facebook.Bulkupload.Handlers
 		{
 
 			BulkFile bulkFile = new BulkFile();
-			return bulkFile.CreateFile(fileDescription);
+			return  bulkFile.CreateFile(fileDescription);
 			
 
 

@@ -14,7 +14,8 @@ namespace Edge.Facebook.Bulkupload
 		void Application_Start(object sender, EventArgs e)
 		{
 			// Code that runs on application startup
-			Bulkupload.Objects.BulkFile.Path = Server.MapPath("~/Files");
+			//Bulkupload.Objects.BulkFile.Path = Server.MapPath("~/Files");
+			
 		}
 
 		void Application_End(object sender, EventArgs e)
