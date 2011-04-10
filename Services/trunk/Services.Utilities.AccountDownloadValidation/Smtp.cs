@@ -6,7 +6,7 @@ using System.Collections;
 using System.Net.Mail;
 using System.Net;
 
-namespace Services.Utilities
+namespace Easynet.Edge.Services.Utilities
 {
 	public class Smtp
 	{
