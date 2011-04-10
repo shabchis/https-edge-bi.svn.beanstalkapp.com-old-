@@ -11,9 +11,9 @@ using Easynet.Edge.Core.Configuration;
 using Easynet.Edge.Core.Utilities;
 using System.Configuration;
 
-namespace Services.Utilities.AccountDownloadValidation
+namespace Services.Utilities
 {
-	public class AccountDownloadValidationService : Service
+	public class AccountDownloadValidation : Service
     {
         SqlCommand _LogCmd ,_baseCmd,_setCmd;
 		string SourceConn,conn;
