@@ -27,8 +27,9 @@ namespace Easynet.Edge.Services.Utilities
 				throw new System.Configuration.ConfigurationException("Missing configuration appSettings SourceConnectionString");
 						
             DataManager.ConnectionString = SourceConn;
-			_LogCmd = DataManager.CreateCommand("SELECT [Account_ID],[DayCode],[Service] FROM [Source].[dbo].[AccountsServicesLog] WHERE Status is 0");
-			_setCmd = DataManager.CreateCommand("Update [Source].[dbo].[AccountsServicesLog] set [status] = 9");
+			_LogCmd = DataManager.CreateCommand("SELECT [Account_ID],[DayCode],[Service] FROM [Source].[dbo].[AccountsServicesLog] WHERE Status = 0");
+			_setCmd = DataManager.CreateCommand("Update [Source].[dbo].[AccountsServicesLog] set [status] = 9 where [Account_ID]=@account_id:int "
+												+ "and [DayCode] = @day_code:int and [Service] = @service:int");
 			//_baseCmd.Parameters["@ACCOUNT_ID"].Value =7;
 
 		}
@@ -60,8 +61,25 @@ namespace Easynet.Edge.Services.Utilities
 					sb.AppendLine(_account.DayCode.ToString() + "\t" + _account.Account_id.ToString() + "\t" + _account.CahnnelType);
 				}
 				Smtp.Send("Accounts Validataion Report", true, sb.ToString(), null);
+				
+				//set status  = 9 ( means data wasnt downloaded and reported )
+				SqlCommand _cmd = new SqlCommand();
+				
+				using (DataManager.Current.OpenConnection())
+				{
+					_cmd = _setCmd; 
+					
+					foreach (AccountEntity _account in _accounts)
+					{
+						_cmd = _setCmd;
+						DataManager.Current.AssociateCommands(_cmd);
+						_cmd.Parameters["@account_id"].Value = _account.Account_id;
+						_cmd.Parameters["@day_code"].Value = _account.DayCode;
+						_cmd.Parameters["@service"].Value = _account.Channel;
+						_cmd.ExecuteNonQuery();
+					}
+				}
 			}
-			
 			return ServiceOutcome.Success;
 		}
 	}

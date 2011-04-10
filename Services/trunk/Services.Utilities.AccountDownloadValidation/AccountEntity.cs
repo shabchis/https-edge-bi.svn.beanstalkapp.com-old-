@@ -13,9 +13,9 @@ namespace Easynet.Edge.Services.Utilities
 		}
 		public AccountEntity(SqlDataReader _reader)
 		{
-			Account_id = Convert.ToUInt16(_reader[0]);
-			DayCode = Convert.ToUInt16(_reader[1]);
-			Channel = Convert.ToUInt16(_reader[2]);
+			Account_id = Convert.ToUInt64(_reader[0]);
+			DayCode = Convert.ToUInt64(_reader[1]);
+			Channel = Convert.ToInt64(_reader[2]);
 			switch (Channel)
 			{
 				case 0: CahnnelType = "BackOffice";
@@ -32,10 +32,10 @@ namespace Easynet.Edge.Services.Utilities
 			
 		}
 		
-		public int Account_id { set; get; }
-		public int Channel { set; get; }
+		public UInt64 Account_id { set; get; }
+		public Int64 Channel { set; get; }
 		public string CahnnelType { set; get; }
-		public int DayCode { set; get; }
+		public UInt64 DayCode { set; get; }
 
 
 
