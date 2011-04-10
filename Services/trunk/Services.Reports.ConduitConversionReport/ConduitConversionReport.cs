@@ -117,8 +117,6 @@ namespace Easynet.Edge.Services.Reports
 				Report _report = new Report();
 				FileUtils CsvFile = new FileUtils();
 				DataManager.Current.AssociateCommands(_cmd);
-				//Log.Write(_cmd.ToString(), LogMessageType.Information);
-				//_cmd.ExecuteNonQuery();
 				using (SqlDataReader _reader = _cmd.ExecuteReader())
 				{
 					if (!_reader.IsClosed)
