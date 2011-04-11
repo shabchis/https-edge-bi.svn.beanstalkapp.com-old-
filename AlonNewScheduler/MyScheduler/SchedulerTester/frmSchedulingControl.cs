@@ -64,7 +64,7 @@ namespace SchedulerTester
 			}
 			catch (Exception ex)
 			{
-
+                MessageBox.Show(ex.Message);
 				 Easynet.Edge.Core.Utilities.Log.Write("SchedulingControlForm", ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
