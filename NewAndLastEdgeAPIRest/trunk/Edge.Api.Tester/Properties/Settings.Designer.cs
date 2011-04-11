@@ -25,7 +25,7 @@ namespace NewRestApiTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://bi_rnd:8080/API2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://alonya-pc/API3")]
         public string RemoteAdress {
             get {
                 return ((string)(this["RemoteAdress"]));
@@ -37,8 +37,8 @@ namespace NewRestApiTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{\"OperationType\":\"New\",\"email\":\"amir@seperia.com\",\"Password\":\"123456\",\r\n\"UserID\":" +
-            "\"8\",\"Session\":\"0EB3BAD4D3FB3F64FE2EE9EC27B54752\"}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"OperationType\":\"New\",\"email\":\"doron@edge.bi\",\"Password\":\"123456\",\r\n\"UserID\":\"8\"" +
+            ",\"Session\":\"0EB3BAD4D3FB3F64FE2EE9EC27B54752\"}")]
         public string BodyLogInJson {
             get {
                 return ((string)(this["BodyLogInJson"]));

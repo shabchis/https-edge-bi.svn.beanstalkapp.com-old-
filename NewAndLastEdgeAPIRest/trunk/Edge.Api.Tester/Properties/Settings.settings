@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="RemoteAdress" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://bi_rnd:8080/API2</Value>
+      <Value Profile="(Default)">http://alonya-pc/API3</Value>
     </Setting>
     <Setting Name="BodyLogInJson" Type="System.String" Scope="User">
-      <Value Profile="(Default)">{"OperationType":"New","email":"amir@seperia.com","Password":"123456",
+      <Value Profile="(Default)">{"OperationType":"New","email":"doron@edge.bi","Password":"123456",
 "UserID":"8","Session":"0EB3BAD4D3FB3F64FE2EE9EC27B54752"}</Value>
     </Setting>
     <Setting Name="DefaultHeaders" Type="System.String" Scope="User">
