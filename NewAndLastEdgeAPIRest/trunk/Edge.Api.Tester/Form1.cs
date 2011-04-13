@@ -110,7 +110,7 @@ namespace NewRestApiTester__
 
 
 			HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(fullAddress);
-			request.Timeout = 130000;
+			request.Timeout = 9999999;
 			request.Accept = "application/json";
 			request.ContentType = "application/json";
 

@@ -81,12 +81,14 @@ namespace Edge.Objects
 					}
 					else
 					{
-						while (stackMenu.Count != 1 && !menu.Path.StartsWith(stackMenu.Peek().Path))
+						
+						while (stackMenu.Count != 1 && !Regex.IsMatch(menu.Path, string.Format(@"^{0}(?=\/)", stackMenu.Peek().Path), RegexOptions.IgnoreCase))
 						{
 
 							stackMenu.Pop();
 						}
-						if (!menu.Path.StartsWith(stackMenu.Peek().Path))
+
+						if (!Regex.IsMatch(menu.Path, string.Format(@"^{0}(?=\/)", stackMenu.Peek().Path), RegexOptions.IgnoreCase))
 						{
 							returnObject.Add(stackMenu.Pop());
 							stackMenu.Push(menu);
@@ -94,12 +96,13 @@ namespace Edge.Objects
 						else
 						{
 							stackMenu.Peek().ChildItems.Add(menu);
-							stackMenu.Push(menu); //bug 157 it was with comment
+							stackMenu.Push(menu);
 						}
+						
 					}
 				}
 			}
-			//stackMenu.Pop();
+			
 			while (stackMenu.Count > 1)
 			{
 				stackMenu.Pop();
