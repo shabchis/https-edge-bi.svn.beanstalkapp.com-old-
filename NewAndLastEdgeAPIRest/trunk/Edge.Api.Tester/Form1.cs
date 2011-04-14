@@ -81,7 +81,11 @@ namespace NewRestApiTester__
 
 
 		}
-
+		public static void currentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
+		{
+			  Exception e = (Exception) args.ExceptionObject;
+			MessageBox.Show(string.Format("Un Handeled exception occured:\n{0}",e.Message));
+		}
 
 
 		private void GetButton_Click(object sender, EventArgs e)

@@ -13,9 +13,13 @@ namespace NewRestApiTester__
 		[STAThread]
 		static void Main()
 		{
+			AppDomain currentDomain = AppDomain.CurrentDomain;
+			currentDomain.UnhandledException += new UnhandledExceptionEventHandler(Form1.currentDomain_UnhandledException);
 			Application.EnableVisualStyles(); 
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Form1());
 		}
+
+		
 	}
 }
