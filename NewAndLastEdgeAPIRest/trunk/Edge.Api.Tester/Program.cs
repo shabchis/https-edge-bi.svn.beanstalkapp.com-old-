@@ -13,11 +13,20 @@ namespace NewRestApiTester__
 		[STAThread]
 		static void Main()
 		{
-			AppDomain currentDomain = AppDomain.CurrentDomain;
-			currentDomain.UnhandledException += new UnhandledExceptionEventHandler(Form1.currentDomain_UnhandledException);
+			
+			
 			Application.EnableVisualStyles(); 
 			Application.SetCompatibleTextRenderingDefault(false);
+			Application.ThreadException += Application_ThreadException;
+			
 			Application.Run(new Form1());
+			
+		}
+
+		static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+		{
+			
+			MessageBox.Show(e.Exception.Message);
 		}
 
 		
