@@ -16,6 +16,7 @@ namespace Easynet.Edge.Services.Utilities
 			Account_id = Convert.ToUInt64(_reader[0]);
 			DayCode = Convert.ToUInt64(_reader[1]);
 			Channel = Convert.ToInt64(_reader[2]);
+			App = Convert.ToString(_reader[3]);
 			switch (Channel)
 			{
 				case 0: CahnnelType = "BackOffice";
@@ -29,6 +30,18 @@ namespace Easynet.Edge.Services.Utilities
 				default: CahnnelType = "Undefined Cahnnel";
 						break;
 			}
+
+			switch (Convert.ToInt32(_reader[4]))
+			{
+				case 0: Status = "Failed";
+						break;
+				case 1: Status = "Success";
+						break;
+				default: Status = "Uknown";
+						break;
+				
+			}
+
 			
 		}
 		
@@ -36,8 +49,8 @@ namespace Easynet.Edge.Services.Utilities
 		public Int64 Channel { set; get; }
 		public string CahnnelType { set; get; }
 		public UInt64 DayCode { set; get; }
-
-
+		public string Status { set; get; }
+		public string App { set; get; }
 
 	}
 }
