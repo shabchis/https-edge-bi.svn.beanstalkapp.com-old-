@@ -34,7 +34,7 @@ namespace NewRestApiTester__
 			FormatComboBox.SelectedIndex = 1;
 
 
-
+			
 		}
 
 		private void LoadServicesComboxBox()
@@ -83,8 +83,18 @@ namespace NewRestApiTester__
 		}
 		public static void currentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args)
 		{
-			  Exception e = (Exception) args.ExceptionObject;
-			MessageBox.Show(string.Format("Un Handeled exception occured:\n{0}",e.Message));
+			try
+			{
+				Exception e = (Exception)args.ExceptionObject;
+				MessageBox.Show(string.Format("Un Handeled exception occured:\n{0} istermainating={1}", e.Message, args.IsTerminating));
+			}
+			catch (Exception)
+			{
+				
+				
+			}
+			
+			
 		}
 
 
