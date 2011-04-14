@@ -398,5 +398,79 @@ namespace NewRestApiTester__
 		{
 			CreateRequest("PUT");
 		}
+
+		private void textBox1_TextChanged(object sender, EventArgs e)
+		{
+			
+		}
+		private List<WordIndexs> FindText(RichTextBox targetRiceTextBox,string wordToFind)
+		{
+			int indexToStart=0;
+			List<WordIndexs> words = new List<WordIndexs>();
+			while (indexToStart<targetRiceTextBox.Text.Length)
+			{
+
+				indexToStart = targetRiceTextBox.Find(wordToFind, indexToStart, targetRiceTextBox.Text.Length , RichTextBoxFinds.None);
+				if (indexToStart == -1)
+					break;
+				words.Add(new WordIndexs() { StartIndex=indexToStart,Length=wordToFind.Length,EndIndex=indexToStart+wordToFind.Length-1});
+				indexToStart += wordToFind.Length;
+				
+			}
+
+			return words;
+		}
+
+		private void findButton_Click(object sender, EventArgs e)
+		{
+			List<WordIndexs> words = FindText(BodyTextBox, textBox1.Text);			
+			
+			BodyTextBox.BackColor = Color.White;
+		
+		
+			if (words != null)
+			{
+				foreach (WordIndexs word in words)
+				{
+					BodyTextBox.SelectionStart = word.StartIndex;
+
+					BodyTextBox.SelectionLength = word.Length;
+
+					
+
+					BodyTextBox.SelectionBackColor = Color.Yellow;
+					
+					
+
+				}
+			}
+			words = null;
+			words = FindText(ResponseBodyRichTextBox, textBox1.Text);
+			ResponseBodyRichTextBox.BackColor = Color.White;
+			if (words != null)
+			{
+				foreach (WordIndexs word in words)
+				{
+					ResponseBodyRichTextBox.SelectionStart = word.StartIndex;
+
+					ResponseBodyRichTextBox.SelectionLength = word.Length;
+
+					
+
+					ResponseBodyRichTextBox.SelectionBackColor = Color.Yellow;
+
+
+
+				}
+			}
+		}
+
 	}
+	public struct WordIndexs
+	{
+		public int StartIndex;
+		public int Length;
+		public int EndIndex;
+	}
+		
 }
