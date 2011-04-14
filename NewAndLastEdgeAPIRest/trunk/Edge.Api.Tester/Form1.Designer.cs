@@ -39,7 +39,6 @@
 			this.Key = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.Value = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.label3 = new System.Windows.Forms.Label();
-			this.BodyTextBox = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this.HeaderKeytextBox = new System.Windows.Forms.TextBox();
@@ -57,6 +56,10 @@
 			this.ResponseHeaderTextBox = new System.Windows.Forms.TextBox();
 			this.DeleteButton = new System.Windows.Forms.Button();
 			this.btnPut = new System.Windows.Forms.Button();
+			this.BodyTextBox = new System.Windows.Forms.RichTextBox();
+			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.label8 = new System.Windows.Forms.Label();
+			this.findButton = new System.Windows.Forms.Button();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -110,7 +113,7 @@
 			// SetButton
 			// 
 			this.SetButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.SetButton.Location = new System.Drawing.Point(660, 528);
+			this.SetButton.Location = new System.Drawing.Point(660, 560);
 			this.SetButton.Name = "SetButton";
 			this.SetButton.Size = new System.Drawing.Size(75, 23);
 			this.SetButton.TabIndex = 6;
@@ -121,7 +124,7 @@
 			// GetButton
 			// 
 			this.GetButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.GetButton.Location = new System.Drawing.Point(578, 528);
+			this.GetButton.Location = new System.Drawing.Point(578, 560);
 			this.GetButton.Name = "GetButton";
 			this.GetButton.Size = new System.Drawing.Size(75, 23);
 			this.GetButton.TabIndex = 7;
@@ -162,15 +165,6 @@
 			this.label3.Size = new System.Drawing.Size(50, 13);
 			this.label3.TabIndex = 9;
 			this.label3.Text = "Headers:";
-			// 
-			// BodyTextBox
-			// 
-			this.BodyTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.BodyTextBox.Location = new System.Drawing.Point(15, 225);
-			this.BodyTextBox.Multiline = true;
-			this.BodyTextBox.Name = "BodyTextBox";
-			this.BodyTextBox.Size = new System.Drawing.Size(325, 286);
-			this.BodyTextBox.TabIndex = 10;
 			// 
 			// label4
 			// 
@@ -259,15 +253,15 @@
 			this.panel1.Controls.Add(this.label9);
 			this.panel1.Controls.Add(this.label7);
 			this.panel1.Controls.Add(this.ResponseHeaderTextBox);
-			this.panel1.Location = new System.Drawing.Point(346, 147);
+			this.panel1.Location = new System.Drawing.Point(327, 147);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(390, 375);
+			this.panel1.Size = new System.Drawing.Size(408, 375);
 			this.panel1.TabIndex = 19;
 			// 
 			// ResponseBodyRichTextBox
 			// 
 			this.ResponseBodyRichTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.ResponseBodyRichTextBox.Location = new System.Drawing.Point(7, 133);
+			this.ResponseBodyRichTextBox.Location = new System.Drawing.Point(25, 133);
 			this.ResponseBodyRichTextBox.Name = "ResponseBodyRichTextBox";
 			this.ResponseBodyRichTextBox.ReadOnly = true;
 			this.ResponseBodyRichTextBox.Size = new System.Drawing.Size(309, 231);
@@ -281,7 +275,7 @@
 			this.FormatComboBox.Items.AddRange(new object[] {
             "XML",
             "JSON"});
-			this.FormatComboBox.Location = new System.Drawing.Point(151, 96);
+			this.FormatComboBox.Location = new System.Drawing.Point(169, 96);
 			this.FormatComboBox.Name = "FormatComboBox";
 			this.FormatComboBox.Size = new System.Drawing.Size(121, 21);
 			this.FormatComboBox.TabIndex = 5;
@@ -291,7 +285,7 @@
 			// 
 			this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label10.AutoSize = true;
-			this.label10.Location = new System.Drawing.Point(103, 103);
+			this.label10.Location = new System.Drawing.Point(121, 103);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(42, 13);
 			this.label10.TabIndex = 4;
@@ -301,7 +295,7 @@
 			// 
 			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(4, 104);
+			this.label9.Location = new System.Drawing.Point(22, 104);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(79, 13);
 			this.label9.TabIndex = 2;
@@ -311,7 +305,7 @@
 			// 
 			this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(6, 10);
+			this.label7.Location = new System.Drawing.Point(24, 10);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(96, 13);
 			this.label7.TabIndex = 1;
@@ -320,7 +314,7 @@
 			// ResponseHeaderTextBox
 			// 
 			this.ResponseHeaderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.ResponseHeaderTextBox.Location = new System.Drawing.Point(3, 33);
+			this.ResponseHeaderTextBox.Location = new System.Drawing.Point(21, 33);
 			this.ResponseHeaderTextBox.Multiline = true;
 			this.ResponseHeaderTextBox.Name = "ResponseHeaderTextBox";
 			this.ResponseHeaderTextBox.ReadOnly = true;
@@ -331,7 +325,7 @@
 			// DeleteButton
 			// 
 			this.DeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.DeleteButton.Location = new System.Drawing.Point(496, 528);
+			this.DeleteButton.Location = new System.Drawing.Point(496, 560);
 			this.DeleteButton.Name = "DeleteButton";
 			this.DeleteButton.Size = new System.Drawing.Size(75, 23);
 			this.DeleteButton.TabIndex = 20;
@@ -342,7 +336,7 @@
 			// btnPut
 			// 
 			this.btnPut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnPut.Location = new System.Drawing.Point(415, 528);
+			this.btnPut.Location = new System.Drawing.Point(415, 560);
 			this.btnPut.Name = "btnPut";
 			this.btnPut.Size = new System.Drawing.Size(75, 23);
 			this.btnPut.TabIndex = 21;
@@ -350,11 +344,52 @@
 			this.btnPut.UseVisualStyleBackColor = true;
 			this.btnPut.Click += new System.EventHandler(this.btnPut_Click);
 			// 
+			// BodyTextBox
+			// 
+			this.BodyTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.BodyTextBox.Location = new System.Drawing.Point(12, 226);
+			this.BodyTextBox.Name = "BodyTextBox";
+			this.BodyTextBox.Size = new System.Drawing.Size(306, 296);
+			this.BodyTextBox.TabIndex = 22;
+			this.BodyTextBox.Text = "";
+			// 
+			// textBox1
+			// 
+			this.textBox1.Location = new System.Drawing.Point(48, 528);
+			this.textBox1.Multiline = true;
+			this.textBox1.Name = "textBox1";
+			this.textBox1.Size = new System.Drawing.Size(197, 53);
+			this.textBox1.TabIndex = 23;
+			this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(12, 528);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(30, 13);
+			this.label8.TabIndex = 24;
+			this.label8.Text = "Find:";
+			// 
+			// findButton
+			// 
+			this.findButton.Location = new System.Drawing.Point(252, 528);
+			this.findButton.Name = "findButton";
+			this.findButton.Size = new System.Drawing.Size(75, 23);
+			this.findButton.TabIndex = 25;
+			this.findButton.Text = "Find";
+			this.findButton.UseVisualStyleBackColor = true;
+			this.findButton.Click += new System.EventHandler(this.findButton_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(748, 563);
+			this.ClientSize = new System.Drawing.Size(748, 595);
+			this.Controls.Add(this.findButton);
+			this.Controls.Add(this.label8);
+			this.Controls.Add(this.textBox1);
+			this.Controls.Add(this.BodyTextBox);
 			this.Controls.Add(this.btnPut);
 			this.Controls.Add(this.DeleteButton);
 			this.Controls.Add(this.panel1);
@@ -366,7 +401,6 @@
 			this.Controls.Add(this.HeaderKeytextBox);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.label4);
-			this.Controls.Add(this.BodyTextBox);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.HeaderslistView);
 			this.Controls.Add(this.GetButton);
@@ -397,7 +431,6 @@
 		private System.Windows.Forms.Button GetButton;
 		private System.Windows.Forms.ListView HeaderslistView;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.TextBox BodyTextBox;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.TextBox HeaderKeytextBox;
@@ -417,6 +450,10 @@
 		private System.Windows.Forms.RichTextBox ResponseBodyRichTextBox;
 		private System.Windows.Forms.Button DeleteButton;
 		private System.Windows.Forms.Button btnPut;
+		private System.Windows.Forms.RichTextBox BodyTextBox;
+		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Button findButton;
 	}
 }
 
