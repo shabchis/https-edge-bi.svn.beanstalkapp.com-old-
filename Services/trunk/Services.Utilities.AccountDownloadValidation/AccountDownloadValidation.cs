@@ -28,7 +28,7 @@ namespace Easynet.Edge.Services.Utilities
 
 
 			_LogCmd = DataManager.CreateCommand("SELECT [Account_ID],[DayCode],[Service],[Application],[Status] FROM [Source].[dbo].[AccountsServicesLog] WHERE Status = @stat:int  order by [Application],[Status],[Account_ID]");
-			_setCmd = DataManager.CreateCommand("Update [Source].[dbo].[AccountsServicesLog] set [status] = @stat where [Account_ID]=@account_id:int "
+			_setCmd = DataManager.CreateCommand("Update [Source].[dbo].[AccountsServicesLog] set [status] = @stat:int where [Account_ID]=@account_id:int "
 												+ "and [DayCode] = @day_code:int and [Service] = @service:int and [Application]=@app:Nvarchar");
 			//_baseCmd.Parameters["@ACCOUNT_ID"].Value =7;
 			sp = DataManager.CreateCommand("Validate_Account()", System.Data.CommandType.StoredProcedure);
@@ -70,16 +70,16 @@ namespace Easynet.Edge.Services.Utilities
             }
 			StringBuilder sb = new StringBuilder();
 			sb.AppendLine("The following accounts reported :");
-			sb.AppendLine("<table>");
+			sb.AppendLine("<table border=\"1\">");
 			//Table headers
-			sb.AppendLine("<tr><th>DayCode</th><th>Account ID</th><th>Application</th><th>Status</th></tr>");
+			sb.AppendLine("<tr><th>DayCode</th><th>Account ID</th><th>Service</th><th>Application</th><th>Status</th></tr>");
 			string _startTag = "<td>";
 			string _endTag = "</td>";
 			if (_Failed.Count > 0)
 			{
 				foreach (AccountEntity _account in _Failed)
 				{
-					sb.AppendLine("<tr>" + _startTag + _account.DayCode.ToString() + _endTag + _startTag + _account.Account_id.ToString() + _endTag + _startTag + _account.CahnnelType + _endTag + _startTag + _account.App + _endTag + _startTag + _account.Status + _endTag + "</tr>");
+					sb.AppendLine("<tr style=\"color:red\">" + _startTag + _account.DayCode.ToString() + _endTag + _startTag + _account.Account_id.ToString() + _endTag + _startTag + _account.CahnnelType + _endTag + _startTag + _account.App + _endTag + _startTag + _account.Status + _endTag + "</tr>");
 				}
 				foreach (AccountEntity _account in _Success)
 				{
