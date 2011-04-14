@@ -11,7 +11,7 @@ namespace Easynet.Edge.Services.Utilities
 	public class Smtp
 	{
 		internal static void Send(string subject, bool highPriority,
-										string body, string attachment)
+										string body,bool IsBodyHtml,string attachment)
 		{
 			string _toAddress, _fromAddress;
 			System.Net.Mail.MailMessage msg = new MailMessage();
@@ -20,8 +20,9 @@ namespace Easynet.Edge.Services.Utilities
 				msg.Priority = MailPriority.High;
 			try
 			{
-				if (!String.IsNullOrEmpty(body)) 
-					msg.Body = body;
+				if (!String.IsNullOrEmpty(body)) msg.Body = body;
+				if (IsBodyHtml) msg.IsBodyHtml = true;
+					else msg.IsBodyHtml = false;
 				SmtpClient smtp = Smtp.GetSmtpConnection(out _toAddress, out _fromAddress);
 				msg.To.Add(_toAddress);
 				msg.From = new MailAddress(_fromAddress);
