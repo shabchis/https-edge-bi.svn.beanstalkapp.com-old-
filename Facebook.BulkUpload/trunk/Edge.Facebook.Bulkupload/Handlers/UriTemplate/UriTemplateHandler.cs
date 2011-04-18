@@ -47,7 +47,7 @@ namespace Edge.Facebook.Bulkupload.Handlers.UriTemplate
 		public sealed override void ProcessRequest(HttpContext context)
 		{
 			_currentContext = context;
-
+			
 
 			if (ShouldValidateSession)
 			{
