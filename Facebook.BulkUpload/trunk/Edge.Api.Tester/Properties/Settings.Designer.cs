@@ -25,7 +25,7 @@ namespace NewRestApiTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8081/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://bi_rnd/bulkupload")]
         public string RemoteAdress {
             get {
                 return ((string)(this["RemoteAdress"]));
@@ -86,7 +86,7 @@ namespace NewRestApiTester.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8081/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8081")]
         public string LocalAdress {
             get {
                 return ((string)(this["LocalAdress"]));

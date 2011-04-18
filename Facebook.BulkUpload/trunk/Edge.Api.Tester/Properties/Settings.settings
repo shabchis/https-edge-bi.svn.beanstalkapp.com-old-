@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="RemoteAdress" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://localhost:8081/</Value>
+      <Value Profile="(Default)">http://bi_rnd/bulkupload</Value>
     </Setting>
     <Setting Name="BodyLogInJson" Type="System.String" Scope="User">
       <Value Profile="(Default)">{"OperationType":"New","email":"amir@seperia.com","Password":"123456",
@@ -19,7 +19,7 @@
       <Value Profile="(Default)">test,facebook/createfile</Value>
     </Setting>
     <Setting Name="LocalAdress" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://localhost:8081/</Value>
+      <Value Profile="(Default)">http://localhost:8081</Value>
     </Setting>
   </Settings>
 </SettingsFile>
