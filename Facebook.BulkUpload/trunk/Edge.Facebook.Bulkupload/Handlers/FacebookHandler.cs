@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Edge.Facebook.Bulkupload.Handlers.UriTemplate;
 using Edge.Facebook.Bulkupload.Objects;
+using System.Web.SessionState;
 
 namespace Edge.Facebook.Bulkupload.Handlers
 {

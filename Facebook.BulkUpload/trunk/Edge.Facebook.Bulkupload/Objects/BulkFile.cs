@@ -9,6 +9,7 @@ using System.Text;
 
 namespace Edge.Facebook.Bulkupload.Objects
 {
+	
 	public class BulkFile
 	{
 		public FileDescription _fileDescription;
@@ -23,12 +24,15 @@ namespace Edge.Facebook.Bulkupload.Objects
 		{
 			try
 			{
+				Guid guid = Guid.NewGuid();
+				
 				_fileDescription = fileDescription;
 				//reset the counter just in case...
 				_counter = 0;
 				//intitalize the return stream
 				string path = HttpContext.Current.Server.MapPath("~/Files");
-				string specificFilePath = System.IO.Path.Combine(path, string.Format("BulkUpload{0}.txt", DateTime.Now.ToString("ddMMyyHHmmss")));
+				string fileName=string.Format("BulkUpload{0}.txt", guid.ToString());
+				string specificFilePath = System.IO.Path.Combine(path,fileName );
 				_streamWriter = new StreamWriter(specificFilePath, false, Encoding.Unicode);
 
 				//witer the titles of the tab delimited file
@@ -41,7 +45,7 @@ namespace Edge.Facebook.Bulkupload.Objects
 				//Create the file duplicate the fields create Cartesian product
 				CartesianProduct(0); //pay attention yaron should sent the first col as 0 or you will need to change the method
 				_streamWriter.Close();
-				
+				specificFilePath=string.Format("http://{0}/Files/{1}",HttpContext.Current.Request.ServerVariables["HTTP_HOST"],fileName);
 				//HttpContext.Current.Response.TransmitFile(specificFilePath);
 				return specificFilePath;
 			}
