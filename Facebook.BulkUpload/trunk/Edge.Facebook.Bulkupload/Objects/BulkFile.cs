@@ -45,7 +45,10 @@ namespace Edge.Facebook.Bulkupload.Objects
 				//Create the file duplicate the fields create Cartesian product
 				CartesianProduct(0); //pay attention yaron should sent the first col as 0 or you will need to change the method
 				_streamWriter.Close();
-				specificFilePath=string.Format("http://{0}/Files/{1}",HttpContext.Current.Request.ServerVariables["HTTP_HOST"],fileName);
+				string appPath = HttpContext.Current.Request.ApplicationPath;
+				if (appPath == "/")
+					appPath = string.Empty;
+				specificFilePath=string.Format("http://{0}{1}/Files/{2}",HttpContext.Current.Request.ServerVariables["HTTP_HOST"],appPath,fileName);
 				//HttpContext.Current.Response.TransmitFile(specificFilePath);
 				return specificFilePath;
 			}
