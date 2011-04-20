@@ -10,7 +10,7 @@ namespace Edge.Facebook.Bulkupload.Handlers
 {
 	public class FacebookHandler : TemplateHandler
 	{
-		[UriMapping(Method = "POST", Template = "facebook/createfile", BodyParameter = "fileDescription")]
+		[UriMapping(Method = "POST", Template = "createfile", BodyParameter = "fileDescription")]
 		public string CreateFile(FileDescription fileDescription)
 		{
 
