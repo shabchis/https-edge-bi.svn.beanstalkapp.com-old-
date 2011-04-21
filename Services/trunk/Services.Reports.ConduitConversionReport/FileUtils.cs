@@ -53,7 +53,7 @@ namespace Easynet.Edge.Services.Reports
 			//TO DO:  Get Headers from config file section conduit report email
 	
 			List<string> Headers = new List<string>(){
-				"DayCode","Campaign","AdGroup","DestUrl","Imps","Clicks","CTR","Cost","SignUpConv"
+				"Date","Campaign","Ad Group","Destination URL","Impressions","Clicks","CTR","Cost","Sign-up Conv. (many-per-click)"
 			};
 			foreach (var h in Headers)
 			{
