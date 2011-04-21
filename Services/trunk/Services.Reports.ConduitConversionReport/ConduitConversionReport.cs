@@ -100,7 +100,7 @@ namespace Easynet.Edge.Services.Reports
 				
 				param.Value = value;
 				
-				Log.Write(string.Format("ExecuteStoredProcedureService Value{0} ", value), LogMessageType.QA);
+				//Log.Write(string.Format("ExecuteStoredProcedureService Value{0} ", value), LogMessageType.QA);
 			}
 
 		}
