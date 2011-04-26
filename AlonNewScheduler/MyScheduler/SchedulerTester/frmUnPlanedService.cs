@@ -16,6 +16,7 @@ namespace SchedulerTester
         private Scheduler _scheduler;
         public frmUnPlanedService(Scheduler scheduler)
         {
+            InitializeComponent();
             _scheduler = scheduler;
         }
 
@@ -24,9 +25,13 @@ namespace SchedulerTester
         private void FillComboBoxes()
         {
             List<ServiceConfiguration> serviceConfigurations= _scheduler.GetAllExistServices();
-            servicesCmb.DataSource = serviceConfigurations;
-            servicesCmb.ValueMember = "ServiceConfiguration.SchedulingProfile.Name";
-            servicesCmb.DisplayMember = "Name";
+           
+            foreach (ServiceConfiguration serviceConfiguration in serviceConfigurations)
+            {
+                servicesCmb.Items.Add(string.Format("{0}:{1}",serviceConfiguration.SchedulingProfile.Name,serviceConfiguration.Name));
+                            
+            }
+           
 
         }
 
@@ -35,4 +40,6 @@ namespace SchedulerTester
             FillComboBoxes();
         }
     }
+    
 }
+
