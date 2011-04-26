@@ -51,10 +51,11 @@
             // 
             // servicesCmb
             // 
+            this.servicesCmb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.servicesCmb.FormattingEnabled = true;
             this.servicesCmb.Location = new System.Drawing.Point(120, 9);
             this.servicesCmb.Name = "servicesCmb";
-            this.servicesCmb.Size = new System.Drawing.Size(121, 21);
+            this.servicesCmb.Size = new System.Drawing.Size(231, 21);
             this.servicesCmb.TabIndex = 1;
             // 
             // priorityCmb
