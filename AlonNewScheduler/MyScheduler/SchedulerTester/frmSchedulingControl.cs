@@ -44,6 +44,7 @@ namespace SchedulerTester
 		{
 			try
 			{
+                
 				_scheduler.Stop();
 			}
 			catch (Exception ex)
@@ -58,6 +59,7 @@ namespace SchedulerTester
 			try
 			{
 				_scheduler = new Scheduler(true);
+                
 				_scheduler.ServiceRunRequiredEvent += new EventHandler(_scheduler_ServiceRunRequiredEvent);
 				_scheduler.NewScheduleCreatedEvent += new EventHandler(_scheduler_NewScheduleCreatedEventHandler);
 				//	_scheduler.Start();
@@ -407,7 +409,8 @@ namespace SchedulerTester
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-
+            frmUnPlanedService f = new frmUnPlanedService(_scheduler);
+            f.Show();
 		}
 
 		private void AddUnplanedServiceConfiguration()
@@ -493,6 +496,14 @@ namespace SchedulerTester
 				 Easynet.Edge.Core.Utilities.Log.Write("SchedulingControlForm", ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
+
+        private void frmSchedulingControl_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MessageBox.Show("YOU MUST NOT CLOSED THIS FORM, IF YOU HAVE TO,PLEAE TALK WITH SHAY BAR-CHEN OR AMIT BLUMAN");
+            e.Cancel = true;
+        }
+
+       
 
 
 	}
