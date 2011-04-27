@@ -147,7 +147,7 @@ namespace MyScheduler
                         _scheduledServices.Remove(unScheduledService.Key);
                     }
                 }
-                //lock (_toBeScheduleServices) //clear unplaned services that already finsihed runing
+                //lock (_toBeScheduleServices) //clear unplaned services that already finsihed runing 
                 //{
                 //    if (_toBeScheduleServices!=null && _toBeScheduleServices.Count>0)
                 //    {
