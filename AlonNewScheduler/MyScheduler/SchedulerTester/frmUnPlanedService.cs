@@ -14,10 +14,12 @@ namespace SchedulerTester
 {
     public partial class frmUnPlanedService : Form
     {
+        private Listener _listner;
         private Scheduler _scheduler;
-        public frmUnPlanedService(Scheduler scheduler)
+        public frmUnPlanedService(Listener listner,Scheduler scheduler)
         {
             InitializeComponent();
+            _listner = listner;
             _scheduler = scheduler;
         }
 
@@ -58,8 +60,9 @@ namespace SchedulerTester
                     serviceAndAccount = servicesCmb.SelectedItem.ToString().Split(':');
                 else
                     throw new Exception("You must choose service!");
-                string serviceName = serviceAndAccount[0];
-                string account = serviceAndAccount[1];
+                string account = serviceAndAccount[0];
+                string serviceName = serviceAndAccount[1];
+               
 
                 if (priorityCmb.SelectedItem!=null)
                     switch (priorityCmb.SelectedItem.ToString())
@@ -85,23 +88,18 @@ namespace SchedulerTester
                                 break;
                             }
                     }
-                
+
+                _listner.AddToSchedule(serviceName, int.Parse(account), DateTime.Now, new Easynet.Edge.Core.SettingsCollection());
 
 
 
 
-                ServiceConfiguration serviceConfiguration = new ServiceConfiguration()
-                {
-                    priority=(int)servicePriority
-
-
-
-                };
+               
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                 MessageBox.Show(ex.Message);
             }
         }
 
