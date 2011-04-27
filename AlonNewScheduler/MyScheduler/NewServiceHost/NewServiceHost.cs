@@ -16,7 +16,7 @@ namespace NewServiceHost
 	public partial class NewServiceHost : ServiceBase
 	{
 		Scheduler _scheduler;
-		System.Timers.Timer _timer;
+		
 		public NewServiceHost()
 		{
 			InitializeComponent();

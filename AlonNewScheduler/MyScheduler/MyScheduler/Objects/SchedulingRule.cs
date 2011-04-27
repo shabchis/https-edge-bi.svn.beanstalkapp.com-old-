@@ -15,6 +15,7 @@ namespace MyScheduler.Objects
 		//public TimeSpan Frequency { get; set; }
 		public TimeSpan MaxDeviationBefore { get; set; }
 		public TimeSpan MaxDeviationAfter { get; set; }
+        public DateTime SpecificDateTime { get; set; }
 		// public Dictionary<string,object> ServiceSettings { get; }
 	}
 	public struct SchedulingData
@@ -72,6 +73,7 @@ namespace MyScheduler.Objects
 	{
 		Day,
 		Week,
-		Month
+		Month,
+        UnPlaned
 	}
 }
