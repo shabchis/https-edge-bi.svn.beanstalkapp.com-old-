@@ -74,6 +74,6 @@ namespace MyScheduler.Objects
 		Day,
 		Week,
 		Month,
-        UnPlaned
+        UnPlanned
 	}
 }

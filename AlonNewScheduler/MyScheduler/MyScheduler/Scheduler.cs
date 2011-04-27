@@ -126,7 +126,7 @@ namespace MyScheduler
                         scheduledService.Value.LegacyInstance.State == Legacy.ServiceState.Aborting || scheduledService.Value.Deleted == true)
                     {
                         if (scheduledService.Value.EndTime.Add(_timeToDeleteServiceFromTimeLine) < DateTime.Now)
-                            _scheduledServices.Remove(scheduledService.Key);
+                            endedAndTimeToClear.Add(scheduledService.Key);
                     }               
                 }
                 foreach (SchedulingData toClear in endedAndTimeToClear)
@@ -351,7 +351,7 @@ namespace MyScheduler
                                         }
                                         break;
                                     }
-                                case SchedulingScope.UnPlaned:
+                                case SchedulingScope.UnPlanned:
                                     {
                                         DateTime timeToRun = schedulingRule.SpecificDateTime;
                                         if (timeToRun >= _timeLineFrom && timeToRun <= _timeLineTo || timeToRun <= _timeLineFrom && timeToRun.Add(schedulingRule.MaxDeviationAfter) > DateTime.Now)
