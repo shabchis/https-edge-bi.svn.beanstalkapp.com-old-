@@ -34,8 +34,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.timeToRunPicker = new System.Windows.Forms.DateTimePicker();
             this.label3 = new System.Windows.Forms.Label();
-            this.scopeCmb = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.addBtn = new System.Windows.Forms.Button();
             this.CancelBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -60,6 +58,7 @@
             // 
             // priorityCmb
             // 
+            this.priorityCmb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.priorityCmb.FormattingEnabled = true;
             this.priorityCmb.Location = new System.Drawing.Point(120, 49);
             this.priorityCmb.Name = "priorityCmb";
@@ -91,50 +90,33 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "Time To Run";
             // 
-            // scopeCmb
-            // 
-            this.scopeCmb.FormattingEnabled = true;
-            this.scopeCmb.Location = new System.Drawing.Point(120, 120);
-            this.scopeCmb.Name = "scopeCmb";
-            this.scopeCmb.Size = new System.Drawing.Size(121, 21);
-            this.scopeCmb.TabIndex = 7;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(20, 120);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(94, 13);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Scheduling Scope";
-            // 
             // addBtn
             // 
-            this.addBtn.Location = new System.Drawing.Point(23, 162);
+            this.addBtn.Location = new System.Drawing.Point(21, 123);
             this.addBtn.Name = "addBtn";
             this.addBtn.Size = new System.Drawing.Size(75, 23);
             this.addBtn.TabIndex = 8;
             this.addBtn.Text = "Add";
             this.addBtn.UseVisualStyleBackColor = true;
+            this.addBtn.Click += new System.EventHandler(this.addBtn_Click);
             // 
             // CancelBtn
             // 
-            this.CancelBtn.Location = new System.Drawing.Point(120, 162);
+            this.CancelBtn.Location = new System.Drawing.Point(120, 123);
             this.CancelBtn.Name = "CancelBtn";
             this.CancelBtn.Size = new System.Drawing.Size(75, 23);
             this.CancelBtn.TabIndex = 9;
             this.CancelBtn.Text = "Cancel";
             this.CancelBtn.UseVisualStyleBackColor = true;
+            this.CancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
             // 
             // frmUnPlanedService
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(423, 221);
+            this.ClientSize = new System.Drawing.Size(423, 164);
             this.Controls.Add(this.CancelBtn);
             this.Controls.Add(this.addBtn);
-            this.Controls.Add(this.scopeCmb);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.timeToRunPicker);
             this.Controls.Add(this.priorityCmb);
@@ -157,8 +139,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DateTimePicker timeToRunPicker;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox scopeCmb;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button addBtn;
         private System.Windows.Forms.Button CancelBtn;
     }

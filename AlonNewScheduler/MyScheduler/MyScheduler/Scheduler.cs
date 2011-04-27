@@ -145,6 +145,20 @@ namespace MyScheduler
                         _scheduledServices.Remove(unScheduledService.Key);
                     }
                 }
+                lock (_toBeScheduleServices) //clear unplaned services that already finsihed runing
+                {
+                    var unPlanedServices = from ups in _toBeScheduleServices
+                                           where ups.SchedulingRules[0].Scope == SchedulingScope.UnPlaned
+                                           select ups;
+
+                    foreach (var service in unPlanedServices)
+                    {
+                        if (service.SchedulingRules[0].SpecificDateTime.Add(service.SchedulingRules[0].MaxDeviationAfter) <= DateTime.Now)
+                            _toBeScheduleServices.Remove(service);
+                        
+                    }
+                    
+                }
 
             }
 
@@ -329,6 +343,17 @@ namespace MyScheduler
                                         }
                                         break;
                                     }
+                                case SchedulingScope.UnPlaned:
+                                    {
+                                        DateTime timeToRun = schedulingRule.SpecificDateTime;
+                                        if (timeToRun >= _timeLineFrom && timeToRun <= _timeLineTo || timeToRun <= _timeLineFrom && timeToRun.Add(schedulingRule.MaxDeviationAfter) > DateTime.Now)
+                                        {
+                                            Schedulingdata = new SchedulingData() { Configuration = service, profileID = service.SchedulingProfile.ID, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = timeToRun };
+                                            if (!CheckIfSpecificSchedulingRuleDidNotRunYet(Schedulingdata))
+                                                foundedSchedulingdata.Add(Schedulingdata);
+                                        }
+                                        break;
+                                    }
                             }
 
                         }
@@ -405,7 +430,7 @@ namespace MyScheduler
                             case CalendarUnit.AlwaysOn:
                             case CalendarUnit.ReRun:
                                 continue; //not supported right now!
-                                break;
+                               
                         }
 
                         //subunits= weekday,monthdays

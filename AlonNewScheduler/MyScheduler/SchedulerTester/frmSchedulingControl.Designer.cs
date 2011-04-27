@@ -183,6 +183,7 @@
             // deleteServiceFromScheduleBtn
             // 
             this.deleteServiceFromScheduleBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.deleteServiceFromScheduleBtn.Enabled = false;
             this.deleteServiceFromScheduleBtn.Location = new System.Drawing.Point(482, 291);
             this.deleteServiceFromScheduleBtn.Name = "deleteServiceFromScheduleBtn";
             this.deleteServiceFromScheduleBtn.Size = new System.Drawing.Size(179, 23);
