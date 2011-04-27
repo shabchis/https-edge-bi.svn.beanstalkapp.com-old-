@@ -55,11 +55,11 @@
     <Compile Include="frmSchedulingControl.Designer.cs">
       <DependentUpon>frmSchedulingControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmUnPlanedService.cs">
+    <Compile Include="frmUnPlannedService.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmUnPlanedService.Designer.cs">
-      <DependentUpon>frmUnPlanedService.cs</DependentUpon>
+    <Compile Include="frmUnPlannedService.Designer.cs">
+      <DependentUpon>frmUnPlannedService.cs</DependentUpon>
     </Compile>
     <Compile Include="Listener.cs" />
     <Compile Include="Program.cs" />
@@ -67,8 +67,8 @@
     <EmbeddedResource Include="frmSchedulingControl.resx">
       <DependentUpon>frmSchedulingControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmUnPlanedService.resx">
-      <DependentUpon>frmUnPlanedService.cs</DependentUpon>
+    <EmbeddedResource Include="frmUnPlannedService.resx">
+      <DependentUpon>frmUnPlannedService.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

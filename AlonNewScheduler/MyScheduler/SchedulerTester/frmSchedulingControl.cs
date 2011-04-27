@@ -341,25 +341,30 @@ namespace SchedulerTester
 		{
 			try
 			{
-				foreach (DataGridViewRow row in scheduleInfoGrid.SelectedRows)
-				{
-					var scheduleData = from s in _scheduledServices
-									   where s.Key.GetHashCode() == Convert.ToInt32(row.Cells["shceduledID"].Value)
-									   select s.Key;
+                DialogResult result = MessageBox.Show("Are you sure you want to abort service?", "Abort Service", MessageBoxButtons.YesNo);
 
-					try
-					{
-						_scheduler.AbortRuningService(scheduleData.First());
-					}
-					catch (Exception ex)
-					{
+                if (result==System.Windows.Forms.DialogResult.Yes)
+                {
+                    foreach (DataGridViewRow row in scheduleInfoGrid.SelectedRows)
+                    {
+                        var scheduleData = from s in _scheduledServices
+                                           where s.Key.GetHashCode() == Convert.ToInt32(row.Cells["shceduledID"].Value)
+                                           select s.Key;
 
-						MessageBox.Show(string.Format("You cannot delete service in this state\n{0}", ex.Message));
-					}
+                        try
+                        {
+                            _scheduler.AbortRuningService(scheduleData.First());
+                        }
+                        catch (Exception ex)
+                        {
 
-				}
+                            MessageBox.Show(string.Format("You cannot delete service in this state\n{0}", ex.Message));
+                        }
 
-				GetScheduleServices();
+                    }
+
+                    GetScheduleServices(); 
+                }
 			}
 			catch (Exception ex)
 			{
@@ -412,7 +417,7 @@ namespace SchedulerTester
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-            frmUnPlanedService f = new frmUnPlanedService(_listner, _scheduler);
+            frmUnPlannedService f = new frmUnPlannedService(_listner, _scheduler);
             f.Show();
 		}
 
@@ -425,18 +430,22 @@ namespace SchedulerTester
 		{
 			try
 			{
-				foreach (DataGridViewRow row in scheduleInfoGrid.SelectedRows)
-				{
-					var scheduleData = from s in _scheduledServices
-									   where s.Key.GetHashCode() == Convert.ToInt32(row.Cells["shceduledID"].Value)
-									   select s.Key;
-					if (_scheduledServices[scheduleData.First()].LegacyInstance.State == Easynet.Edge.Core.Services.ServiceState.Uninitialized)
-						_scheduler.DeleteScpecificServiceInstance(scheduleData.First());
-					else
-						MessageBox.Show(string.Format("You can't delete service instance with state {0}", _scheduledServices[scheduleData.First()].LegacyInstance.State));
+                DialogResult result = MessageBox.Show("Are you sure you want to Delete service from schedule?", "Delete Service", MessageBoxButtons.YesNo);
+                if (result==System.Windows.Forms.DialogResult.Yes)
+                {
+                    foreach (DataGridViewRow row in scheduleInfoGrid.SelectedRows)
+                    {
+                        var scheduleData = from s in _scheduledServices
+                                           where s.Key.GetHashCode() == Convert.ToInt32(row.Cells["shceduledID"].Value)
+                                           select s.Key;
+                        if (_scheduledServices[scheduleData.First()].LegacyInstance.State == Easynet.Edge.Core.Services.ServiceState.Uninitialized)
+                            _scheduler.DeleteScpecificServiceInstance(scheduleData.First());
+                        else
+                            MessageBox.Show(string.Format("You can't delete service instance with state {0}", _scheduledServices[scheduleData.First()].LegacyInstance.State));
 
-				}
-				GetScheduleServices();
+                    }
+                    GetScheduleServices(); 
+                }
 			}
 			catch (Exception ex)
 			{

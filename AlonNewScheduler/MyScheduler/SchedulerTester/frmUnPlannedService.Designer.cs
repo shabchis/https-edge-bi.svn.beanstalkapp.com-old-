@@ -1,6 +1,6 @@
 ﻿namespace SchedulerTester
 {
-    partial class frmUnPlanedService
+    partial class frmUnPlannedService
     {
         /// <summary>
         /// Required designer variable.
@@ -112,7 +112,7 @@
             this.CancelBtn.UseVisualStyleBackColor = true;
             this.CancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
             // 
-            // frmUnPlanedService
+            // frmUnPlannedService
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -125,8 +125,8 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.servicesCmb);
             this.Controls.Add(this.label1);
-            this.Name = "frmUnPlanedService";
-            this.Text = "Add Unplaned Service";
+            this.Name = "frmUnPlannedService";
+            this.Text = "Add Unplanned Service";
             this.Load += new System.EventHandler(this.frmUnPlanedService_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

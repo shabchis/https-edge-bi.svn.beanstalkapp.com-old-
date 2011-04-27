@@ -12,11 +12,11 @@ using Easynet.Edge.Core.Services;
 
 namespace SchedulerTester
 {
-    public partial class frmUnPlanedService : Form
+    public partial class frmUnPlannedService : Form
     {
         private Listener _listner;
         private Scheduler _scheduler;
-        public frmUnPlanedService(Listener listner,Scheduler scheduler)
+        public frmUnPlannedService(Listener listner,Scheduler scheduler)
         {
             InitializeComponent();
             _listner = listner;
@@ -91,7 +91,8 @@ namespace SchedulerTester
 
                 _listner.AddToSchedule(serviceName, int.Parse(account), DateTime.Now, new Easynet.Edge.Core.SettingsCollection());
 
-
+                MessageBox.Show("Service has been added to schedule and will be runinng shortly");
+                this.Close();
 
 
                
