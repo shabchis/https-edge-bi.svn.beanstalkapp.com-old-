@@ -637,7 +637,8 @@ namespace MyScheduler
 
             //startTime = servicesWithSameProfile.Min(s => s.Value.EndTime);
             DateTime calculatedStartTime = startTime;
-            startTime = servicesWithSameProfile.Where(s => s.Value.EndTime > calculatedStartTime).Min(s => s.Value.EndTime);
+
+            startTime = servicesWithSameProfile.Where(s => s.Value.EndTime >= calculatedStartTime).Min(s => s.Value.EndTime);
             if (startTime < DateTime.Now)
                 startTime = DateTime.Now;
 
