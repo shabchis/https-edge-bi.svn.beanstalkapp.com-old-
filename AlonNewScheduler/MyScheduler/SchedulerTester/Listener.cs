@@ -63,7 +63,7 @@ namespace SchedulerTester
                 //        //scheduling rules 
                 myServiceConfiguration.SchedulingRules.Add(new SchedulingRule()
                 {
-                    Scope = SchedulingScope.UnPlaned,
+                    Scope = SchedulingScope.UnPlanned,
                     SpecificDateTime = DateTime.Now,
                     MaxDeviationAfter = new TimeSpan(0, 0, 45, 0, 0),
                     Hours=new List<TimeSpan>()

@@ -511,7 +511,7 @@ namespace SchedulerTester
 
         private void frmSchedulingControl_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DialogResult result= MessageBox.Show("YOU MUST NOT CLOSE THIS FORM, IF YOU HAVE TO,\nPLEAE TALK WITH SHAY BAR-CHEN OR AMIT BLUMAN,\nARE TOU SURE YOU WANT TO CLOSE THE SCHEDULER?","Form Closing!",MessageBoxButtons.YesNo);
+            DialogResult result= MessageBox.Show("YOU MUST NOT CLOSE THIS FORM, IF YOU HAVE TO,\nPLEASE TALK WITH SHAY BAR-CHEN OR AMIT BLUMAN,\nARE YOU SURE YOU WANT TO CLOSE THE SCHEDULER?","Form Closing!",MessageBoxButtons.YesNo);
             if (result == System.Windows.Forms.DialogResult.Yes)
             {
                 result = MessageBox.Show("Are You Sure?", "Form Closing!", MessageBoxButtons.YesNo);
