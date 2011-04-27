@@ -147,26 +147,26 @@ namespace MyScheduler
                         _scheduledServices.Remove(unScheduledService.Key);
                     }
                 }
-                lock (_toBeScheduleServices) //clear unplaned services that already finsihed runing
-                {
-                    if (_toBeScheduleServices!=null && _toBeScheduleServices.Count>0)
-                    {
-                        var unPlanedServices = from ups in _toBeScheduleServices
-                                               where ups.SchedulingRules!=null && ups.SchedulingRules.Count>0 &&  ups.SchedulingRules[0].Scope == SchedulingScope.UnPlaned
-                                               select ups;
+                //lock (_toBeScheduleServices) //clear unplaned services that already finsihed runing
+                //{
+                //    if (_toBeScheduleServices!=null && _toBeScheduleServices.Count>0)
+                //    {
+                //        var unPlanedServices = from ups in _toBeScheduleServices
+                //                               where ups.SchedulingRules!=null && ups.SchedulingRules.Count>0 &&  ups.SchedulingRules[0].Scope == SchedulingScope.UnPlaned
+                //                               select ups;
+                //        List<ServiceConfiguration> 
+                //        foreach (var service in unPlanedServices.ToList())
+                //        {
+                //            if (service.SchedulingRules != null && service.SchedulingRules.Count > 0)
+                //            {
+                //                if (service.SchedulingRules[0].SpecificDateTime.Add(service.SchedulingRules[0].MaxDeviationAfter) <= DateTime.Now)
+                //                    _toBeScheduleServices.Remove(service);
+                //            }
 
-                        foreach (var service in unPlanedServices)
-                        {
-                            if (service.SchedulingRules != null && service.SchedulingRules.Count > 0)
-                            {
-                                if (service.SchedulingRules[0].SpecificDateTime.Add(service.SchedulingRules[0].MaxDeviationAfter) <= DateTime.Now)
-                                    _toBeScheduleServices.Remove(service);
-                            }
-
-                        } 
-                    }
+                //        } 
+                //    }
                     
-                }
+                //}
 
             }
 
