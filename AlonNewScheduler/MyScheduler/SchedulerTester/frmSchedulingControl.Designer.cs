@@ -172,7 +172,6 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(667, 291);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(186, 23);
@@ -184,7 +183,6 @@
             // deleteServiceFromScheduleBtn
             // 
             this.deleteServiceFromScheduleBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.deleteServiceFromScheduleBtn.Enabled = false;
             this.deleteServiceFromScheduleBtn.Location = new System.Drawing.Point(482, 291);
             this.deleteServiceFromScheduleBtn.Name = "deleteServiceFromScheduleBtn";
             this.deleteServiceFromScheduleBtn.Size = new System.Drawing.Size(179, 23);

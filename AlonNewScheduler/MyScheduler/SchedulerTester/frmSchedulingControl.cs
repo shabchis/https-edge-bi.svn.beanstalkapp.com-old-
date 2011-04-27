@@ -18,6 +18,7 @@ namespace SchedulerTester
 	{
 		StringBuilder _strNotScheduled = new StringBuilder();
 		private Scheduler _scheduler;
+        private Listener _listner;
 		private Dictionary<SchedulingData, ServiceInstance> _scheduledServices = new Dictionary<SchedulingData, ServiceInstance>();
 		public delegate void SetLogMethod(string lineText);
 		public delegate void UpdateGridMethod(legacy.ServiceInstance serviceInstance);
@@ -32,6 +33,7 @@ namespace SchedulerTester
 				setLogMethod = new SetLogMethod(SetLogTextBox);
 				updateGridMethod = new UpdateGridMethod(UpdateGridData);
 				this.FormClosed += new FormClosedEventHandler(frmSchedulingControl_FormClosed);
+               
 			}
 			catch (Exception ex)
 			{
@@ -59,6 +61,7 @@ namespace SchedulerTester
 			try
 			{
 				_scheduler = new Scheduler(true);
+                _listner = new Listener(_scheduler);
                 
 				_scheduler.ServiceRunRequiredEvent += new EventHandler(_scheduler_ServiceRunRequiredEvent);
 				_scheduler.NewScheduleCreatedEvent += new EventHandler(_scheduler_NewScheduleCreatedEventHandler);
@@ -409,7 +412,7 @@ namespace SchedulerTester
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-            frmUnPlanedService f = new frmUnPlanedService(_scheduler);
+            frmUnPlanedService f = new frmUnPlanedService(_listner, _scheduler);
             f.Show();
 		}
 
@@ -503,6 +506,7 @@ namespace SchedulerTester
             e.Cancel = true;
         }
 
+       
        
 
 

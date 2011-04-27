@@ -119,18 +119,20 @@ namespace MyScheduler
 
 
                 }
+                List<SchedulingData> endedAndTimeToClear = new List<SchedulingData>();
                 foreach (var scheduledService in _scheduledServices)
                 {
                     if (scheduledService.Value.LegacyInstance.State == Legacy.ServiceState.Ended ||
                         scheduledService.Value.LegacyInstance.State == Legacy.ServiceState.Aborting || scheduledService.Value.Deleted == true)
                     {
-                        if (scheduledService.Value.EndTime.Add(_timeToDeleteServiceFromTimeLine) > DateTime.Now)
+                        if (scheduledService.Value.EndTime.Add(_timeToDeleteServiceFromTimeLine) < DateTime.Now)
                             _scheduledServices.Remove(scheduledService.Key);
-                    }
-                          
-                         
-                    
+                    }               
                 }
+                foreach (SchedulingData toClear in endedAndTimeToClear)
+                    _scheduledServices.Remove(toClear);
+                
+
                 lock (_unscheduleServices)
                 {
                     _unscheduleServices.Clear();
@@ -411,7 +413,7 @@ namespace MyScheduler
                     serviceConfiguration.Name = serviceUse.Name;
                     if (activeServiceElement.Options.ContainsKey("ServicePriority"))
                         serviceConfiguration.priority = int.Parse(activeServiceElement.Options["ServicePriority"]);
-                    //serviceConfiguration.ID = GetServceConfigruationIDByName(serviceConfiguration.Name);
+                   
                     serviceConfiguration.MaxConcurrent = (activeServiceElement.MaxInstances == 0) ? 9999 : activeServiceElement.MaxInstances;
                     serviceConfiguration.MaxCuncurrentPerProfile = (activeServiceElement.MaxInstancesPerAccount == 0) ? 9999 : activeServiceElement.MaxInstancesPerAccount;
                     serviceConfiguration.LegacyConfiguration = activeServiceElement;

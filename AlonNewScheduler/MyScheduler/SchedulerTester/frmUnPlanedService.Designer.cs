@@ -59,6 +59,7 @@
             // priorityCmb
             // 
             this.priorityCmb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.priorityCmb.Enabled = false;
             this.priorityCmb.FormattingEnabled = true;
             this.priorityCmb.Location = new System.Drawing.Point(120, 49);
             this.priorityCmb.Name = "priorityCmb";
@@ -76,6 +77,7 @@
             // 
             // timeToRunPicker
             // 
+            this.timeToRunPicker.Enabled = false;
             this.timeToRunPicker.Location = new System.Drawing.Point(120, 87);
             this.timeToRunPicker.Name = "timeToRunPicker";
             this.timeToRunPicker.Size = new System.Drawing.Size(200, 20);
