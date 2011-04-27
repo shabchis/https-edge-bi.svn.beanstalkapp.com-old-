@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace SchedulerTester
 {
@@ -17,7 +18,7 @@ namespace SchedulerTester
             currentDomain.UnhandledException += new UnhandledExceptionEventHandler(currentDomain_UnhandledException);
             Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
 			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
+			Application.SetCompatibleTextRenderingDefault(false);           
 			Application.Run(new frmSchedulingControl());
 		}
 
@@ -28,8 +29,11 @@ namespace SchedulerTester
 
         static void currentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+           
             Exception ex=(Exception)e.ExceptionObject;
             MessageBox.Show(ex.Message);
+            
+
         }
 	}
 }
