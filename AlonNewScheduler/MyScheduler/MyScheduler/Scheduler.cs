@@ -147,15 +147,21 @@ namespace MyScheduler
                 }
                 lock (_toBeScheduleServices) //clear unplaned services that already finsihed runing
                 {
-                    var unPlanedServices = from ups in _toBeScheduleServices
-                                           where ups.SchedulingRules[0].Scope == SchedulingScope.UnPlaned
-                                           select ups;
-
-                    foreach (var service in unPlanedServices)
+                    if (_toBeScheduleServices!=null && _toBeScheduleServices.Count>0)
                     {
-                        if (service.SchedulingRules[0].SpecificDateTime.Add(service.SchedulingRules[0].MaxDeviationAfter) <= DateTime.Now)
-                            _toBeScheduleServices.Remove(service);
-                        
+                        var unPlanedServices = from ups in _toBeScheduleServices
+                                               where ups.SchedulingRules!=null && ups.SchedulingRules.Count>0 &&  ups.SchedulingRules[0].Scope == SchedulingScope.UnPlaned
+                                               select ups;
+
+                        foreach (var service in unPlanedServices)
+                        {
+                            if (service.SchedulingRules != null && service.SchedulingRules.Count > 0)
+                            {
+                                if (service.SchedulingRules[0].SpecificDateTime.Add(service.SchedulingRules[0].MaxDeviationAfter) <= DateTime.Now)
+                                    _toBeScheduleServices.Remove(service);
+                            }
+
+                        } 
                     }
                     
                 }

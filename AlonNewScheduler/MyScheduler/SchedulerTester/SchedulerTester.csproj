@@ -61,6 +61,7 @@
     <Compile Include="frmUnPlanedService.Designer.cs">
       <DependentUpon>frmUnPlanedService.cs</DependentUpon>
     </Compile>
+    <Compile Include="Listener.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frmSchedulingControl.resx">

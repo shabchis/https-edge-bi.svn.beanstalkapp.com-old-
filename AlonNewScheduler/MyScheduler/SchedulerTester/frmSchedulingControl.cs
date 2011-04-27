@@ -457,7 +457,7 @@ namespace SchedulerTester
 			}
 			catch (Exception ex)
 			{
-
+                MessageBox.Show(ex.Message);
 				 Easynet.Edge.Core.Utilities.Log.Write("SchedulingControlForm", ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
 			}
 		}
@@ -499,7 +499,7 @@ namespace SchedulerTester
 
         private void frmSchedulingControl_FormClosing(object sender, FormClosingEventArgs e)
         {
-            MessageBox.Show("YOU MUST NOT CLOSED THIS FORM, IF YOU HAVE TO,PLEAE TALK WITH SHAY BAR-CHEN OR AMIT BLUMAN");
+            MessageBox.Show("YOU MUST NOT CLOSE THIS FORM, IF YOU HAVE TO,PLEAE TALK WITH SHAY BAR-CHEN OR AMIT BLUMAN");
             e.Cancel = true;
         }
 
