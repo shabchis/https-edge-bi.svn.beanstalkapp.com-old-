@@ -32,6 +32,12 @@
             this.ScheduleBtn = new System.Windows.Forms.Button();
             this.endServiceBtn = new System.Windows.Forms.Button();
             this.scheduleInfoGrid = new System.Windows.Forms.DataGridView();
+            this.rescheduleBtn = new System.Windows.Forms.Button();
+            this.unPlannedBtn = new System.Windows.Forms.Button();
+            this.deleteServiceFromScheduleBtn = new System.Windows.Forms.Button();
+            this.startBtn = new System.Windows.Forms.Button();
+            this.EndBtn = new System.Windows.Forms.Button();
+            this.logtextBox = new System.Windows.Forms.TextBox();
             this.shceduledID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.scheduledName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.accountID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -42,12 +48,6 @@
             this.deleted = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.outCome = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dynamicStaus = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rescheduleBtn = new System.Windows.Forms.Button();
-            this.unPlannedBtn = new System.Windows.Forms.Button();
-            this.deleteServiceFromScheduleBtn = new System.Windows.Forms.Button();
-            this.startBtn = new System.Windows.Forms.Button();
-            this.EndBtn = new System.Windows.Forms.Button();
-            this.logtextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.scheduleInfoGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -97,66 +97,6 @@
             this.scheduleInfoGrid.ReadOnly = true;
             this.scheduleInfoGrid.Size = new System.Drawing.Size(1100, 273);
             this.scheduleInfoGrid.TabIndex = 2;
-            // 
-            // shceduledID
-            // 
-            this.shceduledID.HeaderText = "Shceduled ID";
-            this.shceduledID.Name = "shceduledID";
-            this.shceduledID.ReadOnly = true;
-            // 
-            // scheduledName
-            // 
-            this.scheduledName.HeaderText = "Scheduled Name";
-            this.scheduledName.Name = "scheduledName";
-            this.scheduledName.ReadOnly = true;
-            // 
-            // accountID
-            // 
-            this.accountID.HeaderText = "Account ID";
-            this.accountID.Name = "accountID";
-            this.accountID.ReadOnly = true;
-            // 
-            // startOn
-            // 
-            this.startOn.HeaderText = "Start On";
-            this.startOn.Name = "startOn";
-            this.startOn.ReadOnly = true;
-            // 
-            // endOn
-            // 
-            this.endOn.HeaderText = "End On";
-            this.endOn.Name = "endOn";
-            this.endOn.ReadOnly = true;
-            // 
-            // status
-            // 
-            this.status.HeaderText = "Status";
-            this.status.Name = "status";
-            this.status.ReadOnly = true;
-            // 
-            // scope
-            // 
-            this.scope.HeaderText = "Scope";
-            this.scope.Name = "scope";
-            this.scope.ReadOnly = true;
-            // 
-            // deleted
-            // 
-            this.deleted.HeaderText = "Deleted";
-            this.deleted.Name = "deleted";
-            this.deleted.ReadOnly = true;
-            // 
-            // outCome
-            // 
-            this.outCome.HeaderText = "OutCome";
-            this.outCome.Name = "outCome";
-            this.outCome.ReadOnly = true;
-            // 
-            // dynamicStaus
-            // 
-            this.dynamicStaus.HeaderText = "Dynamic Status";
-            this.dynamicStaus.Name = "dynamicStaus";
-            this.dynamicStaus.ReadOnly = true;
             // 
             // rescheduleBtn
             // 
@@ -223,6 +163,86 @@
             this.logtextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.logtextBox.Size = new System.Drawing.Size(1099, 227);
             this.logtextBox.TabIndex = 9;
+            // 
+            // shceduledID
+            // 
+            this.shceduledID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.shceduledID.HeaderText = "Shceduled ID";
+            this.shceduledID.Name = "shceduledID";
+            this.shceduledID.ReadOnly = true;
+            this.shceduledID.Width = 97;
+            // 
+            // scheduledName
+            // 
+            this.scheduledName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.scheduledName.HeaderText = "Scheduled Name";
+            this.scheduledName.Name = "scheduledName";
+            this.scheduledName.ReadOnly = true;
+            this.scheduledName.Width = 105;
+            // 
+            // accountID
+            // 
+            this.accountID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.accountID.HeaderText = "Account ID";
+            this.accountID.Name = "accountID";
+            this.accountID.ReadOnly = true;
+            this.accountID.Width = 79;
+            // 
+            // startOn
+            // 
+            this.startOn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.startOn.HeaderText = "Start On";
+            this.startOn.Name = "startOn";
+            this.startOn.ReadOnly = true;
+            this.startOn.Width = 66;
+            // 
+            // endOn
+            // 
+            this.endOn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.endOn.HeaderText = "End On";
+            this.endOn.Name = "endOn";
+            this.endOn.ReadOnly = true;
+            this.endOn.Width = 51;
+            // 
+            // status
+            // 
+            this.status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.status.HeaderText = "Status";
+            this.status.Name = "status";
+            this.status.ReadOnly = true;
+            this.status.Width = 62;
+            // 
+            // scope
+            // 
+            this.scope.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.scope.HeaderText = "Scope";
+            this.scope.Name = "scope";
+            this.scope.ReadOnly = true;
+            this.scope.Width = 63;
+            // 
+            // deleted
+            // 
+            this.deleted.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.deleted.HeaderText = "Deleted";
+            this.deleted.Name = "deleted";
+            this.deleted.ReadOnly = true;
+            this.deleted.Width = 69;
+            // 
+            // outCome
+            // 
+            this.outCome.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.outCome.HeaderText = "OutCome";
+            this.outCome.Name = "outCome";
+            this.outCome.ReadOnly = true;
+            this.outCome.Width = 76;
+            // 
+            // dynamicStaus
+            // 
+            this.dynamicStaus.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dynamicStaus.HeaderText = "Dynamic Status";
+            this.dynamicStaus.Name = "dynamicStaus";
+            this.dynamicStaus.ReadOnly = true;
+            this.dynamicStaus.Width = 97;
             // 
             // frmSchedulingControl
             // 

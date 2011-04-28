@@ -323,11 +323,12 @@ namespace SchedulerTester
 				{
 					if (!_scheduledServices.ContainsKey(scheduledService.Key))
 						_scheduledServices.Add(scheduledService.Key, scheduledService.Value);
-					int row = scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("dd/MM/yyy HH:mm"), scheduledService.Value.EndTime.ToString("dd/MM/yyy HH:mm"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted, scheduledService.Value.LegacyInstance.Outcome, scheduledService.Value.LegacyInstance.State });
+					int row = scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("dd/MM/yyy HH:mm:ss"), scheduledService.Value.EndTime.ToString("dd/MM/yyy HH:mm:ss"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted, scheduledService.Value.LegacyInstance.Outcome, scheduledService.Value.LegacyInstance.State });
 					scheduleInfoGrid.Rows[row].DefaultCellStyle.BackColor = GetColorByState(scheduledService.Value.LegacyInstance.State, scheduledService.Value.LegacyInstance.Outcome);
 					scheduleInfoGrid.Rows[row].Tag = scheduledService.Value.LegacyInstance;
 
 				}
+               
 
 			}
 			catch (Exception ex)
