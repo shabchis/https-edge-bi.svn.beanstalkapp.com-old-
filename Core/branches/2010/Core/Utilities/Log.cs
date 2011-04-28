@@ -53,6 +53,10 @@ namespace Easynet.Edge.Core.Utilities
 
 		public void Save()
 		{
+            /*Fixed buy alon 30/3/2001- bug-when  data manager.currecnt.openconnection() is starting transaction and 
+             * on the log.save you create transaction you get error message:"ther transaction is either not associete with the current connection
+             or has been commited.
+             the fix is to create the comand not using the datamatanger.createCommand so the transaction will not be associte withe the log connection*/
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
             cmd.CommandText = @"insert into Log
