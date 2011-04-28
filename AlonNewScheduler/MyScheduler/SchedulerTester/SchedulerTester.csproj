@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="DebugService.cs" />
     <Compile Include="frmSchedulingControl.cs">
       <SubType>Form</SubType>
@@ -64,6 +65,7 @@
     <Compile Include="Listener.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Smtp.cs" />
     <EmbeddedResource Include="frmSchedulingControl.resx">
       <DependentUpon>frmSchedulingControl.cs</DependentUpon>
     </EmbeddedResource>

@@ -18,19 +18,22 @@ namespace SchedulerTester
             currentDomain.UnhandledException += new UnhandledExceptionEventHandler(currentDomain_UnhandledException);
             Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
 			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);           
+			Application.SetCompatibleTextRenderingDefault(false);            
 			Application.Run(new frmSchedulingControl());
 		}
 
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
+            
             MessageBox.Show(e.Exception.Message);
         }
 
         static void currentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-           
-            Exception ex=(Exception)e.ExceptionObject;
+
+            
+            Exception ex=(Exception)e.ExceptionObject;           
+            Smtp.Send("Scheduler exception Test!!!!!!!!!!!", true, string.Format("Message:\n{0}\nInner Exception:\n{1}\nExeption.ToString():\n{2}\nIsTerminating:{3}", ex.Message, ex.InnerException, ex, e.IsTerminating), false, string.Empty);
             MessageBox.Show(ex.Message);
             
 
