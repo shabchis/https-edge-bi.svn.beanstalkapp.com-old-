@@ -14,7 +14,7 @@ namespace Easynet.Edge.Services.Reports
 		}
 		public ReportRowEntity(SqlDataReader reader)
 		{
-			DayCode = Convert.ToUInt64(reader[0]);
+			DayCode = Convert.ToString(reader[0]);
 			Campaign = Convert.ToString(reader[1]);
 			AdGroup = Convert.ToString(reader[2]);
 			DestUrl = Convert.ToString(reader[3]);
@@ -25,7 +25,7 @@ namespace Easynet.Edge.Services.Reports
 			SignUpConv = Convert.ToUInt64(reader[8]);
 		}
 
-		public UInt64 DayCode { get; set; }
+		public String DayCode { get; set; }
 		public String Campaign { get; set; }
 		public String AdGroup { get; set; }
 		public String DestUrl { get; set; }
