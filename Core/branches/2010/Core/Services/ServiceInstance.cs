@@ -444,7 +444,7 @@ namespace Easynet.Edge.Core.Services
 			}
 
 			// Check whether the service is accessible via WCF. If it is, skip the Appdomain loading
-			try
+			/*try
 			{
 				OpenChannelAndSubscribe();
 			}
@@ -452,7 +452,7 @@ namespace Easynet.Edge.Core.Services
 			{
 				// Communcation test failed, meaning we need to set up the service (assumisng it's down)
 				_commChannel.Abort();
-
+			*/
 				AppDomainSetup setup = new AppDomainSetup();
 				string assemblyDir = AppSettings.Get(typeof(Service), "AssemblyDirectory");
 				setup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
@@ -474,7 +474,10 @@ namespace Easynet.Edge.Core.Services
 						OnOutcomeReported(ServiceOutcome.Failure);
 
 						// EXCEPTION:
-						throw new Exception(String.Format("Failed to create a new AppDomain for the service. Service name: {0}.", Configuration.Name), ex);
+						Log.Write(
+							String.Format("{0} ({1})", this.Configuration.Name, this.InstanceID),
+							"Failed to create a new AppDomain for the service.",
+							ex);
 					}
 				});
 
@@ -496,14 +499,17 @@ namespace Easynet.Edge.Core.Services
 						OnOutcomeReported(ServiceOutcome.Failure);
 
 						// EXCEPTION:
-						throw new Exception(String.Format("Failed to initialize the service. Service name: {0}.", Configuration.Name), ex);
+						Log.Write(
+							String.Format("{0} ({1})", this.Configuration.Name, this.InstanceID),
+							"Failed to initialize the service",
+							ex);
 					}
 
 					// Try to open it again now that the service is running
 					OpenChannelAndSubscribe();
 				}
 				), null);
-			}
+			//}
 		}
 
 		/// <summary>
