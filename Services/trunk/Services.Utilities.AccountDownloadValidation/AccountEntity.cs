@@ -41,11 +41,11 @@ namespace Easynet.Edge.Services.Utilities
 						break;
 				
 			}
-
-			
+			Account_Name = Convert.ToString(_reader[5]);
 		}
 		
 		public UInt64 Account_id { set; get; }
+		public string Account_Name { set; get; }
 		public Int64 Channel { set; get; }
 		public string CahnnelType { set; get; }
 		public UInt64 DayCode { set; get; }
