@@ -478,6 +478,7 @@ namespace Easynet.Edge.Core.Services
 							String.Format("{0} ({1})", this.Configuration.Name, this.InstanceID),
 							"Failed to create a new AppDomain for the service.",
 							ex);
+                        return;
 					}
 				});
 
@@ -503,6 +504,7 @@ namespace Easynet.Edge.Core.Services
 							String.Format("{0} ({1})", this.Configuration.Name, this.InstanceID),
 							"Failed to initialize the service",
 							ex);
+                        return;
 					}
 
 					// Try to open it again now that the service is running
