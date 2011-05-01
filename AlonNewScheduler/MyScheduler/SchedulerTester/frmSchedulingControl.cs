@@ -158,49 +158,28 @@ namespace SchedulerTester
 		{
 			try
 			{
-				this.Invoke(setLogMethod, new Object[] { "Schedule Created:" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\r\n" });
-
-				
-					ScheduledInformationEventArgs ee = (ScheduledInformationEventArgs)e;
-				
+				this.Invoke(setLogMethod, new Object[] { "Schedule Created:" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\r\n" });				
+					ScheduledInformationEventArgs ee = (ScheduledInformationEventArgs)e;				
 					_scheduledServices.Clear();
-
                     _strNotScheduled.Clear();
 
 					
 
-					foreach (KeyValuePair<SchedulingData, ServiceInstance> notSchedInfo in ee.NotScheduledInformation)
-					{
+					foreach (KeyValuePair<SchedulingData, ServiceInstance> notSchedInfo in ee.NotScheduledInformation)					
 						_strNotScheduled.AppendLine(string.Format("Service {0} with profile {1} not scheduled", notSchedInfo.Value.ServiceName, notSchedInfo.Key.profileID));
-
-						
-
-
-					}
-
-					foreach (KeyValuePair<SchedulingData, ServiceInstance> SchedInfo in ee.ScheduleInformation)
-					{
-
-						
-
-
+                
+                foreach (KeyValuePair<SchedulingData, ServiceInstance> SchedInfo in ee.ScheduleInformation)
 						_scheduledServices.Add(SchedInfo.Key, SchedInfo.Value);
-					}
+					
 					GetScheduleServices();
 
 					if (!string.IsNullOrEmpty(_strNotScheduled.ToString()))
                         try
                         {
-                            if (!EventLog.SourceExists("Scheduler-Tester"))
-                            {
-                                EventLog.CreateEventSource(new EventSourceCreationData("Scheduler-Tester", "Application"));
-                            }
-                            EventLog eventLog = new EventLog();
-                            eventLog.Source = "Scheduler-Tester";
-                            eventLog.WriteEntry(string.Format("Source:Scheduler-Tester-Scheduler\nWarning not some services could nt be schedule:\n {0}", _strNotScheduled.ToString()), EventLogEntryType.Warning);
-                            {
-                                this.Invoke(setLogMethod, new Object[] { _strNotScheduled.ToString() });
-                            }
+                            Exception notScheduleException = new Exception(string.Format("Some servies could not be schedule:\n{0}", _strNotScheduled.ToString()));
+                            Easynet.Edge.Core.Utilities.Log.Write("Scheduler", "Some services could not be scheduled", notScheduleException, Easynet.Edge.Core.Utilities.LogMessageType.Error);
+                           
+                            this.Invoke(setLogMethod, new Object[] { _strNotScheduled.ToString() });
                         }
                         catch (Exception)
                         {
