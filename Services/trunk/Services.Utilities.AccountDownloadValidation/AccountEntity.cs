@@ -13,35 +13,43 @@ namespace Easynet.Edge.Services.Utilities
 		}
 		public AccountEntity(SqlDataReader _reader)
 		{
-			Account_id = Convert.ToUInt64(_reader[0]);
-			DayCode = Convert.ToUInt64(_reader[1]);
-			Channel = Convert.ToInt64(_reader[2]);
-			App = Convert.ToString(_reader[3]);
-			switch (Channel)
+			try
 			{
-				case 0: CahnnelType = "BackOffice";
+				Account_id = Convert.ToUInt64(_reader[0]);
+				DayCode = Convert.ToUInt64(_reader[1]);
+				Channel = Convert.ToInt64(_reader[2]);
+				App = Convert.ToString(_reader[3]);
+				switch (Channel)
+				{
+					case 0: CahnnelType = "BackOffice";
 						break;
-				case -1:CahnnelType = "Content";
+					case -1: CahnnelType = "Content";
 						break;
-				case 6: CahnnelType = "Facebook";
+					case 6: CahnnelType = "Facebook";
 						break;
-				case 1: CahnnelType = "Adwords";
+					case 1: CahnnelType = "Adwords";
 						break;
-				default: CahnnelType = "Undefined Cahnnel";
+					default: CahnnelType = "Undefined Cahnnel";
 						break;
-			}
+				}
 
-			switch (Convert.ToInt32(_reader[4]))
-			{
-				case 0: Status = "Failed";
+				switch (Convert.ToInt32(_reader[4]))
+				{
+					case 0: Status = "Failed";
 						break;
-				case 1: Status = "Success";
+					case 1: Status = "Success";
 						break;
-				default: Status = "Uknown";
+					default: Status = "Uknown";
 						break;
-				
+
+				}
+				Account_Name = Convert.ToString(_reader[5]);
 			}
-			Account_Name = Convert.ToString(_reader[5]);
+			catch (Exception e)
+			{
+				throw new Exception("AccountEntity constructor", e); 
+			}
+			
 		}
 		
 		public UInt64 Account_id { set; get; }
