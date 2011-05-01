@@ -10,6 +10,7 @@ using MyScheduler;
 using MyScheduler.Objects;
 using System.IO;
 using legacy = Easynet.Edge.Core.Services;
+using System.Diagnostics;
 
 
 namespace SchedulerTester
@@ -159,28 +160,28 @@ namespace SchedulerTester
 			{
 				this.Invoke(setLogMethod, new Object[] { "Schedule Created:" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\r\n" });
 
-				using (StreamWriter writer = new StreamWriter(Path.Combine(Application.StartupPath, "log.txt"), true, Encoding.Unicode))
-				{
+				
 					ScheduledInformationEventArgs ee = (ScheduledInformationEventArgs)e;
 				
 					_scheduledServices.Clear();
 
                     _strNotScheduled.Clear();
 
-					writer.WriteLine("Schedule Created" + DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
+					
 
 					foreach (KeyValuePair<SchedulingData, ServiceInstance> notSchedInfo in ee.NotScheduledInformation)
 					{
 						_strNotScheduled.AppendLine(string.Format("Service {0} with profile {1} not scheduled", notSchedInfo.Value.ServiceName, notSchedInfo.Key.profileID));
 
-						writer.WriteLine(string.Format("Service {0} with profile {1} not scheduled", notSchedInfo.Value.ServiceName, notSchedInfo.Key.profileID));
+						
 
 
 					}
+
 					foreach (KeyValuePair<SchedulingData, ServiceInstance> SchedInfo in ee.ScheduleInformation)
 					{
 
-						writer.WriteLine(string.Format("ScheduleInfoID:{0}\tService Name:{1}\tAccountID:{2}\tStartTime:{3}\tEndTime\tStatus:{4}\tScope{5}\tDeleted:{6}\tResult:{7}", SchedInfo.Key.GetHashCode(), SchedInfo.Value.ServiceName, SchedInfo.Value.ProfileID, SchedInfo.Value.StartTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.EndTime.ToString("dd/MM/yyyy,HH:mm"), SchedInfo.Value.LegacyInstance.State, SchedInfo.Key.Rule.Scope, SchedInfo.Value.Deleted, SchedInfo.Value.LegacyInstance.Outcome));
+						
 
 
 						_scheduledServices.Add(SchedInfo.Key, SchedInfo.Value);
@@ -188,11 +189,26 @@ namespace SchedulerTester
 					GetScheduleServices();
 
 					if (!string.IsNullOrEmpty(_strNotScheduled.ToString()))
-					{
-                        this.Invoke(setLogMethod, new Object[] { _strNotScheduled.ToString()});
-					}
+                        try
+                        {
+                            if (!EventLog.SourceExists("Scheduler-Tester"))
+                            {
+                                EventLog.CreateEventSource(new EventSourceCreationData("Scheduler-Tester", "Application"));
+                            }
+                            EventLog eventLog = new EventLog();
+                            eventLog.Source = "Scheduler-Tester";
+                            eventLog.WriteEntry(string.Format("Source:Scheduler-Tester-Scheduler\nWarning not some services could nt be schedule:\n {0}", _strNotScheduled.ToString()), EventLogEntryType.Warning);
+                            {
+                                this.Invoke(setLogMethod, new Object[] { _strNotScheduled.ToString() });
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            
+                           
+                        }
 				}
-			}
+			
 			catch (Exception ex)
 			{
 
@@ -463,10 +479,7 @@ namespace SchedulerTester
 				_scheduler.Start();
 
 				logtextBox.Text = logtextBox.Text.Insert(0, "Timer Started:" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\r\n");
-				using (StreamWriter writer = new StreamWriter(Path.Combine(Application.StartupPath, "log.txt"), true, Encoding.Unicode))
-				{
-					writer.WriteLine("Timer Started" + DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
-				}
+				
 			}
 			catch (Exception ex)
 			{
@@ -482,10 +495,7 @@ namespace SchedulerTester
 				_scheduler.Stop();
 				this.Invoke(setLogMethod, new Object[] { "Timer Stoped" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "r\n" });
 
-				using (StreamWriter writer = new StreamWriter(Path.Combine(Application.StartupPath, "log.txt"), true, Encoding.Unicode))
-				{
-					writer.WriteLine("Timer Stoped" + DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
-				}
+				
 			}
 			catch (Exception ex)
 			{
