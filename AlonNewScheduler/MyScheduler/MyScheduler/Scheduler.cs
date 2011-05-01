@@ -71,7 +71,7 @@ namespace MyScheduler
             List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(false);
             BuildScheduleFromNextTimeLineServices(servicesForNextTimeLine);
             OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation = _unscheduleServices, ScheduleInformation = _scheduledServices });
-            //Log.Write(this.ToString(), "New Schedule Created", LogMessageType.Information);
+            Log.Write(this.ToString(), "New Schedule Created", LogMessageType.Information);
             //PrintSchduleTable();
         }
 
