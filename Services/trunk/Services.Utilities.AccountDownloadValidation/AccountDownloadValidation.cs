@@ -43,7 +43,7 @@ namespace Easynet.Edge.Services.Utilities
 				throw new System.Configuration.ConfigurationException("AccountValidationDataBase ConnectionTimeout is missing");
 
 
-			_LogCmd = DataManager.CreateCommand("SELECT [Account_ID],[DayCode],[Service],[Application],[Status] FROM [Source].[dbo].[AccountsServicesLog] WHERE Status = @stat:int and [Application]=@application:Nvarchar  order by [Application],[Status],[Account_ID]");
+			_LogCmd = DataManager.CreateCommand("SELECT [Account_ID],[DayCode],[Service],[Application],[Status],[Account_Name] FROM [Source].[dbo].[AccountsServicesLog] WHERE Status = @stat:int and [Application]=@application:Nvarchar  order by [Application],[Status],[Account_ID]");
 			_setCmd = DataManager.CreateCommand("Update [Source].[dbo].[AccountsServicesLog] set [status] = @stat:int where [Account_ID]=@account_id:int "
 												+ "and [DayCode] = @day_code:int and [Service] = @service:int and [Application]=@app:Nvarchar");
 			sp = DataManager.CreateCommand("Validate_Account()", System.Data.CommandType.StoredProcedure);
