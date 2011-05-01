@@ -102,6 +102,9 @@ namespace Easynet.Edge.Core.Utilities
                     connection.Open();
                     cmd.Connection = connection;
                     cmd.ExecuteNonQuery();
+
+                   
+
                    
                    
                 }
@@ -111,12 +114,12 @@ namespace Easynet.Edge.Core.Utilities
 
                 try
                 {
-                    if (!EventLog.SourceExists("Core.Utilities.Log"))
+                    if (!EventLog.SourceExists("Edge.Core.Utilities.Log"))
                     {
-                        EventLog.CreateEventSource(new EventSourceCreationData("Core.Utilities.Log", "Application"));
+                        EventLog.CreateEventSource(new EventSourceCreationData("Edge.Core.Utilities.Log",  "Edge"));
                     }
                     EventLog eventLog = new EventLog();
-                    eventLog.Source = "Core.Utilities.Log";
+                    eventLog.Source = "Edge.Core.Utilities.Log";
                     eventLog.WriteEntry(string.Format("Source:Log.Save\nerror: {0}", ex.Message), EventLogEntryType.Error);
                    
                 }
