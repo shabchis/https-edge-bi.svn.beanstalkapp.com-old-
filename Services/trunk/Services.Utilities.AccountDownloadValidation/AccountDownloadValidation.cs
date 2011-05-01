@@ -47,6 +47,8 @@ namespace Easynet.Edge.Services.Utilities
 			_setCmd = DataManager.CreateCommand("Update [Source].[dbo].[AccountsServicesLog] set [status] = @stat:int where [Account_ID]=@account_id:int "
 												+ "and [DayCode] = @day_code:int and [Service] = @service:int and [Application]=@app:Nvarchar");
 			sp = DataManager.CreateCommand("Validate_Account()", System.Data.CommandType.StoredProcedure);
+			
+			// Run account validation stored procedure and update status
 			using (DataManager.Current.OpenConnection())
 			{
 				DataManager.Current.AssociateCommands(sp);
