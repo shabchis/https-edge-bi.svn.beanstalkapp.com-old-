@@ -94,55 +94,44 @@ namespace Easynet.Edge.Core.Utilities
             cmd.Parameters.AddWithValue("@Message", Null(this.Message));
             cmd.Parameters.AddWithValue("@IsException", this.IsException);
             cmd.Parameters.AddWithValue("@ExceptionDetails", Null(this.ExceptionDetails));
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+
+            try
             {
-                connection.Open();
-                cmd.Connection = connection;
-                cmd.ExecuteNonQuery();
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    cmd.Connection = connection;
+                    cmd.ExecuteNonQuery();
+                   
+                   
+                }
             }
-//            SqlCommand cmd = DataManager.CreateCommand(@"
-//				insert into Log
-//				(
-//					MachineName,
-//					ProcessID,
-//					Source,
-//					MessageType,
-//					ServiceInstanceID,
-//					AccountID,
-//					Message,
-//					IsException,
-//					ExceptionDetails
-//				)
-//				values
-//				(
-//					@MachineName:NVarChar,
-//					@ProcessID:Int,
-//					@Source:NVarChar,
-//					@MessageType:Int,
-//					@ServiceInstanceID:BigInt,
-//					@AccountID:Int,
-//					@Message:NVarChar,
-//					@IsException:Bit,
-//					@ExceptionDetails:NVarChar
-//				)
-//			");
+            catch (Exception ex)
+            {
 
-//            cmd.Parameters["@MachineName"].Value = this.MachineName;
-//            cmd.Parameters["@ProcessID"].Value = this.ProcessID;
-//            cmd.Parameters["@Source"].Value = this.Source;
-//            cmd.Parameters["@MessageType"].Value = this.MessageType;
-//            cmd.Parameters["@ServiceInstanceID"].Value = this.ServiceInstanceID;
-//            cmd.Parameters["@AccountID"].Value = this.AccountID;
-//            cmd.Parameters["@Message"].Value = Null(this.Message);
-//            cmd.Parameters["@IsException"].Value = this.IsException;
-//            cmd.Parameters["@ExceptionDetails"].Value = Null(this.ExceptionDetails);
+                try
+                {
+                    if (!EventLog.SourceExists("Core.Utilities.Log"))
+                    {
+                        EventLog.CreateEventSource(new EventSourceCreationData("Core.Utilities.Log", "Application"));
+                    }
+                    EventLog eventLog = new EventLog();
+                    eventLog.Source = "Core.Utilities.Log";
+                    eventLog.WriteEntry(string.Format("Source:Log.Save\nerror: {0}", ex.Message), EventLogEntryType.Error);
+                   
+                }
+                catch (Exception)
+                {
+                    
+                    
+                }
 
-//            using (SqlConnection connection = new SqlConnection(ConnectionString))
-//            {
-//                connection.Open();
-//                cmd.Connection = connection;
-//                cmd.ExecuteNonQuery();
-//            }
+   
+
+            }
+            
+
+
 		}
 
 		object Null(object obj)
