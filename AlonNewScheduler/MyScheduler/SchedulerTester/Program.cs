@@ -33,7 +33,7 @@ namespace SchedulerTester
 
             
             Exception ex=(Exception)e.ExceptionObject;           
-            Smtp.Send("Scheduler exception Test!!!!!!!!!!!", true, string.Format("Message:\n{0}\nInner Exception:\n{1}\nExeption.ToString():\n{2}\nIsTerminating:{3}", ex.Message, ex.InnerException, ex, e.IsTerminating), false, string.Empty);
+            Smtp.Send("SchedulerTester  exception", true, string.Format("Message:\n{0}\nInner Exception:\n{1}\nExeption.ToString():\n{2}\nIsTerminating:{3}\nStack:\n{4}", ex.Message, ex.InnerException, ex, e.IsTerminating,ex.StackTrace), false, string.Empty);
             MessageBox.Show(ex.Message);
             
 

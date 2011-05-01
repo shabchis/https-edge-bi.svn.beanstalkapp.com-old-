@@ -71,7 +71,7 @@ namespace MyScheduler
             List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(false);
             BuildScheduleFromNextTimeLineServices(servicesForNextTimeLine);
             OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation = _unscheduleServices, ScheduleInformation = _scheduledServices });
-            Log.Write(this.ToString(), "New Schedule Created", LogMessageType.Information);
+            //Log.Write(this.ToString(), "New Schedule Created", LogMessageType.Information);
             //PrintSchduleTable();
         }
 
@@ -186,7 +186,7 @@ namespace MyScheduler
 
             BuildScheduleFromNextTimeLineServices(servicesForNextTimeLine);
             OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation = _unscheduleServices, ScheduleInformation = _scheduledServices });
-            Log.Write(this.ToString(), "ReSchedule Created", LogMessageType.Information);
+           
             //PrintSchduleTable();
 
         }
@@ -703,7 +703,7 @@ namespace MyScheduler
             NewSchedule();
             NotifyServicesToRun();
 
-            Log.Write(this.ToString(), "Timer for new scheduling and required services has been started", LogMessageType.Information);
+            
             _newSchedulethread = new Thread(new ThreadStart(delegate()
             {
                 while (true)
@@ -765,7 +765,7 @@ namespace MyScheduler
         /// </summary>
         public void Stop()
         {
-            Log.Write(this.ToString(), "Timer for new scheduling and required services has been stoped", LogMessageType.Information);
+           
             if (_findRequiredServicesthread != null)
                 _findRequiredServicesthread.Abort();
 
