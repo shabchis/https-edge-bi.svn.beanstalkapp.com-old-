@@ -29,10 +29,10 @@ namespace SchedulerTester
         {
             //services per account
             List<ServiceConfiguration> serviceConfigurations = _scheduler.GetAllExistServices();
-
+             serviceConfigurations = serviceConfigurations.OrderBy((s => s.SchedulingProfile.ID)).ToList();
             foreach (ServiceConfiguration serviceConfiguration in serviceConfigurations)
             {
-                servicesCmb.Items.Add(string.Format("{0}:{1}", serviceConfiguration.SchedulingProfile.Name, serviceConfiguration.Name));
+                servicesCmb.Items.Add(string.Format("{0}    :   {1}", serviceConfiguration.SchedulingProfile.Name,  serviceConfiguration.Name));
 
             }
             priorityCmb.Items.Add(ServicePriority.Normal);
@@ -60,8 +60,8 @@ namespace SchedulerTester
                     serviceAndAccount = servicesCmb.SelectedItem.ToString().Split(':');
                 else
                     throw new Exception("You must choose service!");
-                string account = serviceAndAccount[0];
-                string serviceName = serviceAndAccount[1];
+                string account = serviceAndAccount[0].Trim();
+                string serviceName = serviceAndAccount[1].Trim();
                
 
                 if (priorityCmb.SelectedItem!=null)

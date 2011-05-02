@@ -34,6 +34,7 @@ namespace SchedulerTester
 				setLogMethod = new SetLogMethod(SetLogTextBox);
 				updateGridMethod = new UpdateGridMethod(UpdateGridData);
 				this.FormClosed += new FormClosedEventHandler(frmSchedulingControl_FormClosed);
+
                
 			}
 			catch (Exception ex)
@@ -63,6 +64,7 @@ namespace SchedulerTester
 			{
 				_scheduler = new Scheduler(true);
                 _listner = new Listener(_scheduler);
+                _listner.Start();
                 
 				_scheduler.ServiceRunRequiredEvent += new EventHandler(_scheduler_ServiceRunRequiredEvent);
 				_scheduler.NewScheduleCreatedEvent += new EventHandler(_scheduler_NewScheduleCreatedEventHandler);
