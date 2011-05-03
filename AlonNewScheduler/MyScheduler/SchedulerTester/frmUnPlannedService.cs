@@ -88,11 +88,37 @@ namespace SchedulerTester
                                 break;
                             }
                     }
+                Easynet.Edge.Core.SettingsCollection options = new Easynet.Edge.Core.SettingsCollection();
+                foreach (ListViewItem item in optionsListView.Items)                
+                    options.Add(item.SubItems[0].Text.Trim(), item.SubItems[1].Text.Trim());  
+                
+ 
+                
+                DateTime targetDateTime = new DateTime(dateToRunPicker.Value.Year, dateToRunPicker.Value.Month, dateToRunPicker.Value.Day, timeToRunPicker.Value.Hour, timeToRunPicker.Value.Minute, 0);
+                DateTime from = FromPicker.Value;
+                DateTime to = toPicker.Value;
+                if (to.Date < from.Date || to.Date>DateTime.Now.Date)
+                    throw new Exception("to date must be equal or greater then from date, and both should be less then today's date");
+                bool result = false;
 
-                _listner.AddToSchedule(serviceName, int.Parse(account), DateTime.Now, new Easynet.Edge.Core.SettingsCollection());
+                while (from.Date<=to.Date)
+                {
+                    options["Date"] = from.ToString("yyyyMMdd");
+                    result = _listner.FormAddToSchedule(serviceName, int.Parse(account), targetDateTime, options, servicePriority);
+                    from = from.AddDays(1);
+                    
+                }
+                if (result)
+                {
+                    MessageBox.Show("Service has been added to schedule and will be runinng shortly");
+                    this.Close();
+                }
+                else
+                    MessageBox.Show("one or more unplaned serivces did not schedule");
 
-                MessageBox.Show("Service has been added to schedule and will be runinng shortly");
-                this.Close();
+
+                
+                
 
 
                
@@ -108,6 +134,28 @@ namespace SchedulerTester
         {
             this.Close();
 
+        }
+
+        private void addOptionBtn_Click(object sender, EventArgs e)
+        {
+            bool exist = false;
+            foreach (ListViewItem item in optionsListView.Items)
+            {
+                if (item.SubItems[0].Text.Trim() == keyTxt.Text)
+                    exist = true;
+                
+            }
+            if (!string.IsNullOrEmpty(keyTxt.Text) && !string.IsNullOrEmpty(valueTxt.Text))
+            {
+                if (!exist)
+                {
+                    optionsListView.Items.Add(new ListViewItem(new string[] { keyTxt.Text, valueTxt.Text }));
+                    keyTxt.Text = string.Empty;
+                    valueTxt.Text = string.Empty;
+                }
+                else
+                    MessageBox.Show("DuplicateKey");
+            }
         }
     }
 
