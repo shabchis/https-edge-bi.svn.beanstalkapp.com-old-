@@ -222,7 +222,10 @@ namespace MyScheduler
         /// <param name="serviceConfiguration"></param>
         public void AddNewServiceToSchedule(ServiceConfiguration serviceConfiguration)
         {
-            _toBeScheduleServices.Add(serviceConfiguration);
+            lock (this)
+            {
+                _toBeScheduleServices.Add(serviceConfiguration); 
+            }
             ReSchedule();
         }
 
