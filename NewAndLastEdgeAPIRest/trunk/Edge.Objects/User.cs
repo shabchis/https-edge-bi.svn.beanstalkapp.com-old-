@@ -96,7 +96,7 @@ namespace Edge.Objects
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
 			using (DataManager.Current.OpenConnection())
 			{
-				SqlCommand sqlCommand = DataManager.CreateCommand("SELECT UserID,Name,AccountAdmin,Email FROM User_GUI_User ORDER BY UserID");
+				SqlCommand sqlCommand = DataManager.CreateCommand("SELECT UserID,IsActive,Name,AccountAdmin,Email FROM User_GUI_User ORDER BY UserID");
 
 
 				thingReader = new ThingReader<User>(sqlCommand.ExecuteReader(), CustomApply);
