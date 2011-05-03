@@ -43,8 +43,11 @@ namespace SchedulerTester
                 ServiceConfiguration myServiceConfiguration = new ServiceConfiguration();
                 ServiceConfiguration baseConfiguration = new ServiceConfiguration();
                 ActiveServiceElement activeServiceElement = new ActiveServiceElement(ServicesConfiguration.Accounts.GetAccount(accountID).Services[serviceName]);
-                foreach (string option in options.Keys)
-                    activeServiceElement.Options[option] = options[option];
+                if (options != null)
+                {
+                    foreach (string option in options.Keys)
+                        activeServiceElement.Options[option] = options[option];
+                }
                 ServiceElement serviceElement = ServicesConfiguration.Services[serviceName];
 
                 //base configuration;
