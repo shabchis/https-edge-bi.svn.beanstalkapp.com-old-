@@ -48,6 +48,7 @@
             this.deleted = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.outCome = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dynamicStaus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.priority = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.scheduleInfoGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -91,7 +92,8 @@
             this.scope,
             this.deleted,
             this.outCome,
-            this.dynamicStaus});
+            this.dynamicStaus,
+            this.priority});
             this.scheduleInfoGrid.Location = new System.Drawing.Point(3, 12);
             this.scheduleInfoGrid.Name = "scheduleInfoGrid";
             this.scheduleInfoGrid.ReadOnly = true;
@@ -244,6 +246,12 @@
             this.dynamicStaus.ReadOnly = true;
             this.dynamicStaus.Width = 97;
             // 
+            // priority
+            // 
+            this.priority.HeaderText = "Priority";
+            this.priority.Name = "priority";
+            this.priority.ReadOnly = true;
+            // 
             // frmSchedulingControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -290,6 +298,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn deleted;
         private System.Windows.Forms.DataGridViewTextBoxColumn outCome;
         private System.Windows.Forms.DataGridViewTextBoxColumn dynamicStaus;
+        private System.Windows.Forms.DataGridViewTextBoxColumn priority;
 	}
 }
 
