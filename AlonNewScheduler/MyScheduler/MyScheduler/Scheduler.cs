@@ -13,6 +13,7 @@ using Easynet.Edge.Core.Utilities;
 
 
 
+
 namespace MyScheduler
 {
 
@@ -39,6 +40,7 @@ namespace MyScheduler
         public event EventHandler ServiceRunRequiredEvent;
         //public event EventHandler ServiceNotScheduledEvent;
         public event EventHandler NewScheduleCreatedEvent;
+        private volatile bool _needReschedule = false;
 
 
 
@@ -68,11 +70,14 @@ namespace MyScheduler
         /// </summary>
         public void NewSchedule()
         {
+            _needReschedule = false;
             List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(false);
             BuildScheduleFromNextTimeLineServices(servicesForNextTimeLine);
             OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation = _unscheduleServices, ScheduleInformation = _scheduledServices });
             Log.Write(this.ToString(), "New Schedule Created", LogMessageType.Information);
             //PrintSchduleTable();
+           
+           
         }
 
         private void BuildScheduleFromNextTimeLineServices(List<SchedulingData> servicesForNextTimeLine)
@@ -178,6 +183,7 @@ namespace MyScheduler
         /// </summary>
         public void ReSchedule()
         {
+            _needReschedule = false;
             List<SchedulingData> servicesForNextTimeLine;
             if (_timeLineFrom == DateTime.MinValue)
                 servicesForNextTimeLine = GetServicesForNextTimeLine(false);
@@ -186,7 +192,7 @@ namespace MyScheduler
 
             BuildScheduleFromNextTimeLineServices(servicesForNextTimeLine);
             OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation = _unscheduleServices, ScheduleInformation = _scheduledServices });
-           
+            
             //PrintSchduleTable();
 
         }
@@ -226,7 +232,7 @@ namespace MyScheduler
             {
                 _toBeScheduleServices.Add(serviceConfiguration); 
             }
-            ReSchedule();
+            _needReschedule = true;
         }
 
         /// <summary>
@@ -604,7 +610,7 @@ namespace MyScheduler
         void LegacyInstance_StateChanged(object sender, Legacy.ServiceStateChangedEventArgs e)
         {
             if (e.StateAfter == Legacy.ServiceState.Ended)
-                ReSchedule();
+                _needReschedule = true;
         }
 
         /// <summary>
@@ -735,6 +741,12 @@ namespace MyScheduler
         {
             //DO some checks
             List<ServiceInstance> instancesToRun = new List<ServiceInstance>();
+            if (_needReschedule)
+            {
+                _needReschedule = false;
+                ReSchedule();
+               
+            }
             lock (_scheduledServices)
             {
                 foreach (var scheduleService in _scheduledServices.OrderBy(s => s.Value.StartTime))
