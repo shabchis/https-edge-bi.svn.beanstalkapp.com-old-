@@ -43,6 +43,7 @@
             this.accountID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.startOn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.endOn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.actualEndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.scope = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.deleted = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -88,6 +89,7 @@
             this.accountID,
             this.startOn,
             this.endOn,
+            this.actualEndTime,
             this.status,
             this.scope,
             this.deleted,
@@ -206,6 +208,14 @@
             this.endOn.ReadOnly = true;
             this.endOn.Width = 51;
             // 
+            // actualEndTime
+            // 
+            this.actualEndTime.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.actualEndTime.HeaderText = "Actual End Time";
+            this.actualEndTime.Name = "actualEndTime";
+            this.actualEndTime.ReadOnly = true;
+            this.actualEndTime.Width = 80;
+            // 
             // status
             // 
             this.status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
@@ -293,6 +303,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn accountID;
         private System.Windows.Forms.DataGridViewTextBoxColumn startOn;
         private System.Windows.Forms.DataGridViewTextBoxColumn endOn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn actualEndTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn status;
         private System.Windows.Forms.DataGridViewTextBoxColumn scope;
         private System.Windows.Forms.DataGridViewTextBoxColumn deleted;
