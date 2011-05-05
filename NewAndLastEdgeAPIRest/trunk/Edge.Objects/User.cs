@@ -55,7 +55,7 @@ namespace Edge.Objects
 		//public Dictionary<int, string> AssignedToGroups = new Dictionary<int, string>();
 
 		[DataMember(Order = 6)]
-		[ListMap(Command = "SELECT T0.GroupID,T1.Name FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID WHERE T0.UserID=@UserID:Int", IsStoredProcedure = false)]
+		[ListMap(Command = "SELECT T0.GroupID,T1.Name FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID WHERE T0.UserID=@UserID:Int ORDER BY Name", IsStoredProcedure = false)]
 		public List<Group> AssignedToGroups = new List<Group>();
 
 		public static User GetUserByID(int id)
@@ -96,7 +96,7 @@ namespace Edge.Objects
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
 			using (DataManager.Current.OpenConnection())
 			{
-				SqlCommand sqlCommand = DataManager.CreateCommand("SELECT UserID,IsActive,Name,AccountAdmin,Email FROM User_GUI_User ORDER BY UserID");
+				SqlCommand sqlCommand = DataManager.CreateCommand("SELECT UserID,IsActive,Name,AccountAdmin,Email FROM User_GUI_User ORDER BY Name");
 
 
 				thingReader = new ThingReader<User>(sqlCommand.ExecuteReader(), CustomApply);
