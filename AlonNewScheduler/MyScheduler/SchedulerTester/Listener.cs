@@ -71,7 +71,8 @@ namespace SchedulerTester
                     Scope = SchedulingScope.UnPlanned,
                     SpecificDateTime = DateTime.Now,
                     MaxDeviationAfter = new TimeSpan(0, 0, 45, 0, 0),
-                    Hours=new List<TimeSpan>()
+                    Hours=new List<TimeSpan>(),
+                    GuidForUnplaned = Guid.NewGuid()
                 });
                 myServiceConfiguration.SchedulingRules[0].Hours.Add(new TimeSpan(0, 0, 0, 0));
                 myServiceConfiguration.BaseConfiguration = baseConfiguration;
@@ -134,7 +135,8 @@ namespace SchedulerTester
                     Scope = SchedulingScope.UnPlanned,
                     SpecificDateTime = targetTime,
                     MaxDeviationAfter = new TimeSpan(0, 0, 45, 0, 0),
-                    Hours = new List<TimeSpan>()
+                    Hours = new List<TimeSpan>(),
+                    GuidForUnplaned=Guid.NewGuid()
                 });
                 myServiceConfiguration.SchedulingRules[0].Hours.Add(new TimeSpan(0, 0, 0, 0));
                 myServiceConfiguration.BaseConfiguration = baseConfiguration;
