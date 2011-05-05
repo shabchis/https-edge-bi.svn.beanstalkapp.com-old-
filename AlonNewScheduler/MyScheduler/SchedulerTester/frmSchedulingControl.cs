@@ -154,6 +154,7 @@ namespace SchedulerTester
         {
             legacy.ServiceInstance instance = (Easynet.Edge.Core.Services.ServiceInstance)sender;
             this.Invoke(updateGridMethod, new Object[] { instance });
+           
         }
 
 		void _scheduler_NewScheduleCreatedEventHandler(object sender, EventArgs e)
@@ -240,6 +241,7 @@ namespace SchedulerTester
 					{
                         row.Cells["dynamicStaus"].Value = serviceInstance.State;
                         row.Cells["outCome"].Value = serviceInstance.Outcome;
+                        row.Cells["actualEndTime"].Value = serviceInstance.TimeEnded.ToString("dd/MM/yyyy HH:mm:ss");
 
                         Color color = GetColorByState(serviceInstance.State, serviceInstance.Outcome);
 						row.DefaultCellStyle.BackColor = color;
@@ -318,9 +320,10 @@ namespace SchedulerTester
 				scheduleInfoGrid.Rows.Clear();
 				foreach (var scheduledService in scheduledServices.OrderBy(s => s.Value.StartTime))
 				{
+                    
 					if (!_scheduledServices.ContainsKey(scheduledService.Key))
 						_scheduledServices.Add(scheduledService.Key, scheduledService.Value);
-					int row = scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("dd/MM/yyy HH:mm:ss"), scheduledService.Value.EndTime.ToString("dd/MM/yyy HH:mm:ss"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted, scheduledService.Value.LegacyInstance.Outcome, scheduledService.Value.LegacyInstance.State ,scheduledService.Value.Priority});
+                    int row = scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("dd/MM/yyy HH:mm:ss"), scheduledService.Value.EndTime.ToString("dd/MM/yyy HH:mm:ss"), scheduledService.Value.LegacyInstance.TimeEnded.ToString("dd/MM/yyy HH:mm:ss"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted, scheduledService.Value.LegacyInstance.Outcome, scheduledService.Value.LegacyInstance.State, scheduledService.Value.Priority });
 					scheduleInfoGrid.Rows[row].DefaultCellStyle.BackColor = GetColorByState(scheduledService.Value.LegacyInstance.State, scheduledService.Value.LegacyInstance.Outcome);
 					scheduleInfoGrid.Rows[row].Tag = scheduledService.Value.LegacyInstance;
 

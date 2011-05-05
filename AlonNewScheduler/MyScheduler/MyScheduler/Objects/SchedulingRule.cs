@@ -18,8 +18,9 @@ namespace MyScheduler.Objects
         public DateTime SpecificDateTime { get; set; }
         // public Dictionary<string,object> ServiceSettings { get; }
     }
-    public struct SchedulingData
+    public class SchedulingData
     {
+        private Guid _guid;
         public ServiceConfiguration Configuration;
         public SchedulingRule Rule;
         public int profileID;
@@ -29,8 +30,12 @@ namespace MyScheduler.Objects
         public ActiveServiceElement LegacyConfiguration;
         public int Priority;
 
+        public SchedulingData()
+        {
+            _guid = Guid.NewGuid();
+        }
 
-
+        
         public override string ToString()
         {
 
@@ -46,7 +51,16 @@ namespace MyScheduler.Objects
             if (Rule.Scope != SchedulingScope.UnPlanned)
                 uniqueKey = String.Format("ConfigurationName:{0},SelectedDay:{1},SelectedHour:{2},RuleScope:{3},TimeToRun:{4},ProfileID:{5}", Configuration.BaseConfiguration.Name, SelectedDay, SelectedHour, Rule.Scope, TimeToRun, profileID);
             else
-                uniqueKey = String.Format("ConfigurationName:{0},SelectedDay:{1},SelectedHour:{2},RuleScope:{3},TimeToRun:{4},ProfileID:{5}{6}", Configuration.BaseConfiguration.Name, SelectedDay, SelectedHour, Rule.Scope, TimeToRun, profileID,Guid.NewGuid());
+            {
+                //StringBuilder optionsBuilder = new StringBuilder();
+                //foreach (var option in LegacyConfiguration.Options)
+                //{
+                //    optionsBuilder.Append(string.Format("{0}:{1},", option.Key, option.Value));
+                //}
+                //_optionsUniqueNess = optionsBuilder.ToString();
+                
+                uniqueKey = String.Format("ConfigurationName:{0},SelectedDay:{1},SelectedHour:{2},RuleScope:{3},TimeToRun:{4},ProfileID:{5}{6}", Configuration.BaseConfiguration.Name, SelectedDay, SelectedHour, Rule.Scope, TimeToRun, profileID, _guid);
+            }
             return uniqueKey;
         }
 
