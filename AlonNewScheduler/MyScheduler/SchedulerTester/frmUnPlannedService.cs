@@ -28,16 +28,17 @@ namespace SchedulerTester
         private void FillComboBoxes()
         {
             //services per account
-            List<ServiceConfiguration> serviceConfigurations = _scheduler.GetAllExistServices();
+            
+            List<ServiceConfiguration> serviceConfigurations = _scheduler.GetAllExistServices().Where(s =>s.SchedulingRules.Count>0 && s.SchedulingRules[0].Scope != SchedulingScope.UnPlanned).ToList();
             serviceConfigurations = serviceConfigurations.OrderBy((s => s.SchedulingProfile.ID)).ToList();
             foreach (ServiceConfiguration serviceConfiguration in serviceConfigurations)
             {
                 servicesCmb.Items.Add(string.Format("{0}    :   {1}", serviceConfiguration.SchedulingProfile.Name, serviceConfiguration.Name));
 
             }
-            priorityCmb.Items.Add(ServicePriority.Normal);
             priorityCmb.Items.Add(ServicePriority.Low);
-            priorityCmb.Items.Add(ServicePriority.High);
+            priorityCmb.Items.Add(ServicePriority.Normal);
+            priorityCmb.Items.Add(ServicePriority.High);           
             priorityCmb.Items.Add(ServicePriority.Immediate);
 
 
