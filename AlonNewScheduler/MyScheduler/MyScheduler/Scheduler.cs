@@ -23,7 +23,7 @@ namespace MyScheduler
     public class Scheduler
     {
         #region members
-        private List<ServiceConfiguration> _toBeScheduleServices = new List<ServiceConfiguration>();
+        private List<ServiceConfiguration> _servicesWarehouse = new List<ServiceConfiguration>();
         private Dictionary<SchedulingData, ServiceInstance> _scheduledServices = new Dictionary<SchedulingData, ServiceInstance>();
         private Dictionary<int, ServiceConfiguration> _servicesPerConfigurationID = new Dictionary<int, ServiceConfiguration>();
         private Dictionary<int, ServiceConfiguration> _servicesPerProfileID = new Dictionary<int, ServiceConfiguration>();
@@ -135,13 +135,13 @@ namespace MyScheduler
                             endedAndTimeToClear.Add(scheduledService.Key);
                     }
                 }
-                lock (_toBeScheduleServices)
+                lock (_servicesWarehouse)
                 {
                     foreach (SchedulingData toClear in endedAndTimeToClear)
                     {
                         bool test = _scheduledServices.Remove(toClear); //clear from already schedule table
                         test = toBeScheduledByTimeAndPriority.Remove(toClear); //clear from to be scheduled on the curent new schedule
-                        test = _toBeScheduleServices.Remove(toClear.Configuration); //clear from services in services wherhouse(all services from configuration and unplaned)
+                        test = _servicesWarehouse.Remove(toClear.Configuration); //clear from services in services wherhouse(all services from configuration and unplaned)
                     }
                 }
 
@@ -240,7 +240,7 @@ namespace MyScheduler
             lock (this)
             {
 
-                _toBeScheduleServices.Add(serviceConfiguration);
+                _servicesWarehouse.Add(serviceConfiguration);
             }
             _needReschedule = true;
         }
@@ -272,13 +272,13 @@ namespace MyScheduler
             SchedulingData Schedulingdata;
             List<SchedulingData> foundedSchedulingdata = new List<SchedulingData>();
             List<int> indexesOfUnplanedServicesAlreadyScheduled = new List<int>();
-            lock (_toBeScheduleServices)
+            lock (_servicesWarehouse)
             {
-                for (int i = 0; i < _toBeScheduleServices.Count; i++)
+                for (int i = 0; i < _servicesWarehouse.Count; i++)
                 {
-                    foreach (SchedulingRule schedulingRule in _toBeScheduleServices[i].SchedulingRules)
+                    foreach (SchedulingRule schedulingRule in _servicesWarehouse[i].SchedulingRules)
                     {
-                        ServiceConfiguration service = _toBeScheduleServices[i];
+                        ServiceConfiguration service = _servicesWarehouse[i];
                         if (schedulingRule != null)
                         {
                             foreach (TimeSpan hour in schedulingRule.Hours)
@@ -487,7 +487,7 @@ namespace MyScheduler
                     profile.Settings = new Dictionary<string, object>();
                     profile.Settings.Add("AccountID", account.ID);
                     serviceConfiguration.SchedulingProfile = profile;
-                    _toBeScheduleServices.Add(serviceConfiguration);
+                    _servicesWarehouse.Add(serviceConfiguration);
 
                 }
             }
@@ -848,7 +848,7 @@ namespace MyScheduler
         public List<ServiceConfiguration> GetAllExistServices()
         {
 
-            return _toBeScheduleServices.OrderBy(s => s.SchedulingProfile.Name).ToList(); ;
+            return _servicesWarehouse.OrderBy(s => s.SchedulingProfile.Name).ToList(); ;
         }
     }
     public class TimeToRunEventArgs : EventArgs
