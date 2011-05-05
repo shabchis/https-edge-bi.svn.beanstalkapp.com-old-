@@ -9,6 +9,7 @@ namespace MyScheduler.Objects
 {
     public class SchedulingRule
     {
+        public Guid GuidForUnplaned;
         public SchedulingScope Scope { get; set; }
         public List<int> Days { get; set; }// { get; }
         public List<TimeSpan> Hours { get; set; }// { get; }
@@ -20,7 +21,7 @@ namespace MyScheduler.Objects
     }
     public class SchedulingData
     {
-        private Guid _guid;
+        internal Guid Guid;
         public ServiceConfiguration Configuration;
         public SchedulingRule Rule;
         public int profileID;
@@ -32,7 +33,7 @@ namespace MyScheduler.Objects
 
         public SchedulingData()
         {
-            _guid = Guid.NewGuid();
+            Guid = Guid.NewGuid();
         }
 
         
@@ -51,15 +52,9 @@ namespace MyScheduler.Objects
             if (Rule.Scope != SchedulingScope.UnPlanned)
                 uniqueKey = String.Format("ConfigurationName:{0},SelectedDay:{1},SelectedHour:{2},RuleScope:{3},TimeToRun:{4},ProfileID:{5}", Configuration.BaseConfiguration.Name, SelectedDay, SelectedHour, Rule.Scope, TimeToRun, profileID);
             else
-            {
-                //StringBuilder optionsBuilder = new StringBuilder();
-                //foreach (var option in LegacyConfiguration.Options)
-                //{
-                //    optionsBuilder.Append(string.Format("{0}:{1},", option.Key, option.Value));
-                //}
-                //_optionsUniqueNess = optionsBuilder.ToString();
-                
-                uniqueKey = String.Format("ConfigurationName:{0},SelectedDay:{1},SelectedHour:{2},RuleScope:{3},TimeToRun:{4},ProfileID:{5}{6}", Configuration.BaseConfiguration.Name, SelectedDay, SelectedHour, Rule.Scope, TimeToRun, profileID, _guid);
+            {               
+                //uniqueKey = String.Format("ConfigurationName:{0},SelectedDay:{1},SelectedHour:{2},RuleScope:{3},TimeToRun:{4},ProfileID:{5}{6}", Configuration.BaseConfiguration.Name, SelectedDay, SelectedHour, Rule.Scope, TimeToRun, profileID, Guid);
+                uniqueKey = Guid.ToString();
             }
             return uniqueKey;
         }

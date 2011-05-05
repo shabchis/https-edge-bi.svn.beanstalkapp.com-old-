@@ -9,6 +9,7 @@ namespace MyScheduler.Objects
 {
 	public class ServiceConfiguration
 	{
+        private Guid _guid;
 		public int ID;
 		public ServiceConfiguration BaseConfiguration;			
 		public string Name;
@@ -21,6 +22,16 @@ namespace MyScheduler.Objects
 		public TimeSpan MaxExecutionTime = new TimeSpan(0,60, 0);
 		public ActiveServiceElement LegacyConfiguration;
 		public int priority;
+
+        public ServiceConfiguration()
+        {
+            _guid = new Guid();
+        }
+        public override int GetHashCode()
+        {
+            return _guid.GetHashCode();
+        }
+       
 		
 	}
 

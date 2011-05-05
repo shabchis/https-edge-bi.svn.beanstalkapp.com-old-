@@ -55,6 +55,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.useOptionsCheckBox = new System.Windows.Forms.CheckBox();
+            this.clearOptionsBtn = new System.Windows.Forms.Button();
             this.schedulingGroupBox.SuspendLayout();
             this.serviceOptionsGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -196,6 +197,7 @@
             // 
             // serviceOptionsGroupBox
             // 
+            this.serviceOptionsGroupBox.Controls.Add(this.clearOptionsBtn);
             this.serviceOptionsGroupBox.Controls.Add(this.removeOptionBtn);
             this.serviceOptionsGroupBox.Controls.Add(this.addOptionBtn);
             this.serviceOptionsGroupBox.Controls.Add(this.optionsListView);
@@ -223,6 +225,7 @@
             this.removeOptionBtn.TabIndex = 18;
             this.removeOptionBtn.Text = "<<";
             this.removeOptionBtn.UseVisualStyleBackColor = true;
+            this.removeOptionBtn.Click += new System.EventHandler(this.removeOptionBtn_Click);
             // 
             // addOptionBtn
             // 
@@ -242,9 +245,10 @@
             this.optionsListView.FullRowSelect = true;
             this.optionsListView.Location = new System.Drawing.Point(476, 109);
             this.optionsListView.Name = "optionsListView";
-            this.optionsListView.Size = new System.Drawing.Size(121, 97);
+            this.optionsListView.Size = new System.Drawing.Size(127, 97);
             this.optionsListView.TabIndex = 16;
             this.optionsListView.UseCompatibleStateImageBehavior = false;
+            this.optionsListView.View = System.Windows.Forms.View.Details;
             // 
             // Key
             // 
@@ -305,6 +309,16 @@
             this.useOptionsCheckBox.UseVisualStyleBackColor = true;
             this.useOptionsCheckBox.CheckedChanged += new System.EventHandler(this.useOptionsCheckBox_CheckedChanged);
             // 
+            // clearOptionsBtn
+            // 
+            this.clearOptionsBtn.Location = new System.Drawing.Point(381, 168);
+            this.clearOptionsBtn.Name = "clearOptionsBtn";
+            this.clearOptionsBtn.Size = new System.Drawing.Size(75, 23);
+            this.clearOptionsBtn.TabIndex = 19;
+            this.clearOptionsBtn.Text = "Clear";
+            this.clearOptionsBtn.UseVisualStyleBackColor = true;
+            this.clearOptionsBtn.Click += new System.EventHandler(this.clearOptionsBtn_Click);
+            // 
             // frmUnPlannedService
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -361,5 +375,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox useOptionsCheckBox;
+        private System.Windows.Forms.Button clearOptionsBtn;
     }
 }

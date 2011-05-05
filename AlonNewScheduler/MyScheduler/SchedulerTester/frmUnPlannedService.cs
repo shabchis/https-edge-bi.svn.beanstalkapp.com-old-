@@ -172,6 +172,20 @@ namespace SchedulerTester
                 serviceOptionsGroupBox.Enabled = false;
         }
 
+        private void removeOptionBtn_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in optionsListView.SelectedItems)
+            {
+                item.Remove();
+
+            }
+        }
+
+        private void clearOptionsBtn_Click(object sender, EventArgs e)
+        {
+            optionsListView.Clear();
+        }
+
 
     }
 
