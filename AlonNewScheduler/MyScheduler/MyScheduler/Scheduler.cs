@@ -23,11 +23,12 @@ namespace MyScheduler
     public class Scheduler
     {
         #region members
-        private List<ServiceConfiguration> _servicesWarehouse = new List<ServiceConfiguration>();
+        private List<ServiceConfiguration> _servicesWarehouse = new List<ServiceConfiguration>(); //all services from configuration file load to this var
         private Dictionary<SchedulingData, ServiceInstance> _scheduledServices = new Dictionary<SchedulingData, ServiceInstance>();
         private Dictionary<int, ServiceConfiguration> _servicesPerConfigurationID = new Dictionary<int, ServiceConfiguration>();
         private Dictionary<int, ServiceConfiguration> _servicesPerProfileID = new Dictionary<int, ServiceConfiguration>();
         private Dictionary<SchedulingData, ServiceInstance> _unscheduleServices = new Dictionary<SchedulingData, ServiceInstance>();
+        private Dictionary<string, ServicePerProfileAvgExecutionTimeCash> _servicePerProfileAvgExecutionTimeCash = new Dictionary<string, ServicePerProfileAvgExecutionTimeCash>();
         DateTime _timeLineFrom;
         DateTime _timeLineTo;
         private TimeSpan _neededScheduleTimeLine; //scheduling for the next xxx min....
@@ -41,7 +42,7 @@ namespace MyScheduler
         //public event EventHandler ServiceNotScheduledEvent;
         public event EventHandler NewScheduleCreatedEvent;
         private volatile bool _needReschedule = false;
-
+        private TimeSpan _executionTimeCashTimeOutAfter;
 
 
         #endregion
@@ -55,12 +56,14 @@ namespace MyScheduler
             if (getServicesFromConfigFile)
                 GetServicesFromConfigurationFile();
 
-            _percentile = int.Parse(AppSettings.Get(this, "Percentile"));
-            _neededScheduleTimeLine = TimeSpan.Parse(AppSettings.Get(this, "NeededScheduleTimeLine"));
-            _intervalBetweenNewSchedule = TimeSpan.Parse(AppSettings.Get(this, "IntervalBetweenNewSchedule"));
-            _findServicesToRunInterval = TimeSpan.Parse(AppSettings.Get(this, "FindServicesToRunInterval"));
-            _timeToDeleteServiceFromTimeLine = TimeSpan.Parse(AppSettings.Get(this, "DeleteEndedServiceInterval"));
-
+            
+                _percentile = int.Parse(AppSettings.Get(this, "Percentile"));
+                _neededScheduleTimeLine = TimeSpan.Parse(AppSettings.Get(this, "NeededScheduleTimeLine"));
+                _intervalBetweenNewSchedule = TimeSpan.Parse(AppSettings.Get(this, "IntervalBetweenNewSchedule"));
+                _findServicesToRunInterval = TimeSpan.Parse(AppSettings.Get(this, "FindServicesToRunInterval"));
+                _timeToDeleteServiceFromTimeLine = TimeSpan.Parse(AppSettings.Get(this, "DeleteEndedServiceInterval"));
+                _executionTimeCashTimeOutAfter = TimeSpan.Parse(AppSettings.Get(this, "DeleteEndedServiceInterval"));
+           
 
 
         }
@@ -642,15 +645,37 @@ namespace MyScheduler
         private TimeSpan GetAverageExecutionTime(string configurationName, int AccountID, int Percentile)
         {
             long averageExacutionTime;
-            using (DataManager.Current.OpenConnection())
+            string key = string.Format("ConfigurationName:{0},Account:{1},Percentile:{2}", configurationName, AccountID, Percentile);
+            try
             {
-                using (SqlCommand sqlCommand = DataManager.CreateCommand("ServiceConfiguration_GetExecutionTime(@ConfigName:NvarChar,@Percentile:Int,@ProfileID:Int)", System.Data.CommandType.StoredProcedure))
+                if (_servicePerProfileAvgExecutionTimeCash.ContainsKey(key) && _servicePerProfileAvgExecutionTimeCash[key].TimeSaved.Add(_executionTimeCashTimeOutAfter) < DateTime.Now)
                 {
-                    sqlCommand.Parameters["@ConfigName"].Value = configurationName;
-                    sqlCommand.Parameters["@Percentile"].Value = Percentile;
-                    sqlCommand.Parameters["@ProfileID"].Value = AccountID;
-                    averageExacutionTime = System.Convert.ToInt32(sqlCommand.ExecuteScalar());
+                    averageExacutionTime = _servicePerProfileAvgExecutionTimeCash[key].AverageExecutionTime;
                 }
+                else
+                {
+
+                    using (DataManager.Current.OpenConnection())
+                    {
+                        using (SqlCommand sqlCommand = DataManager.CreateCommand("ServiceConfiguration_GetExecutionTime(@ConfigName:NvarChar,@Percentile:Int,@ProfileID:Int)", System.Data.CommandType.StoredProcedure))
+                        {
+                            sqlCommand.Parameters["@ConfigName"].Value = configurationName;
+                            sqlCommand.Parameters["@Percentile"].Value = Percentile;
+                            sqlCommand.Parameters["@ProfileID"].Value = AccountID;
+
+                            averageExacutionTime = System.Convert.ToInt32(sqlCommand.ExecuteScalar());
+                            _servicePerProfileAvgExecutionTimeCash[key] = new ServicePerProfileAvgExecutionTimeCash() { AverageExecutionTime = averageExacutionTime, TimeSaved = DateTime.Now };
+
+
+
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+                averageExacutionTime = 180;
             }
             return TimeSpan.FromMinutes(Math.Ceiling(TimeSpan.FromSeconds(averageExacutionTime).TotalMinutes));
         }
