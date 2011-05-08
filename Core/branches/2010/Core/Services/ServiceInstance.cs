@@ -360,26 +360,48 @@ namespace Easynet.Edge.Core.Services
 				cmd.Parameters["@instanceID"].Value = this.InstanceID;
 			}
 
-			using (SqlConnection cn = new SqlConnection(AppSettings.GetAbsolute("Easynet.Edge.Services.DataRetrieval.BaseService.SourceConnectionString")))
-			{
-				cmd.Connection = cn;
-				cn.Open();
-				object newID;
+            const int maxTries = 2;
+            int tries = 0;
+            while (tries < maxTries)
+            {
+                try
+                {
+                    using (SqlConnection cn = new SqlConnection(AppSettings.GetAbsolute("Easynet.Edge.Services.DataRetrieval.BaseService.SourceConnectionString")))
+                    {
+                        cmd.Connection = cn;
+                        cn.Open();
+                        object newID;
 
-				if (isInsert)
-				{
-					newID = cmd.ExecuteScalar();
-					if (newID is DBNull)
-						throw new Exception("Save failed to return a new InstanceID.");
+                        if (isInsert)
+                        {
+                            newID = cmd.ExecuteScalar();
+                            if (newID is DBNull)
+                                throw new Exception("Save failed to return a new InstanceID.");
 
-					InstanceIDProperty.SetValue(this, Convert.ToInt64(newID));
-				}
-				else
-				{
-					if (cmd.ExecuteNonQuery() < 1)
-						throw new Exception("Save did not affect any rows.");
-				}
-			}
+                            InstanceIDProperty.SetValue(this, Convert.ToInt64(newID));
+                        }
+                        else
+                        {
+                            if (cmd.ExecuteNonQuery() < 1)
+                                throw new Exception("Save did not affect any rows.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    tries++;
+                    if (tries == maxTries)
+                    {
+                        Log.Write("Failed to save ServiceInstance.", ex);
+
+                        if (this.InstanceID < 0)
+                        {
+                            OnStateChanged(ServiceState.Ended, false);
+                            OnOutcomeReported(ServiceOutcome.Failure, false);
+                        }
+                    }
+                }
+            }
 
 
 		}
@@ -583,14 +605,15 @@ namespace Easynet.Edge.Core.Services
 			OnStateChanged(state);
 		}
 
-		private void OnStateChanged(ServiceState state)
+		private void OnStateChanged(ServiceState state, bool save = true)
 		{
 			ServiceState before = this.State;
 			StateProperty.SetValue(this, state);
 			if (state == ServiceState.Ended)
 				TimeEndedProperty.SetValue(this, DateTime.Now);
 
-			this.Save();
+            if (save)
+			    this.Save();
 
 			if (this.StateChanged != null)
 				StateChanged(this, new ServiceStateChangedEventArgs(before, state));
@@ -611,10 +634,12 @@ namespace Easynet.Edge.Core.Services
 			OnOutcomeReported(outcome);
 		}
 
-		void OnOutcomeReported(ServiceOutcome outcome)
+        void OnOutcomeReported(ServiceOutcome outcome, bool save = true)
 		{
 			OutcomeProperty.SetValue(this, outcome);
-			this.Save();
+
+            if (save)
+			    this.Save();
 
 			if (this.OutcomeReported != null)
 				OutcomeReported(this, EventArgs.Empty);
