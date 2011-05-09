@@ -377,13 +377,18 @@ namespace Easynet.Edge.Core.Services
                             newID = cmd.ExecuteScalar();
                             if (newID is DBNull)
                                 throw new Exception("Save failed to return a new InstanceID.");
-
-                            InstanceIDProperty.SetValue(this, Convert.ToInt64(newID));
+                            else
+                            {
+                                InstanceIDProperty.SetValue(this, Convert.ToInt64(newID));
+                                break;
+                            }
                         }
                         else
                         {
                             if (cmd.ExecuteNonQuery() < 1)
                                 throw new Exception("Save did not affect any rows.");
+                            else
+                                break;
                         }
                     }
                 }
