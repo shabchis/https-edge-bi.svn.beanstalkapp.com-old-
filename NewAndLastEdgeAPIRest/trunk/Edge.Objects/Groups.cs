@@ -151,13 +151,18 @@ namespace Edge.Objects
 				sqlConnection.Open();
 				sqlTransaction = sqlConnection.BeginTransaction("SaveGroup");
 				returnValue=this.GroupID = Convert.ToInt32(MapperUtility.SaveOrRemoveSimpleObject<Group>(command, CommandType.StoredProcedure, sqlOperation, this, sqlConnection, sqlTransaction));
-
+				int lastAccountID = -999;
+				bool AddFictive = true;
 				//insert the new permission
 				foreach (KeyValuePair<int, List<AssignedPermission>> assignedPermissionPerAccount in this.AssignedPermissions)
 				{
 					foreach (AssignedPermission assignedPermission in assignedPermissionPerAccount.Value)
 					{
-						SqlCommand sqlCommand = DataManager.CreateCommand("Permissions_Operations(@AccountID:Int,@TargetID:Int,@TargetIsGroup:Bit,@PermissionType:NvarChar,@Value:Bit)", CommandType.StoredProcedure);
+						if (lastAccountID == assignedPermissionPerAccount.Key)
+							AddFictive = false;
+						else
+							AddFictive = true;
+						SqlCommand sqlCommand = DataManager.CreateCommand("Permissions_Operations(@AccountID:Int,@TargetID:Int,@TargetIsGroup:Bit,@PermissionType:NvarChar,@Value:Bit,@AddFictive:Bit)", CommandType.StoredProcedure);
 						sqlCommand.Connection = sqlConnection;
 						sqlCommand.Transaction = sqlTransaction;
 						sqlCommand.Parameters["@AccountID"].Value = assignedPermissionPerAccount.Key;
@@ -165,6 +170,7 @@ namespace Edge.Objects
 						sqlCommand.Parameters["@TargetIsGroup"].Value = 1;
 						sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.PermissionType;						
 						sqlCommand.Parameters["@Value"].Value = assignedPermission.Value;
+						sqlCommand.Parameters["@AddFictive"].Value = AddFictive;
 						sqlCommand.ExecuteNonQuery();
 					}
 				}
