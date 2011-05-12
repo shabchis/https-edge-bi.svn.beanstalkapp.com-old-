@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.servicesCmb = new System.Windows.Forms.ComboBox();
             this.priorityCmb = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.FromPicker = new System.Windows.Forms.DateTimePicker();
@@ -44,6 +43,7 @@
             this.dateToRunPicker = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
             this.serviceOptionsGroupBox = new System.Windows.Forms.GroupBox();
+            this.clearOptionsBtn = new System.Windows.Forms.Button();
             this.removeOptionBtn = new System.Windows.Forms.Button();
             this.addOptionBtn = new System.Windows.Forms.Button();
             this.optionsListView = new System.Windows.Forms.ListView();
@@ -55,7 +55,9 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.useOptionsCheckBox = new System.Windows.Forms.CheckBox();
-            this.clearOptionsBtn = new System.Windows.Forms.Button();
+            this.servicesCheckedListBox = new System.Windows.Forms.CheckedListBox();
+            this.selectAllbtn = new System.Windows.Forms.Button();
+            this.unSelectAllBtn = new System.Windows.Forms.Button();
             this.schedulingGroupBox.SuspendLayout();
             this.serviceOptionsGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -69,20 +71,11 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Service";
             // 
-            // servicesCmb
-            // 
-            this.servicesCmb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.servicesCmb.FormattingEnabled = true;
-            this.servicesCmb.Location = new System.Drawing.Point(73, 9);
-            this.servicesCmb.Name = "servicesCmb";
-            this.servicesCmb.Size = new System.Drawing.Size(231, 21);
-            this.servicesCmb.TabIndex = 1;
-            // 
             // priorityCmb
             // 
             this.priorityCmb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.priorityCmb.FormattingEnabled = true;
-            this.priorityCmb.Location = new System.Drawing.Point(73, 49);
+            this.priorityCmb.Location = new System.Drawing.Point(714, 12);
             this.priorityCmb.Name = "priorityCmb";
             this.priorityCmb.Size = new System.Drawing.Size(121, 21);
             this.priorityCmb.TabIndex = 3;
@@ -90,7 +83,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 49);
+            this.label2.Location = new System.Drawing.Point(656, 12);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(38, 13);
             this.label2.TabIndex = 2;
@@ -114,7 +107,7 @@
             // 
             // addBtn
             // 
-            this.addBtn.Location = new System.Drawing.Point(18, 458);
+            this.addBtn.Location = new System.Drawing.Point(73, 612);
             this.addBtn.Name = "addBtn";
             this.addBtn.Size = new System.Drawing.Size(75, 23);
             this.addBtn.TabIndex = 8;
@@ -124,7 +117,7 @@
             // 
             // CancelBtn
             // 
-            this.CancelBtn.Location = new System.Drawing.Point(117, 458);
+            this.CancelBtn.Location = new System.Drawing.Point(172, 612);
             this.CancelBtn.Name = "CancelBtn";
             this.CancelBtn.Size = new System.Drawing.Size(75, 23);
             this.CancelBtn.TabIndex = 9;
@@ -154,7 +147,7 @@
             this.schedulingGroupBox.Controls.Add(this.label6);
             this.schedulingGroupBox.Controls.Add(this.dateToRunPicker);
             this.schedulingGroupBox.Controls.Add(this.label5);
-            this.schedulingGroupBox.Location = new System.Drawing.Point(18, 91);
+            this.schedulingGroupBox.Location = new System.Drawing.Point(73, 245);
             this.schedulingGroupBox.Name = "schedulingGroupBox";
             this.schedulingGroupBox.Size = new System.Drawing.Size(366, 100);
             this.schedulingGroupBox.TabIndex = 12;
@@ -210,12 +203,22 @@
             this.serviceOptionsGroupBox.Controls.Add(this.label4);
             this.serviceOptionsGroupBox.Controls.Add(this.toPicker);
             this.serviceOptionsGroupBox.Enabled = false;
-            this.serviceOptionsGroupBox.Location = new System.Drawing.Point(18, 220);
+            this.serviceOptionsGroupBox.Location = new System.Drawing.Point(73, 374);
             this.serviceOptionsGroupBox.Name = "serviceOptionsGroupBox";
             this.serviceOptionsGroupBox.Size = new System.Drawing.Size(626, 216);
             this.serviceOptionsGroupBox.TabIndex = 13;
             this.serviceOptionsGroupBox.TabStop = false;
             this.serviceOptionsGroupBox.Text = "Service Options";
+            // 
+            // clearOptionsBtn
+            // 
+            this.clearOptionsBtn.Location = new System.Drawing.Point(381, 168);
+            this.clearOptionsBtn.Name = "clearOptionsBtn";
+            this.clearOptionsBtn.Size = new System.Drawing.Size(75, 23);
+            this.clearOptionsBtn.TabIndex = 19;
+            this.clearOptionsBtn.Text = "Clear";
+            this.clearOptionsBtn.UseVisualStyleBackColor = true;
+            this.clearOptionsBtn.Click += new System.EventHandler(this.clearOptionsBtn_Click);
             // 
             // removeOptionBtn
             // 
@@ -301,7 +304,7 @@
             // useOptionsCheckBox
             // 
             this.useOptionsCheckBox.AutoSize = true;
-            this.useOptionsCheckBox.Location = new System.Drawing.Point(18, 198);
+            this.useOptionsCheckBox.Location = new System.Drawing.Point(73, 352);
             this.useOptionsCheckBox.Name = "useOptionsCheckBox";
             this.useOptionsCheckBox.Size = new System.Drawing.Size(123, 17);
             this.useOptionsCheckBox.TabIndex = 15;
@@ -309,21 +312,45 @@
             this.useOptionsCheckBox.UseVisualStyleBackColor = true;
             this.useOptionsCheckBox.CheckedChanged += new System.EventHandler(this.useOptionsCheckBox_CheckedChanged);
             // 
-            // clearOptionsBtn
+            // servicesCheckedListBox
             // 
-            this.clearOptionsBtn.Location = new System.Drawing.Point(381, 168);
-            this.clearOptionsBtn.Name = "clearOptionsBtn";
-            this.clearOptionsBtn.Size = new System.Drawing.Size(75, 23);
-            this.clearOptionsBtn.TabIndex = 19;
-            this.clearOptionsBtn.Text = "Clear";
-            this.clearOptionsBtn.UseVisualStyleBackColor = true;
-            this.clearOptionsBtn.Click += new System.EventHandler(this.clearOptionsBtn_Click);
+            this.servicesCheckedListBox.CheckOnClick = true;
+            this.servicesCheckedListBox.ColumnWidth = 200;
+            this.servicesCheckedListBox.FormattingEnabled = true;
+            this.servicesCheckedListBox.Location = new System.Drawing.Point(73, 9);
+            this.servicesCheckedListBox.MultiColumn = true;
+            this.servicesCheckedListBox.Name = "servicesCheckedListBox";
+            this.servicesCheckedListBox.Size = new System.Drawing.Size(577, 229);
+            this.servicesCheckedListBox.TabIndex = 16;
+            // 
+            // selectAllbtn
+            // 
+            this.selectAllbtn.Location = new System.Drawing.Point(659, 214);
+            this.selectAllbtn.Name = "selectAllbtn";
+            this.selectAllbtn.Size = new System.Drawing.Size(75, 23);
+            this.selectAllbtn.TabIndex = 17;
+            this.selectAllbtn.Text = "Select All";
+            this.selectAllbtn.UseVisualStyleBackColor = true;
+            this.selectAllbtn.Click += new System.EventHandler(this.selectAllbtn_Click);
+            // 
+            // unSelectAllBtn
+            // 
+            this.unSelectAllBtn.Location = new System.Drawing.Point(750, 215);
+            this.unSelectAllBtn.Name = "unSelectAllBtn";
+            this.unSelectAllBtn.Size = new System.Drawing.Size(75, 23);
+            this.unSelectAllBtn.TabIndex = 18;
+            this.unSelectAllBtn.Text = "UNSelect All";
+            this.unSelectAllBtn.UseVisualStyleBackColor = true;
+            this.unSelectAllBtn.Click += new System.EventHandler(this.unSelectAllBtn_Click);
             // 
             // frmUnPlannedService
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(847, 482);
+            this.ClientSize = new System.Drawing.Size(847, 645);
+            this.Controls.Add(this.unSelectAllBtn);
+            this.Controls.Add(this.selectAllbtn);
+            this.Controls.Add(this.servicesCheckedListBox);
             this.Controls.Add(this.useOptionsCheckBox);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.serviceOptionsGroupBox);
@@ -332,7 +359,6 @@
             this.Controls.Add(this.addBtn);
             this.Controls.Add(this.priorityCmb);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.servicesCmb);
             this.Controls.Add(this.label1);
             this.Name = "frmUnPlannedService";
             this.Text = "Add Unplanned Service";
@@ -349,7 +375,6 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox servicesCmb;
         private System.Windows.Forms.ComboBox priorityCmb;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DateTimePicker FromPicker;
@@ -376,5 +401,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox useOptionsCheckBox;
         private System.Windows.Forms.Button clearOptionsBtn;
+        private System.Windows.Forms.CheckedListBox servicesCheckedListBox;
+        private System.Windows.Forms.Button selectAllbtn;
+        private System.Windows.Forms.Button unSelectAllBtn;
     }
 }

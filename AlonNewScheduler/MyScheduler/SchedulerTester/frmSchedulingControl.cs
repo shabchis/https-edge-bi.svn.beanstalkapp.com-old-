@@ -11,6 +11,7 @@ using MyScheduler.Objects;
 using System.IO;
 using legacy = Easynet.Edge.Core.Services;
 using System.Diagnostics;
+using System.Configuration;
 
 
 namespace SchedulerTester
@@ -62,6 +63,18 @@ namespace SchedulerTester
 		{
 			try
 			{
+                try
+                {
+                    this.Text = System.AppDomain.CurrentDomain.FriendlyName;
+
+
+
+                }
+                catch (Exception)
+                {
+                    
+                    throw;
+                }
 				_scheduler = new Scheduler(true);
                 _listner = new Listener(_scheduler);
                 _listner.Start();
@@ -69,6 +82,8 @@ namespace SchedulerTester
 				_scheduler.ServiceRunRequiredEvent += new EventHandler(_scheduler_ServiceRunRequiredEvent);
 				_scheduler.NewScheduleCreatedEvent += new EventHandler(_scheduler_NewScheduleCreatedEventHandler);
 				//	_scheduler.Start();
+                //test
+                
 			}
 			catch (Exception ex)
 			{
@@ -323,7 +338,14 @@ namespace SchedulerTester
                     
 					if (!_scheduledServices.ContainsKey(scheduledService.Key))
 						_scheduledServices.Add(scheduledService.Key, scheduledService.Value);
-                    int row = scheduleInfoGrid.Rows.Add(new object[] { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, scheduledService.Value.StartTime.ToString("dd/MM/yyy HH:mm:ss"), scheduledService.Value.EndTime.ToString("dd/MM/yyy HH:mm:ss"), scheduledService.Value.LegacyInstance.TimeEnded.ToString("dd/MM/yyy HH:mm:ss"), scheduledService.Value.LegacyInstance.State, scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted, scheduledService.Value.LegacyInstance.Outcome, scheduledService.Value.LegacyInstance.State, scheduledService.Value.Priority });
+                    int row = scheduleInfoGrid.Rows.Add(new object[] 
+                    { scheduledService.Key.GetHashCode(), scheduledService.Value.ServiceName, scheduledService.Value.ProfileID, 
+                        scheduledService.Value.StartTime.ToString("dd/MM/yyy HH:mm:ss"), scheduledService.Value.EndTime.ToString("dd/MM/yyy HH:mm:ss"),
+                        scheduledService.Value.LegacyInstance.TimeEnded.ToString("dd/MM/yyy HH:mm:ss"), scheduledService.Value.LegacyInstance.State,
+                        scheduledService.Key.Rule.Scope, scheduledService.Value.Deleted, scheduledService.Value.LegacyInstance.Outcome,
+                        scheduledService.Value.LegacyInstance.State, scheduledService.Value.Priority ,
+                        scheduledService.Value.LegacyInstance.Configuration.Options.ContainsKey("Date")?scheduledService.Value.LegacyInstance.Configuration.Options["Date"] : string.Empty
+                    });
 					scheduleInfoGrid.Rows[row].DefaultCellStyle.BackColor = GetColorByState(scheduledService.Value.LegacyInstance.State, scheduledService.Value.LegacyInstance.Outcome);
 					scheduleInfoGrid.Rows[row].Tag = scheduledService.Value.LegacyInstance;
 
@@ -418,6 +440,7 @@ namespace SchedulerTester
 
 		private void button1_Click(object sender, EventArgs e)
 		{
+            ConfigurationManager.RefreshSection("edge.services");
             frmUnPlannedService f = new frmUnPlannedService(_listner, _scheduler);
             f.Show();
 		}
@@ -460,6 +483,7 @@ namespace SchedulerTester
 		{
 			try
 			{
+                ConfigurationManager.RefreshSection("edge.services");
 				_scheduler.Start();
 
 				logtextBox.Text = logtextBox.Text.Insert(0, "Timer Started:" + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\r\n");

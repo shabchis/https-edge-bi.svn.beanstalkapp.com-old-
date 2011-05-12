@@ -10,6 +10,7 @@ using System.Threading;
 using Easynet.Edge.Core.Configuration;
 using Legacy = Easynet.Edge.Core.Services;
 using Easynet.Edge.Core.Utilities;
+using System.Configuration;
 
 
 
@@ -419,7 +420,7 @@ namespace MyScheduler
         /// <summary>
         /// Load and translate the services from app.config
         /// </summary>
-        public void GetServicesFromConfigurationFile()
+        private void GetServicesFromConfigurationFile()
         {
             Dictionary<string, ServiceConfiguration> baseConfigurations = new Dictionary<string, ServiceConfiguration>();
             Dictionary<string, ServiceConfiguration> configurations = new Dictionary<string, ServiceConfiguration>();
@@ -495,7 +496,7 @@ namespace MyScheduler
                 }
             }
         }
-
+    
         /// <summary>
         /// set the service instance on the right time get the service instance with all the data of scheduling and more
         /// </summary>
@@ -505,7 +506,7 @@ namespace MyScheduler
             lock (_scheduledServices)
             {
 
-                if (serviceInstanceAndRuleHash.Value.ActualDeviation > serviceInstanceAndRuleHash.Value.MaxDeviationAfter)
+                if (serviceInstanceAndRuleHash.Value.ActualDeviation > serviceInstanceAndRuleHash.Value.MaxDeviationAfter && serviceInstanceAndRuleHash.Key.Rule.Scope!=SchedulingScope.UnPlanned)
                 {
                     // check if the waiting time is bigger then max waiting time.
                     _unscheduleServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
@@ -873,8 +874,9 @@ namespace MyScheduler
         public List<ServiceConfiguration> GetAllExistServices()
         {
 
-            return _servicesWarehouse.OrderBy(s => s.SchedulingProfile.Name).ToList(); ;
+            return _servicesWarehouse.OrderBy(s => s.SchedulingProfile.Name).ToList(); 
         }
+        
     }
     public class TimeToRunEventArgs : EventArgs
     {

@@ -50,6 +50,7 @@
             this.outCome = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dynamicStaus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.priority = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DayCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.scheduleInfoGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -95,11 +96,12 @@
             this.deleted,
             this.outCome,
             this.dynamicStaus,
-            this.priority});
+            this.priority,
+            this.DayCode});
             this.scheduleInfoGrid.Location = new System.Drawing.Point(3, 12);
             this.scheduleInfoGrid.Name = "scheduleInfoGrid";
             this.scheduleInfoGrid.ReadOnly = true;
-            this.scheduleInfoGrid.Size = new System.Drawing.Size(1100, 273);
+            this.scheduleInfoGrid.Size = new System.Drawing.Size(1248, 273);
             this.scheduleInfoGrid.TabIndex = 2;
             // 
             // rescheduleBtn
@@ -165,7 +167,7 @@
             this.logtextBox.Multiline = true;
             this.logtextBox.Name = "logtextBox";
             this.logtextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logtextBox.Size = new System.Drawing.Size(1099, 227);
+            this.logtextBox.Size = new System.Drawing.Size(1247, 227);
             this.logtextBox.TabIndex = 9;
             // 
             // shceduledID
@@ -262,11 +264,19 @@
             this.priority.Name = "priority";
             this.priority.ReadOnly = true;
             // 
+            // DayCode
+            // 
+            this.DayCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.DayCode.HeaderText = "dayCode";
+            this.DayCode.Name = "DayCode";
+            this.DayCode.ReadOnly = true;
+            this.DayCode.Width = 74;
+            // 
             // frmSchedulingControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1115, 560);
+            this.ClientSize = new System.Drawing.Size(1263, 560);
             this.Controls.Add(this.logtextBox);
             this.Controls.Add(this.EndBtn);
             this.Controls.Add(this.startBtn);
@@ -310,6 +320,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn outCome;
         private System.Windows.Forms.DataGridViewTextBoxColumn dynamicStaus;
         private System.Windows.Forms.DataGridViewTextBoxColumn priority;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DayCode;
 	}
 }
 
