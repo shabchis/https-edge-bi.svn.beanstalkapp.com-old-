@@ -172,6 +172,7 @@ namespace Edge.Objects
 						sqlCommand.Parameters["@Value"].Value = assignedPermission.Value;
 						sqlCommand.Parameters["@AddFictive"].Value = AddFictive;
 						sqlCommand.ExecuteNonQuery();
+						lastAccountID = assignedPermissionPerAccount.Key;
 					}
 				}
 				foreach (User user in this.Members)
