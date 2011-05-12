@@ -57,14 +57,14 @@ namespace MyScheduler
             if (getServicesFromConfigFile)
                 GetServicesFromConfigurationFile();
 
-            
-                _percentile = int.Parse(AppSettings.Get(this, "Percentile"));
-                _neededScheduleTimeLine = TimeSpan.Parse(AppSettings.Get(this, "NeededScheduleTimeLine"));
-                _intervalBetweenNewSchedule = TimeSpan.Parse(AppSettings.Get(this, "IntervalBetweenNewSchedule"));
-                _findServicesToRunInterval = TimeSpan.Parse(AppSettings.Get(this, "FindServicesToRunInterval"));
-                _timeToDeleteServiceFromTimeLine = TimeSpan.Parse(AppSettings.Get(this, "DeleteEndedServiceInterval"));
-                _executionTimeCashTimeOutAfter = TimeSpan.Parse(AppSettings.Get(this, "DeleteEndedServiceInterval"));
-           
+
+            _percentile = int.Parse(AppSettings.Get(this, "Percentile"));
+            _neededScheduleTimeLine = TimeSpan.Parse(AppSettings.Get(this, "NeededScheduleTimeLine"));
+            _intervalBetweenNewSchedule = TimeSpan.Parse(AppSettings.Get(this, "IntervalBetweenNewSchedule"));
+            _findServicesToRunInterval = TimeSpan.Parse(AppSettings.Get(this, "FindServicesToRunInterval"));
+            _timeToDeleteServiceFromTimeLine = TimeSpan.Parse(AppSettings.Get(this, "DeleteEndedServiceInterval"));
+            _executionTimeCashTimeOutAfter = TimeSpan.Parse(AppSettings.Get(this, "DeleteEndedServiceInterval"));
+
 
 
         }
@@ -143,9 +143,10 @@ namespace MyScheduler
                 {
                     foreach (SchedulingData toClear in endedAndTimeToClear)
                     {
-                        bool test = _scheduledServices.Remove(toClear); //clear from already schedule table
-                        test = toBeScheduledByTimeAndPriority.Remove(toClear); //clear from to be scheduled on the curent new schedule
-                        test = _servicesWarehouse.Remove(toClear.Configuration); //clear from services in services wherhouse(all services from configuration and unplaned)
+                        _scheduledServices.Remove(toClear); //clear from already schedule table
+                        toBeScheduledByTimeAndPriority.Remove(toClear); //clear from to be scheduled on the curent new schedule
+                        if (toClear.Rule.Scope == SchedulingScope.UnPlanned)
+                            _servicesWarehouse.Remove(toClear.Configuration); //clear from services in services wherhouse(all services from configuration and unplaned)
                     }
                 }
 
@@ -275,7 +276,7 @@ namespace MyScheduler
         {
             SchedulingData Schedulingdata;
             List<SchedulingData> foundedSchedulingdata = new List<SchedulingData>();
-            List<int> indexesOfUnplanedServicesAlreadyScheduled = new List<int>();
+
             lock (_servicesWarehouse)
             {
                 for (int i = 0; i < _servicesWarehouse.Count; i++)
@@ -496,7 +497,7 @@ namespace MyScheduler
                 }
             }
         }
-    
+
         /// <summary>
         /// set the service instance on the right time get the service instance with all the data of scheduling and more
         /// </summary>
@@ -506,7 +507,7 @@ namespace MyScheduler
             lock (_scheduledServices)
             {
 
-                if (serviceInstanceAndRuleHash.Value.ActualDeviation > serviceInstanceAndRuleHash.Value.MaxDeviationAfter && serviceInstanceAndRuleHash.Key.Rule.Scope!=SchedulingScope.UnPlanned)
+                if (serviceInstanceAndRuleHash.Value.ActualDeviation > serviceInstanceAndRuleHash.Value.MaxDeviationAfter && serviceInstanceAndRuleHash.Key.Rule.Scope != SchedulingScope.UnPlanned)
                 {
                     // check if the waiting time is bigger then max waiting time.
                     _unscheduleServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
@@ -526,7 +527,10 @@ namespace MyScheduler
         /// <param name="schedulingData"></param>
         public void DeleteScpecificServiceInstance(SchedulingData schedulingData)
         {
+
             _scheduledServices[schedulingData].Deleted = true;
+            _needReschedule = true;
+
         }
 
         /// <summary>
@@ -873,10 +877,83 @@ namespace MyScheduler
 
         public List<ServiceConfiguration> GetAllExistServices()
         {
+            List<ServiceConfiguration> allServices = new List<ServiceConfiguration>();
+            Dictionary<string, ServiceConfiguration> baseConfigurations = new Dictionary<string, ServiceConfiguration>();
+            Dictionary<string, ServiceConfiguration> configurations = new Dictionary<string, ServiceConfiguration>();
+            //base configuration
+            foreach (ServiceElement serviceElement in ServicesConfiguration.Services)
+            {
+                ServiceConfiguration serviceConfiguration = new ServiceConfiguration();
+                serviceConfiguration.Name = serviceElement.Name;
 
-            return _servicesWarehouse.OrderBy(s => s.SchedulingProfile.Name).ToList(); 
+                serviceConfiguration.MaxConcurrent = serviceElement.MaxInstances;
+                serviceConfiguration.MaxCuncurrentPerProfile = serviceElement.MaxInstancesPerAccount;
+                //serviceConfiguration.ID = GetServceConfigruationIDByName(serviceConfiguration.Name);
+                baseConfigurations.Add(serviceConfiguration.Name, serviceConfiguration);
+            }
+            //profiles=account and specific aconfiguration
+            foreach (AccountElement account in ServicesConfiguration.Accounts)
+            {
+                foreach (AccountServiceElement accountService in account.Services)
+                {
+                    ServiceElement serviceUse = accountService.Uses.Element;
+                    //active element is the calculated configuration 
+                    ActiveServiceElement activeServiceElement = new ActiveServiceElement(accountService);
+                    ServiceConfiguration serviceConfiguration = new ServiceConfiguration();
+                    serviceConfiguration.Name = serviceUse.Name;
+                    if (activeServiceElement.Options.ContainsKey("ServicePriority"))
+                        serviceConfiguration.priority = int.Parse(activeServiceElement.Options["ServicePriority"]);
+
+                    serviceConfiguration.MaxConcurrent = (activeServiceElement.MaxInstances == 0) ? 9999 : activeServiceElement.MaxInstances;
+                    serviceConfiguration.MaxCuncurrentPerProfile = (activeServiceElement.MaxInstancesPerAccount == 0) ? 9999 : activeServiceElement.MaxInstancesPerAccount;
+                    serviceConfiguration.LegacyConfiguration = activeServiceElement;
+                    //scheduling rules 
+                    foreach (SchedulingRuleElement schedulingRuleElement in activeServiceElement.SchedulingRules)
+                    {
+
+                        SchedulingRule rule = new SchedulingRule();
+                        switch (schedulingRuleElement.CalendarUnit)
+                        {
+
+
+                            case CalendarUnit.Day:
+                                rule.Scope = SchedulingScope.Day;
+                                break;
+                            case CalendarUnit.Month:
+                                rule.Scope = SchedulingScope.Month;
+                                break;
+                            case CalendarUnit.Week:
+                                rule.Scope = SchedulingScope.Week;
+                                break;
+                            case CalendarUnit.AlwaysOn:
+                            case CalendarUnit.ReRun:
+                                continue; //not supported right now!
+
+                        }
+
+                        //subunits= weekday,monthdays
+                        rule.Days = schedulingRuleElement.SubUnits.ToList();
+                        rule.Hours = schedulingRuleElement.ExactTimes.ToList();
+                        rule.MaxDeviationAfter = schedulingRuleElement.MaxDeviation;
+                        if (serviceConfiguration.SchedulingRules == null)
+                            serviceConfiguration.SchedulingRules = new List<SchedulingRule>();
+                        serviceConfiguration.SchedulingRules.Add(rule);
+                    }
+                    serviceConfiguration.BaseConfiguration = baseConfigurations[serviceUse.Name];
+                    //profile settings
+                    Profile profile = new Profile();
+                    profile.Name = account.ID.ToString();
+                    profile.ID = account.ID;
+                    profile.Settings = new Dictionary<string, object>();
+                    profile.Settings.Add("AccountID", account.ID);
+                    serviceConfiguration.SchedulingProfile = profile;
+                    allServices.Add(serviceConfiguration);
+                }
+            }
+            return allServices.OrderBy(s => s.SchedulingProfile.Name).ToList();
+
+
         }
-        
     }
     public class TimeToRunEventArgs : EventArgs
     {
@@ -887,6 +964,7 @@ namespace MyScheduler
         public Dictionary<SchedulingData, ServiceInstance> ScheduleInformation;
         public Dictionary<SchedulingData, ServiceInstance> NotScheduledInformation;
     }
+
 
 
 

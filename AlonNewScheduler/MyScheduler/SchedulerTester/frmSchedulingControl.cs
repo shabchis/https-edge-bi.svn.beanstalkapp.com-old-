@@ -257,7 +257,7 @@ namespace SchedulerTester
                         row.Cells["dynamicStaus"].Value = serviceInstance.State;
                         row.Cells["outCome"].Value = serviceInstance.Outcome;
                         row.Cells["actualEndTime"].Value = serviceInstance.TimeEnded.ToString("dd/MM/yyyy HH:mm:ss");
-
+                        
                         Color color = GetColorByState(serviceInstance.State, serviceInstance.Outcome);
 						row.DefaultCellStyle.BackColor = color;
 					}
@@ -271,52 +271,57 @@ namespace SchedulerTester
 
 		}
 
-		private static Color GetColorByState(legacy.ServiceState state, legacy.ServiceOutcome outCome)
+		private static Color GetColorByState(legacy.ServiceState state, legacy.ServiceOutcome outCome,bool deleted=false)
 		{
 			Color color = Color.White;
 			try
 			{
+                if (deleted != true)
+                {
+                    switch (state)
+                    {
 
-				switch (state)
-				{
+                        case Easynet.Edge.Core.Services.ServiceState.Uninitialized:
+                            break;
+                        case Easynet.Edge.Core.Services.ServiceState.Initializing:
+                            color = Color.FromArgb(0xdd, 0xdd, 0xdd); // light gray
+                            break;
+                        case Easynet.Edge.Core.Services.ServiceState.Ready:
+                            color = Color.FromArgb(0xee, 0xee, 0xff); // light blue
+                            break;
+                        case Easynet.Edge.Core.Services.ServiceState.Starting:
+                            color = Color.Green; // green
+                            break;
+                        case Easynet.Edge.Core.Services.ServiceState.Running:
+                            color = Color.FromArgb(0xe0, 0xff, 0xe0); // light green
+                            break;
+                        case Easynet.Edge.Core.Services.ServiceState.Waiting:
+                            color = Color.FromArgb(0xee, 0xff, 0xee); // light green (a little lighter)
+                            break;
+                        case Easynet.Edge.Core.Services.ServiceState.Ended:
+                            {
+                                if (outCome == legacy.ServiceOutcome.Success)
+                                    color = Color.Turquoise;
+                                else if (outCome == legacy.ServiceOutcome.Failure)
+                                    color = Color.DarkRed;
+                                else if (outCome == legacy.ServiceOutcome.Unspecified)
+                                    color = Color.Orange;
+                                else if (outCome == legacy.ServiceOutcome.Aborted)
+                                    color = Color.Purple;
+                                break;
 
-					case Easynet.Edge.Core.Services.ServiceState.Uninitialized:
-						break;
-					case Easynet.Edge.Core.Services.ServiceState.Initializing:
-						color = Color.FromArgb(0xdd, 0xdd, 0xdd); // light gray
-						break;
-					case Easynet.Edge.Core.Services.ServiceState.Ready:
-						color = Color.FromArgb(0xee, 0xee, 0xff); // light blue
-						break;
-					case Easynet.Edge.Core.Services.ServiceState.Starting:
-						color = Color.Green; // green
-						break;
-					case Easynet.Edge.Core.Services.ServiceState.Running:
-						color = Color.FromArgb(0xe0, 0xff, 0xe0); // light green
-						break;
-					case Easynet.Edge.Core.Services.ServiceState.Waiting:
-						color = Color.FromArgb(0xee, 0xff, 0xee); // light green (a little lighter)
-						break;
-					case Easynet.Edge.Core.Services.ServiceState.Ended:
-						{
-							if (outCome == legacy.ServiceOutcome.Success)
-								color = Color.Turquoise;
-							else if (outCome == legacy.ServiceOutcome.Failure)
-								color = Color.DarkRed;
-							else if (outCome == legacy.ServiceOutcome.Unspecified)
-								color = Color.Orange;
-							else if (outCome == legacy.ServiceOutcome.Aborted)
-								color = Color.Purple;
-							break;
+                            }
 
-						}
+                        case Easynet.Edge.Core.Services.ServiceState.Aborting:
+                            color = Color.Red;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                    color = Color.DarkGray;
 
-					case Easynet.Edge.Core.Services.ServiceState.Aborting:
-						color = Color.Red;
-						break;
-					default:
-						break;
-				}
 
 			}
 			catch (Exception ex)
@@ -346,7 +351,7 @@ namespace SchedulerTester
                         scheduledService.Value.LegacyInstance.State, scheduledService.Value.Priority ,
                         scheduledService.Value.LegacyInstance.Configuration.Options.ContainsKey("Date")?scheduledService.Value.LegacyInstance.Configuration.Options["Date"] : string.Empty
                     });
-					scheduleInfoGrid.Rows[row].DefaultCellStyle.BackColor = GetColorByState(scheduledService.Value.LegacyInstance.State, scheduledService.Value.LegacyInstance.Outcome);
+					scheduleInfoGrid.Rows[row].DefaultCellStyle.BackColor = GetColorByState(scheduledService.Value.LegacyInstance.State, scheduledService.Value.LegacyInstance.Outcome,scheduledService.Value.Deleted);
 					scheduleInfoGrid.Rows[row].Tag = scheduledService.Value.LegacyInstance;
 
 				}
@@ -463,12 +468,20 @@ namespace SchedulerTester
                                            where s.Key.GetHashCode() == Convert.ToInt32(row.Cells["shceduledID"].Value)
                                            select s.Key;
                         if (_scheduledServices[scheduleData.First()].LegacyInstance.State == Easynet.Edge.Core.Services.ServiceState.Uninitialized)
-                            _scheduler.DeleteScpecificServiceInstance(scheduleData.First());
+                        {
+                            SchedulingData schedulingDate = scheduleData.First();
+                            _scheduler.DeleteScpecificServiceInstance(schedulingDate);
+                            row.Cells["deleted"].Value=true;
+                            row.DefaultCellStyle.BackColor = GetColorByState(legacy.ServiceState.Aborting, legacy.ServiceOutcome.Aborted, true);
+                            
+
+                        }
                         else
                             MessageBox.Show(string.Format("You can't delete service instance with state {0}", _scheduledServices[scheduleData.First()].LegacyInstance.State));
 
                     }
-                    GetScheduleServices(); 
+                    //GetScheduleServices(); 
+                    
                 }
 			}
 			catch (Exception ex)
