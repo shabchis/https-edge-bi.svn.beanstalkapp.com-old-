@@ -908,37 +908,7 @@ namespace MyScheduler
                     serviceConfiguration.MaxCuncurrentPerProfile = (activeServiceElement.MaxInstancesPerAccount == 0) ? 9999 : activeServiceElement.MaxInstancesPerAccount;
                     serviceConfiguration.LegacyConfiguration = activeServiceElement;
                     //scheduling rules 
-                    foreach (SchedulingRuleElement schedulingRuleElement in activeServiceElement.SchedulingRules)
-                    {
-
-                        SchedulingRule rule = new SchedulingRule();
-                        switch (schedulingRuleElement.CalendarUnit)
-                        {
-
-
-                            case CalendarUnit.Day:
-                                rule.Scope = SchedulingScope.Day;
-                                break;
-                            case CalendarUnit.Month:
-                                rule.Scope = SchedulingScope.Month;
-                                break;
-                            case CalendarUnit.Week:
-                                rule.Scope = SchedulingScope.Week;
-                                break;
-                            case CalendarUnit.AlwaysOn:
-                            case CalendarUnit.ReRun:
-                                continue; //not supported right now!
-
-                        }
-
-                        //subunits= weekday,monthdays
-                        rule.Days = schedulingRuleElement.SubUnits.ToList();
-                        rule.Hours = schedulingRuleElement.ExactTimes.ToList();
-                        rule.MaxDeviationAfter = schedulingRuleElement.MaxDeviation;
-                        if (serviceConfiguration.SchedulingRules == null)
-                            serviceConfiguration.SchedulingRules = new List<SchedulingRule>();
-                        serviceConfiguration.SchedulingRules.Add(rule);
-                    }
+                    
                     serviceConfiguration.BaseConfiguration = baseConfigurations[serviceUse.Name];
                     //profile settings
                     Profile profile = new Profile();

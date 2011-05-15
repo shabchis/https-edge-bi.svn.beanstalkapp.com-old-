@@ -29,7 +29,7 @@ namespace SchedulerTester
         {
             //services per account
 
-            List<ServiceConfiguration> serviceConfigurations = _scheduler.GetAllExistServices().Where(s => s.SchedulingRules.Count > 0 && s.SchedulingRules[0].Scope != SchedulingScope.UnPlanned).ToList();
+            List<ServiceConfiguration> serviceConfigurations = _scheduler.GetAllExistServices(); //.Where(s => s.SchedulingRules.Count > 0 && s.SchedulingRules[0].Scope != SchedulingScope.UnPlanned).ToList();
             serviceConfigurations = serviceConfigurations.OrderBy((s => s.SchedulingProfile.ID)).ToList();
             foreach (ServiceConfiguration serviceConfiguration in serviceConfigurations)
             {
