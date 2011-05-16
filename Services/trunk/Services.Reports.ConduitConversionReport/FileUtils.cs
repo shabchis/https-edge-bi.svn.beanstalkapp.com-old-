@@ -33,7 +33,9 @@ namespace Easynet.Edge.Services.Reports
 							_row.Append("\t" + row.Imps.ToString());
 							_row.Append("\t" + row.Clicks.ToString());
 							_row.Append("\t" + row.CTR.ToString());
+							_row.Append("\t" + row.AvgCPC.ToString());
 							_row.Append("\t" + row.Cost.ToString());
+							_row.Append("\t" + row.AvgPosition.ToString());
 							_row.Append("\t" + row.SignUpConv.ToString());
 							sw.WriteLine(_row);
 						}
@@ -53,7 +55,7 @@ namespace Easynet.Edge.Services.Reports
 			//TO DO:  Get Headers from config file section conduit report email
 	
 			List<string> Headers = new List<string>(){
-				"Date","Campaign","Ad Group","Destination URL","Impressions","Clicks","CTR","Cost","Sign-up Conv. (many-per-click)"
+				"Date","Campaign","Ad Group","Destination URL","Impressions","Clicks","CTR","Avg CPC","Cost","Avg Position","Sign-up Conv. (many-per-click)"
 			};
 			foreach (var h in Headers)
 			{
