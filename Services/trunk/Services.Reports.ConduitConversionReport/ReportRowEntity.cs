@@ -21,8 +21,10 @@ namespace Easynet.Edge.Services.Reports
 			Imps = Convert.ToUInt64(reader[4]);
 			Clicks = Convert.ToUInt64(reader[5]);
 			CTR = Convert.ToUInt64(reader[6]);
-			Cost = Convert.ToUInt64(reader[7]);
-			SignUpConv = Convert.ToUInt64(reader[8]);
+			AvgCPC = Convert.ToUInt64(reader[7]);
+			Cost = Convert.ToUInt64(reader[8]);
+			AvgPosition = Convert.ToUInt64(reader[9]);
+			SignUpConv = Convert.ToUInt64(reader[10]);
 		}
 
 		public String DayCode { get; set; }
@@ -33,7 +35,11 @@ namespace Easynet.Edge.Services.Reports
 		public UInt64 Clicks { get; set; }
 		public UInt64 CTR { get; set; }
 		public UInt64 Cost { get; set; }
+		public UInt64 AvgCPC { get; set; }
+		public UInt64 AvgPosition { get; set; }
 		public UInt64 SignUpConv { get; set; }
+		 
+			
 
 	}
 }
