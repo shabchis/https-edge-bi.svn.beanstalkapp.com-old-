@@ -96,7 +96,7 @@ namespace Edge.Objects
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
 			using (DataManager.Current.OpenConnection())
 			{
-				SqlCommand sqlCommand = DataManager.CreateCommand("SELECT UserID,IsActive,Name,AccountAdmin,Email FROM User_GUI_User ORDER BY Name");
+				SqlCommand sqlCommand = DataManager.CreateCommand("SELECT UserID,IsActive,Name FROM User_GUI_User ORDER BY Name");
 
 
 				thingReader = new ThingReader<User>(sqlCommand.ExecuteReader(), CustomApply);
@@ -105,13 +105,13 @@ namespace Edge.Objects
 					users.Add((User)thingReader.Current);
 				}
 			}
-			if (users != null && users.Count > 0)
-			{
-				for (int i = 0; i < users.Count; i++)
-				{
-					users[i] = MapperUtility.ExpandObject<User>(users[i], customApply);
-				}
-			}
+			//if (users != null && users.Count > 0)
+			//{
+			//    for (int i = 0; i < users.Count; i++)
+			//    {
+			//        users[i] = MapperUtility.ExpandObject<User>(users[i], customApply);
+			//    }
+			//}
 			return users;
 		}
 
@@ -135,21 +135,24 @@ namespace Edge.Objects
 				{
 					foreach (AssignedPermission assignedPermission in assignedPermissionPerAccount.Value)
 					{
-						if (lastAccountID == assignedPermissionPerAccount.Key)
-							AddFictive = false;
-						else
-							AddFictive = true;
-						SqlCommand sqlCommand = DataManager.CreateCommand("Permissions_Operations(@AccountID:Int,@TargetID:Int,@TargetIsGroup:Bit,@PermissionType:NvarChar,@Value:Bit,@AddFictive:Bit)", CommandType.StoredProcedure);
-						sqlCommand.Connection = sqlConnection;
-						sqlCommand.Transaction = sqlTransaction;
-						sqlCommand.Parameters["@AccountID"].Value = assignedPermissionPerAccount.Key;
-						sqlCommand.Parameters["@TargetID"].Value = this.UserID;
-						sqlCommand.Parameters["@TargetIsGroup"].Value = 0;						
-						sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.PermissionType;
-						sqlCommand.Parameters["@Value"].Value = assignedPermission.Value;
-						sqlCommand.Parameters["@AddFictive"].Value = AddFictive;
-						sqlCommand.ExecuteNonQuery();
-						lastAccountID = assignedPermissionPerAccount.Key;
+						if (assignedPermission.PermissionName!="FictivePermission")
+						{
+							if (lastAccountID == assignedPermissionPerAccount.Key)
+								AddFictive = false;
+							else
+								AddFictive = true;
+							SqlCommand sqlCommand = DataManager.CreateCommand("Permissions_Operations(@AccountID:Int,@TargetID:Int,@TargetIsGroup:Bit,@PermissionType:NvarChar,@Value:Bit,@AddFictive:Bit)", CommandType.StoredProcedure);
+							sqlCommand.Connection = sqlConnection;
+							sqlCommand.Transaction = sqlTransaction;
+							sqlCommand.Parameters["@AccountID"].Value = assignedPermissionPerAccount.Key;
+							sqlCommand.Parameters["@TargetID"].Value = this.UserID;
+							sqlCommand.Parameters["@TargetIsGroup"].Value = 0;
+							sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.PermissionType;
+							sqlCommand.Parameters["@Value"].Value = assignedPermission.Value;
+							sqlCommand.Parameters["@AddFictive"].Value = AddFictive;
+							sqlCommand.ExecuteNonQuery();
+							lastAccountID = assignedPermissionPerAccount.Key; 
+						}
 					}
 				}
 
@@ -198,5 +201,22 @@ namespace Edge.Objects
 
 
 
+
+
+
+		public static void EnableDisableUser(int ID, bool isActive)
+		{
+			using (DataManager.Current.OpenConnection())
+			{
+				SqlCommand sqlCommand = DataManager.CreateCommand(@"UPDATE User_GUI_User 
+																	SET IsActive=@isActive:bit
+																	WHERE UserID=@userID:int");
+				sqlCommand.Parameters["@isActive"].Value = isActive;
+				sqlCommand.Parameters["@userID"].Value = ID;
+
+				sqlCommand.ExecuteNonQuery();
+			}
+			
+		}
 	}
 }

@@ -158,21 +158,24 @@ namespace Edge.Objects
 				{
 					foreach (AssignedPermission assignedPermission in assignedPermissionPerAccount.Value)
 					{
-						if (lastAccountID == assignedPermissionPerAccount.Key)
-							AddFictive = false;
-						else
-							AddFictive = true;
-						SqlCommand sqlCommand = DataManager.CreateCommand("Permissions_Operations(@AccountID:Int,@TargetID:Int,@TargetIsGroup:Bit,@PermissionType:NvarChar,@Value:Bit,@AddFictive:Bit)", CommandType.StoredProcedure);
-						sqlCommand.Connection = sqlConnection;
-						sqlCommand.Transaction = sqlTransaction;
-						sqlCommand.Parameters["@AccountID"].Value = assignedPermissionPerAccount.Key;
-						sqlCommand.Parameters["@TargetID"].Value = this.GroupID;
-						sqlCommand.Parameters["@TargetIsGroup"].Value = 1;
-						sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.PermissionType;						
-						sqlCommand.Parameters["@Value"].Value = assignedPermission.Value;
-						sqlCommand.Parameters["@AddFictive"].Value = AddFictive;
-						sqlCommand.ExecuteNonQuery();
-						lastAccountID = assignedPermissionPerAccount.Key;
+						if (assignedPermission.PermissionName != "FictivePermission")
+						{
+							if (lastAccountID == assignedPermissionPerAccount.Key)
+								AddFictive = false;
+							else
+								AddFictive = true;
+							SqlCommand sqlCommand = DataManager.CreateCommand("Permissions_Operations(@AccountID:Int,@TargetID:Int,@TargetIsGroup:Bit,@PermissionType:NvarChar,@Value:Bit,@AddFictive:Bit)", CommandType.StoredProcedure);
+							sqlCommand.Connection = sqlConnection;
+							sqlCommand.Transaction = sqlTransaction;
+							sqlCommand.Parameters["@AccountID"].Value = assignedPermissionPerAccount.Key;
+							sqlCommand.Parameters["@TargetID"].Value = this.GroupID;
+							sqlCommand.Parameters["@TargetIsGroup"].Value = 1;
+							sqlCommand.Parameters["@PermissionType"].Value = assignedPermission.PermissionType;
+							sqlCommand.Parameters["@Value"].Value = assignedPermission.Value;
+							sqlCommand.Parameters["@AddFictive"].Value = AddFictive;
+							sqlCommand.ExecuteNonQuery();
+							lastAccountID = assignedPermissionPerAccount.Key;
+						}
 					}
 				}
 				foreach (User user in this.Members)
