@@ -29,7 +29,7 @@ namespace Edge.Api.Tools.Handlers
 		[UriMapping(Method="GET",Template = "tools/refund")]
 		public Refund GetRefund()
 		{
-			return new Refund() { AccountID = 7, ChannelID = 6, Month = new DateTime(1977, 10, 27), RefundAmount = 90 };
+			return new Refund() { AccountID = 7, ChannelID = 6, Month =DateTime.Now, RefundAmount = 90 };
 
 		}
 

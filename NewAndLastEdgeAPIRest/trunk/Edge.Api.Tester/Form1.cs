@@ -15,6 +15,7 @@ using System.Xml;
 using System.IO;
 using Microsoft.Win32;
 using Edge.Objects;
+using Newtonsoft.Json.Converters;
 
 
 
@@ -478,6 +479,14 @@ namespace NewRestApiTester__
 				}
 			}
 		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			Refund r = (Refund)Newtonsoft.Json.JsonConvert.DeserializeObject(BodyTextBox.Text, typeof(Refund));
+			BodyTextBox.Text = Newtonsoft.Json.JsonConvert.SerializeObject(r, Newtonsoft.Json.Formatting.Indented, new IsoDateTimeConverter());
+		}
+
+		
 
 	}
 	public struct WordIndexs
