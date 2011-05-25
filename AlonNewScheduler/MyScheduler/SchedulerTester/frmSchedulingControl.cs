@@ -195,7 +195,7 @@ namespace SchedulerTester
                         try
                         {
                             Exception notScheduleException = new Exception(string.Format("Some servies could not be schedule:\n{0}", _strNotScheduled.ToString()));
-                            Easynet.Edge.Core.Utilities.Log.Write("Scheduler", "Some services could not be scheduled", notScheduleException, Easynet.Edge.Core.Utilities.LogMessageType.Error);
+                            //Easynet.Edge.Core.Utilities.Log.Write("Scheduler", "Some services could not be scheduled", null, Easynet.Edge.Core.Utilities.LogMessageType.Information);
                            
                             this.Invoke(setLogMethod, new Object[] { _strNotScheduled.ToString() });
                         }
