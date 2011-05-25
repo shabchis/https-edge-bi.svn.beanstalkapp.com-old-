@@ -511,7 +511,10 @@ namespace MyScheduler
                 {
                     // check if the waiting time is bigger then max waiting time.
                     _unscheduleServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
-                    Log.Write(this.ToString(), string.Format("Service {0} not schedule since it's scheduling exceed max MaxDeviation", serviceInstanceAndRuleHash.Value.ServiceName), LogMessageType.Warning);
+                    if (DateTime.Now > serviceInstanceAndRuleHash.Key.TimeToRun + serviceInstanceAndRuleHash.Value.MaxDeviationAfter)
+                        Log.Write(this.ToString(), string.Format("Service {0} will not run!! since it's scheduling exceed max MaxDeviation", serviceInstanceAndRuleHash.Value.ServiceName),new Exception("Service will not run!"), LogMessageType.Error);
+                    else
+                        Log.Write(this.ToString(), string.Format("Service {0} may not schedule since it's scheduling exceed max MaxDeviation", serviceInstanceAndRuleHash.Value.ServiceName), LogMessageType.Warning);
 
                 }
                 else
@@ -908,7 +911,7 @@ namespace MyScheduler
                     serviceConfiguration.MaxCuncurrentPerProfile = (activeServiceElement.MaxInstancesPerAccount == 0) ? 9999 : activeServiceElement.MaxInstancesPerAccount;
                     serviceConfiguration.LegacyConfiguration = activeServiceElement;
                     //scheduling rules 
-                    
+
                     serviceConfiguration.BaseConfiguration = baseConfigurations[serviceUse.Name];
                     //profile settings
                     Profile profile = new Profile();
