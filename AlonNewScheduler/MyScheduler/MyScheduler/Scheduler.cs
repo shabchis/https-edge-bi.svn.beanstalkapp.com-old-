@@ -28,7 +28,9 @@ namespace MyScheduler
         private Dictionary<SchedulingData, ServiceInstance> _scheduledServices = new Dictionary<SchedulingData, ServiceInstance>();
         private Dictionary<int, ServiceConfiguration> _servicesPerConfigurationID = new Dictionary<int, ServiceConfiguration>();
         private Dictionary<int, ServiceConfiguration> _servicesPerProfileID = new Dictionary<int, ServiceConfiguration>();
-        private Dictionary<SchedulingData, ServiceInstance> _unscheduleServices = new Dictionary<SchedulingData, ServiceInstance>();
+        private Dictionary<SchedulingData, ServiceInstance> _mayNotBescheduleServices = new Dictionary<SchedulingData, ServiceInstance>();
+
+       
         private Dictionary<string, ServicePerProfileAvgExecutionTimeCash> _servicePerProfileAvgExecutionTimeCash = new Dictionary<string, ServicePerProfileAvgExecutionTimeCash>();
         DateTime _timeLineFrom;
         DateTime _timeLineTo;
@@ -42,6 +44,7 @@ namespace MyScheduler
         public event EventHandler ServiceRunRequiredEvent;
         //public event EventHandler ServiceNotScheduledEvent;
         public event EventHandler NewScheduleCreatedEvent;
+        public event EventHandler NotRunServices;
         private volatile bool _needReschedule = false;
         private TimeSpan _executionTimeCashTimeOutAfter;
 
@@ -77,7 +80,7 @@ namespace MyScheduler
             _needReschedule = false;
             List<SchedulingData> servicesForNextTimeLine = GetServicesForNextTimeLine(false);
             BuildScheduleFromNextTimeLineServices(servicesForNextTimeLine);
-            OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation = _unscheduleServices, ScheduleInformation = _scheduledServices });
+            OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation = _mayNotBescheduleServices, ScheduleInformation = _scheduledServices });
             Log.Write(this.ToString(), "New Schedule Created", LogMessageType.Information);
             //PrintSchduleTable();
 
@@ -151,17 +154,17 @@ namespace MyScheduler
                 }
 
 
-                lock (_unscheduleServices)
+                lock (_mayNotBescheduleServices)
                 {
-                    _unscheduleServices.Clear();//clear unscheduled
+                    _mayNotBescheduleServices.Clear();//clear unscheduled
                     foreach (KeyValuePair<SchedulingData, ServiceInstance> scheduldService in _scheduledServices) //services that did not run because their base time + maxdiviation<datetime.now 
                     {                                                                                             //should have been run but from some reason did not run
 
                         if (scheduldService.Key.TimeToRun.Add(scheduldService.Key.Rule.MaxDeviationAfter) > DateTime.Now && scheduldService.Value.LegacyInstance.State == Legacy.ServiceState.Uninitialized)
-                            _unscheduleServices.Add(scheduldService.Key, scheduldService.Value);
+                            _mayNotBescheduleServices.Add(scheduldService.Key, scheduldService.Value);
 
                     }
-                    foreach (KeyValuePair<SchedulingData, ServiceInstance> unScheduledService in _unscheduleServices) //clar the services that will not be run
+                    foreach (KeyValuePair<SchedulingData, ServiceInstance> unScheduledService in _mayNotBescheduleServices) //clar the services that will not be run
                     {
                         _scheduledServices.Remove(unScheduledService.Key);
                     }
@@ -205,7 +208,7 @@ namespace MyScheduler
                 servicesForNextTimeLine = GetServicesForNextTimeLine(true);
 
             BuildScheduleFromNextTimeLineServices(servicesForNextTimeLine);
-            OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation = _unscheduleServices, ScheduleInformation = _scheduledServices });
+            OnNewScheduleCreated(new ScheduledInformationEventArgs() { NotScheduledInformation = _mayNotBescheduleServices, ScheduleInformation = _scheduledServices });
 
             //PrintSchduleTable();
 
@@ -276,7 +279,7 @@ namespace MyScheduler
         {
             SchedulingData Schedulingdata;
             List<SchedulingData> foundedSchedulingdata = new List<SchedulingData>();
-
+             List<SchedulingData> willNotRun = new List<SchedulingData>();
             lock (_servicesWarehouse)
             {
                 for (int i = 0; i < _servicesWarehouse.Count; i++)
@@ -306,6 +309,17 @@ namespace MyScheduler
                                                         foundedSchedulingdata.Add(Schedulingdata);
 
                                                 }
+                                                else //Check if it already been trying to schedule then it it should be error
+                                                {
+                                                    Schedulingdata = new SchedulingData() { Configuration = service, profileID = service.SchedulingProfile.ID, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = timeToRun };
+                                                    if (_scheduledServices.ContainsKey(Schedulingdata) || _mayNotBescheduleServices.ContainsKey(Schedulingdata))
+                                                    {
+                                                        Log.Write(this.ToString(), string.Format("Service {0} will not run!! since it's scheduling exceed max MaxDeviation", Schedulingdata.Configuration.Name), new Exception("Service will not run!"), LogMessageType.Error);
+                                                        willNotRun.Add(Schedulingdata);
+                                                    }
+ 
+                                                }
+
                                                 timeToRun = timeToRun.AddDays(1);
 
                                             }
@@ -333,7 +347,7 @@ namespace MyScheduler
                                                     }
 
                                                 }
-                                                if (day == (int)timeToRunTo.DayOfWeek + 1)
+                                               else if (day == (int)timeToRunTo.DayOfWeek + 1)
                                                 {
                                                     if (timeToRunTo >= _timeLineFrom && timeToRunTo <= _timeLineTo || timeToRunTo <= _timeLineFrom && timeToRunTo.Add(schedulingRule.MaxDeviationAfter) >= DateTime.Now)
                                                     {
@@ -342,6 +356,16 @@ namespace MyScheduler
                                                             foundedSchedulingdata.Add(Schedulingdata);
 
                                                     }
+                                                }
+                                                else //Check if it already been trying to schedule then it it should be error
+                                                {
+                                                    Schedulingdata = new SchedulingData() { Configuration = service, profileID = service.SchedulingProfile.ID, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = timeToRunTo };
+                                                    if (_scheduledServices.ContainsKey(Schedulingdata) || _mayNotBescheduleServices.ContainsKey(Schedulingdata))
+                                                    {
+                                                        Log.Write(this.ToString(), string.Format("Service {0} will not run!! since it's scheduling exceed max MaxDeviation", Schedulingdata.Configuration.Name), new Exception("Service will not run!"), LogMessageType.Error);
+                                                        willNotRun.Add(Schedulingdata);
+                                                    }
+
                                                 }
 
                                             }
@@ -366,7 +390,7 @@ namespace MyScheduler
 
                                                     }
                                                 }
-                                                if (day == (int)timeToRunTo.DayOfWeek)
+                                                else if (day == (int)timeToRunTo.DayOfWeek)
                                                 {
                                                     if (timeToRunTo >= _timeLineFrom && timeToRunTo <= _timeLineTo || timeToRunTo <= _timeLineFrom && timeToRunTo.Add(schedulingRule.MaxDeviationAfter) >= DateTime.Now)
                                                     {
@@ -375,6 +399,16 @@ namespace MyScheduler
                                                             foundedSchedulingdata.Add(Schedulingdata);
 
                                                     }
+                                                }
+                                                else //Check if it already been trying to schedule then it it should be error
+                                                {
+                                                    Schedulingdata = new SchedulingData() { Configuration = service, profileID = service.SchedulingProfile.ID, Rule = schedulingRule, SelectedDay = (int)(DateTime.Now.DayOfWeek) + 1, SelectedHour = hour, Priority = service.priority, LegacyConfiguration = service.LegacyConfiguration, TimeToRun = timeToRunTo };
+                                                    if (_scheduledServices.ContainsKey(Schedulingdata) || _mayNotBescheduleServices.ContainsKey(Schedulingdata))
+                                                    {
+                                                        Log.Write(this.ToString(), string.Format("Service {0} will not run!! since it's scheduling exceed max MaxDeviation", Schedulingdata.Configuration.Name), new Exception("Service will not run!"), LogMessageType.Error);
+                                                        willNotRun.Add(Schedulingdata);
+                                                    }
+
                                                 }
                                             }
                                             break;
@@ -403,6 +437,9 @@ namespace MyScheduler
                 }
 
             }
+            if (willNotRun.Count > 0)
+                NotRunServices(this, new WillNotRunEventArgs() { WillNotRun = willNotRun });
+                
             return foundedSchedulingdata;
         }
 
@@ -510,10 +547,8 @@ namespace MyScheduler
                 if (serviceInstanceAndRuleHash.Value.ActualDeviation > serviceInstanceAndRuleHash.Value.MaxDeviationAfter && serviceInstanceAndRuleHash.Key.Rule.Scope != SchedulingScope.UnPlanned)
                 {
                     // check if the waiting time is bigger then max waiting time.
-                    _unscheduleServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
-                    if (DateTime.Now > serviceInstanceAndRuleHash.Key.TimeToRun + serviceInstanceAndRuleHash.Value.MaxDeviationAfter)
-                        Log.Write(this.ToString(), string.Format("Service {0} will not run!! since it's scheduling exceed max MaxDeviation", serviceInstanceAndRuleHash.Value.ServiceName),new Exception("Service will not run!"), LogMessageType.Error);
-                    else
+                    _mayNotBescheduleServices.Add(serviceInstanceAndRuleHash.Key, serviceInstanceAndRuleHash.Value);
+                    if (DateTime.Now > serviceInstanceAndRuleHash.Key.TimeToRun + serviceInstanceAndRuleHash.Value.MaxDeviationAfter)                 
                         Log.Write(this.ToString(), string.Format("Service {0} may not schedule since it's scheduling exceed max MaxDeviation", serviceInstanceAndRuleHash.Value.ServiceName), LogMessageType.Warning);
 
                 }
@@ -749,9 +784,9 @@ namespace MyScheduler
                     scheduled.Value.Priority);
                 prev = scheduled;
             }
-            if (_unscheduleServices.Count > 0)
+            if (_mayNotBescheduleServices.Count > 0)
                 Console.WriteLine("---------------------Will not be scheduled--------------------------------------");
-            foreach (KeyValuePair<SchedulingData, ServiceInstance> notScheduled in _unscheduleServices)
+            foreach (KeyValuePair<SchedulingData, ServiceInstance> notScheduled in _mayNotBescheduleServices)
             {
                 Console.WriteLine("Service name: {0}\tBase start time:{1:hh:mm}\tschedule time is{2:hh:mm}\t maximum waiting time is{3}", notScheduled.Value.ServiceName, notScheduled.Value.EndTime, notScheduled.Value.StartTime, notScheduled.Value.MaxDeviationAfter);
             }
@@ -936,6 +971,10 @@ namespace MyScheduler
     {
         public Dictionary<SchedulingData, ServiceInstance> ScheduleInformation;
         public Dictionary<SchedulingData, ServiceInstance> NotScheduledInformation;
+    }
+    public class WillNotRunEventArgs : EventArgs
+    {
+        public List<SchedulingData> WillNotRun = new List<SchedulingData>();
     }
 
 
