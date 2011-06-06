@@ -75,7 +75,7 @@
             // 
             this.priorityCmb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.priorityCmb.FormattingEnabled = true;
-            this.priorityCmb.Location = new System.Drawing.Point(714, 12);
+            this.priorityCmb.Location = new System.Drawing.Point(856, 12);
             this.priorityCmb.Name = "priorityCmb";
             this.priorityCmb.Size = new System.Drawing.Size(121, 21);
             this.priorityCmb.TabIndex = 3;
@@ -83,7 +83,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(656, 12);
+            this.label2.Location = new System.Drawing.Point(798, 12);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(38, 13);
             this.label2.TabIndex = 2;
@@ -315,17 +315,17 @@
             // servicesCheckedListBox
             // 
             this.servicesCheckedListBox.CheckOnClick = true;
-            this.servicesCheckedListBox.ColumnWidth = 200;
+            this.servicesCheckedListBox.ColumnWidth = 350;
             this.servicesCheckedListBox.FormattingEnabled = true;
             this.servicesCheckedListBox.Location = new System.Drawing.Point(73, 9);
             this.servicesCheckedListBox.MultiColumn = true;
             this.servicesCheckedListBox.Name = "servicesCheckedListBox";
-            this.servicesCheckedListBox.Size = new System.Drawing.Size(577, 229);
+            this.servicesCheckedListBox.Size = new System.Drawing.Size(719, 229);
             this.servicesCheckedListBox.TabIndex = 16;
             // 
             // selectAllbtn
             // 
-            this.selectAllbtn.Location = new System.Drawing.Point(659, 214);
+            this.selectAllbtn.Location = new System.Drawing.Point(801, 214);
             this.selectAllbtn.Name = "selectAllbtn";
             this.selectAllbtn.Size = new System.Drawing.Size(75, 23);
             this.selectAllbtn.TabIndex = 17;
@@ -335,7 +335,7 @@
             // 
             // unSelectAllBtn
             // 
-            this.unSelectAllBtn.Location = new System.Drawing.Point(750, 215);
+            this.unSelectAllBtn.Location = new System.Drawing.Point(892, 215);
             this.unSelectAllBtn.Name = "unSelectAllBtn";
             this.unSelectAllBtn.Size = new System.Drawing.Size(75, 23);
             this.unSelectAllBtn.TabIndex = 18;
@@ -347,7 +347,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(847, 645);
+            this.ClientSize = new System.Drawing.Size(989, 645);
             this.Controls.Add(this.unSelectAllBtn);
             this.Controls.Add(this.selectAllbtn);
             this.Controls.Add(this.servicesCheckedListBox);
