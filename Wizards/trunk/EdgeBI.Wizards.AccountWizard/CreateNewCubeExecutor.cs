@@ -111,16 +111,11 @@ namespace EdgeBI.Wizards.AccountWizard
                                 {
                                     Measure measure = measureGroup.Measures.FindByName(targetAcquisition);
                                     if (measure != null)
-                                    {                                                                  //key of new active useres /actives
-                                        if (!replacement.CalcMembersOnly)
-                                        {
+                                    {                                                               //key of new active useres /actives                                        
                                             if (measureGroup.Measures.FindByName(replacement.ReplaceTo) == null) //check if their is no measure with the same name
                                             {
                                                 measure.Name = replacement.ReplaceTo;
                                             }
-                                        }
-
-
                                     } 
                                 }
 
