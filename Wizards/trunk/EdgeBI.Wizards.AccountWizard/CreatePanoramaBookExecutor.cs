@@ -228,10 +228,10 @@ namespace EdgeBI.Wizards.AccountWizard
 			foreach (FileInfo file in templateSourceDirectory.GetFiles() )
 			{
                 if (file.Name.Equals(accountWizardSettings.Get("Panorama.ROIViewsRegs")) && !string.IsNullOrEmpty(newUsersChanged)) //regs				
-					file.CopyTo(Path.Combine(targetDirectory.ToString(),string.Format("2. ROI by {0}.xml",newUsersChanged)), true);
+					file.CopyTo(Path.Combine(targetDirectory.ToString(),string.Format("4. ROI by {0}.xml",newUsersChanged)), true);
 
                 else if (file.Name.Equals(accountWizardSettings.Get("Panorama.ROIViewsActives")) && !string.IsNullOrEmpty(newActiverUsersChanged)) //actives				
-                    file.CopyTo(Path.Combine(targetDirectory.ToString(), string.Format("2. ROI by {0}.xml", newActiverUsersChanged)), true);
+                    file.CopyTo(Path.Combine(targetDirectory.ToString(), string.Format("4. ROI by {0}.xml", newActiverUsersChanged)), true);
                 else
                 {
                     if (copyContent) //if we create content cube then copy content files ,else...not
