@@ -40,15 +40,19 @@ namespace MyNewWizard
         public override Dictionary<string, object> CollectValues()
         {
             Dictionary<string, object> roleValues = new Dictionary<string, object>();
-            
-                        
-            roleValues.Add("AccountSettings.RoleName", txtRoleName.Text.Trim());
-            roleValues.Add("AccountSettings.RoleID", txtRoleID.Text.Trim());
-            if (!string.IsNullOrEmpty(txtRoleMemberName.Text.Trim()))
-            {
-                roleValues.Add("AccountSettings.RoleMemberName", txtRoleMemberName.Text.Trim());
 
+            if (((bool)FrmWizard.AllCollectedValues["AccountSettings.UseExistingRole"]) == false)
+            {
+                roleValues.Add("AccountSettings.UseExistingRole", false);
+                roleValues.Add("AccountSettings.RoleName", txtRoleName.Text.Trim());
+                roleValues.Add("AccountSettings.RoleID", txtRoleID.Text.Trim());
+                if (!string.IsNullOrEmpty(txtRoleMemberName.Text.Trim()))
+                {
+                    roleValues.Add("AccountSettings.RoleMemberName", txtRoleMemberName.Text.Trim());
+                }
             }
+            else
+                roleValues.Add("AccountSettings.UseExistingRole", true);
             return roleValues;
         }
 
@@ -58,11 +62,18 @@ namespace MyNewWizard
         }
         protected override void InitalizePage()
         {
+            
             _parentForm = (FrmWizard)ParentForm;
             _parentForm.Text = this.StepDescription;
+            if (((bool)FrmWizard.AllCollectedValues["AccountSettings.UseExistingRole"]) == true)
+                grpRole.Enabled = false;
+            else
+            {
+                grpRole.Enabled = true;
             txtRoleMemberName.Text = string.Format(@"EDGE\{0}", FrmWizard.AllCollectedValues["AccountSettings.BI_Scope_Name"]);
             txtRoleName.Text = string.Format(@"UDM {0}", FrmWizard.AllCollectedValues["AccountSettings.BI_Scope_Name"]);
             txtRoleID.Text = string.Format("Role {0}", FrmWizard.AllCollectedValues["AccountSettings.BI_Scope_ID"]);
+                }
             
             stepReadyTimer.Interval = interval;
             stepReadyTimer.Start();

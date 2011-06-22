@@ -23,6 +23,7 @@ namespace MyNewWizard
         Dictionary<string, object> _BEDataValues=new Dictionary<string, object>();
         Dictionary<string, object> _CPAData = new Dictionary<string, object>();
         Dictionary<string, object> _strings = new Dictionary<string, object>();
+        Dictionary<int, string> _beDataUI = new Dictionary<int, string>();
         
 		public CreateNewCube()
 		{
@@ -163,18 +164,30 @@ namespace MyNewWizard
 
                 case "BEData":
                     {
-                        int i = 1;
-                        string patern = @"\bClient Specific";
-                        foreach (ListViewItem item in listViewBeData.Items)
+                        for (int index = 0; index < _beDataUI.Count; index++)
                         {
-                            if (Regex.IsMatch(item.Text, patern))
+                            if (!_beDataUI.ContainsKey(index))
                             {
-                                i++;
-                            }
-                        }
+                                liv = new ListViewItem(new string[] { string.Format("BO Client Specific{0}", index), txtBeReplace.Text, calcOnly });
+                                listViewBeData.Items.Add(liv);
+                                _beDataUI.Add(index, string.Format("BO Client Specific{0}", index));
+                                break;
 
-                        liv = new ListViewItem(new string[] { string.Format("BO Client Specific{0}", i), txtBeReplace.Text, calcOnly });
-                        listViewBeData.Items.Add(liv);
+                            }
+                            
+                        }
+                        //int i = 1;
+                        //string patern = @"\bClient Specific";
+                        //foreach (ListViewItem item in listViewBeData.Items)
+                        //{
+                        //    if (Regex.IsMatch(item.Text, patern))
+                        //    {
+                        //        i++;
+                        //    }
+                        //}
+
+                        //liv = new ListViewItem(new string[] { string.Format("BO Client Specific{0}", i), txtBeReplace.Text, calcOnly });
+                        //listViewBeData.Items.Add(liv);
                         break;
                     }
                 case " ":
@@ -207,8 +220,23 @@ namespace MyNewWizard
 
         private void btnRemoveBeData_Click(object sender, EventArgs e)
         {
+            //int i = 1;
+            //string patern = @"\bClient Specific";
+            //foreach (ListViewItem item in listViewBeData.Items)
+            //{
+            //    if (Regex.IsMatch(item.Text, patern))
+            //    {
+            //        i++;
+            //    }
+            //}
+            string patern = @"\bClient Specific";
             foreach (ListViewItem item in listViewBeData.SelectedItems)
             {
+                if (Regex.IsMatch(item.Text, patern))
+                {
+                    int index = int.Parse(Regex.Match(item.Text, @"\d").ToString());
+                    _beDataUI.Remove(index);
+                }
                 item.Remove();
 
             }

@@ -240,7 +240,7 @@ namespace EdgeBI.Wizards.AccountWizard
 
                 //Get the roleID from last step collector
                 //Dictionary<string, object> roleData = GetCollectedData();
-
+               
                 CubePermission cubePermission = new CubePermission(collectedData["AccountSettings.RoleID"].ToString(), accountWizardSettings.Get("Cube.CubePermission.ID"), accountWizardSettings.Get("Cube.CubePermission.Name"));
                 cubePermission.Read = ReadAccess.Allowed;
                 newBOCube.CubePermissions.Add(cubePermission);
