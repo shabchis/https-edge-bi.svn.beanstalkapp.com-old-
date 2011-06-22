@@ -33,6 +33,7 @@ namespace EdgeBI.Wizards.AccountWizard
                     {
                         AddNewActiveDirectoryUser(collectedData["ActiveDirectory.UserName"].ToString(), collectedData["ActiveDirectory.Password"].ToString(), collectedData["ActiveDirectory.FullName"].ToString(), true);
                         //  this.SaveExecutorData(collectedData); todo: check why i did this line look like i dont need it
+                        Log.Write(string.Format("User {0} created in active directory", collectedData["ActiveDirectory.UserName"].ToString()), LogMessageType.Information);
                         UpdateOltpDataBase(collectedData);
                         this.ReportProgress((float)0.9);
                     } 
@@ -51,7 +52,7 @@ namespace EdgeBI.Wizards.AccountWizard
 				this.ReportProgress((float)1);
 
 			}
-            Log.Write(string.Format("User {0} created in active directory", collectedData["ActiveDirectory.UserName"].ToString()), LogMessageType.Information);
+            
 			
 			return base.DoWork();
 		}

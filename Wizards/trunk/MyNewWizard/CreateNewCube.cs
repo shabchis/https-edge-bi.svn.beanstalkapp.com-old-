@@ -164,18 +164,28 @@ namespace MyNewWizard
 
                 case "BEData":
                     {
-                        for (int index = 0; index < _beDataUI.Count; index++)
+                        if (_beDataUI.Count == 0)
                         {
-                            if (!_beDataUI.ContainsKey(index))
+                            liv = new ListViewItem(new string[] { string.Format("BO Client Specific{0}", 1), txtBeReplace.Text, calcOnly });
+                            listViewBeData.Items.Add(liv);
+                            _beDataUI.Add(1, string.Format("BO Client Specific{0}", 1));
+                        }
+                        else
+                        {
+                            for (int index = 1; index < _beDataUI.Count; index++)
                             {
-                                liv = new ListViewItem(new string[] { string.Format("BO Client Specific{0}", index), txtBeReplace.Text, calcOnly });
-                                listViewBeData.Items.Add(liv);
-                                _beDataUI.Add(index, string.Format("BO Client Specific{0}", index));
-                                break;
+                                if (!_beDataUI.ContainsKey(index))
+                                {
+                                    liv = new ListViewItem(new string[] { string.Format("BO Client Specific{0}", index), txtBeReplace.Text, calcOnly });
+                                    listViewBeData.Items.Add(liv);
+                                    _beDataUI.Add(index, string.Format("BO Client Specific{0}", index));
+                                   
+
+                                }
 
                             }
-                            
                         }
+                        break;
                         //int i = 1;
                         //string patern = @"\bClient Specific";
                         //foreach (ListViewItem item in listViewBeData.Items)
@@ -188,7 +198,7 @@ namespace MyNewWizard
 
                         //liv = new ListViewItem(new string[] { string.Format("BO Client Specific{0}", i), txtBeReplace.Text, calcOnly });
                         //listViewBeData.Items.Add(liv);
-                        break;
+                       
                     }
                 case " ":
                     {
@@ -245,6 +255,7 @@ namespace MyNewWizard
         private void btnClearBeData_Click(object sender, EventArgs e)
         {
             listViewBeData.Items.Clear();
+            _beDataUI.Clear();
         }
 
         private void btnAddCPA_Click(object sender, EventArgs e)

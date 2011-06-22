@@ -42,13 +42,18 @@ namespace MyNewWizard
             {
                 AccountData.Add("AccountSettings.UseExistingRole", false);
             }
-            AccountData.Add("AccountSettings.AccountName", txtAccountName.Text.Trim());
-            AccountData.Add("AccountSettings.AccountID", txtAccountID.Text.Trim());
-            AccountData.Add("AccountSettings.ClientName", txtClientName.Text.Trim());
-            AccountData.Add("AccountSettings.ClientID", txtClientID.Text.Trim());
-            AccountData.Add("AccountSettings.ScopeName", txtScopeName.Text.Trim());
-            AccountData.Add("AccountSettings.ScopeID", txtScopeID.Text.Trim());
-
+            if (cmbWizardType.SelectedValue.ToString() == addNewAccount)
+            {
+                AccountData.Add("AccountSettings.CreateAccount", true);
+                AccountData.Add("AccountSettings.AccountName", txtAccountName.Text.Trim());
+                AccountData.Add("AccountSettings.AccountID", txtAccountID.Text.Trim());
+                AccountData.Add("AccountSettings.ClientName", txtClientName.Text.Trim());
+                AccountData.Add("AccountSettings.ClientID", txtClientID.Text.Trim());
+                AccountData.Add("AccountSettings.ScopeName", txtScopeName.Text.Trim());
+                AccountData.Add("AccountSettings.ScopeID", txtScopeID.Text.Trim());
+            }
+            else
+                AccountData.Add("AccountSettings.CreateAccount", false);
 
             return AccountData;
         }
