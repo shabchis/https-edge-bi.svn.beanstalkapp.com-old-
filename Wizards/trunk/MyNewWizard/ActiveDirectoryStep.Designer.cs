@@ -34,8 +34,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtUserName = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox1.SuspendLayout();
+            this.grpActiveDirectory = new System.Windows.Forms.GroupBox();
+            this.grpActiveDirectory.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtFullName
@@ -87,33 +87,33 @@
             this.txtUserName.Size = new System.Drawing.Size(186, 20);
             this.txtUserName.TabIndex = 5;
             // 
-            // groupBox1
+            // grpActiveDirectory
             // 
-            this.groupBox1.Controls.Add(this.txtPassword);
-            this.groupBox1.Controls.Add(this.txtFullName);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.txtUserName);
-            this.groupBox1.Location = new System.Drawing.Point(233, 129);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(339, 118);
-            this.groupBox1.TabIndex = 12;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Add Active Directory User";
+            this.grpActiveDirectory.Controls.Add(this.txtPassword);
+            this.grpActiveDirectory.Controls.Add(this.txtFullName);
+            this.grpActiveDirectory.Controls.Add(this.label1);
+            this.grpActiveDirectory.Controls.Add(this.label2);
+            this.grpActiveDirectory.Controls.Add(this.label3);
+            this.grpActiveDirectory.Controls.Add(this.txtUserName);
+            this.grpActiveDirectory.Location = new System.Drawing.Point(233, 129);
+            this.grpActiveDirectory.Name = "grpActiveDirectory";
+            this.grpActiveDirectory.Size = new System.Drawing.Size(339, 118);
+            this.grpActiveDirectory.TabIndex = 12;
+            this.grpActiveDirectory.TabStop = false;
+            this.grpActiveDirectory.Text = "Add Active Directory User";
             // 
             // ActiveDirectoryStep
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.grpActiveDirectory);
             this.Name = "ActiveDirectoryStep";
             this.StepDescription = "Create new active directory user";
             this.StepName = "ActiveDirectoryStepCollector";
             this.Load += new System.EventHandler(this.ActiveDirectoryStep_Load);
             this.VisibleChanged += new System.EventHandler(this.ActiveDirectoryStep_VisibleChanged);
-            this.Controls.SetChildIndex(this.groupBox1, 0);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.Controls.SetChildIndex(this.grpActiveDirectory, 0);
+            this.grpActiveDirectory.ResumeLayout(false);
+            this.grpActiveDirectory.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -127,6 +127,6 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtUserName;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox grpActiveDirectory;
 	}
 }

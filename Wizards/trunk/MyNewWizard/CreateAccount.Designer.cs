@@ -35,7 +35,9 @@
             this.txtBIScopName = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.grpBI = new System.Windows.Forms.GroupBox();
-            this.chkCreateAccount = new System.Windows.Forms.CheckBox();
+            this.chkUseExistingRole = new System.Windows.Forms.CheckBox();
+            this.txtRole = new System.Windows.Forms.TextBox();
+            this.lblRole = new System.Windows.Forms.Label();
             this.grpCreateAccount = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtScopeID = new System.Windows.Forms.TextBox();
@@ -47,6 +49,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtClientName = new System.Windows.Forms.TextBox();
+            this.cmbWizardType = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.grpBI.SuspendLayout();
             this.grpCreateAccount.SuspendLayout();
             this.SuspendLayout();
@@ -76,25 +80,26 @@
             // txtBIScopeID
             // 
             this.txtBIScopeID.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.txtBIScopeID.Location = new System.Drawing.Point(97, 54);
+            this.txtBIScopeID.Location = new System.Drawing.Point(101, 19);
             this.txtBIScopeID.Name = "txtBIScopeID";
             this.txtBIScopeID.Size = new System.Drawing.Size(186, 20);
             this.txtBIScopeID.TabIndex = 43;
+            this.txtBIScopeID.Validated += new System.EventHandler(this.txtBIScopeID_Validated);
             // 
             // label16
             // 
             this.label16.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(6, 22);
+            this.label16.Location = new System.Drawing.Point(10, 59);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(82, 13);
+            this.label16.Size = new System.Drawing.Size(63, 13);
             this.label16.TabIndex = 44;
-            this.label16.Text = "BI Scope Name";
+            this.label16.Text = "Book Name";
             // 
             // txtBIScopName
             // 
             this.txtBIScopName.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.txtBIScopName.Location = new System.Drawing.Point(97, 15);
+            this.txtBIScopName.Location = new System.Drawing.Point(101, 52);
             this.txtBIScopName.Name = "txtBIScopName";
             this.txtBIScopName.Size = new System.Drawing.Size(186, 20);
             this.txtBIScopName.TabIndex = 42;
@@ -103,7 +108,7 @@
             // 
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 61);
+            this.label6.Location = new System.Drawing.Point(10, 26);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(65, 13);
             this.label6.TabIndex = 45;
@@ -111,6 +116,9 @@
             // 
             // grpBI
             // 
+            this.grpBI.Controls.Add(this.chkUseExistingRole);
+            this.grpBI.Controls.Add(this.txtRole);
+            this.grpBI.Controls.Add(this.lblRole);
             this.grpBI.Controls.Add(this.txtBIScopName);
             this.grpBI.Controls.Add(this.label6);
             this.grpBI.Controls.Add(this.label16);
@@ -118,23 +126,42 @@
             this.grpBI.Enabled = false;
             this.grpBI.Location = new System.Drawing.Point(12, 131);
             this.grpBI.Name = "grpBI";
-            this.grpBI.Size = new System.Drawing.Size(309, 241);
+            this.grpBI.Size = new System.Drawing.Size(329, 241);
             this.grpBI.TabIndex = 48;
             this.grpBI.TabStop = false;
             this.grpBI.Text = "BI";
             // 
-            // chkCreateAccount
+            // chkUseExistingRole
             // 
-            this.chkCreateAccount.AutoSize = true;
-            this.chkCreateAccount.Checked = true;
-            this.chkCreateAccount.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkCreateAccount.Location = new System.Drawing.Point(327, 108);
-            this.chkCreateAccount.Name = "chkCreateAccount";
-            this.chkCreateAccount.Size = new System.Drawing.Size(142, 17);
-            this.chkCreateAccount.TabIndex = 49;
-            this.chkCreateAccount.Text = "Create Account Hirarchy";
-            this.chkCreateAccount.UseVisualStyleBackColor = true;
-            this.chkCreateAccount.CheckedChanged += new System.EventHandler(this.chkCreateAccount_CheckedChanged);
+            this.chkUseExistingRole.AutoSize = true;
+            this.chkUseExistingRole.Location = new System.Drawing.Point(215, 81);
+            this.chkUseExistingRole.Name = "chkUseExistingRole";
+            this.chkUseExistingRole.Size = new System.Drawing.Size(84, 17);
+            this.chkUseExistingRole.TabIndex = 48;
+            this.chkUseExistingRole.Text = "Use Existing";
+            this.chkUseExistingRole.UseVisualStyleBackColor = true;
+            this.chkUseExistingRole.Visible = false;
+            // 
+            // txtRole
+            // 
+            this.txtRole.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.txtRole.Enabled = false;
+            this.txtRole.Location = new System.Drawing.Point(101, 81);
+            this.txtRole.Name = "txtRole";
+            this.txtRole.Size = new System.Drawing.Size(107, 20);
+            this.txtRole.TabIndex = 46;
+            this.txtRole.Visible = false;
+            // 
+            // lblRole
+            // 
+            this.lblRole.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblRole.AutoSize = true;
+            this.lblRole.Location = new System.Drawing.Point(10, 88);
+            this.lblRole.Name = "lblRole";
+            this.lblRole.Size = new System.Drawing.Size(42, 13);
+            this.lblRole.TabIndex = 47;
+            this.lblRole.Text = "BI Role";
+            this.lblRole.Visible = false;
             // 
             // grpCreateAccount
             // 
@@ -148,7 +175,7 @@
             this.grpCreateAccount.Controls.Add(this.label2);
             this.grpCreateAccount.Controls.Add(this.label3);
             this.grpCreateAccount.Controls.Add(this.txtClientName);
-            this.grpCreateAccount.Location = new System.Drawing.Point(327, 131);
+            this.grpCreateAccount.Location = new System.Drawing.Point(347, 131);
             this.grpCreateAccount.Name = "grpCreateAccount";
             this.grpCreateAccount.Size = new System.Drawing.Size(433, 241);
             this.grpCreateAccount.TabIndex = 50;
@@ -248,11 +275,34 @@
             this.txtClientName.TabIndex = 47;
             this.txtClientName.Validated += new System.EventHandler(this.txtClientName_Validated);
             // 
+            // cmbWizardType
+            // 
+            this.cmbWizardType.FormattingEnabled = true;
+            this.cmbWizardType.Items.AddRange(new object[] {
+            "Add new account",
+            "Add new BI",
+            "Create new BI for active Account"});
+            this.cmbWizardType.Location = new System.Drawing.Point(446, 104);
+            this.cmbWizardType.Name = "cmbWizardType";
+            this.cmbWizardType.Size = new System.Drawing.Size(209, 21);
+            this.cmbWizardType.TabIndex = 51;
+            this.cmbWizardType.SelectedValueChanged += new System.EventHandler(this.cmbWizardType_SelectedValueChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(344, 107);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(64, 13);
+            this.label7.TabIndex = 52;
+            this.label7.Text = "WizardType";
+            // 
             // CreateAccount
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.cmbWizardType);
             this.Controls.Add(this.grpCreateAccount);
-            this.Controls.Add(this.chkCreateAccount);
             this.Controls.Add(this.grpBI);
             this.Controls.Add(this.cmbApplication);
             this.Controls.Add(this.label1);
@@ -263,8 +313,9 @@
             this.Controls.SetChildIndex(this.label1, 0);
             this.Controls.SetChildIndex(this.cmbApplication, 0);
             this.Controls.SetChildIndex(this.grpBI, 0);
-            this.Controls.SetChildIndex(this.chkCreateAccount, 0);
             this.Controls.SetChildIndex(this.grpCreateAccount, 0);
+            this.Controls.SetChildIndex(this.cmbWizardType, 0);
+            this.Controls.SetChildIndex(this.label7, 0);
             this.grpBI.ResumeLayout(false);
             this.grpBI.PerformLayout();
             this.grpCreateAccount.ResumeLayout(false);
@@ -283,7 +334,6 @@
         private System.Windows.Forms.TextBox txtBIScopName;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox grpBI;
-        private System.Windows.Forms.CheckBox chkCreateAccount;
         private System.Windows.Forms.GroupBox grpCreateAccount;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtScopeName;
@@ -295,5 +345,10 @@
         private System.Windows.Forms.TextBox txtScopeID;
         private System.Windows.Forms.TextBox txtClientID;
         private System.Windows.Forms.TextBox txtAccountID;
+        private System.Windows.Forms.CheckBox chkUseExistingRole;
+        private System.Windows.Forms.TextBox txtRole;
+        private System.Windows.Forms.Label lblRole;
+        private System.Windows.Forms.ComboBox cmbWizardType;
+        private System.Windows.Forms.Label label7;
     }
 }

@@ -9,10 +9,14 @@ using System.Text.RegularExpressions;
 using System.Data.SqlClient;
 using EdgeBI.Wizards;
 using Easynet.Edge.Core.Configuration;
+using Easynet.Edge.Core;
 namespace MyNewWizard
 {
     public partial class CreateAccount : WizardForm.WizardPage
     {
+        private const string addNewAccount = "Add new account";
+        private const string addNewBI = "Add new BI";
+        private const string NewBIForActiveAccount = "Create new BI for active Account";
         FrmWizard _parentForm;
         public CreateAccount()
         {
@@ -26,7 +30,18 @@ namespace MyNewWizard
             AccountData.Add("AccountSettings.ApplicationID", cmbApplication.SelectedValue);
             AccountData.Add("AccountSettings.BI_Scope_ID", txtBIScopeID.Text.Trim());
             AccountData.Add("AccountSettings.BI_Scope_Name", txtBIScopName.Text.Trim());
-            AccountData.Add("AccountSettings.CreateAccount", chkCreateAccount.Checked);
+            //AccountData.Add("AccountSettings.CreateAccount", chkCreateAccount.Checked);
+            //Change to
+            AccountData.Add("AccountSettings.WizardType", cmbWizardType.SelectedValue);
+            if (chkUseExistingRole.Checked && cmbWizardType.SelectedValue.ToString()==NewBIForActiveAccount)
+            {
+                AccountData.Add("AccountSettings.UseExistingRole", true);
+                AccountData.Add("AccountSettings.RoleID", txtBIScopeID.Text.Trim());
+            }
+            else
+            {
+                AccountData.Add("AccountSettings.UseExistingRole", false);
+            }
             AccountData.Add("AccountSettings.AccountName", txtAccountName.Text.Trim());
             AccountData.Add("AccountSettings.AccountID", txtAccountID.Text.Trim());
             AccountData.Add("AccountSettings.ClientName", txtClientName.Text.Trim());
@@ -74,13 +89,26 @@ namespace MyNewWizard
         {
 
             fillApplicationComboBox();
+            fillWizardTypeComboBox();
+
+        }
+
+        private void fillWizardTypeComboBox()
+        {
+            Dictionary<string,string> wizardTypes = new Dictionary<string,string>();
+            wizardTypes.Add(addNewAccount,addNewAccount);
+            wizardTypes.Add(addNewBI,addNewBI);
+            wizardTypes.Add(NewBIForActiveAccount,NewBIForActiveAccount);
+            cmbWizardType.DataSource =new BindingSource(wizardTypes,null);
+            cmbWizardType.ValueMember = "Key";
+            cmbWizardType.DisplayMember = "Value";
 
         }
 
         private void fillIDS()
         {
 
-            if (chkCreateAccount.Checked)
+            if (cmbWizardType.SelectedValue.ToString() == addNewAccount)
             {
                 using (SqlConnection sqlConnection = new SqlConnection(FrmWizard.GetFromWizardSettings("OLTP.Connection.string")))
                 {
@@ -177,19 +205,7 @@ namespace MyNewWizard
             }
         }
 
-        private void chkCreateAccount_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkCreateAccount.Checked)
-            {
-                grpBI.Enabled = false;
-                grpCreateAccount.Enabled = true;
-            }
-            else
-            {
-                grpBI.Enabled = true;
-                grpCreateAccount.Enabled = false;
-            }
-        }
+
 
 
 
@@ -280,6 +296,91 @@ namespace MyNewWizard
         private void cmbApplication_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void txtBIScopeID_Validated(object sender, EventArgs e)
+        {
+            try
+            {
+                int scopeId;
+                if (int.TryParse(txtBIScopeID.Text.Trim(),out scopeId))
+                {
+
+                    if (cmbWizardType.SelectedValue.ToString() == addNewBI || cmbWizardType.SelectedValue.ToString()==NewBIForActiveAccount)
+                    {
+                        using (SqlConnection sqlConnection = new SqlConnection(FrmWizard.GetFromWizardSettings("OLTP.Connection.string")))
+                        {
+                            sqlConnection.Open();
+                            using (SqlCommand sqlCommand = new SqlCommand(@"Select Account_Name 
+                                                                    From User_GUI_Account
+                                                                    Where Scope_ID=@Scope_ID", sqlConnection))
+                            {
+                                sqlCommand.Parameters.AddWithValue("@Scope_ID", int.Parse(txtBIScopeID.Text.Trim()));
+                                using (SqlDataReader reader=sqlCommand.ExecuteReader())
+                                {
+                                    if (reader.Read())
+                                    {
+                                        txtBIScopName.Text = reader[0].ToString();                        
+
+                                    }
+                                }
+                                if (cmbWizardType.SelectedValue.ToString() == NewBIForActiveAccount && !string.IsNullOrEmpty(txtBIScopeID.Text))
+                                {
+                                    txtRole.Text = string.Format("Role {0}", txtBIScopeID.Text.Trim());
+                                }
+                            }
+                        }
+                       
+
+                    }                   
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void cmbWizardType_SelectedValueChanged(object sender, EventArgs e)
+        {
+            switch (cmbWizardType.SelectedValue.ToString())
+            {
+                case addNewAccount:
+                    {
+                        grpBI.Enabled = false;
+                        grpCreateAccount.Enabled = true;
+                        lblRole.Visible = false;
+                        txtRole.Visible = false;
+                        chkUseExistingRole.Checked = false;
+                        chkUseExistingRole.Visible = false;
+                        break;
+                    }
+                case addNewBI:
+                    {
+                        grpBI.Enabled = true;
+                        grpCreateAccount.Enabled = false;
+                        lblRole.Visible = false;
+                        txtRole.Visible = false;
+                        chkUseExistingRole.Checked = false;
+                        chkUseExistingRole.Visible = false;
+                        txtBIScopeID.Text = string.Empty;
+                        break;
+                    }
+                case NewBIForActiveAccount:
+                    {
+                        grpBI.Enabled = true;
+                        grpCreateAccount.Enabled = false;
+                        lblRole.Visible = true;
+                        txtRole.Visible = true;
+                        chkUseExistingRole.Checked = true;
+                        chkUseExistingRole.Visible = true;
+                        txtBIScopeID.Text = string.Empty;
+
+                        break;
+                    }
+            }
         }
 
 

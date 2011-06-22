@@ -47,21 +47,37 @@ namespace MyNewWizard
         public override Dictionary<string, object> CollectValues()
         {
             Dictionary<string, object> activeDirectoryValues = new Dictionary<string, object>();
-           
-            activeDirectoryValues.Add("ActiveDirectory.UserName", txtUserName.Text.Trim());
-            activeDirectoryValues.Add("ActiveDirectory.Password", txtPassword.Text.Trim());
-            activeDirectoryValues.Add("ActiveDirectory.FullName", txtFullName.Text.Trim());
+            if (!(bool)FrmWizard.AllCollectedValues["AccountSettings.UseExistingRole"])
+            {
+                activeDirectoryValues.Add("ActiveDirectory.UserName", txtUserName.Text.Trim());
+                activeDirectoryValues.Add("ActiveDirectory.Password", txtPassword.Text.Trim());
+                activeDirectoryValues.Add("ActiveDirectory.FullName", txtFullName.Text.Trim());
+                activeDirectoryValues.Add("AccountSettings.UseExistingRole", false);
+            }
+            else
+            {
+                activeDirectoryValues.Add("AccountSettings.UseExistingRole", true);
+
+            }
 
             return activeDirectoryValues;
         }
         protected override void InitalizePage()
         {
-
             _parentForm = (FrmWizard)ParentForm;
             _parentForm.Text = this.StepDescription;
-            txtUserName.Text = FrmWizard.AllCollectedValues["AccountSettings.BI_Scope_Name"].ToString();
-            txtFullName.Text = FrmWizard.AllCollectedValues["AccountSettings.BI_Scope_Name"].ToString();
-            txtPassword.Text = password;
+            if (!(bool)FrmWizard.AllCollectedValues["AccountSettings.UseExistingRole"])
+            {
+                grpActiveDirectory.Enabled = true;
+                
+                txtUserName.Text = FrmWizard.AllCollectedValues["AccountSettings.BI_Scope_Name"].ToString();
+                txtFullName.Text = FrmWizard.AllCollectedValues["AccountSettings.BI_Scope_Name"].ToString();
+                txtPassword.Text = password;
+            }
+            else
+            {
+                grpActiveDirectory.Enabled = false;
+            }
             stepReadyTimer.Interval = interval; 
             stepReadyTimer.Start();
           

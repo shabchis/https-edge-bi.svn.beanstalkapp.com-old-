@@ -28,7 +28,10 @@ namespace EdgeBI.Wizards.AccountWizard
                 SetAccountWizardSettingsByApllicationID(Convert.ToInt32(collectedData[ApplicationIDKey]));
 			this.ReportProgress(0.1f);
 			Log.Write("Creating role on analysis server", LogMessageType.Information);
-			CreateRole(collectedData);
+            if (!(bool)collectedData["AccountSettings.UseExistingRole"])
+            {
+                CreateRole(collectedData);
+            }
 			this.ReportProgress(0.7f);
 			Log.Write("Role Created", LogMessageType.Information);
 

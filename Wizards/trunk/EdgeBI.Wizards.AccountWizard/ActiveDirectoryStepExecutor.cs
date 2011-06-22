@@ -27,12 +27,15 @@ namespace EdgeBI.Wizards.AccountWizard
 			Log.Write("Creating user in active directory", LogMessageType.Information);
 			try
 			{
-                if (!string.IsNullOrEmpty(collectedData["ActiveDirectory.Password"].ToString()))
+                if ( !(bool)collectedData["AccountSettings.UseExistingRole"])
                 {
-                    AddNewActiveDirectoryUser(collectedData["ActiveDirectory.UserName"].ToString(), collectedData["ActiveDirectory.Password"].ToString(), collectedData["ActiveDirectory.FullName"].ToString(), true);
-                  //  this.SaveExecutorData(collectedData); todo: check why i did this line look like i dont need it
-                    UpdateOltpDataBase(collectedData);
-                    this.ReportProgress((float)0.9);
+                    if (!string.IsNullOrEmpty(collectedData["ActiveDirectory.Password"].ToString()))
+                    {
+                        AddNewActiveDirectoryUser(collectedData["ActiveDirectory.UserName"].ToString(), collectedData["ActiveDirectory.Password"].ToString(), collectedData["ActiveDirectory.FullName"].ToString(), true);
+                        //  this.SaveExecutorData(collectedData); todo: check why i did this line look like i dont need it
+                        UpdateOltpDataBase(collectedData);
+                        this.ReportProgress((float)0.9);
+                    } 
                 }
                 this.ReportProgress((float)1);
 			}

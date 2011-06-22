@@ -17,67 +17,70 @@ namespace EdgeBI.Wizards.AccountWizard
             if (inputValues.ContainsKey(ApplicationIDKey))
                 SetAccountWizardSettingsByApllicationID(Convert.ToInt32(inputValues[ApplicationIDKey]));
             Dictionary<string, string> errors = null;
-            foreach (KeyValuePair<string, object> input in inputValues)
+            if (!(bool)inputValues["AccountSettings.UseExistingRole"])
             {
-                try
+                foreach (KeyValuePair<string, object> input in inputValues)
                 {
-                    switch (input.Key)
+                    try
                     {
-                        case "AccountSettings.RoleName":
-                        case "AccountSettings.RoleID":
-                            {
-                                if (!string.IsNullOrEmpty(input.Value.ToString()))
+                        switch (input.Key)
+                        {
+                            case "AccountSettings.RoleName":
+                            case "AccountSettings.RoleID":
                                 {
-                                    if (IsRoleExist(input.Value.ToString()))
+                                    if (!string.IsNullOrEmpty(input.Value.ToString()))
+                                    {
+                                        if (IsRoleExist(input.Value.ToString()))
+                                        {
+                                            if (errors == null)
+                                                errors = new Dictionary<string, string>();
+                                            errors.Add(input.Key, string.Format(@"Role with ID\Name: ""{0}"" already exists", input.Value));
+
+                                        }
+                                    }
+                                    else
                                     {
                                         if (errors == null)
                                             errors = new Dictionary<string, string>();
-                                        errors.Add(input.Key, string.Format(@"Role with ID\Name: ""{0}"" already exists", input.Value));
+                                        errors.Add(input.Key, @"Role ID\Name cannot be null or empty");
+                                    }
+
+
+
+                                    break;
+                                }
+                            case "AccountSettings.RoleMemberName":
+                                {
+                                    if (!string.IsNullOrEmpty(input.Value.ToString()))
+                                    {
+                                        //if (!IsExistActiveDirectoryUser(input.Value.ToString()))
+                                        //{
+                                        //    if (errors == null)
+                                        //        errors = new Dictionary<string, string>();
+                                        //    errors.Add(input.Key, string.Format(@"Role with ID\Name: ""{0}"" already exists"));
+                                        //} 
+                                    }
+                                    else
+                                    {
+                                        if (errors == null)
+                                            errors = new Dictionary<string, string>();
+                                        errors.Add(input.Key, "Role can not be empty");
 
                                     }
-                                }
-                                else
-                                {
-                                    if (errors == null)
-                                        errors = new Dictionary<string, string>();
-                                    errors.Add(input.Key, @"Role ID\Name cannot be null or empty");
+                                    break;
                                 }
 
 
-
-                                break;
-                            }
-                        case "AccountSettings.RoleMemberName":
-                            {
-                                if (!string.IsNullOrEmpty(input.Value.ToString()))
-                                {
-                                    //if (!IsExistActiveDirectoryUser(input.Value.ToString()))
-                                    //{
-                                    //    if (errors == null)
-                                    //        errors = new Dictionary<string, string>();
-                                    //    errors.Add(input.Key, string.Format(@"Role with ID\Name: ""{0}"" already exists"));
-                                    //} 
-                                }
-                                else
-                                {
-                                     if (errors == null)
-                                         errors = new Dictionary<string, string>();
-                                     errors.Add(input.Key, "Role can not be empty");
-
-                                }
-                                break;
-                            }
-
-
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
+                    catch (Exception ex)
+                    {
 
-                    errors.Add(input.Key, ex.Message);
-                }
+                        errors.Add(input.Key, ex.Message);
+                    }
 
 
+                } 
             }
             return errors;
         }

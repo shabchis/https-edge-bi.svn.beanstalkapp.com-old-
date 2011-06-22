@@ -34,8 +34,8 @@
             this.txtRoleID = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.txtRoleName = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox1.SuspendLayout();
+            this.grpRole = new System.Windows.Forms.GroupBox();
+            this.grpRole.SuspendLayout();
             this.SuspendLayout();
             // 
             // label23
@@ -88,33 +88,33 @@
             this.txtRoleName.Size = new System.Drawing.Size(186, 20);
             this.txtRoleName.TabIndex = 46;
             // 
-            // groupBox1
+            // grpRole
             // 
-            this.groupBox1.Controls.Add(this.txtRoleID);
-            this.groupBox1.Controls.Add(this.txtRoleName);
-            this.groupBox1.Controls.Add(this.label10);
-            this.groupBox1.Controls.Add(this.label22);
-            this.groupBox1.Controls.Add(this.label23);
-            this.groupBox1.Controls.Add(this.txtRoleMemberName);
-            this.groupBox1.Location = new System.Drawing.Point(275, 136);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(323, 130);
-            this.groupBox1.TabIndex = 53;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Add BI Role";
+            this.grpRole.Controls.Add(this.txtRoleID);
+            this.grpRole.Controls.Add(this.txtRoleName);
+            this.grpRole.Controls.Add(this.label10);
+            this.grpRole.Controls.Add(this.label22);
+            this.grpRole.Controls.Add(this.label23);
+            this.grpRole.Controls.Add(this.txtRoleMemberName);
+            this.grpRole.Location = new System.Drawing.Point(275, 136);
+            this.grpRole.Name = "grpRole";
+            this.grpRole.Size = new System.Drawing.Size(323, 130);
+            this.grpRole.TabIndex = 53;
+            this.grpRole.TabStop = false;
+            this.grpRole.Text = "Add BI Role";
             // 
             // CreateNewRole
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.grpRole);
             this.Name = "CreateNewRole";
             this.StepDescription = "Create new role";
             this.StepName = "CreateRoleStepCollector";
             this.Load += new System.EventHandler(this.CreateNewRole_Load);
             this.VisibleChanged += new System.EventHandler(this.CreateNewRole_VisibleChanged);
-            this.Controls.SetChildIndex(this.groupBox1, 0);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.Controls.SetChildIndex(this.grpRole, 0);
+            this.grpRole.ResumeLayout(false);
+            this.grpRole.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -128,6 +128,6 @@
 		private System.Windows.Forms.TextBox txtRoleID;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.TextBox txtRoleName;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox grpRole;
 	}
 }
