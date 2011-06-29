@@ -172,19 +172,23 @@ namespace MyNewWizard
                         }
                         else
                         {
-                            for (int index = 1; index < _beDataUI.Count; index++)
+                            int i = -1;
+                            for (int index = 1; index <= _beDataUI.Count; index++)
                             {
-                                if (!_beDataUI.ContainsKey(index))
+                                if (!_beDataUI.ContainsKey(index+1))
                                 {
-                                    liv = new ListViewItem(new string[] { string.Format("BO Client Specific{0}", index), txtBeReplace.Text, calcOnly });
+                                    liv = new ListViewItem(new string[] { string.Format("BO Client Specific{0}", index+1), txtBeReplace.Text, calcOnly });
                                     listViewBeData.Items.Add(liv);
-                                    _beDataUI.Add(index, string.Format("BO Client Specific{0}", index));
-                                   
-
+                                    i = index + 1;
+                                    
                                 }
 
                             }
+                            if(i!=-1)
+                                _beDataUI.Add(i, string.Format("BO Client Specific{0}",i)); 
                         }
+                        listViewBeData.Sort();
+                        
                         break;
                         //int i = 1;
                         //string patern = @"\bClient Specific";

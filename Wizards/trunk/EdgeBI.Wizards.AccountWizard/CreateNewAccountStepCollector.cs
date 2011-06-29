@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
+using Microsoft.AnalysisServices;
+using Easynet.Edge.Core.Utilities;
 
 namespace EdgeBI.Wizards.AccountWizard
 {
@@ -62,9 +64,54 @@ namespace EdgeBI.Wizards.AccountWizard
                            
                             break;
                         }
+                    case "AccountSettings.UseExistingRole":
+                        {
+                            if (Convert.ToBoolean(input.Value) == true)
+                            {
+                                if (!IsRoleExist(inputValues["AccountSettings.RoleID"].ToString()))
+                                {
+                                    if (errors == null)
+                                        errors = new Dictionary<string, string>();
+                                    errors.Add(input.Key, string.Format("RoleID: {0} Does not exist", inputValues["AccountSettings.RoleID"]));
+                                }
+                            }
+                            break;
+                        }
                 }
             }
             return errors;
+        }
+        private bool IsRoleExist(string RoleNameID)
+        {
+            bool exists = false;
+            //Connect To analysisServer
+            using (Server analysisServer = new Server())
+            {
+
+
+                try
+                {
+
+                    analysisServer.Connect(accountWizardSettings.Get("AnalysisServer.ConnectionString"));
+                }
+                catch (Exception ex)
+                {
+                    Log.Write("Unable to connect analysisServer", ex);
+                    throw;
+                }
+
+                //Get the database
+                Database analysisDatabase = analysisServer.Databases.GetByName(accountWizardSettings.Get("AnalysisServer.Database"));
+                if (analysisDatabase.Roles.Contains(RoleNameID) || analysisDatabase.Roles.ContainsName(RoleNameID))
+                {
+                    exists = true;
+
+                }
+
+            }
+            return exists;
+
+
         }
 
         private bool CheckScopeIDExsitence(object scopeID)

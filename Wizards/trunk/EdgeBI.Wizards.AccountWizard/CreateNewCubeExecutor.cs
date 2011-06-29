@@ -245,7 +245,8 @@ namespace EdgeBI.Wizards.AccountWizard
                 cubePermission.Read = ReadAccess.Allowed;
                 newBOCube.CubePermissions.Add(cubePermission);
 
-
+                
+                
 
 
                 ///Add the new BO cube

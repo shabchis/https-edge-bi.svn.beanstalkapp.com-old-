@@ -145,7 +145,6 @@
             // txtRole
             // 
             this.txtRole.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.txtRole.Enabled = false;
             this.txtRole.Location = new System.Drawing.Point(101, 81);
             this.txtRole.Name = "txtRole";
             this.txtRole.Size = new System.Drawing.Size(107, 20);
