@@ -180,7 +180,7 @@ namespace EdgeBI.Wizards
             StepCollectorHost = new ServiceHost(this);
             StepCollectorHost.AddServiceEndpoint(typeof(IStepCollector), portsharingBinding, new Uri(String.Format("net.tcp://localhost:3636/wizard/step/{0}", sessionID)));
 
-            
+
 
 
             StepCollectorHost.Open();
@@ -224,7 +224,10 @@ namespace EdgeBI.Wizards
                 int sessionID = WizardSession.SessionID;
                 int wizardID = WizardSession.WizardID;
                 int? stepIndex;
+                string scopeName = string.Empty;
+
                 //Get the last step index for current session
+
                 using (SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT Max(StepIndex) FROM Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
                                                                         WHERE SessionID=@SessionID:Int AND ServiceInstanceID=@ServiceInstanceID:Int"))
                 {
@@ -239,15 +242,37 @@ namespace EdgeBI.Wizards
                 else
                     stepIndex = stepIndex + 1;
 
+                if (!ValidatedInput.ContainsKey("AccountSettings.BI_Scope_Name"))
+                {
+                    using (SqlCommand sqlCommand = DataManager.CreateCommand(@"Select Value
+                                                                                from  Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
+                                                                                where WizardID=@WizardID:Int and SessionID=@SessionID:Int AND Field=@Field:Nvarchar"))
+                    {
+                        sqlCommand.Parameters["@WizardID"].Value = wizardID;
+                        sqlCommand.Parameters["@SessionID"].Value = sessionID;
+                        sqlCommand.Parameters["@Field"].Value = "AccountSettings.BI_Scope_Name";
+                        using (SqlDataReader reader=sqlCommand.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                scopeName = reader[0].ToString();
+                                
+                            } 
+                        }
+                        
+
+                    }
+                }
 
                 foreach (KeyValuePair<string, object> input in ValidatedInput)
                 {
                     using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
-																			(WizardID,SessionID,ServiceInstanceID,StepName,Field,Value,ValueType,StepIndex)
+																			(WizardID,SessionID,ServiceInstanceID,ScopeName,StepName,Field,Value,ValueType,StepIndex)
 																			Values 
 																			(@WizardID:Int,
 																			@SessionID:Int,
-																			@ServiceInstanceID:BigInt,
+																			@ServiceInstanceID:BigInt,                                                                           
+                                                                            @ScopeName:Nvarchar,
 																			@StepName:NvarChar,
 																			@Field:NVarChar,
 																			@Value:NVarChar,
@@ -257,6 +282,7 @@ namespace EdgeBI.Wizards
                         sqlCommand.Parameters["@WizardID"].Value = wizardID;
                         sqlCommand.Parameters["@SessionID"].Value = sessionID;
                         sqlCommand.Parameters["@ServiceInstanceID"].Value = Instance.ParentInstance.ParentInstance.InstanceID;
+                        sqlCommand.Parameters["@ScopeName"].Value = scopeName;
                         sqlCommand.Parameters["@StepName"].Value = StepName;
                         sqlCommand.Parameters["@Field"].Value = input.Key;
                         sqlCommand.Parameters["@Value"].Value = input.Value.ToString();

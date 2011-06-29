@@ -83,17 +83,40 @@ namespace EdgeBI.Wizards
         /// <param name="executorData"></param>
         protected void SaveExecutorData(Dictionary<string, object> executorData)
         {
+            string scopeName = string.Empty;
             using (DataManager.Current.OpenConnection())
             {
+                if (!executorData.ContainsKey("AccountSettings.BI_Scope_Name"))
+                {
+                    using (SqlCommand sqlCommand = DataManager.CreateCommand(@"Select Value
+                                                                                from  Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
+                                                                                where WizardID=@WizardID:Int and SessionID=@SessionID:Int AND Field=@Field:Nvarchar"))
+                    {
+                        sqlCommand.Parameters["@WizardID"].Value = WizardSession.WizardID;
+                        sqlCommand.Parameters["@SessionID"].Value = WizardSession.SessionID;
+                        sqlCommand.Parameters["@Field"].Value = "AccountSettings.BI_Scope_Name";
+                        using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                scopeName = reader[0].ToString();
+
+                            }
+                        }
+
+
+                    }
+                }
                 foreach (KeyValuePair<string, object> input in executorData)
                 {
 
                     using (SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO Wizards_Data_Per_WizardID_SessionID_Step_And_Field 
-																			(WizardID,SessionID,ServiceInstanceID,StepName,Field,Value,ValueType)
+																			(WizardID,SessionID,ServiceInstanceID,ScopeName,StepName,Field,Value,ValueType)
 																			Values 
 																			(@WizardID:Int,
 																			@SessionID:Int,
 																			@ServiceInstanceID:BigInt,
+                                                                            @ScopeName:NvarChar,
 																			@StepName:NvarChar,
 																			@Field:NVarChar,
 																			@Value:NVarChar,
@@ -102,6 +125,7 @@ namespace EdgeBI.Wizards
                         sqlCommand.Parameters["@WizardID"].Value = WizardSession.WizardID;
                         sqlCommand.Parameters["@SessionID"].Value = WizardSession.SessionID;
                         sqlCommand.Parameters["@ServiceInstanceID"].Value = Instance.ParentInstance.ParentInstance.InstanceID;
+                        sqlCommand.Parameters["@ScopeName"].Value = scopeName;
                         sqlCommand.Parameters["@StepName"].Value = WizardSession.CurrentStep.StepName;
                         sqlCommand.Parameters["@Field"].Value = input.Key;
                         sqlCommand.Parameters["@Value"].Value = input.Value.ToString();

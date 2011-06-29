@@ -103,6 +103,26 @@ namespace EdgeBI.Wizards.AccountWizard
 
                         sqlCommand.ExecuteNonQuery();
                     }
+                    sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_GUI_CampaignTargets
+                                                                (AccountID,CampaignGK,AdgroupGK,SegmentID,CPA_new_users,CPA_new_activations)
+                                                                VALUES
+                                                                (@AccountID:Int,@CampaignGK:Int,-1,-1,@CPA_new_users:Float,@CPA_new_activations:Float)");
+                    sqlCommand.Connection = sqlConnection;
+                    sqlCommand.Transaction = sqlTransaction;
+                    sqlCommand.Parameters["@AccountID"].Value = accountID;
+                    sqlCommand.Parameters["@CampaignGK"].Value = DBNull.Value; 
+                    if (targetCpa1 != null)
+                        sqlCommand.Parameters["@CPA_new_users"].Value = targetCpa1;
+                    else
+                        sqlCommand.Parameters["@CPA_new_users"].Value = DBNull.Value;
+
+                    if (targetCpa2 != null)
+                        sqlCommand.Parameters["@CPA_new_activations"].Value = targetCpa2;
+                    else
+                        sqlCommand.Parameters["@CPA_new_activations"].Value = DBNull.Value;
+
+                    sqlCommand.ExecuteNonQuery();
+
                     if (sqlTransaction != null)
                     {
                         sqlTransaction.Commit();
