@@ -36,7 +36,7 @@ namespace MyNewWizard
             if (chkUseExistingRole.Checked && cmbWizardType.SelectedValue.ToString()==NewBIForActiveAccount)
             {
                 AccountData.Add("AccountSettings.UseExistingRole", true);
-                AccountData.Add("AccountSettings.RoleID", txtBIScopeID.Text.Trim());
+                AccountData.Add("AccountSettings.RoleID", txtRole.Text.Trim());
             }
             else
             {
