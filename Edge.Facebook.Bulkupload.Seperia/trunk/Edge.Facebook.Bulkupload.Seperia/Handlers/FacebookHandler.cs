@@ -53,7 +53,7 @@ namespace Edge.Facebook.Bulkupload.Seperia.Handlers
 			f.Settings[11].values.Add("Body1^^B^^B10");
 			f.Settings[11].values.Add("Body2^^B^^B20");
 			f.Settings.Add(12, new ColumnDescriptionAndValues() { ColumnName = "image", SettingName = "Split" });
-			f.Settings[12].values.Add("Image1^^image^^@Image1");			
+			f.Settings[12].values.Add("Image1^^IMAGE^^@Image1");			
 			f.Settings.Add(13, new ColumnDescriptionAndValues() { ColumnName = "link *", SettingName = "Counter", from = 1000 });
 			f.Settings[13].values.Add("http://www.pc-speed.org/scan/de30/scan.php?utm_source=facebook&utm_medium=cpc&utm_campaign=product&EdgeTrackerID=@@");
 			f.Settings.Add(14, new ColumnDescriptionAndValues() { ColumnName = "country *", SettingName = "Default" });
