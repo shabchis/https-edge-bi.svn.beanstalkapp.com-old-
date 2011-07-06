@@ -15,14 +15,14 @@ namespace Edge.Facebook.Bulkupload.Seperia.Handlers
 		{
 
 			BulkFile bulkFile = new BulkFile();
-			return  bulkFile.CreateFile(fileDescription);
-			
+			return bulkFile.CreateFile(fileDescription);
+
 
 
 		}
 
 
-		[UriMapping( Method="GET", Template="test")]
+		[UriMapping(Method = "GET", Template = "test")]
 		public FileDescription getJsonTemplate()
 		{
 			FileDescription f = new FileDescription();
@@ -41,20 +41,19 @@ namespace Edge.Facebook.Bulkupload.Seperia.Handlers
 			f.Settings.Add(6, new ColumnDescriptionAndValues() { ColumnName = "ad_status", SettingName = "Default" });
 			f.Settings[6].values.Add("active");
 			f.Settings.Add(7, new ColumnDescriptionAndValues() { ColumnName = "ad_name *", SettingName = "CalculatedValues" });
-			f.Settings[7].values.Add("image,T,B");
+			f.Settings[7].values.Add("H,B,IMAGE");
 			f.Settings.Add(8, new ColumnDescriptionAndValues() { ColumnName = "bid_type *", SettingName = "Default" });
 			f.Settings[8].values.Add("CPC");
 			f.Settings.Add(9, new ColumnDescriptionAndValues() { ColumnName = "max_bid *", SettingName = "Double" });
 			f.Settings[9].values.Add("0.75");
-			f.Settings.Add(10, new ColumnDescriptionAndValues() { ColumnName = "title *", SettingName = "Default" });
-			f.Settings[10].values.Add("Title1");
-			f.Settings[10].values.Add("Title2");
-			f.Settings.Add(11, new ColumnDescriptionAndValues() { ColumnName = "body *", SettingName = "Default" });
-			f.Settings[11].values.Add("Body1");
-			f.Settings[11].values.Add("Body2");
-			f.Settings.Add(12, new ColumnDescriptionAndValues() { ColumnName = "image", SettingName = "ValuesTo|Default" });
-			f.Settings[12].values.Add("image,Image1");
-			f.Settings[12].values.Add("image,Image2");
+			f.Settings.Add(10, new ColumnDescriptionAndValues() { ColumnName = "title *", SettingName = "Split" });
+			f.Settings[10].values.Add("Title1^^H^^H10");
+			f.Settings[10].values.Add("Title2^^H^^H20");
+			f.Settings.Add(11, new ColumnDescriptionAndValues() { ColumnName = "body *", SettingName = "Split" });
+			f.Settings[11].values.Add("Body1^^B^^B10");
+			f.Settings[11].values.Add("Body2^^B^^B20");
+			f.Settings.Add(12, new ColumnDescriptionAndValues() { ColumnName = "image", SettingName = "Split" });
+			f.Settings[12].values.Add("Image1^^image^^@Image1");			
 			f.Settings.Add(13, new ColumnDescriptionAndValues() { ColumnName = "link *", SettingName = "Counter", from = 1000 });
 			f.Settings[13].values.Add("http://www.pc-speed.org/scan/de30/scan.php?utm_source=facebook&utm_medium=cpc&utm_campaign=product&EdgeTrackerID=@@");
 			f.Settings.Add(14, new ColumnDescriptionAndValues() { ColumnName = "country *", SettingName = "Default" });
@@ -105,14 +104,6 @@ namespace Edge.Facebook.Bulkupload.Seperia.Handlers
 			f.Settings[36].values.Add("");
 			f.Settings.Add(37, new ColumnDescriptionAndValues() { ColumnName = "friends_of_connections", SettingName = "Default" });
 			f.Settings[37].values.Add("");
-			f.Settings.Add(38, new ColumnDescriptionAndValues() { ColumnName = "T", SettingName = "ValuesTo" });
-			f.Settings[38].values.Add("T,T1");
-			f.Settings[38].values.Add("T,T2");
-			f.Settings[38].values.Add("T,T3");
-			f.Settings.Add(39, new ColumnDescriptionAndValues() { ColumnName = "B", SettingName = "ValuesTo" });
-			f.Settings[39].values.Add("B,B1");
-			f.Settings[39].values.Add("B,B2");
-			f.Settings[39].values.Add("B,B3");
 
 
 			return f;
@@ -141,7 +132,7 @@ namespace Edge.Facebook.Bulkupload.Seperia.Handlers
 
 
 			//return f;
-			 
+
 		}
 		public override bool ShouldValidateSession
 		{

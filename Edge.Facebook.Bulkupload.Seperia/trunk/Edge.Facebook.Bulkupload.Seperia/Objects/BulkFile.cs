@@ -14,7 +14,7 @@ namespace Edge.Facebook.Bulkupload.Objects
 	{
 		public FileDescription _fileDescription;
 		List<JArray> _list = new List<JArray>();
-		private Dictionary<string, string> _calculatedValues;
+		private Dictionary<string, string> _postActionKeysValues;
 
 		public static string Path;
 		StreamWriter _streamWriter;
@@ -39,8 +39,7 @@ namespace Edge.Facebook.Bulkupload.Objects
 				//witer the titles of the tab delimited file
 				foreach (KeyValuePair<int, ColumnDescriptionAndValues> colDesc in _fileDescription.Settings.OrderBy(s => s.Key))
 				{
-					if (colDesc.Value.SettingName != "ValuesTo")
-						_streamWriter.Write("{0}\t", colDesc.Value.ColumnName);
+					_streamWriter.Write("{0}\t", colDesc.Value.ColumnName);
 				}
 				_streamWriter.WriteLine();
 
@@ -66,23 +65,21 @@ namespace Edge.Facebook.Bulkupload.Objects
 		{
 			if (listIndex >= _fileDescription.Settings.Count) //the last column then write it on the stream and dont collect on memory
 			{
-				_calculatedValues = new Dictionary<string, string>();
-				StringBuilder lineBuilder = new StringBuilder();
 				int colIndex = 0;
+				_postActionKeysValues = new Dictionary<string, string>();
+				StringBuilder lineBuilder = new StringBuilder();
+				string line=string.Empty;
 				foreach (string colValue in stack.Reverse())
 				{
-					lineBuilder.Append(GetCustomFormat(colIndex, colValue));
-					//_streamWriter.Write(GetCustomFormat(colIndex, colValue)); //write to strem with the correct configuration of every column
+
+					lineBuilder.Append(GetCustomFormat(colIndex, colValue)); //write to strem with the correct configuration of every column
 					colIndex++;
 
 				}
-				string line = lineBuilder.ToString();
-
-				line = AddPostFormat(line);
-
-				_streamWriter.Write(line);
+				line = AddPostFormat(lineBuilder.ToString());
+				_streamWriter.WriteLine(line);
 				_counter++; //this counter is user for specail coonfiguration of some columns "mispar ratz"
-				_streamWriter.WriteLine();
+				//_streamWriter.WriteLine();
 				stack.Pop(); //remove last value 
 				return;
 			}
@@ -99,7 +96,6 @@ namespace Edge.Facebook.Bulkupload.Objects
 				return; //finish all the values the return
 			}
 		}
-
 		private string AddPostFormat(string line)
 		{
 			Regex r = new Regex(@"\bValuesFrom\(.+\)", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
@@ -111,15 +107,17 @@ namespace Edge.Facebook.Bulkupload.Objects
 
 				//clear unnessery strings
 				string newString = originalString.Replace("ValuesFrom", string.Empty);
+
 				newString = newString.Replace("(", string.Empty);
 				newString = newString.Replace(")", string.Empty);
 				string[] arrayOfParams = newString.Split(',');
 
 				foreach (string param in arrayOfParams)
 				{
-					newString = newString.Replace(param, _calculatedValues[param]);
+					newString = newString.Replace(param.ToUpper(), _postActionKeysValues[param]);
 				}
-				newString = newString.Replace(',', ' ');
+				
+				newString = newString.Replace(",", "");
 				line = line.Replace(originalString, newString);
 			}
 			return line;
@@ -192,29 +190,32 @@ namespace Edge.Facebook.Bulkupload.Objects
 						break;
 
 					}
+				case "Split":
+					{
+						//get param name with regex
+						Regex paramNameRegex = new Regex(@"\^\^[a-zA-Z]+\^\^");
+						if (!paramNameRegex.IsMatch(colValue))
+							throw new InvalidOperationException(string.Format("ColIndex: {0} wrong format"));
+						string paramName = paramNameRegex.Match(colValue).Value;
+
+						
+						//get two values
+						string[] resultAndValue = colValue.Split(new string[] { paramName }, StringSplitOptions.None);
+							
+						
+					
+						//put value1 in this result
+						result = string.Format("{0}\t", resultAndValue[0]);
+						//put value2 with paramname on ditionary
+						_postActionKeysValues.Add(paramName.Replace("^","").ToUpper(), resultAndValue[1]);
+						
+						
+						break;
+					}
 				case "CalculatedValues":
 					{
 
 						result = string.Format("ValuesFrom({0})\t", colValue);
-						break;
-					}
-				case "ValuesTo":
-					{
-
-						string[] str;
-						str = colValue.Split(',');
-						_calculatedValues.Add(str[0], str[1]);
-						result = string.Empty;
-
-						break;
-					}
-				case "ValuesTo|Default":
-					{
-						string[] str;
-						str = colValue.Split(',');
-						_calculatedValues.Add(str[0], str[1]);
-						result = string.Format("{0}\t", str[1]);
-
 						break;
 					}
 				default:
