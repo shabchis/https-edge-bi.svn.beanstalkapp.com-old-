@@ -38,8 +38,11 @@ namespace Easynet.Edge.Services.DataRetrieval.Retriever
 				throw new Exception("Could not find Url Parameters for Babylon BO service. Cannot continue.");
 			}
 
-            urlParameters = urlParameters.Replace("_DATEFROM_", startDate.ToUniversalTime().ToString("MM/dd/yyyy"));
-            urlParameters = urlParameters.Replace("_DATETO_", endDate.ToUniversalTime().ToString("MM/dd/yyyy"));
+			//urlParameters = urlParameters.Replace("_DATEFROM_", startDate.ToUniversalTime().ToString("MM/dd/yyyy"));
+			//urlParameters = urlParameters.Replace("_DATETO_", endDate.ToUniversalTime().ToString("MM/dd/yyyy"));
+
+			urlParameters = urlParameters.Replace("_DATEFROM_", startDate.ToString("MM/dd/yyyy"));
+			urlParameters = urlParameters.Replace("_DATETO_", endDate.ToString("MM/dd/yyyy"));
 
 			byte[] post = encoding.GetBytes(urlParameters);
 			request.ContentLength = urlParameters.Length;
