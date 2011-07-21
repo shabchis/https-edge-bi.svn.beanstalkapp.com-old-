@@ -42,10 +42,12 @@ namespace Easynet.Edge.Services.Reports
 			try
 			{
 				IDictionary smtpCon = Config.GetSection("SmtpConnection");
-				SmtpClient smtp = new SmtpClient(smtpCon["server"].ToString(), Int32.Parse((smtpCon["port"].ToString())));
+				SmtpClient smtp = new SmtpClient();
+				smtp.Host=smtpCon["server"].ToString();
+				smtp.Port=Int32.Parse((smtpCon["port"].ToString()));
 				smtp.Credentials = new NetworkCredential(smtpCon["user"].ToString(), smtpCon["pass"].ToString());
-				smtp.UseDefaultCredentials = Boolean.Parse(smtpCon["UseDefaultCredentials"].ToString());
-				smtp.EnableSsl = Boolean.Parse(smtpCon["EnableSsl"].ToString());
+				//smtp.UseDefaultCredentials = Boolean.Parse(smtpCon["UseDefaultCredentials"].ToString());
+				//smtp.EnableSsl = Boolean.Parse(smtpCon["EnableSsl"].ToString());
 
 				to = smtpCon["to"].ToString();
 				from = smtpCon["from"].ToString();
