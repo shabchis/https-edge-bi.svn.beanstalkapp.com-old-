@@ -98,7 +98,7 @@
                                                         <DataTemplate>
                                                             <Grid HorizontalAlignment="Left">
                                                                 <TextBlock Text="{Binding Value}" Margin="6,3,3,3" MouseDown="TextBlock_MouseDown"/>
-                                                                <TextBox Width="280" Text="{this:StringBinding Path=Value, UpdateSourceTrigger=PropertyChanged}" Visibility="Collapsed" LostFocus="TextBox_LostFocus" KeyDown="TextBox_KeyDown" />
+                                                                <TextBox Width="280" Text="{local:SegmentValueBinding Path=Value, UpdateSourceTrigger=LostFocus}" Visibility="Collapsed" LostFocus="TextBox_LostFocus" KeyDown="TextBox_KeyDown" />
                                                             </Grid>
                                                         </DataTemplate>
                                                     </GridViewColumn.CellTemplate>

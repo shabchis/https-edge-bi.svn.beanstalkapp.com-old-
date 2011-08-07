@@ -20,6 +20,7 @@ using System.Reflection;
 using System.Collections;
 using Easynet.Edge.UI.Server;
 using Easynet.Edge.Core;
+using Easynet.Edge.UI.Client.Pages;
 
 namespace Easynet.Edge.UI.Client.Pages
 {
@@ -35,7 +36,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		ObservableCollection<DataRow> _items;
 		Oltp.SegmentDataTable _segments;
 		
-		Oltp.SegmentValueDataTable _segmentValuesTable;
+		internal Oltp.SegmentValueDataTable _segmentValuesTable;
 		ListTable _segmentValuesListTable;
 		TextBox _segmentValueTextbox;
 
@@ -169,6 +170,17 @@ namespace Easynet.Edge.UI.Client.Pages
 				MainWindow.MessageBoxError("At least one value is required for a segment.", null);
 				e.Cancel = true;
 				return;
+			}
+
+			List<TextBox> textboxes = VisualTree.GetChildren<TextBox>(_segmentValuesListTable);
+			foreach (TextBox textbox in textboxes)
+			{
+				if (Validation.GetHasError(textbox))
+				{
+					MainWindow.MessageBoxError("You have one or more errors. Please correct them before continuing.", null);
+					e.Cancel = true;
+					return;
+				}
 			}
 
 			Dialog_ApplyingChanges<Oltp.SegmentDataTable, Oltp.SegmentRow>(
@@ -382,6 +394,11 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void TextBox_LostFocus(object sender, RoutedEventArgs e)
 		{
 			TextBox source = sender as TextBox;
+
+			// Don't exit on error
+			if (Validation.GetHasError(source))
+				return;
+
 			(source as TextBox).Visibility = Visibility.Collapsed;
 			TextBlock target = VisualTree.GetChild<TextBlock>(source.Parent);
 			target.Visibility = Visibility.Visible;
@@ -431,5 +448,40 @@ namespace Easynet.Edge.UI.Client.SegmentsLocal
 		}
 
 		#endregion
+	}
+
+	public class SegmentValueBinding : StringBinding
+	{
+		public SegmentValueBinding()
+		{
+			this.ValidationRules.Add(new SegmentValueValidationRule());
+		}
+	}
+
+	public class SegmentValueValidationRule : ValidatingBindingRuleBase
+	{
+		public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+		{
+			ValidationResult result = base.Validate(value, cultureInfo);
+			if (!result.IsValid)
+				return result;
+
+			var page = MainWindow.Current.CurrentPage as SegmentsPage;
+			if (page == null)
+				return new ValidationResult(true, null);
+
+			Oltp.SegmentValueDataTable values = page._segmentValuesTable;
+
+			var valueText = (string)value;
+
+			if (values.Select(String.Format("{0} = '{1}'",
+				values.ValueColumn.ColumnName,
+				valueText.Replace("'", "''"))).Length > 0)
+			{
+				result = new ValidationResult(false, "This value is already defined.");
+			}
+
+			return result;
+		}
 	}
 }
