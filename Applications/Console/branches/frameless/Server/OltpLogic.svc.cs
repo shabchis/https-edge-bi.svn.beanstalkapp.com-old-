@@ -466,7 +466,7 @@ namespace Easynet.Edge.UI.Server
 		/// </summary>
 		/// <param name="adunitID"></param>
 		/// <returns></returns>
-		public Oltp.GatewayDataTable Gateway_GetByIdentifier(int accountID, long identifier)
+		public Oltp.GatewayDataTable Gateway_GetByIdentifier(int accountID, string identifier)
 		{
 			return From<GatewayTableAdapter>().GetByIdentifier(accountID, identifier);
 		}
@@ -915,7 +915,7 @@ namespace Easynet.Edge.UI.Server
 		/// <param name="accountID"></param>
 		/// <param name="identifier"></param>
 		/// <returns></returns>
-		public Oltp.GatewayReservationDataTable GatewayReservation_GetByIdentifier(int accountID, long identifier)
+		public Oltp.GatewayReservationDataTable GatewayReservation_GetByIdentifier(int accountID, string identifier)
 		{
 			return From<GatewayReservationTableAdapter>().GetByIdentifier(accountID, identifier);
 		}
@@ -927,7 +927,7 @@ namespace Easynet.Edge.UI.Server
 		/// <param name="fromID"></param>
 		/// <param name="toID"></param>
 		/// <returns></returns>
-		public Oltp.GatewayReservationDataTable GatewayReservation_GetByOverlap(int accountID, long fromID, long toID, int[] otherAccounts)
+		public Oltp.GatewayReservationDataTable GatewayReservation_GetByOverlap(int accountID, string fromID, string toID, int[] otherAccounts)
 		{
 			Oltp.GatewayReservationDataTable results = From<GatewayReservationTableAdapter>().GetByOverlap(accountID, fromID, toID);
 
@@ -1533,7 +1533,7 @@ namespace Easynet.Edge.UI.Server
 				pageAndGatewayCmd.Parameters["@segment3"].Value = s3;
 				pageAndGatewayCmd.Parameters["@segment4"].Value = s4;
 				pageAndGatewayCmd.Parameters["@segment5"].Value = s5;
-				pageAndGatewayCmd.ExecuteNonQuery();
+				int temp = pageAndGatewayCmd.ExecuteNonQuery();
 
 				if(updatedCreativeGKs.Contains(adgCreative.CreativeGK))
 					continue;

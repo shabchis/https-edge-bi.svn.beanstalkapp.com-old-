@@ -81,7 +81,7 @@ namespace Easynet.Edge.UI.Server
 		void RelatedAccount_Save(Oltp.RelatedAccountDataTable relatedAccountTable);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
-		Oltp.GatewayDataTable Gateway_GetByIdentifier(int accountID, long identifier);
+		Oltp.GatewayDataTable Gateway_GetByIdentifier(int accountID, string identifier);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
 		Oltp.GatewayDataTable Gateway_Get(int adunitID);
@@ -117,10 +117,10 @@ namespace Easynet.Edge.UI.Server
 		Oltp.GatewayReservationDataTable GatewayReservation_GetByPage(int accountID, long pageGK);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
-		Oltp.GatewayReservationDataTable GatewayReservation_GetByIdentifier(int accountID, long identifier);
+		Oltp.GatewayReservationDataTable GatewayReservation_GetByIdentifier(int accountID, string identifier);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
-		Oltp.GatewayReservationDataTable GatewayReservation_GetByOverlap(int accountID, long fromID, long toID, int[] otherAccounts);
+		Oltp.GatewayReservationDataTable GatewayReservation_GetByOverlap(int accountID, string fromID, string toID, int[] otherAccounts);
 
 		[OperationContract(IsInitiating = false)] [NetDataContract]
 		Oltp.KeywordDataTable Keyword_Get(int accountID, bool includeRelated, string keywordFilter, bool includeUnmonitored);

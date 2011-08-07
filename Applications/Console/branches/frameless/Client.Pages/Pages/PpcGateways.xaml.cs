@@ -244,7 +244,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		/// <param name="account"></param>
 		/// <param name="gatewayGK"></param>
-		private void GetGateways(Oltp.AccountRow account, int? channelID, int? identifier, int?[] segments)
+		private void GetGateways(Oltp.AccountRow account, int? channelID, string identifier, int?[] segments)
 		{
 			ObservableCollection<DataRow> foundItems = new ObservableCollection<DataRow>();
 
@@ -252,7 +252,6 @@ namespace Easynet.Edge.UI.Client.Pages
 			{
 				// SPECIFIC GATEWAY LOOKUP
 				Oltp.GatewayRow filterGateway = null;
-				long gatewayIdentifier = identifier.Value;
 				Oltp.GatewayDataTable filterGatewayTable = null;
 				Oltp.GatewayReservationDataTable reservations = null;
 
@@ -261,10 +260,10 @@ namespace Easynet.Edge.UI.Client.Pages
 					using (OltpProxy proxy = new OltpProxy())
 					{
 						// Check to see if requested gateway exists
-						filterGatewayTable = proxy.Service.Gateway_GetByIdentifier(account.ID, gatewayIdentifier);
+						filterGatewayTable = proxy.Service.Gateway_GetByIdentifier(account.ID, identifier);
 						if (filterGatewayTable.Rows.Count < 1)
 						{
-							reservations = proxy.Service.GatewayReservation_GetByIdentifier(account.ID, gatewayIdentifier);
+							reservations = proxy.Service.GatewayReservation_GetByIdentifier(account.ID, identifier);
 						}
 					}
 				},

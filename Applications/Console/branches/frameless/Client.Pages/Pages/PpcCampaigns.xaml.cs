@@ -936,6 +936,7 @@ namespace Easynet.Edge.UI.Client.Pages
 					{
 						checkbox = new CheckBox();
 						checkbox.IsChecked = false;
+						checkbox.Style = (Style)App.Current.Resources["FormFieldBatchCheckbox"];
 						Action<object, RoutedEventArgs> del = delegate(object innerSender, RoutedEventArgs innerE)
 						{
 							control.IsEnabled = checkbox.IsChecked.Value;
@@ -1030,7 +1031,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				new Oltp.CampaignRow[] { (Oltp.CampaignRow)Campaign_dialog.TargetContent };
 
 			// Check whether this is a new campaign
-			if (Window.CurrentAccount.HasBackOffice && tempRow.RowState == DataRowState.Modified)
+			if (Window.CurrentAccount.HasBackOffice && tempRow.RowState == DataRowState.Modified && Campaign_dialog.HasBindingsToApply)
 			{
 				MessageBoxResult result = MessageBox.Show("Applying changes will override all the segments of trackers associated with the selected campaigns. Continue?",
 					"Warning",
@@ -1103,7 +1104,11 @@ namespace Easynet.Edge.UI.Client.Pages
 					}
 
 
-					if (tempRow.Targets == null || tempRow.Targets.InnerRow.RowState == DataRowState.Unchanged || (measuresToSave != null && measuresToSave.Count == 0))
+					if (tempRow.Targets == null ||
+						tempRow.Targets.InnerRow == null ||
+						tempRow.Targets.InnerRow.RowState == DataRowState.Unchanged ||
+						(measuresToSave != null && measuresToSave.Count == 0)
+						)
 					{
 						// No targets to save, just end here
 						Campaign_dialog.EndApplyChanges(e);
@@ -1382,6 +1387,9 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void Adgroup_AddClick(object sender, RoutedEventArgs e)
 		{
+			throw new NotSupportedException("Feature not available.");
+
+			/*
 			// Get the parent adunit
 			Oltp.AdgroupDataTable tbl = null;
 			int selectedIndex = _listTable.ListView.SelectedIndex;
@@ -1427,6 +1435,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			{
 				AdgroupCreatives_GotFocus(null, null);
 			}
+			*/
 		}
 
 		/// <summary>
@@ -1854,7 +1863,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			adgroupKeywordRow.ChannelID = adgroup.ChannelID;
 			adgroupKeywordRow.CampaignSourceID = adgroup.CampaignSourceID;
 			adgroupKeywordRow.AdgroupSourceID = adgroup.AdgroupSourceID;
-			adgroupKeywordRow.KeywordSourceID = 0 - DateTime.UtcNow.Ticks;
+			adgroupKeywordRow.KeywordSourceID = (0 - DateTime.UtcNow.Ticks).ToString();
 			_adgroupKeywordTable.Rows.Add(adgroupKeywordRow);
 
 			ObservableCollection<Oltp.AdgroupKeywordRow> source = _adgroupKeywords.ListView.ItemsSource as ObservableCollection<Oltp.AdgroupKeywordRow>;
@@ -1925,7 +1934,7 @@ namespace Easynet.Edge.UI.Client.Pages
 					adgroupKeywordRow.ChannelID = adgroup.ChannelID;
 					adgroupKeywordRow.CampaignSourceID = adgroup.CampaignSourceID;
 					adgroupKeywordRow.AdgroupSourceID = adgroup.AdgroupSourceID;
-					adgroupKeywordRow.KeywordSourceID = 0 - DateTime.UtcNow.Ticks - (tickOffset++);
+					adgroupKeywordRow.KeywordSourceID = (0 - DateTime.UtcNow.Ticks - (tickOffset++)).ToString();
 					_adgroupKeywordTable.Rows.Add(adgroupKeywordRow);
 					source.Add(adgroupKeywordRow);
 				}
@@ -2067,7 +2076,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			adgroupCreativeRow.ChannelID = adgroup.ChannelID;
 			adgroupCreativeRow.CampaignSourceID = adgroup.CampaignSourceID;
 			adgroupCreativeRow.AdgroupSourceID = adgroup.AdgroupSourceID;
-			adgroupCreativeRow.CreativeSourceID = 0 - DateTime.UtcNow.Ticks;
+			adgroupCreativeRow.CreativeSourceID = (0 - DateTime.UtcNow.Ticks).ToString();
 			_adgroupCreativeTable.Rows.Add(adgroupCreativeRow);
 
 			ObservableCollection<Oltp.AdgroupCreativeRow> source = _adgroupCreatives.ListView.ItemsSource as ObservableCollection<Oltp.AdgroupCreativeRow>;

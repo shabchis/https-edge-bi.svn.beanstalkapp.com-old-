@@ -732,6 +732,22 @@ namespace Easynet.Edge.UI.Client
 		}
 
 
+		public bool HasBindingsToApply
+		{
+			get
+			{
+				foreach (BEData bdata in _bindings)
+				{
+					if ((this.IsBatch && !bdata.ShouldBatchApply) || !bdata.HasValueChanged)
+						continue;
+					else
+						return true;
+				}
+
+				return false;
+			}
+		}
+
 
 		public void ApplyBindingsToItems(IEnumerable targetItems)
 		{
@@ -764,8 +780,9 @@ namespace Easynet.Edge.UI.Client
 				updated++;
 			}
 
-			if (updated < 1)
-				throw new Exception("Nothing was applied. This should not happen, and could indicate a binding that was not changed to this:DialogBinding.");
+			// No need for this message any more
+			//if (updated < 1)
+			//	throw new Exception("Nothing was applied. This should not happen, and could indicate a binding that was not changed to this:DialogBinding.");
 		}
 
 		/// <summary>

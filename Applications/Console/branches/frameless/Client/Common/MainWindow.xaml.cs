@@ -97,9 +97,9 @@ namespace Easynet.Edge.UI.Client
 			string sessionID;
 
 			#if DEBUG
-			accountID = 63;
-			sessionID = "EA592DD05EE41724A8F7F0C4F0750FD4";
-			menuItemPath = "find/creatives";
+			accountID = 95;
+			sessionID = "FD3E03D69016E7BA9F4204B8202E3537";
+			menuItemPath = "management/campaigns";
 			#endif
 
 			// Normal producion
@@ -489,12 +489,17 @@ namespace Easynet.Edge.UI.Client
 		/// <param name="excep"></param>
 		public static void MessageBoxError(string message, Exception ex)
 		{
-			if (ex is TargetInvocationException)
-				ex = ex.InnerException;
+			Type errorType = null;
 
-			Type errorType = ex.GetType();
-			if (ex is FaultException)
-				errorType = ((FaultException)ex).InnerException.GetType();
+			if (ex != null)
+			{
+				if (ex is TargetInvocationException)
+					ex = ex.InnerException;
+
+				errorType = ex.GetType();
+				if (ex is FaultException)
+					errorType = ((FaultException)ex).InnerException.GetType();
+			}
 
 			MessageBox.Show(
 				ex == null ?
