@@ -18,26 +18,26 @@ namespace Easynet.Edge.Services.Reports
 			Campaign = Convert.ToString(reader[1]);
 			AdGroup = Convert.ToString(reader[2]);
 			DestUrl = Convert.ToString(reader[3]);
-			Imps = Convert.ToUInt64(reader[4]);
-			Clicks = Convert.ToUInt64(reader[5]);
-			CTR = Convert.ToUInt64(reader[6]);
-			AvgCPC = Convert.ToUInt64(reader[7]);
-			Cost = Convert.ToUInt64(reader[8]);
-			AvgPosition = Convert.ToUInt64(reader[9]);
-			SignUpConv = Convert.ToUInt64(reader[10]);
+			Imps = Convert.ToString(reader[4]);
+			Clicks = Convert.ToString(reader[5]);
+			CTR = Convert.ToString(reader[6]);
+			AvgCPC = Convert.ToString(reader[7]);
+			Cost = Convert.ToString(reader[8]);
+			AvgPosition = Convert.ToString(reader[9]);
+			SignUpConv = Convert.ToString(reader[10]);
 		}
 
 		public String DayCode { get; set; }
 		public String Campaign { get; set; }
 		public String AdGroup { get; set; }
 		public String DestUrl { get; set; }
-		public UInt64 Imps { get; set; }
-		public UInt64 Clicks { get; set; }
-		public UInt64 CTR { get; set; }
-		public UInt64 Cost { get; set; }
-		public UInt64 AvgCPC { get; set; }
-		public UInt64 AvgPosition { get; set; }
-		public UInt64 SignUpConv { get; set; }
+		public String Imps { get; set; }
+		public String Clicks { get; set; }
+		public String CTR { get; set; }
+		public String Cost { get; set; }
+		public String AvgCPC { get; set; }
+		public String AvgPosition { get; set; }
+		public String SignUpConv { get; set; }
 		 
 			
 
