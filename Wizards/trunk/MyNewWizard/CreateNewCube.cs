@@ -74,8 +74,11 @@ namespace MyNewWizard
                  if (!cubeValues.ContainsKey("AccountSettings.TargetACQ" + targetCPANum.ToString()))
                  {
                      cubeValues.Add("AccountSettings.TargetACQ" + targetCPANum.ToString(), new Replacment() { ReplaceFrom = string.Format("appsettings:AccountSettings.TargetACQ{0}", targetCPANum), ReplaceTo = item.SubItems[3].Text, CalcMembersOnly = onlyCalc });
-                     if (!cubeValues.ContainsKey("AccountSettings.TargetValue"+targetCPANum.ToString()))
-                         cubeValues.Add("AccountSettings.TargetValue"+targetCPANum.ToString(),item.SubItems[4].Text.Trim());
+                     if (!cubeValues.ContainsKey("AccountSettings.TargetValue" + targetCPANum.ToString()))
+                     {
+                         cubeValues.Add("AccountSettings.TargetValue" + targetCPANum.ToString(), item.SubItems[4].Text.Trim());
+                         cubeValues["AccountSettings.MeasureAccountID"]= txtAccountID.Text;
+                     }
 
                  }
 
@@ -563,6 +566,11 @@ namespace MyNewWizard
         {
             if (txtTargetCPA.Text.Length > 0)
                 txtAccountID.Enabled = true;
+        }
+
+        private void txtTargetCPA_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
        

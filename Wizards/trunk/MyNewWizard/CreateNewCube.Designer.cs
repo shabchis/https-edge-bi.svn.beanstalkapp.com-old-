@@ -304,6 +304,7 @@
             this.txtTargetCPA.Name = "txtTargetCPA";
             this.txtTargetCPA.Size = new System.Drawing.Size(100, 20);
             this.txtTargetCPA.TabIndex = 24;
+            this.txtTargetCPA.TextChanged += new System.EventHandler(this.txtTargetCPA_TextChanged);
             this.txtTargetCPA.Validated += new System.EventHandler(this.txtTargetCPA_Validated);
             // 
             // label3
