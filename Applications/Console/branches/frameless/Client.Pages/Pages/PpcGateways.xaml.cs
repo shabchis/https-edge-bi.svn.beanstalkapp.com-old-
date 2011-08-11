@@ -274,14 +274,14 @@ namespace Easynet.Edge.UI.Client.Pages
 						if (reservations.Rows.Count > 0)
 						{
 							MessageBox.Show(
-								String.Format("Tracker {0} has been reserved by {1}.", gatewayIdentifier, (reservations.Rows[0] as Oltp.GatewayReservationRow).ReservedByUserName),
+								String.Format("Tracker {0} has been reserved by {1}.", identifier, (reservations.Rows[0] as Oltp.GatewayReservationRow).ReservedByUserName),
 								"Information",
 								MessageBoxButton.OK, MessageBoxImage.Warning);
 						}
 						else
 						{
 							MessageBox.Show(
-								String.Format("Tracker {0} is not in use.", gatewayIdentifier),
+								String.Format("Tracker {0} is not in use.", identifier),
 								"Information",
 								MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -338,25 +338,16 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		private void _filterButton_Click(object sender, RoutedEventArgs e)
 		{
-			int gatewayIdentifier = -1;
-			if (!String.IsNullOrEmpty(_filterText.Text) && !Int32.TryParse(_filterText.Text, out gatewayIdentifier))
-			{
-			    // Ignore
-			    MainWindow.MessageBoxError("Please enter a valid identifier (number bigger than 0)", null);
-
-			    // Make re-entering a number easier
-			    _filterText.SelectAll();
-			    _filterText.Focus();
-
-			    return;
-			}
+			string identifier = _filterText.Text.Trim();
+			if (String.IsNullOrEmpty(identifier))
+				identifier = null;
 
 
 			GetGateways
 			(
 				Window.CurrentAccount,
 				_channelPicker.SelectedIndex > 0 ? new Nullable<int>(((Oltp.ChannelRow)_channelPicker.SelectedValue).ID) : null,
-				gatewayIdentifier < 0 ? null : new Nullable<int>(gatewayIdentifier),
+				identifier,
 				new int?[]
 				{
 					GetSegmentValue(_segment1Filter, _segment1Picker),
@@ -414,9 +405,8 @@ namespace Easynet.Edge.UI.Client.Pages
 			editVersion.AccountID = this.Window.CurrentAccount.ID;
 			
 			// Start with the last searched for ID (for user friendliness)
-			int originalID;
-			if (int.TryParse(_filterText.Text, out originalID))
-				editVersion.Identifier = originalID;
+			if (!String.IsNullOrEmpty(_filterText.Text))
+				editVersion.Identifier = _filterText.Text;
 
 			// Enable these fields for first use
 			_input_originalID.IsReadOnly = false;
@@ -496,7 +486,7 @@ namespace Easynet.Edge.UI.Client.Pages
 					if (usedGW.Rows.Count > 0)
 					{
 						MainWindow.MessageBoxError(
-							String.Format("Tracker {0} is already taken. Please use a different identifier.", editVersion.Identifier), null);
+							String.Format("Tracker {0} is already taken. Please use a different tracker.", editVersion.Identifier), null);
 
 						_input_originalID.Focus();
 						_input_originalID.SelectAll();
@@ -948,7 +938,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			using (OltpProxy proxy = new OltpProxy())
 			{
 				Oltp.GatewayReservationDataTable existingReservations =
-					proxy.Service.GatewayReservation_GetByOverlap(Window.CurrentAccount.ID, fromID, toID, otherAccounts);
+					proxy.Service.GatewayReservation_GetByOverlap(Window.CurrentAccount.ID, fromID.ToString(), toID.ToString(), otherAccounts);
 
 				if (existingReservations.Rows.Count > 0)
 				{

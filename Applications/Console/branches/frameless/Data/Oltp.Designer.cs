@@ -1930,7 +1930,7 @@ namespace Easynet.Edge.UI.Data {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public GatewayRow AddGatewayRow(int AccountID, int ChannelID, long Identifier, string Name, string DestinationURL, int Segment1, int Segment2, int Segment3, int Segment4, int Segment5, int CampaignGK, long AdgroupGK, int ReferenceType, long ReferenceID, long PageGK) {
+            public GatewayRow AddGatewayRow(int AccountID, int ChannelID, string Identifier, string Name, string DestinationURL, int Segment1, int Segment2, int Segment3, int Segment4, int Segment5, int CampaignGK, long AdgroupGK, int ReferenceType, long ReferenceID, long PageGK) {
                 GatewayRow rowGatewayRow = ((GatewayRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -2000,7 +2000,7 @@ namespace Easynet.Edge.UI.Data {
                 base.Columns.Add(this.columnAccountID);
                 this.columnChannelID = new global::System.Data.DataColumn("ChannelID", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnChannelID);
-                this.columnIdentifier = new global::System.Data.DataColumn("Identifier", typeof(long), null, global::System.Data.MappingType.Element);
+                this.columnIdentifier = new global::System.Data.DataColumn("Identifier", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnIdentifier);
                 this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnName);
@@ -2039,7 +2039,7 @@ namespace Easynet.Edge.UI.Data {
                 this.columnChannelID.Caption = "Channel_ID";
                 this.columnChannelID.DefaultValue = ((int)(-1));
                 this.columnIdentifier.Caption = "Gateway_id";
-                this.columnIdentifier.DefaultValue = ((long)(-1));
+                this.columnIdentifier.MaxLength = 1000;
                 this.columnName.Caption = "Gateway";
                 this.columnName.MaxLength = 1000;
                 this.columnDestinationURL.Caption = "Dest_URL";
@@ -10249,13 +10249,13 @@ namespace Easynet.Edge.UI.Data {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public long Identifier {
+            public string Identifier {
                 get {
-                    if (this.IsIdentifierNull()) {
-                        return -1;
+                    try {
+                        return ((string)(this[this.tableGateway.IdentifierColumn]));
                     }
-                    else {
-                        return ((long)(this[this.tableGateway.IdentifierColumn]));
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Identifier\' in table \'Gateway\' is DBNull.", e);
                     }
                 }
                 set {

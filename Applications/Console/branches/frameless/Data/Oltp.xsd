@@ -2619,7 +2619,13 @@ SELECT Campaign_GK, Account_ID, Channel_ID, campaign, Segment1, Segment2, Segmen
               <xs:element name="GK" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msdata:Caption="Gateway_GK" msprop:Generator_UserColumnName="GK" msprop:Generator_ColumnPropNameInRow="GK" msprop:Generator_ColumnVarNameInTable="columnGK" msprop:Generator_ColumnPropNameInTable="GKColumn" type="xs:long" />
               <xs:element name="AccountID" msdata:Caption="Account_ID" msprop:Generator_UserColumnName="AccountID" msprop:Generator_ColumnPropNameInRow="AccountID" msprop:Generator_ColumnVarNameInTable="columnAccountID" msprop:Generator_ColumnPropNameInTable="AccountIDColumn" type="xs:int" minOccurs="0" />
               <xs:element name="ChannelID" msdata:Caption="Channel_ID" msprop:Generator_UserColumnName="ChannelID" msprop:Generator_ColumnPropNameInRow="ChannelID" msprop:Generator_ColumnVarNameInTable="columnChannelID" msprop:Generator_ColumnPropNameInTable="ChannelIDColumn" type="xs:int" default="-1" minOccurs="0" />
-              <xs:element name="Identifier" msdata:Caption="Gateway_id" msprop:Generator_UserColumnName="Identifier" msprop:nullValue="-1" msprop:Generator_ColumnVarNameInTable="columnIdentifier" msprop:Generator_ColumnPropNameInTable="IdentifierColumn" msprop:Generator_ColumnPropNameInRow="Identifier" type="xs:long" default="-1" minOccurs="0" />
+              <xs:element name="Identifier" msdata:Caption="Gateway_id" msprop:Generator_UserColumnName="Identifier" msprop:Generator_ColumnVarNameInTable="columnIdentifier" msprop:Generator_ColumnPropNameInTable="IdentifierColumn" msprop:Generator_ColumnPropNameInRow="Identifier" minOccurs="0">
+				  <xs:simpleType>
+					  <xs:restriction base="xs:string">
+						  <xs:maxLength value="1000" />
+					  </xs:restriction>
+				  </xs:simpleType>
+			  </xs:element>
               <xs:element name="Name" msdata:Caption="Gateway" msprop:Generator_UserColumnName="Name" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInTable="NameColumn" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">

@@ -273,7 +273,7 @@ namespace Easynet.Edge.UI.Client
 			(Func<Exception, bool>) delegate(Exception ex)
 			{
 				// Failed, so cancel and display a message
-				MainWindow.MessageBoxError("Error while updating.", ex);
+				MainWindow.MessageBoxError("Error while updating.\n\nChanges may have been saved, if re-saving doesn't work please refresh the page.", ex);
 				e.Cancel = true;
 				return false;
 			},
