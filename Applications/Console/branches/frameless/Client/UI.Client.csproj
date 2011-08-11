@@ -132,16 +132,16 @@
     </None>
   </ItemGroup>
   <!-- Demo configuration -->
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Demo|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Demo' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Production\</OutputPath>
+    <OutputPath>bin\Demo\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PublishUrl>Publish\demo.edge-bi.com\</PublishUrl>
-    <InstallUrl>https://demo.edge-bi.com/</InstallUrl>
-    <SupportUrl>https://demo.edge-bi.com/install.html</SupportUrl>
+    <InstallUrl>http://demo.edge-bi.com/</InstallUrl>
+    <SupportUrl>http://demo.edge-bi.com/install.html</SupportUrl>
     <ProductName>Edge.BI Management Console [demo]</ProductName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
