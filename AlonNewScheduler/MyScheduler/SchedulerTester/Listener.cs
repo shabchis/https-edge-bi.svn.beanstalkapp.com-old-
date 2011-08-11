@@ -12,7 +12,7 @@ using Easynet.Edge.Core.Services;
 namespace SchedulerTester
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Single)]
-   public class Listener : IScheduleManager, IDisposable
+    public class Listener : IScheduleManager, IDisposable
     {
         ServiceHost _wcfHost;
         Scheduler _scheduler;
@@ -41,9 +41,18 @@ namespace SchedulerTester
             bool respond = true;
             try
             {
+                ActiveServiceElement activeServiceElement;
                 ServiceConfiguration myServiceConfiguration = new ServiceConfiguration();
                 ServiceConfiguration baseConfiguration = new ServiceConfiguration();
-                ActiveServiceElement activeServiceElement = new ActiveServiceElement(ServicesConfiguration.Accounts.GetAccount(accountID).Services[serviceName]);
+                if (accountID == null || accountID == 0)
+                    throw new Exception("Account id must be set!");
+
+                if (ServicesConfiguration.Services[serviceName] == null)
+                    throw new Exception(string.Format("Service: {0} not exists in configuration", serviceName));
+                if (accountID == -1)
+                    activeServiceElement = new ActiveServiceElement(ServicesConfiguration.Services[serviceName]);
+                else
+                    activeServiceElement = new ActiveServiceElement(ServicesConfiguration.Accounts.GetAccount(accountID).Services[serviceName]);
                 if (options != null)
                 {
                     foreach (string option in options.Keys)
@@ -71,7 +80,7 @@ namespace SchedulerTester
                     Scope = SchedulingScope.UnPlanned,
                     SpecificDateTime = DateTime.Now,
                     MaxDeviationAfter = new TimeSpan(0, 0, 45, 0, 0),
-                    Hours=new List<TimeSpan>(),
+                    Hours = new List<TimeSpan>(),
                     GuidForUnplaned = Guid.NewGuid()
                 });
                 myServiceConfiguration.SchedulingRules[0].Hours.Add(new TimeSpan(0, 0, 0, 0));
@@ -90,11 +99,11 @@ namespace SchedulerTester
             {
                 respond = false;
                 Easynet.Edge.Core.Utilities.Log.Write("AddManualServiceListner", ex.Message, ex, Easynet.Edge.Core.Utilities.LogMessageType.Error);
-  
-                
-            }      
-          
-           
+
+
+            }
+
+
 
             return respond;
         }
@@ -113,7 +122,7 @@ namespace SchedulerTester
                         activeServiceElement.Options[option] = options[option];
                 }
                 ServiceElement serviceElement = ServicesConfiguration.Services[serviceName];
-                
+
                 //base configuration;
                 baseConfiguration.Name = serviceElement.Name;
                 baseConfiguration.MaxConcurrent = serviceElement.MaxInstances;
@@ -136,7 +145,7 @@ namespace SchedulerTester
                     SpecificDateTime = targetTime,
                     MaxDeviationAfter = new TimeSpan(0, 0, 45, 0, 0),
                     Hours = new List<TimeSpan>(),
-                    GuidForUnplaned=Guid.NewGuid()
+                    GuidForUnplaned = Guid.NewGuid()
                 });
                 myServiceConfiguration.SchedulingRules[0].Hours.Add(new TimeSpan(0, 0, 0, 0));
                 myServiceConfiguration.BaseConfiguration = baseConfiguration;
