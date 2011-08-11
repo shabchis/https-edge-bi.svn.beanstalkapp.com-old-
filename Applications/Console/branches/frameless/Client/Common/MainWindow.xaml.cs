@@ -416,7 +416,7 @@ namespace Easynet.Edge.UI.Client
 					{
 						if (onException == null)
 						{
-							MessageBoxError("Operation failed.", ex);
+							MessageBoxError(null, ex);
 							cont = false;
 						}
 						else
@@ -427,7 +427,7 @@ namespace Easynet.Edge.UI.Client
 							}
 							catch (Exception innerEx)
 							{
-								MessageBoxError("Operation failed.", innerEx);
+								MessageBoxError(null, innerEx);
 								cont = false;
 							}
 						}
@@ -496,15 +496,17 @@ namespace Easynet.Edge.UI.Client
 				if (ex is TargetInvocationException)
 					ex = ex.InnerException;
 
-				errorType = ex.GetType();
-				if (ex is FaultException)
-					errorType = ((FaultException)ex).InnerException.GetType();
+				if (ex is FaultException && ex.InnerException != null)
+					errorType = ((FaultException)ex).GetType();
+				else
+					errorType = ex.GetType();
 			}
 
 			MessageBox.Show(
 				ex == null ?
 					message :
-					String.Format("{0}\n\n{1}\n\n({2})", message, ex.Message, errorType.FullName),
+					String.Format("{0}{1}", message == null ? null : message + "\n\n", ex.Message),
+					//String.Format("{0}\n\n{1}\n\n({2})", message, ex.Message, errorType.FullName),
 				"Error",
 				MessageBoxButton.OK, MessageBoxImage.Error
 			);

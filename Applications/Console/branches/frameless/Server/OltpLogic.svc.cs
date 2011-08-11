@@ -700,7 +700,7 @@ namespace Easynet.Edge.UI.Server
 				// Create the gateway with default data
 				Oltp.GatewayRow gw = newGateways.NewGatewayRow();
 				gw.AccountID = accountID;
-				gw.Identifier = i;
+				gw.Identifier = i.ToString();
 				gw.Name = i.ToString();
 				gw.DestinationURL = String.Format(destinationBaseUrl, i);
 
@@ -808,7 +808,7 @@ namespace Easynet.Edge.UI.Server
 				// Create the gateway with default data
 				Oltp.GatewayRow gw = newGateways.NewGatewayRow();
 				gw.AccountID = accountID;
-				gw.Identifier = (int) nextIdentifier;
+				gw.Identifier = nextIdentifier.ToString();
 				gw.Name = nextIdentifier.ToString();
 				gw.DestinationURL = String.Format(destinationBaseUrl, nextIdentifier);
 
