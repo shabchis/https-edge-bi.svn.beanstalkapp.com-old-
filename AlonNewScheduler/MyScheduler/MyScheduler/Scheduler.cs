@@ -138,8 +138,8 @@ namespace MyScheduler
                     if (scheduledService.Value.LegacyInstance.State == Legacy.ServiceState.Ended || //if service ended 
                         scheduledService.Value.LegacyInstance.State == Legacy.ServiceState.Aborting || scheduledService.Value.Deleted == true)  //or aborting  or tag as delted
                     {
-                        if (scheduledService.Value.LegacyInstance.TimeEnded >DateTime.Now.Subtract(_timeToDeleteServiceFromTimeLine)) // so if the difference between and time and now bigger or equal to configure time then remove it.
-                            endedAndTimeToClear.Add(scheduledService.Key);
+						if (scheduledService.Value.LegacyInstance.TimeEnded + _timeToDeleteServiceFromTimeLine < DateTime.Now) // so if the difference between and time and now bigger or equal to configure time then remove it.
+							endedAndTimeToClear.Add(scheduledService.Key); 
                     }
                 }
                 lock (_servicesWarehouse)
