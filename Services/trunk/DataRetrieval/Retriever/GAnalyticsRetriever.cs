@@ -72,7 +72,7 @@ namespace Easynet.Edge.Services.DataRetrieval.Retriever
 			request.ContentType = "application/x-www-form-urlencoded ";
 			request.Method = "POST";
 			ASCIIEncoding encoding = new ASCIIEncoding();
-			string postData = "accountType=GOOGLE&Email=" + GetConfigurationOptionsField("User") + "&Passwd=" + Encryptor.Decrypt(GetConfigurationOptionsField("Password"),GetConfigurationOptionsField("Password")) + "&source=curl-tester-1.0&service=analytics";
+			string postData = "accountType=GOOGLE&Email=" + GetConfigurationOptionsField("User") + "&Passwd=" + Encryptor.Decrypt(GetConfigurationOptionsField("Password")) + "&source=curl-tester-1.0&service=analytics";
 			byte[] data = encoding.GetBytes(postData);
 
 			// Prepare web request...

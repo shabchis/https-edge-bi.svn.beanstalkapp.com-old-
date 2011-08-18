@@ -188,7 +188,7 @@ namespace Easynet.Edge.Services.DataRetrieval.Retriever
 			GetAccountAccessData();
 
 			_accountData = new AccountData(UserAgent,
-                GetConfigurationOptionsField("User"), Encryptor.Decrypt(GetConfigurationOptionsField("Password"), GetConfigurationOptionsField("Password")),
+                GetConfigurationOptionsField("User"), Encryptor.Decrypt(GetConfigurationOptionsField("Password")),
 				_accountEmail, GetConfigurationOptionsField("DeveloperToken"), GetConfigurationOptionsField("ApplicationToken"));
 
 			_fullService = new FullService(_accountData);

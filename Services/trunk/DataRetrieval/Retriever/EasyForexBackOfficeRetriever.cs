@@ -140,7 +140,7 @@ namespace Easynet.Edge.Services.DataRetrieval.Retriever
 			_easyForexBackOffice.Timeout = 10 * 60 * 1000; // 10 minutes.
 
 			// Init access data to easy forex.
-            _easyForexBackOffice.AuthHeaderValue = InitBOAccess(userName, Encryptor.Decrypt(GetConfigurationOptionsField("Password"), GetConfigurationOptionsField("Password")));
+            _easyForexBackOffice.AuthHeaderValue = InitBOAccess(userName, Encryptor.Decrypt(GetConfigurationOptionsField("Password")));
 			//DataTable tempDataTable;
 			// Initalize _requiredDay with format that valid for EasyForex BackOffice.
 			_requiredDay = new DateTime(_requiredDay.Year, _requiredDay.Month, _requiredDay.Day);
