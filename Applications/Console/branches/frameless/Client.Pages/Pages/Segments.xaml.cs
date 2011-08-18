@@ -21,6 +21,7 @@ using System.Collections;
 using Easynet.Edge.UI.Server;
 using Easynet.Edge.Core;
 using Easynet.Edge.UI.Client.Pages;
+using Easynet.Edge.UI.Client.SegmentsLocal;
 
 namespace Easynet.Edge.UI.Client.Pages
 {
@@ -378,15 +379,19 @@ namespace Easynet.Edge.UI.Client.Pages
 
 
 			TextBlock source = sender as TextBlock;
+			var segmentValue = (Oltp.SegmentValueRow) source.DataContext;
 			
 			// Don't allow editing 'all accounts' values
-			if ((source.DataContext as Oltp.SegmentValueRow).AccountID != Window.CurrentAccount.ID)
+			if (segmentValue.AccountID != Window.CurrentAccount.ID)
 				return;
 
 			source.Visibility = Visibility.Collapsed;
 			TextBox target = VisualTree.GetChild<TextBox>(source.Parent);
 			target.Visibility = Visibility.Visible;
 			target.Focus();
+			
+			var segmentRule = (SegmentValueValidationRule) target.GetBindingExpression(TextBox.TextProperty).ParentBinding.ValidationRules[2];
+			segmentRule.Row = segmentValue;
 
 			e.Handled = true;
 		}
@@ -460,6 +465,8 @@ namespace Easynet.Edge.UI.Client.SegmentsLocal
 
 	public class SegmentValueValidationRule : ValidatingBindingRuleBase
 	{
+		public Oltp.SegmentValueRow Row = null;
+
 		public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
 		{
 			ValidationResult result = base.Validate(value, cultureInfo);
@@ -474,9 +481,13 @@ namespace Easynet.Edge.UI.Client.SegmentsLocal
 
 			var valueText = (string)value;
 
-			if (values.Select(String.Format("{0} = '{1}'",
+			DataRow[] rows = values.Select(String.Format("{0} = '{1}'",
 				values.ValueColumn.ColumnName,
-				valueText.Replace("'", "''"))).Length > 0)
+				valueText.Replace("'", "''")));
+
+			bool self = rows.Length == 1 && rows[0] == this.Row;
+
+			if (!self && rows.Length > 0)
 			{
 				result = new ValidationResult(false, "This value is already defined.");
 			}

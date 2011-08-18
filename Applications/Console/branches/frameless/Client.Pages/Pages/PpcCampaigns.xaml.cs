@@ -96,7 +96,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				// Add the table as a resource
 				Resources.Add("ChannelTableRows", _channelTable.Rows);
 				InitializeComponent();
-				_buttonMerge.Visibility = OltpProxy.CurrentUser.AccountAdmin ?
+				_buttonMerge.Visibility = !OltpProxy.CurrentUser.IsAccountAdminNull() && OltpProxy.CurrentUser.AccountAdmin ?
 					Visibility.Visible :
 					Visibility.Collapsed;
 
