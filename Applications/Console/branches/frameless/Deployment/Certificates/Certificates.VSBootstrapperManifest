@@ -1,17 +1,11 @@
 <VSBootstrapperManifest>
-  <ProjectProperties ProjectName="Edge.UI.Deployment.Certificates" BuildLocation="PackagesDir" BuildDirectory="C:\Program Files\Microsoft SDKs\Windows\v6.0A\Bootstrapper\Packages\New Project" DefaultLanguage="en" />
-  <UIPackage ProductCode="Edge.UI.Deployment.Certificates">
+  <ProjectProperties ProjectName="Edge.UI.Deployment.Prerequisites" BuildLocation="PackagesDir" BuildDirectory="C:\Program Files\Microsoft SDKs\Windows\v6.0A\Bootstrapper\Packages\New Project" DefaultLanguage="en" />
+  <UIPackage ProductCode="Edge.UI.Deployment.Prerequisites">
     <UIChecks />
     <Relationships />
     <CustomSchedules />
   </UIPackage>
-  <UIInstallFile FileName="D:\Codebase\2.5\UI\Deployment\Certificates\bin\Release\Edge.UI.Deployment.Certificates.exe" DisplayName="Edge.BI Certificates" Arguments="" Reboot="None" LicenseAgreement="D:\Codebase\2.5\UI\Deployment\Certificates\License.txt" PublicKey="&lt;&lt;File is not Digitally Signed&gt;&gt;" FileHash="42B3B7EB35B81AA37B32AD7344F2205A824B645A" IncludeHash="True" Locale="neutral">
-    <UIChecks>
-      <ExternalCheck FileName="D:\Codebase\2.5\UI\Deployment\Certificates\bin\Release\Edge.UI.Deployment.Certificates.exe" Property="CertInstalled" Arguments="/check" Log="" />
-    </UIChecks>
-    <UIInstallConditions>
-      <UIInstallCondition Type="ByPassIf" Property="CertInstalled" Operator="=" Value="1" Message="" />
-    </UIInstallConditions>
+  <UIInstallFile FileName="D:\Edge\Codebase\2.5\2008\Console\Applications\Frameless\Deployment\Prerequisites\bin\Release\Edge.UI.Deployment.Prerequisites.exe" DisplayName="Edge.BI Prerequisites" Arguments="" Reboot="None" LicenseAgreement="D:\Edge\Codebase\2.5\2008\Console\Applications\Frameless\Deployment\Prerequisites\License.txt" PublicKey="&lt;&lt;File is not Digitally Signed&gt;&gt;" FileHash="42B3B7EB35B81AA37B32AD7344F2205A824B645A" IncludeHash="True" Locale="neutral">
     <UIExitCodes>
       <UIExitCode ExitCode="0" Result="Success" Message="Certificates were successfully installed." />
       <UIExitCode ExitCode="1" Result="Success" Message="Certificates were previously installed, no need to install." />
