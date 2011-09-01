@@ -67,8 +67,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Certificate-public.cer" />
-    <None Include="Certificates.VSBootstrapperManifest" />
+    <EmbeddedResource Include="Resources\Certificate-public.cer" />
+    <None Include="Bootstrapper\Certificates.VSBootstrapperManifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -112,8 +112,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="License.txt" />
-    <EmbeddedResource Include="NPWPF.dll" />
+    <Content Include="Bootstrapper\License.txt" />
+    <EmbeddedResource Include="Resources\NPWPF.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
