@@ -2039,7 +2039,7 @@ namespace Easynet.Edge.UI.Data {
                 this.columnChannelID.Caption = "Channel_ID";
                 this.columnChannelID.DefaultValue = ((int)(-1));
                 this.columnIdentifier.Caption = "Gateway_id";
-                this.columnIdentifier.MaxLength = 1000;
+                this.columnIdentifier.MaxLength = 4000;
                 this.columnName.Caption = "Gateway";
                 this.columnName.MaxLength = 1000;
                 this.columnDestinationURL.Caption = "Dest_URL";
@@ -2705,9 +2705,7 @@ namespace Easynet.Edge.UI.Data {
                 this.columnAccountID.Caption = "Account_ID";
                 this.columnTitle.AllowDBNull = false;
                 this.columnTitle.Caption = "Creative_Title";
-                this.columnDesc1.AllowDBNull = false;
                 this.columnDesc1.Caption = "Creative_Desc1";
-                this.columnDesc2.AllowDBNull = false;
                 this.columnDesc2.Caption = "Creative_Desc2";
                 this.columnSegment1.DefaultValue = ((int)(-1));
                 this.columnSegment2.DefaultValue = ((int)(-1));
@@ -10711,7 +10709,12 @@ namespace Easynet.Edge.UI.Data {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public string Desc1 {
                 get {
-                    return ((string)(this[this.tableCreative.Desc1Column]));
+                    if (this.IsDesc1Null()) {
+                        return null;
+                    }
+                    else {
+                        return ((string)(this[this.tableCreative.Desc1Column]));
+                    }
                 }
                 set {
                     this[this.tableCreative.Desc1Column] = value;
@@ -10721,7 +10724,12 @@ namespace Easynet.Edge.UI.Data {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public string Desc2 {
                 get {
-                    return ((string)(this[this.tableCreative.Desc2Column]));
+                    if (this.IsDesc2Null()) {
+                        return null;
+                    }
+                    else {
+                        return ((string)(this[this.tableCreative.Desc2Column]));
+                    }
                 }
                 set {
                     this[this.tableCreative.Desc2Column] = value;
@@ -10816,6 +10824,26 @@ namespace Easynet.Edge.UI.Data {
                 set {
                     this[this.tableCreative.Segment5Column] = value;
                 }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool IsDesc1Null() {
+                return this.IsNull(this.tableCreative.Desc1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void SetDesc1Null() {
+                this[this.tableCreative.Desc1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool IsDesc2Null() {
+                return this.IsNull(this.tableCreative.Desc2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void SetDesc2Null() {
+                this[this.tableCreative.Desc2Column] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -17407,8 +17435,8 @@ ORDER BY   k.Keyword";
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Creative_GK", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Creative_GK", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Account_ID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Account_ID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Creative_Title", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Creative_Title", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Creative_Desc1", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Creative_Desc1", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Creative_Desc2", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Creative_Desc2", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Creative_Desc1", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Creative_Desc1", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Creative_Desc2", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Creative_Desc2", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_IsMonitored", global::System.Data.SqlDbType.Bit, 0, global::System.Data.ParameterDirection.Input, 0, 0, "IsMonitored", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
@@ -17417,8 +17445,8 @@ SELECT Creative_GK, Account_ID, Creative_Title, Creative_Desc1, Creative_Desc2, 
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Account_ID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Account_ID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Creative_Title", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Creative_Title", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Creative_Desc1", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Creative_Desc1", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Creative_Desc2", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Creative_Desc2", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Creative_Desc1", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Creative_Desc1", global::System.Data.DataRowVersion.Current, true, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Creative_Desc2", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Creative_Desc2", global::System.Data.DataRowVersion.Current, true, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsMonitored", global::System.Data.SqlDbType.Bit, 0, global::System.Data.ParameterDirection.Input, 0, 0, "IsMonitored", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
@@ -17576,7 +17604,7 @@ SELECT Creative_GK, Account_ID, Creative_Title, Creative_Desc1, Creative_Desc2, 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(long Original_Creative_GK, int Original_Account_ID, string Original_Creative_Title, string Original_Creative_Desc1, string Original_Creative_Desc2, bool Original_IsMonitored) {
+        public virtual int Delete(long Original_Creative_GK, int Original_Account_ID, string Original_Creative_Title, bool Original_IsMonitored) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((long)(Original_Creative_GK));
             this.Adapter.DeleteCommand.Parameters[1].Value = ((int)(Original_Account_ID));
             if ((Original_Creative_Title == null)) {
@@ -17584,18 +17612,6 @@ SELECT Creative_GK, Account_ID, Creative_Title, Creative_Desc1, Creative_Desc2, 
             }
             else {
                 this.Adapter.DeleteCommand.Parameters[2].Value = ((string)(Original_Creative_Title));
-            }
-            if ((Original_Creative_Desc1 == null)) {
-                throw new global::System.ArgumentNullException("Original_Creative_Desc1");
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[3].Value = ((string)(Original_Creative_Desc1));
-            }
-            if ((Original_Creative_Desc2 == null)) {
-                throw new global::System.ArgumentNullException("Original_Creative_Desc2");
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[4].Value = ((string)(Original_Creative_Desc2));
             }
             this.Adapter.DeleteCommand.Parameters[5].Value = ((bool)(Original_IsMonitored));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
@@ -17617,25 +17633,13 @@ SELECT Creative_GK, Account_ID, Creative_Title, Creative_Desc1, Creative_Desc2, 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(int Account_ID, string Creative_Title, string Creative_Desc1, string Creative_Desc2, bool IsMonitored) {
+        public virtual int Insert(int Account_ID, string Creative_Title, bool IsMonitored) {
             this.Adapter.InsertCommand.Parameters[0].Value = ((int)(Account_ID));
             if ((Creative_Title == null)) {
                 throw new global::System.ArgumentNullException("Creative_Title");
             }
             else {
                 this.Adapter.InsertCommand.Parameters[1].Value = ((string)(Creative_Title));
-            }
-            if ((Creative_Desc1 == null)) {
-                throw new global::System.ArgumentNullException("Creative_Desc1");
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[2].Value = ((string)(Creative_Desc1));
-            }
-            if ((Creative_Desc2 == null)) {
-                throw new global::System.ArgumentNullException("Creative_Desc2");
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[3].Value = ((string)(Creative_Desc2));
             }
             this.Adapter.InsertCommand.Parameters[4].Value = ((bool)(IsMonitored));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;

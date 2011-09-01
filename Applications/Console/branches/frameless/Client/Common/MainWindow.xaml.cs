@@ -97,8 +97,8 @@ namespace Easynet.Edge.UI.Client
 			string sessionID;
 
 			#if DEBUG
-			accountID = 1003;
-			sessionID = "B7395B738FA266056AB57F1A7A4F444E";
+			accountID = 1241;
+			sessionID = "8E7194580F98135EBD318E8F0CB0E51B";
 			menuItemPath = "management/segments";
 			#endif
 

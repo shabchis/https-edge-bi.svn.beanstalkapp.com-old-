@@ -68,7 +68,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Resources\Certificate-public.cer" />
-    <None Include="Bootstrapper\Certificates.VSBootstrapperManifest" />
+    <None Include="Bootstrapper\UI.Deployment.Prerequisites.VSBootstrapperManifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
