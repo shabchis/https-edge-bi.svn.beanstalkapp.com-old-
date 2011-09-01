@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Easynet.Edge.UI.Deployment.Prerequisites.Properties {
+namespace Easynet.Edge.UI.Deployment.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Easynet.Edge.UI.Deployment.Prerequisites.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Easynet.Edge.UI.Deployment.Prerequisites.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Easynet.Edge.UI.Deployment.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
