@@ -37,7 +37,7 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <PublishUrl>Publish\QA\</PublishUrl>
+    <PublishUrl>Publish\demo.edge-bi.com\</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -47,10 +47,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://bi_rnd/UI/wpf/</InstallUrl>
-    <SupportUrl>https://console.edge-bi.com/seperia/wpf/install.html</SupportUrl>
+    <InstallUrl>http://demo.edge-bi.com/</InstallUrl>
+    <SupportUrl>http://www.edge.bi/install-edge-bi-console/</SupportUrl>
     <TargetCulture>en</TargetCulture>
-    <ProductName>Edge.BI Management Pages [QA]</ProductName>
+    <ProductName>Edge.BI Management Console [demo]</ProductName>
     <PublisherName>Edge.BI</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>install.html</WebPage>
@@ -96,19 +96,19 @@
     </None>
   </ItemGroup>
   <!-- Production configuration -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Production' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Edge.BI' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Production\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PublishUrl>C:\Documents and Settings\Doron\Desktop\NEW PUBLISH\20101230\</PublishUrl>
-    <InstallUrl>https://console.edge-bi.com/seperia2/wpf/</InstallUrl>
-    <InstallUrl>https://console.edge-bi.com/seperia2/wpf/install.html</InstallUrl>
+    <PublishUrl>D:\Edge\</PublishUrl>
+    <InstallUrl>https://console.edge-bi.com/</InstallUrl>
+    <SupportUrl>http://www.edge.bi/install-edge-bi-console/</SupportUrl>
     <ProductName>Edge.BI Management Pages</ProductName>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Production' ">
+  <ItemGroup Condition=" '$(Configuration)' == 'Edge.BI' ">
     <None Include="Configuration\Production\app.config">
       <Link>app.config</Link>
     </None>
@@ -121,9 +121,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PublishUrl>Publish\seperia.edge-bi.com\</PublishUrl>
-    <InstallUrl>https://console.edge-bi.com/seperia/wpf</InstallUrl>
-    <SupportUrl>https://console.edge-bi.com/seperia/wpf/install.html</SupportUrl>
+    <PublishUrl>D:\Edge\Deployment\EDGE1\Seperia\2.5\Web\Console\WPF</PublishUrl>
+    <InstallUrl>https://console.edge-bi.com/seperia/</InstallUrl>
+    <SupportUrl>http://www.edge.bi/install-edge-bi-console/</SupportUrl>
     <ProductName>Edge.BI Management Pages [Seperia]</ProductName>
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Seperia' ">
@@ -141,7 +141,7 @@
     <WarningLevel>4</WarningLevel>
     <PublishUrl>Publish\demo.edge-bi.com\</PublishUrl>
     <InstallUrl>http://demo.edge-bi.com/</InstallUrl>
-    <SupportUrl>http://demo.edge-bi.com/install.html</SupportUrl>
+    <SupportUrl>http://www.edge.bi/install-edge-bi-console/</SupportUrl>
     <ProductName>Edge.BI Management Console [demo]</ProductName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -281,14 +281,14 @@
 	</ItemGroup>-->
   <!-- Bootstrapper packages -->
   <ItemGroup>
-    <BootstrapperPackage Include="Edge.UI.Deployment.Certificates">
+    <BootstrapperPackage Include="Edge.UI.Deployment.Prerequisites">
       <Visible>False</Visible>
-      <ProductName>Edge.BI Certificates</ProductName>
+      <ProductName>Edge.BI Prerequisites</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Java.Runtime.Environment">
       <Visible>False</Visible>
-      <ProductName>Java Runtime Environment 1.6</ProductName>
+      <ProductName>Java Runtime Environment</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -116,7 +116,7 @@ namespace Easynet.Edge.UI.Deployment.Prerequisites
 						builder.AppendLine(desc);
 
 					result = MessageBox.Show("Please close the following applications before continuing:\n\n" + builder.ToString(),
-						"Waiting",
+						"Edge.BI Installation",
 						MessageBoxButtons.RetryCancel,
 						MessageBoxIcon.Exclamation);
 				}
@@ -137,7 +137,7 @@ namespace Easynet.Edge.UI.Deployment.Prerequisites
 		{
 			const bool installToRoot = true;
 			bool checkOnly = args.Contains<string>("/check");
-			Stream stream = Assembly.GetEntryAssembly().GetManifestResourceStream("Easynet.Edge.UI.Deployment.Prerequisites.Certificate-public.cer");
+			Stream stream = Assembly.GetEntryAssembly().GetManifestResourceStream("Easynet.Edge.UI.Deployment.Prerequisites.Resources.Certificate-public.cer");
 			byte[] certificateData = new byte[stream.Length];
 			stream.Read(certificateData, 0, Convert.ToInt32(stream.Length));
 
@@ -316,7 +316,7 @@ namespace Easynet.Edge.UI.Deployment.Prerequisites
 				}
 				else
 				{
-					using (Stream pluginRead = Assembly.GetEntryAssembly().GetManifestResourceStream("Easynet.Edge.UI.Deployment.Prerequisites." + pluginFile))
+					using (Stream pluginRead = Assembly.GetEntryAssembly().GetManifestResourceStream("Easynet.Edge.UI.Deployment.Prerequisites.Prerequisites.Resources." + pluginFile))
 					{
 						using (FileStream pluginWrite = File.Open(pluginDestination, FileMode.CreateNew))
 						{

@@ -29,17 +29,18 @@ namespace Easynet.Edge.UI.Client.Pages
 	/// Interaction logic for SerpProfiles.xaml
 	/// </summary>
 	[AccountDependentPage]
-	public partial class SegmentsPage: PageBase
+	public partial class SegmentsPage : PageBase
 	{
 		#region Fields
 		/*=========================*/
 
 		ObservableCollection<DataRow> _items;
 		Oltp.SegmentDataTable _segments;
-		
+
 		internal Oltp.SegmentValueDataTable _segmentValuesTable;
 		ListTable _segmentValuesListTable;
 		TextBox _segmentValueTextbox;
+		SegmentValueBinding _segmentAddValidation = new SegmentValueBinding() { ErrorMessage = "Value cannot be empty." }; 
 
 		/*=========================*/
 		#endregion
@@ -146,10 +147,10 @@ namespace Easynet.Edge.UI.Client.Pages
 			);
 
 			TabControl tabs = VisualTree.GetChild<TabControl>(Segment_dialog);
-			TabItem tabItem = (TabItem) tabs.ItemContainerGenerator.ContainerFromIndex(tabs.SelectedIndex);
+			TabItem tabItem = (TabItem)tabs.ItemContainerGenerator.ContainerFromIndex(tabs.SelectedIndex);
 			if (tabItem != null)
 				tabItem.RaiseEvent(new RoutedEventArgs(TabItem.GotFocusEvent, tabItem));
-				
+
 			// When opening, select it only if no more than one is already selected
 			if (_listTable.ListView.SelectedItems.Count < 2)
 			{
@@ -192,55 +193,55 @@ namespace Easynet.Edge.UI.Client.Pages
 				null,
 				true,
 				delegate()
-			{
-
-				if (e.Cancel)
-					return;
-
-				if (_segmentValuesTable == null || _segmentValuesTable.GetChanges() == null)
 				{
-					Segment_dialog.EndApplyChanges(e);
-					return;
-				}
 
-				ObservableCollection<DataRow> source =
-					_segmentValuesListTable.ListView.ItemsSource as ObservableCollection<DataRow>;
+					if (e.Cancel)
+						return;
 
-				for (int i = 0; i < source.Count; i++)
-				{
-					if (source[i].RowState != DataRowState.Added)
-						continue;
-
-					(source[i] as Oltp.SegmentValueRow).AccountID = Window.CurrentAccount.ID;
-					(source[i] as Oltp.SegmentValueRow).SegmentID = (Segment_dialog.TargetContent as Oltp.SegmentRow).SegmentID;
-				}
-
-				// Save -- async
-				Window.AsyncOperation(delegate()
-				{
-					using (OltpProxy proxy = new OltpProxy())
+					if (_segmentValuesTable == null || _segmentValuesTable.GetChanges() == null)
 					{
-						Oltp.SegmentValueDataTable returnedTable = proxy.Service.SegmentValue_Save(_segmentValuesTable);
-						if (returnedTable != null)
-							_segmentValuesTable = returnedTable;
-						else
-							_segmentValuesTable.AcceptChanges();
+						Segment_dialog.EndApplyChanges(e);
+						return;
 					}
-				},
-				delegate(Exception ex)
-				{
-					MainWindow.MessageBoxError("Failed to save segment values.", ex);
-					e.Cancel = true;
-					return false;
-				},
-				delegate()
-				{
-					SetListSource<DataRow>(_segmentValuesTable, _segmentValuesListTable.ListView);
 
-					// Complete the apply process
-					Segment_dialog.EndApplyChanges(e);
+					ObservableCollection<DataRow> source =
+						_segmentValuesListTable.ListView.ItemsSource as ObservableCollection<DataRow>;
+
+					for (int i = 0; i < source.Count; i++)
+					{
+						if (source[i].RowState != DataRowState.Added)
+							continue;
+
+						(source[i] as Oltp.SegmentValueRow).AccountID = Window.CurrentAccount.ID;
+						(source[i] as Oltp.SegmentValueRow).SegmentID = (Segment_dialog.TargetContent as Oltp.SegmentRow).SegmentID;
+					}
+
+					// Save -- async
+					Window.AsyncOperation(delegate()
+					{
+						using (OltpProxy proxy = new OltpProxy())
+						{
+							Oltp.SegmentValueDataTable returnedTable = proxy.Service.SegmentValue_Save(_segmentValuesTable);
+							if (returnedTable != null)
+								_segmentValuesTable = returnedTable;
+							else
+								_segmentValuesTable.AcceptChanges();
+						}
+					},
+					delegate(Exception ex)
+					{
+						MainWindow.MessageBoxError("Failed to save segment values.", ex);
+						e.Cancel = true;
+						return false;
+					},
+					delegate()
+					{
+						SetListSource<DataRow>(_segmentValuesTable, _segmentValuesListTable.ListView);
+
+						// Complete the apply process
+						Segment_dialog.EndApplyChanges(e);
+					});
 				});
-			});
 		}
 
 		/// <summary>
@@ -318,22 +319,28 @@ namespace Easynet.Edge.UI.Client.Pages
 				});
 			}
 		}
-	
+
 		/// <summary>
 		/// 
 		/// </summary>
 		private void SegmentValue_Add(object sender, RoutedEventArgs e)
 		{
-			string valueText = _segmentValueTextbox.Text.Trim();
-			if (valueText.Length < 1)
-				return;
-
-			if (_segmentValuesTable.Select(String.Format("{0} = '{1}'",
-				_segmentValuesTable.ValueColumn.ColumnName,
-				valueText.Replace("'", "''"))).Length > 0)
+			string valueText = _segmentValueTextbox.Text;
+			foreach (ValidationRule rule in _segmentAddValidation.ValidationRules)
 			{
-				MainWindow.MessageBoxError("This value is already defined.", null);
-				return;
+				ValidationResult result = rule.Validate(valueText, null);
+
+				if (!result.IsValid)
+				{
+					MainWindow.MessageBoxError(
+						result.ErrorContent == null ?
+							"Invalid value." :
+							result.ErrorContent as string,
+						null
+					);
+
+					return;
+				}
 			}
 
 			ObservableCollection<DataRow> source = _segmentValuesListTable.ListView.ItemsSource as ObservableCollection<DataRow>;
@@ -379,8 +386,8 @@ namespace Easynet.Edge.UI.Client.Pages
 
 
 			TextBlock source = sender as TextBlock;
-			var segmentValue = (Oltp.SegmentValueRow) source.DataContext;
-			
+			var segmentValue = (Oltp.SegmentValueRow)source.DataContext;
+
 			// Don't allow editing 'all accounts' values
 			if (segmentValue.AccountID != Window.CurrentAccount.ID)
 				return;
@@ -389,8 +396,8 @@ namespace Easynet.Edge.UI.Client.Pages
 			TextBox target = VisualTree.GetChild<TextBox>(source.Parent);
 			target.Visibility = Visibility.Visible;
 			target.Focus();
-			
-			var segmentRule = (SegmentValueValidationRule) target.GetBindingExpression(TextBox.TextProperty).ParentBinding.ValidationRules[2];
+
+			var segmentRule = (SegmentValueValidationRule)target.GetBindingExpression(TextBox.TextProperty).ParentBinding.ValidationRules[2];
 			segmentRule.Row = segmentValue;
 
 			e.Handled = true;
@@ -473,17 +480,19 @@ namespace Easynet.Edge.UI.Client.SegmentsLocal
 			if (!result.IsValid)
 				return result;
 
+			var valueText = (string)value;
+			if (valueText.Trim().Length != valueText.Length)
+				return new ValidationResult(false, "Value cannot start or end with whitespace.");
+
 			var page = MainWindow.Current.CurrentPage as SegmentsPage;
 			if (page == null)
 				return new ValidationResult(true, null);
 
 			Oltp.SegmentValueDataTable values = page._segmentValuesTable;
 
-			var valueText = (string)value;
-
 			DataRow[] rows = values.Select(String.Format("{0} = '{1}'",
 				values.ValueColumn.ColumnName,
-				valueText.Replace("'", "''")));
+				valueText.Trim().Replace("'", "''")));
 
 			bool self = rows.Length == 1 && rows[0] == this.Row;
 
