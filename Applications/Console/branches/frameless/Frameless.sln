@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{C542B4FA-F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{E5BDE7F2-0C8D-4CCA-8830-09F32E2D5652}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Deployment.Prerequisites", "Deployment\Edge.UI.Deployment.Prerequisites\UI.Deployment.Prerequisites.csproj", "{08730AF4-DE67-41B0-BCB1-3483D25E71D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Deployment.Prerequisites", "Deployment\UI.Deployment.csproj", "{08730AF4-DE67-41B0-BCB1-3483D25E71D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Client.Pages", "Client.Pages\UI.Client.Pages.csproj", "{E3340E17-48E7-425A-ADA4-F59AB6812B1B}"
 EndProject

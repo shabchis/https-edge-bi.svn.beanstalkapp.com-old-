@@ -8,8 +8,8 @@
     <ProjectGuid>{08730AF4-DE67-41B0-BCB1-3483D25E71D1}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Easynet.Edge.UI.Deployment.Prerequisites</RootNamespace>
-    <AssemblyName>Edge.UI.Deployment.Prerequisites</AssemblyName>
+    <RootNamespace>Easynet.Edge.UI.Deployment</RootNamespace>
+    <AssemblyName>Edge.UI.Deployment</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>http://localhost/Edge.UI.Deployment.Certificates/</PublishUrl>
@@ -68,8 +68,8 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Resources\Certificate-public.cer" />
-    <None Include="Bootstrapper\Java\Java Runtime Environment.VSBootstrapperManifest" />
-    <None Include="Bootstrapper\Prerequisites\UI.Deployment.Prerequisites.VSBootstrapperManifest" />
+    <None Include="Bootstrappers\Edge.BI System Configuration\Edge.BI System Configuration.VSBootstrapperManifest" />
+    <None Include="Bootstrappers\Java Runtime Environment\Java Runtime Environment.VSBootstrapperManifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -113,9 +113,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Bootstrapper\Java\jre-6u20-windows-i586-iftw-rv.exe" />
-    <Content Include="Bootstrapper\Prerequisites\License.txt" />
     <EmbeddedResource Include="Resources\NPWPF.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bootstrappers\Edge.BI System Configuration\License.txt" />
+    <Content Include="Bootstrappers\Java Runtime Environment\jre-6u20-windows-i586-iftw-rv.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

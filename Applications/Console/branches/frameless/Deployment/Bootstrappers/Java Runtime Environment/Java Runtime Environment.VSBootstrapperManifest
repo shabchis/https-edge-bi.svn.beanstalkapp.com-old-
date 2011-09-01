@@ -5,7 +5,7 @@
     <Relationships />
     <CustomSchedules />
   </UIPackage>
-  <UIInstallFile FileName="D:\Edge\Codebase\2.5\2008\Console\Applications\Frameless\Deployment\Bootstrappers\Java\jre-6u20-windows-i586-iftw-rv.exe" DisplayName="Java Runtime Environment" Arguments="" Reboot="None" HomeSiteURL="http://javadl.sun.com/webapps/download/AutoDL?BundleId=39502" PublicKey="&lt;&lt;File is not Digitally Signed&gt;&gt;" IncludeHash="False" Locale="neutral">
+  <UIInstallFile FileName="D:\Edge\Codebase\2.5\2008\Console\Applications\Frameless\Deployment\Bootstrappers\Java Runtime Environment\jre-6u20-windows-i586-iftw-rv.exe" DisplayName="Java Runtime Environment" Arguments="" Reboot="None" HomeSiteURL="http://javadl.sun.com/webapps/download/AutoDL?BundleId=39502" PublicKey="&lt;&lt;File is not Digitally Signed&gt;&gt;" IncludeHash="False" Locale="neutral">
     <UIChecks>
       <RegistryCheck RegKey="HKEY_LOCAL_MACHINE\SOFTWARE\JAVASOFT\JAVA RUNTIME ENVIRONMENT" RegValue="CurrentVersion" Property="CurrentVersion" />
     </UIChecks>
