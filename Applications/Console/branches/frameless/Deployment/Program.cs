@@ -9,7 +9,7 @@ using System.Diagnostics;
 using Microsoft.Win32;
 using System.Text;
 
-namespace Easynet.Edge.UI.Deployment.Prerequisites
+namespace Easynet.Edge.UI.Deployment
 {
 	static class Program
 	{
@@ -21,7 +21,7 @@ namespace Easynet.Edge.UI.Deployment.Prerequisites
 			bool shouldContinue = WaitForApplications();
 			if (!shouldContinue)
 			{
-				Message("Installation canceled.");
+				Message("Configuration canceled.");
 				return -1;
 			}
 
@@ -38,7 +38,7 @@ namespace Easynet.Edge.UI.Deployment.Prerequisites
 			// Try this regardless of success;
 			WpfPlugin(args);
 
-			Message(success ? "All prerequisites were successfully installed." : "Some prerequisites failed to install. See application event log for details.");
+			Message(success ? "All system configurations were completed successfully." : "Some configurations failed to complete. See application event log for details.");
 
 			return success ? 1 : -1;
 		}
@@ -137,7 +137,7 @@ namespace Easynet.Edge.UI.Deployment.Prerequisites
 		{
 			const bool installToRoot = true;
 			bool checkOnly = args.Contains<string>("/check");
-			Stream stream = Assembly.GetEntryAssembly().GetManifestResourceStream("Easynet.Edge.UI.Deployment.Prerequisites.Resources.Certificate-public.cer");
+			Stream stream = Assembly.GetEntryAssembly().GetManifestResourceStream("Easynet.Edge.UI.Deployment.Resources.Certificate-public.cer");
 			byte[] certificateData = new byte[stream.Length];
 			stream.Read(certificateData, 0, Convert.ToInt32(stream.Length));
 
@@ -316,7 +316,7 @@ namespace Easynet.Edge.UI.Deployment.Prerequisites
 				}
 				else
 				{
-					using (Stream pluginRead = Assembly.GetEntryAssembly().GetManifestResourceStream("Easynet.Edge.UI.Deployment.Prerequisites.Prerequisites.Resources." + pluginFile))
+					using (Stream pluginRead = Assembly.GetEntryAssembly().GetManifestResourceStream("Easynet.Edge.UI.Deployment.Prerequisites.Resources." + pluginFile))
 					{
 						using (FileStream pluginWrite = File.Open(pluginDestination, FileMode.CreateNew))
 						{
