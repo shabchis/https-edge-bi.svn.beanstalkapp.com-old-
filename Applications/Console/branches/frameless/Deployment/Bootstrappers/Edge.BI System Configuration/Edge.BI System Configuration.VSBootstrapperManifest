@@ -5,10 +5,12 @@
     <Relationships />
     <CustomSchedules />
   </UIPackage>
-  <UIInstallFile FileName="D:\Edge\Codebase\2.5\2008\Console\Applications\Frameless\Deployment\bin\Release\Edge.UI.Deployment.exe" DisplayName="Edge.BI System Configuration" Arguments="" Reboot="None" LicenseAgreement="D:\Edge\Codebase\2.5\2008\Console\Applications\Frameless\Deployment\Bootstrappers\Edge.BI System Configuration\License.txt" PublicKey="&lt;&lt;File is not Digitally Signed&gt;&gt;" FileHash="42B3B7EB35B81AA37B32AD7344F2205A824B645A" IncludeHash="True" Locale="neutral">
+  <UIInstallFile FileName="D:\Edge\Codebase\2.5\2008\Console\Applications\Frameless\Deployment\bin\Release\Edge.UI.Deployment.exe" DisplayName="Edge.BI System Configuration" Arguments="" Reboot="None" LicenseAgreement="D:\Edge\Codebase\2.5\2008\Console\Applications\Frameless\Deployment\Bootstrappers\Edge.BI System Configuration\License.txt" PublicKey="&lt;&lt;File is not Digitally Signed&gt;&gt;" FileHash="C0E32B9D8D3BDE8CD7D4184BF038A592D9C68ABB" IncludeHash="True" Locale="neutral">
+    <UIChecks />
+    <UIInstallConditions />
     <UIExitCodes>
       <UIExitCode ExitCode="1" Result="Success" Message="Edge.BI system configuration was completed successfully." />
-      <DefaultExitCode Result="Fail" FormatMessageFromSystem="True" Message="Edge.BI system configuration failed. See event log for details." />
+      <DefaultExitCode Result="Fail" FormatMessageFromSystem="True" Message="An unexpected exit code was returned from the installer. The installation failed." />
     </UIExitCodes>
     <LooseFiles />
   </UIInstallFile>
