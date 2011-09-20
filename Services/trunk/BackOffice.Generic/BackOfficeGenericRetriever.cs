@@ -207,13 +207,15 @@ namespace Easynet.Edge.Services.BackOffice.Generic
 				requiredDay = requiredDay.AddHours(UTCOffest);
 
 				// Get data from Generic BackOffice.
-				return Retrieve(requiredDay.AddMinutes(1), requiredDay.AddDays(1).AddMinutes(-1));
+				return Retrieve(requiredDay, requiredDay.AddDays(1).AddSeconds(-1));
+				//return Retrieve(requiredDay.AddMinutes(1), requiredDay.AddDays(1).AddMinutes(-1));
 			}
 			else // Fetch data only by date (time is not relevent)
 			{
 				// Get data from Generic BackOffice.
 				DateTime requiredDay = new DateTime(rawRequiredDay.Year, rawRequiredDay.Month, rawRequiredDay.Day);
-				return Retrieve(requiredDay.AddMinutes(1), requiredDay.AddDays(1).AddMinutes(-1));
+				return Retrieve(requiredDay, requiredDay.AddDays(1).AddSeconds(-1));
+				//return Retrieve(requiredDay.AddMinutes(1), requiredDay.AddDays(1).AddMinutes(-1));
 			}
 		}
 		/*=========================*/
