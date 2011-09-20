@@ -349,6 +349,7 @@ namespace Easynet.Edge.Services.DataRetrieval.Retriever
 			request.UserAgent = AppSettings.Get(this, "UserAgent");
 			request.Timeout = (int)TimeSpan.Parse(AppSettings.Get(this, "RequestTimeout")).TotalMilliseconds; 
 			request.ContentType = "text/plain";
+			
 
 			if (headers.Count > 0)
 			{

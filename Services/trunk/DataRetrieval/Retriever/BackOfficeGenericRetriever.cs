@@ -77,8 +77,8 @@ namespace Easynet.Edge.Services.DataRetrieval.Retriever
 
 		protected override void GetReportData()
 		{
-			_startDate = _requiredDay.AddMinutes(1);
-			_endDate = _requiredDay.AddDays(1).AddMinutes(-1);
+			_startDate = _requiredDay;
+			_endDate = _requiredDay.AddDays(1).AddSeconds(-1);
 
 			// Initalize the url.
 			_webServiceUrl = GetConfigurationOptionsField("URL");
