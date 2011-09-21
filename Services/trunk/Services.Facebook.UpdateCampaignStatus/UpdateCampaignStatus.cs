@@ -7,6 +7,8 @@ using Easynet.Edge.Core.Services;
 using Easynet.Edge.Core.Data;
 using System.Data.SqlClient;
 using System.Xml;
+using System.Net;
+using System.IO;
 
 namespace Services.UpdateCampaignStatus
 {
@@ -27,6 +29,10 @@ namespace Services.UpdateCampaignStatus
 		private string _pipe = string.Empty;
 		private string _serviceType = string.Empty;
 		private int _channelID;
+		protected string _accessToken;
+		protected string _urlAuth;
+		protected string _redirectUrl;
+		protected Uri _baseAddress;
 		protected override void OnInit()
 		{
 
@@ -35,32 +41,43 @@ namespace Services.UpdateCampaignStatus
 			try
 			{
 
-				if (Instance.Configuration.Options["APIKey"] == null)
-					_apiKey = Instance.ParentInstance.Configuration.Options["APIKey"].ToString();
+
+				if (Instance.Configuration.Options["Facebook.Auth.ApiKey"] == null)
+					_apiKey = Instance.ParentInstance.Configuration.Options["Facebook.Auth.ApiKey"].ToString();
 				else
-					_apiKey = Instance.Configuration.Options["APIKey"].ToString();
+					_apiKey = Instance.Configuration.Options["Facebook.Auth.ApiKey"].ToString();
 
 
-				if (Instance.Configuration.Options["sessionKey"] == null)
-					_session = Instance.ParentInstance.Configuration.Options["sessionKey"].ToString();
+				if (Instance.Configuration.Options["Facebook.Auth.AppSecret"] == null)
+					_ap_secret = Instance.ParentInstance.Configuration.Options["Facebook.Auth.AppSecret"].ToString();
 				else
-					_session = Instance.Configuration.Options["sessionKey"].ToString();
+					_ap_secret = Instance.Configuration.Options["Facebook.Auth.AppSecret"].ToString();
 
-				if (Instance.Configuration.Options["applicationSecret"] == null)
-					_ap_secret = Instance.ParentInstance.Configuration.Options["applicationSecret"].ToString();
+				if (Instance.Configuration.Options["Facebook.Auth.SessionSecret"] == null)
+					_sessionSecret = Instance.ParentInstance.Configuration.Options["Facebook.Auth.SessionSecret"].ToString();
 				else
-					_ap_secret = Instance.Configuration.Options["applicationSecret"].ToString();
+					_sessionSecret = Instance.Configuration.Options["Facebook.Auth.SessionSecret"].ToString();
+
 
 				if (Instance.Configuration.Options["FBaccountID"] == null)
 					_FBaccountID = Instance.ParentInstance.Configuration.Options["FBaccountID"].ToString();
 				else
 					_FBaccountID = Instance.Configuration.Options["FBaccountID"].ToString();
 
-				//if (Instance.Configuration.Options["applicationID"] == null)
-				//    _ApplicationID = Instance.ParentInstance.Configuration.Options["applicationID"].ToString();
-				//else
-				//    _ApplicationID = Instance.Configuration.Options["applicationID"].ToString();
+				if (Instance.Configuration.Options["Facebook.AuthenticationUrl"] == null)
+					_urlAuth = Instance.ParentInstance.Configuration.Options["Facebook.AuthenticationUrl"].ToString();
+				else
+					_urlAuth = Instance.Configuration.Options["Facebook.AuthenticationUrl"].ToString();
 
+				if (Instance.Configuration.Options["Facebook.Auth.RedirectUri"] == null)
+					_redirectUrl = Instance.ParentInstance.Configuration.Options["Facebook.Auth.RedirectUri"].ToString();
+				else
+					_redirectUrl = Instance.Configuration.Options["Facebook.Auth.RedirectUri"].ToString();
+
+				if (Instance.Configuration.Options["Facebook.BaseServiceAdress"] == null)
+					_baseAddress = new Uri(Instance.ParentInstance.Configuration.Options["Facebook.BaseServiceAdress"].ToString());
+				else
+					_baseAddress = new Uri(Instance.Configuration.Options["Facebook.BaseServiceAdress"].ToString());
 
 
 				if (Instance.Configuration.Options["accountName"] == null)
@@ -68,25 +85,17 @@ namespace Services.UpdateCampaignStatus
 				else
 					_accoutnName = Instance.Configuration.Options["accountName"].ToString();
 
-				if (Instance.Configuration.Options["sessionSecret"] == null)
-					_sessionSecret = Instance.ParentInstance.Configuration.Options["sessionSecret"].ToString();
-				else
-					_sessionSecret = Instance.Configuration.Options["sessionSecret"].ToString();
+				_urlAuth = string.Format(string.Format(_urlAuth, _apiKey, _redirectUrl, _ap_secret, _sessionSecret));
 
 
-				//if (Instance.Configuration.Options["serviceType"] == null)
-				//    _serviceType = Instance.ParentInstance.Configuration.Options["serviceType"].ToString();
-				//else
-				//    _serviceType = Instance.Configuration.Options["serviceType"].ToString();
-				_channelID =System.Convert.ToInt32( Instance.Configuration.Options["ChannelID"]);
-				connSession = new myFacebook.Session.ConnectSession(_apiKey, _ap_secret);
-				connSession.SessionKey = _session;
-				connSession.SessionSecret = _sessionSecret;
 
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(_urlAuth);
+				WebResponse response = request.GetResponse();
 
-				_facebookAPI = new myFacebook.Rest.Api(connSession);
-
-				_facebookAPI.Auth.Session.SessionExpires = false;
+				using (StreamReader stream = new StreamReader(response.GetResponseStream()))
+				{
+					_accessToken = stream.ReadToEnd();
+				}
 
 
 			}
@@ -219,7 +228,16 @@ namespace Services.UpdateCampaignStatus
 			_parameterList.Add("method", "facebook.Ads.updateCampaigns");
 			try
 			{
-				result = _facebookAPI.Application.SendRequest(_parameterList);
+				string url;
+				url = string.Format("method/Ads.updateCampaigns?account_id={0}&campaign_specs={1}", _FBaccountID, campaign_specs);
+				Uri finalUrl = new Uri(_baseAddress, url);
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(string.Format("{0}&{1}", finalUrl.ToString(), _accessToken));
+				WebResponse response = request.GetResponse();
+				using (StreamReader reader=new StreamReader( response.GetResponseStream()))
+				{
+					result = reader.ReadToEnd();
+				}
+				
 				retXml.LoadXml(result);
 
 				//get the ones who failed and return them on a list ;
