@@ -139,14 +139,14 @@ namespace Easynet.Edge.Services.DataRetrieval.Processor
 
 			using (DataManager.Current.OpenConnection())
 			{
-				DataManager.Current.StartTransaction();
+				//DataManager.Current.StartTransaction();
 				DataManager.Current.AssociateCommands(insertCommand);
 
 				try
 				{
 					// Load the reader with the data file and ignore all white space nodes.         
 					ReadFile(xmlPath, defaultErrorSubDirPath, hasBackOffice, ref xmlFileEmpty, rawDataFields, metaDataFields, insertCommand, gatewayNameFields);
-					DataManager.Current.CommitTransaction();
+				//	DataManager.Current.CommitTransaction();
 				}
 				catch
 				{
