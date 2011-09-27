@@ -221,11 +221,7 @@ namespace Services.UpdateCampaignStatus
 			StringBuilder errors = new StringBuilder();
 			System.Xml.XmlDocument retXml = new System.Xml.XmlDocument();
 			string result;
-			_parameterList.Clear();
-
-			_parameterList.Add("account_id", _FBaccountID);
-			_parameterList.Add("campaign_specs", campaign_specs);
-			_parameterList.Add("method", "facebook.Ads.updateCampaigns");
+			
 			try
 			{
 				string url;
