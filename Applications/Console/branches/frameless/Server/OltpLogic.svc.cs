@@ -531,7 +531,12 @@ namespace Easynet.Edge.UI.Server
 					from UserProcess_GUI_Gateway
 					where
 						Account_ID = @accountID:Int and
-						Gateway_id between @fromID:BigInt and @toID:BigInt
+						ISNUMERIC(Gateway_id) = 1 and
+						CASE 
+							WHEN ISNUMERIC(Gateway_id)=1 THEN CAST(Gateway_id AS BIGINT)
+							ELSE -999999999
+						END
+						between @fromID:BigInt and @toID:BigInt
 				");
 				countExistingCmd.Connection = adapter.CurrentConnection;
 				countExistingCmd.Transaction = adapter.CurrentTransaction;

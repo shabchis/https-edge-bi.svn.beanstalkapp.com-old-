@@ -98,7 +98,7 @@ namespace Easynet.Edge.UI.Client
 
 			#if DEBUG
 			accountID = 7;
-			sessionID = "8BC12FBCB0795EEE16DD4848BA1237A1";
+			sessionID = "E620A1B1A16664FA4442BA934116BC20";
 			menuItemPath = "management/trackers";
 			#endif
 
