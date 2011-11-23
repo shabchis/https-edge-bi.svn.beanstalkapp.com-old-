@@ -33,7 +33,7 @@ namespace Edge.Objects
 		[DataMember(Order = 2)]
 		[FieldMap("IsActive")]
 		public bool IsActive;
-		
+
 		[DataMember(Order = 3)]
 		[FieldMap("AccountAdmin")]
 		public bool IsAcountAdmin;
@@ -112,13 +112,12 @@ namespace Edge.Objects
 			//        users[i] = MapperUtility.ExpandObject<User>(users[i], customApply);
 			//    }
 			//}
-			return users;
+			return users.OrderBy(N => N.Name).ToList() ;
 		}
-
 		public int UserOperations(SqlOperation sqlOperation)
 		{
 			SqlTransaction sqlTransaction = null;
-			int returnValue=-1;
+			int returnValue = -1;
 			try
 			{
 
@@ -127,7 +126,7 @@ namespace Edge.Objects
 				SqlConnection sqlConnection = new SqlConnection(DataManager.ConnectionString);
 				sqlConnection.Open();
 				sqlTransaction = sqlConnection.BeginTransaction("SaveUser");
-				returnValue=this.UserID = Convert.ToInt32(MapperUtility.SaveOrRemoveSimpleObject<User>(command, CommandType.StoredProcedure, sqlOperation, this, sqlConnection, sqlTransaction));
+				returnValue = this.UserID = Convert.ToInt32(MapperUtility.SaveOrRemoveSimpleObject<User>(command, CommandType.StoredProcedure, sqlOperation, this, sqlConnection, sqlTransaction));
 				int lastAccountID = -999;
 				bool AddFictive = true;
 				//insert the new permission
@@ -135,7 +134,7 @@ namespace Edge.Objects
 				{
 					foreach (AssignedPermission assignedPermission in assignedPermissionPerAccount.Value)
 					{
-						if (assignedPermission.PermissionName!="FictivePermission")
+						if (assignedPermission.PermissionName != "FictivePermission")
 						{
 							if (lastAccountID == assignedPermissionPerAccount.Key)
 								AddFictive = false;
@@ -151,7 +150,7 @@ namespace Edge.Objects
 							sqlCommand.Parameters["@Value"].Value = assignedPermission.Value;
 							sqlCommand.Parameters["@AddFictive"].Value = AddFictive;
 							sqlCommand.ExecuteNonQuery();
-							lastAccountID = assignedPermissionPerAccount.Key; 
+							lastAccountID = assignedPermissionPerAccount.Key;
 						}
 					}
 				}
@@ -196,14 +195,6 @@ namespace Edge.Objects
 			}
 
 		}
-
-
-
-
-
-
-
-
 		public static void EnableDisableUser(int ID, bool isActive)
 		{
 			using (DataManager.Current.OpenConnection())
@@ -216,7 +207,7 @@ namespace Edge.Objects
 
 				sqlCommand.ExecuteNonQuery();
 			}
-			
+
 		}
 	}
 }
