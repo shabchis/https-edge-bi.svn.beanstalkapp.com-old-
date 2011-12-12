@@ -21,7 +21,7 @@ mkdir temp
 
 rem // You can change the email or the expire date here
 @echo on
-makecert -r -n "CN=Edge.BI,E=support@edge.bi" -sv temp\EdgeBI.pvk -b 01/01/2010 -e 01/01/2013  temp\EdgeBI.cer
+makecert -r -n "CN=Edge.BI,E=support@edge.bi" -sv temp\EdgeBI.pvk -b 01/01/2010 -e 01/01/2020  temp\EdgeBI.cer
 
 cert2spc temp\EdgeBI.cer temp\EdgeBI.spc
 

@@ -37,7 +37,7 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <PublishUrl>D:\Edge\Deployment\EDGE1\Seperia\2.5\Web\Console\WPF</PublishUrl>
+    <PublishUrl>D:\Edge\Deployment\EDGE1\Edge.BI\2.5\Web\Console\WPF</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -47,10 +47,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://console.edge-bi.com/seperia/</InstallUrl>
+    <InstallUrl>http://console.edge-bi.com/edge-qa/</InstallUrl>
     <SupportUrl>http://www.edge.bi/install-edge-bi-console/</SupportUrl>
     <TargetCulture>en</TargetCulture>
-    <ProductName>Edge.BI Management Pages [Seperia]</ProductName>
+    <ProductName>Edge.BI Management Pages [PRE-RELEASE]</ProductName>
     <PublisherName>Edge.BI</PublisherName>
     <WebPage>install.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
@@ -120,10 +120,10 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PublishUrl>D:\Edge\</PublishUrl>
-    <InstallUrl>http://console.edge-bi.com/seperia/</InstallUrl>
+    <PublishUrl>D:\Edge\Deployment\EDGE1\Edge.BI\2.5\Web\Console\WPF</PublishUrl>
+    <InstallUrl>http://console.edge-bi.com/edge-qa/</InstallUrl>
     <SupportUrl>http://www.edge.bi/install-edge-bi-console/</SupportUrl>
-    <ProductName>Edge.BI Management Pages</ProductName>
+    <ProductName>Edge.BI Management Pages [PRE-RELEASE]</ProductName>
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'EdgeBI' ">
     <None Include="Configuration\Production\app.config">
@@ -324,6 +324,7 @@
   <!-- Misc. files -->
   <ItemGroup>
     <None Include="Certificates\Certificate 2013.pfx" />
+    <None Include="Certificates\Certificate 2020.pfx" />
     <None Include="Properties\app.manifest" />
     <None Include="Regions.txt" />
     <None Include="Certificates\Create Certificate.bat" />
