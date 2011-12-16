@@ -47,11 +47,12 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://console.edge-bi.com/edge-qa/</InstallUrl>
+    <InstallUrl>http://console.edge-bi.com/</InstallUrl>
     <SupportUrl>http://www.edge.bi/install-edge-bi-console/</SupportUrl>
     <TargetCulture>en</TargetCulture>
-    <ProductName>Edge.BI Management Pages [debug]</ProductName>
+    <ProductName>Edge.BI Management Pages [PRE-RELEASE]</ProductName>
     <PublisherName>Edge.BI</PublisherName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>install.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <TrustUrlParameters>true</TrustUrlParameters>
@@ -123,7 +124,7 @@
     <PublishUrl>D:\Edge\Deployment\EDGE1\Edge.BI\2.5\Web\Console\WPF</PublishUrl>
     <InstallUrl>http://console.edge-bi.com/edge-qa/</InstallUrl>
     <SupportUrl>http://www.edge.bi/install-edge-bi-console/</SupportUrl>
-    <ProductName>Edge.BI Management Pages [PRE-RELEASE]</ProductName>
+    <ProductName>Edge.BI Management Pages</ProductName>
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'EdgeBI' ">
     <None Include="Configuration\Production\app.config">
