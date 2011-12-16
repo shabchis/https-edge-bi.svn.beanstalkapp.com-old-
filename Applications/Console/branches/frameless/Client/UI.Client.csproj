@@ -29,8 +29,8 @@
     <SccProvider>
     </SccProvider>
     <SignManifests>true</SignManifests>
-    <ManifestCertificateThumbprint>30A0F30842A5BE26656B67579F9C8DC5FF7257C0</ManifestCertificateThumbprint>
-    <ManifestKeyFile>Certificates\Certificate 2013.pfx</ManifestKeyFile>
+    <ManifestCertificateThumbprint>A923584F045908C8A3A0E289570DE495906D3C3B</ManifestCertificateThumbprint>
+    <ManifestKeyFile>Certificates\Certificate 2020.pfx</ManifestKeyFile>
     <StartupObject>
     </StartupObject>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
@@ -50,13 +50,13 @@
     <InstallUrl>http://console.edge-bi.com/edge-qa/</InstallUrl>
     <SupportUrl>http://www.edge.bi/install-edge-bi-console/</SupportUrl>
     <TargetCulture>en</TargetCulture>
-    <ProductName>Edge.BI Management Pages [PRE-RELEASE]</ProductName>
+    <ProductName>Edge.BI Management Pages [debug]</ProductName>
     <PublisherName>Edge.BI</PublisherName>
     <WebPage>install.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <TrustUrlParameters>true</TrustUrlParameters>
     <ApplicationRevision>722</ApplicationRevision>
-    <ApplicationVersion>2.9.1.722</ApplicationVersion>
+    <ApplicationVersion>2.9.1.727</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
