@@ -60,7 +60,7 @@ namespace Easynet.Edge.UI.Deployment
 
 		static void Message(string text, Exception ex)
 		{
-			Message(text,  EventLogEntryType.Error, ex);
+			Message(text,  ex == null ? EventLogEntryType.Information : EventLogEntryType.Error, ex);
 		}
 
 		static void Message(string text, EventLogEntryType messageType, Exception ex)
