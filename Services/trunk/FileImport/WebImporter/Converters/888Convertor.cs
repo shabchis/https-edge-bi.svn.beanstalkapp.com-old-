@@ -55,28 +55,28 @@ namespace Easynet.Edge.Services.FileImport.Converters
             try
             {
 //                OLD _sqlCommand = @"select [Gateway_id]  ,[Account_Name]
-//  FROM [easynet_OLTP].[dbo].[UserProcess_GUI_Gateway],[easynet_OLTP].[dbo].[User_GUI_Account]
+//  FROM [UserProcess_GUI_Gateway],[User_GUI_Account]
 //  where  [Gateway_id] = "+key +@"and 
-//  [easynet_OLTP].[dbo].[UserProcess_GUI_Gateway].[Account_ID] =
-//   [easynet_OLTP].[dbo].[User_GUI_Account].[Account_ID] ";
+//  [UserProcess_GUI_Gateway].[Account_ID] =
+//   [User_GUI_Account].[Account_ID] ";
 
-                _sqlCommand = @"select  [easynet_OLTP].[dbo].[User_GUI_Account].[Account_Name]  
-                  FROM [easynet_OLTP].[dbo].[UserProcess_GUI_Gateway],[easynet_OLTP].[dbo].[User_GUI_Account]
-                  where  [Gateway_id] =" + key + @" and [easynet_OLTP].[dbo].[UserProcess_GUI_Gateway].account_id > 0 "
+                _sqlCommand = @"select  [User_GUI_Account].[Account_Name]  
+                  FROM [UserProcess_GUI_Gateway],[User_GUI_Account]
+                  where  [Gateway_id] =" + key + @" and [UserProcess_GUI_Gateway].account_id > 0 "
 
                               
                 +
-                @"and   [easynet_OLTP].[dbo].[UserProcess_GUI_Gateway].[Account_ID] =
-                   [easynet_OLTP].[dbo].[User_GUI_Account].[Account_ID]
+                @"and   [UserProcess_GUI_Gateway].[Account_ID] =
+                   [User_GUI_Account].[Account_ID]
                    and 
                    
                    SCope_ID in (
 
 
                 select  SCope_ID
-                  FROM   [easynet_OLTP].[dbo].[User_GUI_Account]
+                  FROM   [User_GUI_Account]
                   where  
-                   [easynet_OLTP].[dbo].[User_GUI_Account].[Account_ID] = "+this.accountID.ToString() +@"
+                   [User_GUI_Account].[Account_ID] = "+this.accountID.ToString() +@"
                    
                    )
                    ";
@@ -109,8 +109,8 @@ namespace Easynet.Edge.Services.FileImport.Converters
                         }
                         else //number of rows = 0
                         {
-                            _sqlCommand = @"select  [easynet_OLTP].[dbo].[User_GUI_Account].[AccountSettings], [easynet_OLTP].[dbo].[User_GUI_Account].[Account_Name] 
-                                            FROM [easynet_OLTP].[dbo].[User_GUI_Account]";
+                            _sqlCommand = @"select  [User_GUI_Account].[AccountSettings], [User_GUI_Account].[Account_Name] 
+                                            FROM [User_GUI_Account]";
 
                             
 

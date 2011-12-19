@@ -892,7 +892,7 @@ ZWD-Zimbabwe Dollar
 
                         string accountIDStr = dt.Rows[accountIDRowIndex][0].ToString();
 
-                        //_sqlCommand = "Select Account_Name FROM [easynet_OLTP].[dbo].[User_GUI_Account] where AccountSettings is like %" + accountIDStr+"%";
+                        //_sqlCommand = "Select Account_Name FROM [User_GUI_Account] where AccountSettings is like %" + accountIDStr+"%";
                         FillAccountNames2DataSet();
 
 

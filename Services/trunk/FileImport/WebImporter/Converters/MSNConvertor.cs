@@ -41,7 +41,7 @@ namespace Easynet.Edge.Services.FileImport.Converters
             StringBuilder sBuilder = new StringBuilder();
             string rowString = "";
 
-            _sqlCommand = @"Select Account_Name,AccountSettings FROM [easynet_OLTP].[dbo].[User_GUI_Account] where AccountSettings   like '%Bing_Account_Name%'";
+            _sqlCommand = @"Select Account_Name,AccountSettings FROM [User_GUI_Account] where AccountSettings   like '%Bing_Account_Name%'";
                     
 
 
