@@ -1,6 +1,6 @@
-﻿<%@ Page MasterPageFile="~/default.Master" Language="C#" AutoEventWireup="true" CodeBehind="RunConvertor.aspx.cs" Inherits="Easynet.Edge.UI.WebPages.WebImporterPage" %>
+﻿<%@ Page MasterPageFile="~/default.Master" Language="C#" AutoEventWireup="true" CodeBehind="WebImporter.aspx.cs" Inherits="Easynet.Edge.UI.WebPages.WebImporterPage" %>
  
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server">
+<asp:Content ContentPlaceHolderID="HeadPlaceHolder" runat="server">
     <title>Edge.BI Web Importer</title>
     <style type="text/css">
 		.formField
@@ -41,9 +41,7 @@
     </style>
 </asp:Content>
 
-<asp:Content ID="Content3" ContentPlaceHolderID="ResultsPlaceHolder" runat="server">
-	<div class="errorMessage" ><%= ErrorMessage %></div>
-	<div class="successMessage" ><%= SuccessMessage %></div>
+<asp:Content ContentPlaceHolderID="ResultsPlaceHolder" runat="server">
 
 	<div class="formField">
 	    <div class="label">Source:</div>
@@ -77,5 +75,7 @@
 		</div>
 	</div>
 	
+	<div class="errorMessage" ><%= ErrorMessage %></div>
+	<div class="successMessage" ><%= SuccessMessage %></div>
 	
 </asp:Content>

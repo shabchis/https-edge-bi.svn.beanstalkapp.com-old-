@@ -412,7 +412,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			Oltp.GatewayDataTable tbl = (_items[selectedIndex] as Oltp.GatewayRow).Table as Oltp.GatewayDataTable;
 
 			// Create an editable new row
-			Oltp.GatewayRow editVersion = Dialog_MakeEditVersion<Oltp.GatewayDataTable, Oltp.GatewayRow>(tbl, null);
+			Oltp.GatewayRow editVersion = Dialog_MakeEditVersion<Oltp.GatewayDataTable, Oltp.GatewayRow>(null);
 			editVersion.AccountID = this.Window.CurrentAccount.ID;
 			
 			// Start with the last searched for ID (for user friendliness)
@@ -465,7 +465,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			Gateway_dialog.TitleTooltip = "GK #" + row.GK.ToString();
 
 			Gateway_dialog.BeginEdit(
-				Dialog_MakeEditVersion<Oltp.GatewayDataTable, Oltp.GatewayRow>(row.Table as Oltp.GatewayDataTable, row),
+				Dialog_MakeEditVersion<Oltp.GatewayDataTable, Oltp.GatewayRow>(row),
 				row
 			);
 

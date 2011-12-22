@@ -25,6 +25,12 @@ namespace Easynet.Edge.UI.Data
 			public const string SEO = "SEO";
 		}
 
+		/// <summary>
+		/// Converts a table (usually the GetChanges of another table) into a typed table
+		/// </summary>
+		/// <typeparam name="TableType"></typeparam>
+		/// <param name="table"></param>
+		/// <returns></returns>
 		public static TableType Prepare<TableType>(DataTable table) where TableType: DataTable, new()
 		{
 			DataTable changes = table.GetChanges();
@@ -582,6 +588,8 @@ namespace Easynet.Edge.UI.Data
 					this.OnPropertyChanged("Targets");
 				}
 			}
+
+			public object Tag { get; set; }
 		}
 
 		public partial class AdgroupCreativeRow: DataRow, INotifyPropertyChanged, IPropertyChangeNotifier

@@ -147,7 +147,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void Profile_Add(object sender, RoutedEventArgs e)
 		{
 			// Create an editable new ro
-			Oltp.SerpProfileRow editVersion = Dialog_MakeEditVersion<Oltp.SerpProfileDataTable, Oltp.SerpProfileRow>(_profiles, null);
+			Oltp.SerpProfileRow editVersion = Dialog_MakeEditVersion<Oltp.SerpProfileDataTable, Oltp.SerpProfileRow>(null);
 			editVersion.AccountID = this.Window.CurrentAccount.ID;
 			editVersion.ProfileType = Oltp.SerpProfileType.SEO;
 
@@ -231,7 +231,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			Profile_dialog.TitleTooltip = row.ID.ToString();
 
 			Profile_dialog.BeginEdit(
-				Dialog_MakeEditVersion<Oltp.SerpProfileDataTable, Oltp.SerpProfileRow>(_profiles, row),
+				Dialog_MakeEditVersion<Oltp.SerpProfileDataTable, Oltp.SerpProfileRow>(row),
 				row
 			);
 

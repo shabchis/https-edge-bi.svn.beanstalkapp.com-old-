@@ -38,19 +38,6 @@ namespace Easynet.Edge.UI.Client
 		{
 			InitializeComponent();
 
-			// Get the menu xml URL
-			XmlDataProvider xmlProvider = this.XmlProvider;
-			if (!ApplicationDeployment.IsNetworkDeployed)
-			{
-				string absolute = AppSettings.Get(this, "MenuXmlAddress.Absolute");
-				xmlProvider.Source = new Uri(absolute);
-			}
-			else
-			{
-				string relative = AppSettings.Get(this, "MenuXmlAddress.Relative");
-				xmlProvider.Source = new Uri(ApplicationDeployment.CurrentDeployment.ActivationUri, relative);
-			}
-
 			// Event handlers
 			this.Loaded += new RoutedEventHandler(MainMenu_Loaded);
 		}
@@ -150,6 +137,19 @@ namespace Easynet.Edge.UI.Client
 		/// </summary>
 		void MainMenu_Loaded(object sender, RoutedEventArgs e)
 		{
+			// Get the menu xml URL
+			XmlDataProvider xmlProvider = this.XmlProvider;
+			if (!ApplicationDeployment.IsNetworkDeployed)
+			{
+				string absolute = AppSettings.Get(this, "MenuXmlAddress.Absolute");
+				xmlProvider.Source = new Uri(absolute);
+			}
+			else
+			{
+				string relative = AppSettings.Get(this, "MenuXmlAddress.Relative");
+				xmlProvider.Source = new Uri(ApplicationDeployment.CurrentDeployment.ActivationUri, relative);
+			}
+
 			DeselectCollapse(true, true, null);
 		}
 

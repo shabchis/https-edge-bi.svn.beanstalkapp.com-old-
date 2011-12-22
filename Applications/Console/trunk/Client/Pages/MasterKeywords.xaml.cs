@@ -141,7 +141,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void Keyword_AddClick(object sender, RoutedEventArgs e)
 		{
 			// Create an editable new row
-			Oltp.KeywordRow editVersion = Dialog_MakeEditVersion<Oltp.KeywordDataTable, Oltp.KeywordRow>(_keywords, null);
+			Oltp.KeywordRow editVersion = Dialog_MakeEditVersion<Oltp.KeywordDataTable, Oltp.KeywordRow>(null);
 			editVersion.AccountID = this.Window.CurrentAccount.ID;
 			editVersion.IsMonitored = true;
 
@@ -171,7 +171,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			_keywordValueField.IsEnabled = false;
 
 			Keyword_dialog.BeginEdit(
-				Dialog_MakeEditVersion<Oltp.KeywordDataTable, Oltp.KeywordRow>(_keywords, row),
+				Dialog_MakeEditVersion<Oltp.KeywordDataTable, Oltp.KeywordRow>(row),
 				row
 			);
 
