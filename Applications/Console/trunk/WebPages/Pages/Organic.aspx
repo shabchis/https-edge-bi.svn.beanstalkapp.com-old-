@@ -130,7 +130,7 @@
 					</asp:PlaceHolder>
 				</td>
 				<td>
-					<asp:PlaceHolder runat="server" Visible="<%# Output.Rank > 0 %>">
+					<asp:PlaceHolder runat="server" Visible="<%# Output.Rankings.Count > 0 %>">
 						<a href="">
 							<zed:ZedGraphWeb runat="server" Width="105" Height="40"/>
 						</a>

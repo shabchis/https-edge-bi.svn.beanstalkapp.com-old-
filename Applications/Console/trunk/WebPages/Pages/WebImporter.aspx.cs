@@ -6,6 +6,7 @@ using Easynet.Edge.Core.Configuration;
 using Easynet.Edge.Core.Scheduling;
 using Easynet.Edge.Core.Services;
 using Easynet.Edge.Core.Utilities;
+using System.ServiceModel;
 
 namespace Easynet.Edge.UI.WebPages
 {
@@ -154,22 +155,26 @@ namespace Easynet.Edge.UI.WebPages
 
 			try
 			{
+				bool success;
 				using (ServiceClient<IScheduleManager> scheduleManager = new ServiceClient<IScheduleManager>())
 				{
 
-					bool success = scheduleManager.Service.AddToSchedule(serviceName, this.AccountID, DateTime.Now, new SettingsCollection()
+					success = scheduleManager.Service.AddToSchedule(serviceName, this.AccountID, DateTime.Now, new SettingsCollection()
 					{
 						{ "SourceType", sourceType},
 						{ "ImportFiles", delimetedList }
 					});
 
-					if (!success)
-						throw new Exception(String.Format("The selected source requires a service ({0}) that is not available for this account.", serviceName));
+				}
+				if (!success)
+				{
+					ErrorMessage = String.Format("The selected source requires a service ({0}) that is not available for this account.", serviceName);
+					return;
 				}
 			}
 			catch(Exception ex)
 			{
-				ErrorMessage = "Failed to import. " + ex.Message;
+				ErrorMessage = String.Format("Failed to import. {0} ({1})", ex.Message, ex.GetType().FullName);
 				Log.Write(typeof(WebImporterPage).Name, "Failed to add " + serviceName + " to the schedule manager.", ex, LogMessageType.Error);
 				return;
 			}

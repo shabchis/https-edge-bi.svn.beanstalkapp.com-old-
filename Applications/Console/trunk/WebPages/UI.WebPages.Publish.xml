@@ -1,32 +1,64 @@
 <publishData>
   <publishTarget publishUrl="D:\Codebase\Reorganize\Console\Applications\Console\Client\Publish\seperia.edge-bi.com\web\">
-    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="08/02/2010 18:31:59" />
-    <file relUrl="bin/Edge.Core.dll" publishTime="07/29/2010 15:35:58" />
-    <file relUrl="bin/Edge.UI.WebPages.XmlSerializers.dll" publishTime="08/02/2010 18:35:49" />
+    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="11/21/2010 10:09:02" />
+    <file relUrl="Pages/Intelligence.aspx" publishTime="08/03/2010 09:58:48" />
+    <file relUrl="bin/Edge.UI.WebPages.XmlSerializers.dll" publishTime="08/02/2010 17:35:49" />
+    <file relUrl="bin/Edge.UI.WebPages.pdb" publishTime="11/23/2010 11:05:27" />
+    <file relUrl="web.config" publishTime="11/23/2010 10:59:28" />
+    <file relUrl="Pages/RunConvertor.aspx" publishTime="11/21/2010 10:06:27" />
+    <file relUrl="bin/Interop.ADOMD.dll" publishTime="11/21/2010 10:09:04" />
+    <file relUrl="Pages/Scripts/AdTest.js" publishTime="07/25/2010 14:21:17" />
+    <file relUrl="bin/ZedGraph.Web.dll" publishTime="07/25/2010 14:21:17" />
+    <file relUrl="bin/Edge.Core.pdb" publishTime="11/21/2010 10:09:01" />
+    <file relUrl="Pages/BU-Intelligence.aspx" publishTime="08/01/2010 12:49:26" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="08/02/2010 17:32:02" />
+    <file relUrl="Pages/AdTest.aspx" publishTime="07/25/2010 14:21:17" />
+    <file relUrl="Global.asax" publishTime="07/25/2010 14:21:19" />
+    <file relUrl="bin/Edge.UI.WebPages.dll" publishTime="11/23/2010 11:05:27" />
+    <file relUrl="bin/Edge.Core.dll" publishTime="11/21/2010 10:09:01" />
+    <file relUrl="Pages/graph.aspx" publishTime="07/25/2010 14:21:18" />
+    <file relUrl="Resources/Graphics/easynet_edge_logo.png" publishTime="07/25/2010 14:21:18" />
     <file relUrl="bin/Microsoft.Office.Interop.Excel.dll" publishTime="12/22/2009 16:02:56" />
-    <file relUrl="Pages/Intelligence.aspx" publishTime="07/25/2010 15:21:18" />
-    <file relUrl="bin/Edge.UI.WebPages.pdb" publishTime="08/02/2010 18:35:48" />
+    <file relUrl="bin/ZedGraph.dll" publishTime="07/25/2010 14:21:17" />
+    <file relUrl="Resources/Styles/style.css" publishTime="08/02/2010 15:25:04" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="11/21/2010 10:09:02" />
+    <file relUrl="default.Master" publishTime="07/25/2010 14:21:19" />
+    <file relUrl="Pages/Alerts.aspx" publishTime="07/25/2010 14:21:18" />
+    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="11/21/2010 10:09:02" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="11/21/2010 10:09:02" />
+    <file relUrl="bin/ExcelPackage.dll" publishTime="07/25/2010 14:21:17" />
+    <file relUrl="bin/System.Core.dll" publishTime="07/29/2008 22:40:48" />
+    <file relUrl="bin/Ionic.Zip.dll" publishTime="07/25/2010 14:21:17" />
+    <file relUrl="Pages/WebImporter.aspx" publishTime="11/23/2010 10:56:08" />
+  </publishTarget>
+  <publishTarget publishUrl="D:\Codebase\Reorganize\Console\Applications\Console\Client\Publish\demo.edge-bi.com\web\">
+    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="09/12/2010 17:34:41" />
+    <file relUrl="Pages/Intelligence.aspx" publishTime="08/03/2010 10:58:48" />
+    <file relUrl="bin/Edge.UI.WebPages.XmlSerializers.dll" publishTime="08/02/2010 18:35:49" />
+    <file relUrl="bin/Edge.UI.WebPages.pdb" publishTime="09/13/2010 12:31:55" />
     <file relUrl="web.config" publishTime="07/25/2010 15:21:19" />
     <file relUrl="Pages/RunConvertor.aspx" publishTime="08/02/2010 16:25:03" />
-    <file relUrl="bin/Interop.ADOMD.dll" publishTime="07/29/2010 12:50:54" />
     <file relUrl="Pages/Scripts/AdTest.js" publishTime="07/25/2010 15:21:17" />
-    <file relUrl="bin/ZedGraph.Web.dll" publishTime="07/25/2010 15:21:17" />
-    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="08/02/2010 18:32:00" />
+    <file relUrl="default.Master" publishTime="07/25/2010 15:21:19" />
+    <file relUrl="Resources/Styles/style.css" publishTime="08/02/2010 16:25:04" />
     <file relUrl="Pages/BU-Intelligence.aspx" publishTime="08/01/2010 13:49:26" />
     <file relUrl="Pages/AdTest.aspx" publishTime="07/25/2010 15:21:17" />
     <file relUrl="Global.asax" publishTime="07/25/2010 15:21:19" />
-    <file relUrl="bin/Edge.UI.WebPages.dll" publishTime="08/02/2010 18:35:49" />
+    <file relUrl="bin/Edge.UI.WebPages.dll" publishTime="09/13/2010 12:31:55" />
     <file relUrl="bin/ExcelPackage.dll" publishTime="07/25/2010 15:21:17" />
     <file relUrl="Pages/graph.aspx" publishTime="07/25/2010 15:21:18" />
     <file relUrl="Resources/Graphics/easynet_edge_logo.png" publishTime="07/25/2010 15:21:18" />
-    <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="08/02/2010 18:32:02" />
+    <file relUrl="bin/Microsoft.Office.Interop.Excel.dll" publishTime="12/22/2009 16:02:56" />
+    <file relUrl="bin/Edge.Core.pdb" publishTime="08/19/2010 12:53:19" />
     <file relUrl="bin/ZedGraph.dll" publishTime="07/25/2010 15:21:17" />
-    <file relUrl="Resources/Styles/style.css" publishTime="08/02/2010 16:25:04" />
-    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="08/02/2010 18:32:01" />
-    <file relUrl="default.Master" publishTime="07/25/2010 15:21:19" />
+    <file relUrl="bin/ZedGraph.Web.dll" publishTime="07/25/2010 15:21:17" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="09/12/2010 17:34:44" />
     <file relUrl="Pages/Alerts.aspx" publishTime="07/25/2010 15:21:18" />
-    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="08/02/2010 18:31:58" />
-    <file relUrl="bin/Edge.Core.pdb" publishTime="07/29/2010 15:35:58" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="08/02/2010 18:32:02" />
+    <file relUrl="bin/Edge.Core.dll" publishTime="08/19/2010 12:53:19" />
+    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="09/12/2010 17:34:41" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="09/12/2010 17:34:44" />
+    <file relUrl="bin/Interop.ADOMD.dll" publishTime="09/12/2010 17:36:47" />
     <file relUrl="bin/System.Core.dll" publishTime="07/29/2008 23:40:48" />
     <file relUrl="bin/Ionic.Zip.dll" publishTime="07/25/2010 15:21:17" />
   </publishTarget>
@@ -71,16 +103,16 @@
     <file relUrl="Pages/Scripts/AdTest.js" publishTime="05/13/2010 17:31:08" />
     <file relUrl="bin/ZedGraph.Web.dll" publishTime="04/21/2010 13:48:41" />
     <file relUrl="bin/Edge.Core.pdb" publishTime="06/08/2010 17:22:51" />
-    <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="06/27/2010 17:15:19" />
     <file relUrl="Pages/AdTest.aspx" publishTime="05/10/2010 14:16:59" />
     <file relUrl="Global.asax" publishTime="05/20/2010 19:01:20" />
     <file relUrl="bin/Edge.UI.WebPages.dll" publishTime="06/30/2010 14:44:49" />
     <file relUrl="Pages/Organic.aspx" publishTime="06/24/2010 13:53:05" />
     <file relUrl="Pages/graph.aspx" publishTime="04/21/2010 13:48:42" />
     <file relUrl="Resources/Graphics/easynet_edge_logo.png" publishTime="04/21/2010 13:48:43" />
-    <file relUrl="bin/Microsoft.Office.Interop.Excel.dll" publishTime="12/22/2009 16:02:56" />
-    <file relUrl="bin/ZedGraph.dll" publishTime="04/21/2010 13:48:41" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="06/27/2010 17:15:19" />
     <file relUrl="Resources/Styles/style.css" publishTime="05/30/2010 15:17:50" />
+    <file relUrl="bin/ZedGraph.dll" publishTime="04/21/2010 13:48:41" />
+    <file relUrl="bin/Microsoft.Office.Interop.Excel.dll" publishTime="12/22/2009 16:02:56" />
     <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="06/27/2010 17:15:17" />
     <file relUrl="default.Master" publishTime="06/23/2010 17:28:30" />
     <file relUrl="Pages/Alerts.aspx" publishTime="06/29/2010 18:01:42" />

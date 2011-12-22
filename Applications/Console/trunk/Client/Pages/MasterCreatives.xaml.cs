@@ -159,7 +159,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			Creative_dialog.TitleTooltip = "GK #" + row.GK.ToString();
 
 			Creative_dialog.BeginEdit(
-				Dialog_MakeEditVersion<Oltp.CreativeDataTable, Oltp.CreativeRow>(_creatives, row),
+				Dialog_MakeEditVersion<Oltp.CreativeDataTable, Oltp.CreativeRow>(row),
 				row
 			);
 

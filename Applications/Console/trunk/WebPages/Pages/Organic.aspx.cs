@@ -30,32 +30,25 @@ namespace Easynet.Edge.UI.WebPages
 	{
 		#region Definitions
 
-		public class OrganicSessionInputs
-		{
-		}
-
-		/// <summary>
-		/// Retrieves inputs from the session
-		/// </summary>
-		public OrganicSessionInputs SessionInputs
-		{
-			get
-			{
-				OrganicSessionInputs inputs = Session["OrganicSessionInputs"] as OrganicSessionInputs;
-				if (inputs == null)
-					Session["OrganicSessionInputs"] = inputs = new OrganicSessionInputs();
-				return inputs;
-			}
-		}
-
-		public class RowOuput
+		public class RankingTable
 		{
 			public int SearchEngineID;
+			public List<string> Columns = new List<string>();
+			public List<RankingRow> Rows = new List<RankingRow>();
+		}
+
+		public class RankingRow
+		{
 			public string SearchEngineUrl;
 			public string Keyword;
-			public string TargetDomain;
+			public Dictionary<string, RankingItem> Items = new Dictionary<RankingColumn, RankingItem>();
+		}
+
+		public class RankingItem
+		{
 			public bool IsClient;
-			public List<Ranking> Rankings;
+			public string TargetDomain;
+			public List<Ranking> Rankings = new List<Ranking>();
 
 		}
 		public class Ranking
@@ -77,7 +70,6 @@ namespace Easynet.Edge.UI.WebPages
 		List<string> _datesKwByTime = new List<string>();
 		string[] _datesPerWord;
 
-		protected RowOuput Output = null;
 		
 		#endregion
 
@@ -177,19 +169,17 @@ namespace Easynet.Edge.UI.WebPages
 			// Get search engine configuration
 			NameValueCollection searchEngineLinkConfig = (NameValueCollection)WebConfigurationManager.GetSection("searchEngineUrls");
 			// TODO: get search engines from DB
-
 			
 			//............................
 			// RUN THE COMMAND
 
 			// Start building a list of tables, one for every search engine
-			List<DataTable> seTables = new List<DataTable>();
+			List<RankingTable> rankingTables = new List<RankingTable>();
 
 			using (DataManager.Current.OpenConnection())
 			{
 				//............................
 				// Create graph data table
-				DataTable dtRank = new DataTable();
 				
 				SqlCommand graphDataCmd = DataManager.CreateCommand(@"RankingGraphData(@profileID:Int, @fromDate:Int, @toDate:Int)", CommandType.StoredProcedure);
 				SqlDataAdapter adpater = new SqlDataAdapter(graphDataCmd);
@@ -217,44 +207,27 @@ namespace Easynet.Edge.UI.WebPages
 
 				using (SqlDataReader reader = resultsCmd.ExecuteReader())
 				{
-					string prevKeyword = null;
-
 					while (reader.Read())
 					{
-						// Will contain 
-						Output = new RowOuput();
-
-						// Get or create the search engine table
-						Output.SearchEngineID = (int) reader["SearchEngineID"];
-						DataTable currentTable;
-						if (seTables.Count > 0 && seTables[seTables.Count - 1].TableName == Output.SearchEngineID.ToString())
-						{
-							currentTable = seTables[seTables.Count - 1];
-						}
+						// Get or create the ranking table
+						RankingTable rankingTable;
+						int searchEngineID = (int)reader["SearchEngineID"];
+						if (rankingTables.Count > 0 && rankingTables[rankingTables.Count-1].SearchEngineID = searchEngineID)
+							rankingTable = rankingTables[rankingTables.Count-1];
 						else
-						{
-							currentTable = new DataTable(Output.SearchEngineID.ToString());
-							currentTable.Columns.Add("Keyword");
-							seTables.Add(currentTable);
-						}
+							rankingTable = new RankingTable() { SearchEngineID = searchEngineID };
 
-						// Get or create a keyword row
-						Output.Keyword = reader["Keyword"] as string;
-
-						DataRow currentRow;
-						if (Output.Keyword == prevKeyword)
-						{
-							// Reuse the previous row
-							currentRow = currentTable.Rows[currentTable.Rows.Count - 1];
-						}
+						// Get or create a rankings row
+						RankingRow rankingRow;
+						string keyword = reader["Keyword"] as string;
+						if (rankingTable.Rows.Count > 0 && rankingTable.Rows[rankingTable.Rows.Count - 1].Keyword = keyword)
+							rankingRow = rankingTable.Rows[rankingTable.Rows.Count - 1];
 						else
-						{
-							// Create a new row
-							prevKeyword = Output.Keyword;
-							currentRow = currentTable.NewRow();
-							currentRow["Keyword"] = TemplateBind(_template_Keyword);
-
-							Output.SearchEngineUrl = GetSearchEngineQueryUrl(Output.SearchEngineID, Output.Keyword);
+							rankingRow = new RankingRow()
+							{
+								Keyword = keyword,
+								SearchEngineUrl = GetSearchEngineQueryUrl(searchEngineID, keyword)
+							};
 							#region Render Graph
 							/*
 							if (!reader.IsDBNull("Rank"))
@@ -376,21 +349,28 @@ namespace Easynet.Edge.UI.WebPages
 						
 							*/
 							#endregion
-						}
 
-						// Add domains
-						Output.TargetDomain = reader["Target"] as string;
-						if (!currentTable.Columns.Contains(Output.TargetDomain))
-						{
-							currentTable.Columns.Add(Output.TargetDomain);
-						}
+						// Create a new column if necessary
+						string targetDomain = reader["Target"] as string;
+						if (!rankingTable.Columns.Contains(targetDomain))
+							rankingTable.Columns.Add(targetDomain);
 						
-						Output.Url = reader["Url"] as string;
-						Output.Rank = reader["Rank"] is DBNull ? 0 : (int) reader["Rank"];
-						Output.RankDiff = reader["RankDiff"] is DBNull ? 0 : (int)reader["RankDiff"];
-						Output.IsClient = currentTable.Columns[Output.TargetDomain].Ordinal < 2;
-						Output.Title = reader["Title"] as string;
-						Output.Description = reader["Description"] as string;
+						// Get or create a rankings item
+						RankingItem rankingItem;
+						if (!rankingRow.Items.TryGetValue(targetDomain, out rankingItem))
+							rankingRow.Items.Add(targetDomain, new RankingItem()
+							{
+								IsClient = rankingTable.Columns.IndexOf(targetDomain) < 1,
+								TargetDomain = targetDomain
+							});
+
+						// Create the new ranking
+						Ranking ranking = new Ranking()
+						{
+							Url = reader["Url"] as string,
+							Rank = reader["Rank"] is DBNull ? 0 : (int) reader["Rank"],
+							RankDiff = reader["RankDiff"] is DBNull ? 0 : (int)reader["RankDiff"]
+						};
 						
 						// ^^^^^^^^^^^^^^^^^^^^^^ TODO ^^^^^^^^^^^^^^^^^^^^^^^66
 						string targetVal = currentRow[Output.TargetDomain] is DBNull ? string.Empty : currentRow[Output.TargetDomain] as string;
@@ -419,11 +399,13 @@ namespace Easynet.Edge.UI.WebPages
 
 						currentRow[target] = targetVal;
 						// ^^^^^^^^^^^^^^^^^^^^^^ TODO ^^^^^^^^^^^^^^^^^^^^^^^66
+
+						//currentRow["Keyword"] = TemplateBind(_template_Keyword);
 					}
 				}
 			}
 
-			_profileSearchEngineRepeater.DataSource = seTables;
+			_profileSearchEngineRepeater.DataSource = rankingTables;
 			_profileSearchEngineRepeater.DataBind();
 		}
 

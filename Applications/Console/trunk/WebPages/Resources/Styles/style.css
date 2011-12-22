@@ -71,18 +71,18 @@ a:hover
 
 .errorMessage
 {
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: bold;
 	color: red;
 	display: block;
-	margin: 3px;
+	margin: 0px 0 5px 0;
 	
 }
 .successMessage
 {
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: bold;
 	color: green; 
 	display: block;
-	margin: 3px;
+	margin: 0px 0 5px 0;
 }

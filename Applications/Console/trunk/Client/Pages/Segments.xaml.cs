@@ -117,7 +117,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void Segment_Add(object sender, RoutedEventArgs e)
 		{
 			// Create an editable new ro
-			Oltp.SegmentRow editVersion = Dialog_MakeEditVersion<Oltp.SegmentDataTable, Oltp.SegmentRow>(_segments, null);
+			Oltp.SegmentRow editVersion = Dialog_MakeEditVersion<Oltp.SegmentDataTable, Oltp.SegmentRow>(null);
 			editVersion.AccountID = this.Window.CurrentAccount.ID;
 
 			// Show the dialog
@@ -139,7 +139,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			Segment_dialog.TitleTooltip = row.SegmentID.ToString();
 
 			Segment_dialog.BeginEdit(
-				Dialog_MakeEditVersion<Oltp.SegmentDataTable, Oltp.SegmentRow>(_segments, row),
+				Dialog_MakeEditVersion<Oltp.SegmentDataTable, Oltp.SegmentRow>(row),
 				row
 			);
 

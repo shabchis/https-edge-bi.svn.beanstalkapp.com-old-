@@ -119,7 +119,7 @@ namespace Easynet.Edge.UI.Client
 		/// <param name="row"></param>
 		/// <returns></returns>
 		[Obsolete]
-		protected static RowType Dialog_MakeEditVersion<TableType, RowType>(TableType table, RowType row)
+		protected static RowType Dialog_MakeEditVersion<TableType, RowType>(RowType row)
 			where TableType: DataTable, new()
 			where RowType: DataRow
 		{
@@ -158,7 +158,16 @@ namespace Easynet.Edge.UI.Client
 		///		If specified, this function is called after applying is complete. It is the
 		///		function's responsibility to call FloatingDialog.EndApplyChanges() in order to complete the apply cycle. 
 		/// </param>
-		protected static void Dialog_ApplyingChanges<TableType, RowType>(TableType sourceTable, FloatingDialog dialog, MethodInfo saveMethod, CancelRoutedEventArgs e, object[] additionalArgs, bool async, Action postApplying)
+		protected static void Dialog_ApplyingChanges<TableType, RowType>
+			(
+				TableType sourceTable,
+				FloatingDialog dialog,
+				MethodInfo saveMethod,
+				CancelRoutedEventArgs e,
+				object[] additionalArgs,
+				bool async,
+				Action postApplying
+			)
 			where TableType: DataTable, new()
 			where RowType: DataRow
 		{
@@ -184,6 +193,7 @@ namespace Easynet.Edge.UI.Client
 			// Will store updated data
 			TableType savedVersion = null;
 
+			// Create a typed version of the changes
 			object[] actualArgs = additionalArgs != null? new object[additionalArgs.Length + 1] : new object[1];
 			actualArgs[0] = Oltp.Prepare<TableType>(changes);
 			if (additionalArgs != null)
@@ -219,7 +229,7 @@ namespace Easynet.Edge.UI.Client
 
 					// Set as new target content
 					dialog.TargetContent = newRow;
-					dialog.Content = Dialog_MakeEditVersion<TableType, RowType>(sourceTable, newRow);
+					dialog.Content = Dialog_MakeEditVersion<TableType, RowType>(newRow);
 				}
 
 				// Activate the post applying action
@@ -231,14 +241,28 @@ namespace Easynet.Edge.UI.Client
 
 			if (async)
 			{
-				App.CurrentPage.Window.AsyncOperation(delegates[0] as Action, delegates[1] as Func<Exception, bool>, delegates[2] as Action);
+				App.CurrentPage.Window.AsyncOperation(
+					delegates[0] as Action,					// out-of-ui action
+					delegates[1] as Func<Exception, bool>,	// exception handler
+					delegates[2] as Action					// in-ui action
+				);
 			}
 			else
 			{
 				bool exception = false;
-				try { (delegates[0] as Action).Invoke(); }
-				catch (Exception ex) { (delegates[1] as Func<Exception, bool>).Invoke(ex); exception = true; }
+				try
+				{
+					// out-of-ui action, done in ui because async is not required
+					(delegates[0] as Action).Invoke();
+				}
+				catch (Exception ex)
+				{
+					// exception handler
+					(delegates[1] as Func<Exception, bool>).Invoke(ex);
+					exception = true;
+				}
 
+				// in-ui action
 				if (!exception)
 					(delegates[2] as Action).Invoke();
 

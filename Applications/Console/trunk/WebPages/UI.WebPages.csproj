@@ -132,6 +132,13 @@
     <Compile Include="Pages\graph.aspx.designer.cs">
       <DependentUpon>graph.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Organic.aspx.cs">
+      <DependentUpon>Organic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Organic.aspx.designer.cs">
+      <DependentUpon>Organic.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\WebImporter.aspx.cs">
       <DependentUpon>WebImporter.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -195,6 +202,7 @@
     <Content Include="Pages\Alerts.aspx" />
     <Content Include="Pages\graph.aspx" />
     <Content Include="Pages\Intelligence.aspx" />
+    <Content Include="Pages\Organic.aspx" />
     <Content Include="Pages\Scripts\AdTest.js" />
     <Content Include="Pages\WebImporter.aspx" />
     <None Include="Web References\CurrencyConvertor\CurrencyConvertor.wsdl" />
