@@ -131,7 +131,7 @@
 		</Grid>
 		
 		<DockPanel Grid.Column="0" Grid.Row="1" IsEnabled="{Binding ElementName=FloatingDialogMask, Path=Visibility, Converter={StaticResource InvisibleToBoolConverter}}" HorizontalAlignment="Left" ScrollViewer.CanContentScroll="False" Margin="10,0,0,0">
-            <this:MainMenu x:Name="MainMenu" x:FieldModifier="public" ScrollViewer.CanContentScroll="False" Visibility="Collapsed" DockPanel.Dock="top" Margin="0,15,0,0" SelectionChanged="_mainMenu_SelectionChanged">
+            <this:MainMenu x:Name="_mainMenu" ScrollViewer.CanContentScroll="False" Visibility="Collapsed" DockPanel.Dock="top" Margin="0,15,0,0" SelectionChanged="_mainMenu_SelectionChanged">
                 <this:MainMenu.Triggers>
 					<EventTrigger RoutedEvent="this:MainMenu.Opened">
 						<BeginStoryboard>

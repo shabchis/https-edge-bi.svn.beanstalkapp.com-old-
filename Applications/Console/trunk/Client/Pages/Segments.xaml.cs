@@ -117,7 +117,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void Segment_Add(object sender, RoutedEventArgs e)
 		{
 			// Create an editable new ro
-			Oltp.SegmentRow editVersion = Dialog_MakeEditVersion<Oltp.SegmentDataTable, Oltp.SegmentRow>(null);
+			Oltp.SegmentRow editVersion = Dialog_MakeEditVersion<Oltp.SegmentDataTable, Oltp.SegmentRow>(_segments, null);
 			editVersion.AccountID = this.Window.CurrentAccount.ID;
 
 			// Show the dialog
@@ -139,11 +139,11 @@ namespace Easynet.Edge.UI.Client.Pages
 			Segment_dialog.TitleTooltip = row.SegmentID.ToString();
 
 			Segment_dialog.BeginEdit(
-				Dialog_MakeEditVersion<Oltp.SegmentDataTable, Oltp.SegmentRow>(row),
+				Dialog_MakeEditVersion<Oltp.SegmentDataTable, Oltp.SegmentRow>(_segments, row),
 				row
 			);
 
-			TabControl tabs = VisualTree.GetChild<TabControl>(Segment_dialog);
+			TabControl tabs = Visual.GetDescendant<TabControl>(Segment_dialog);
 			TabItem tabItem = (TabItem) tabs.ItemContainerGenerator.ContainerFromIndex(tabs.SelectedIndex);
 			if (tabItem != null)
 				tabItem.RaiseEvent(new RoutedEventArgs(TabItem.GotFocusEvent, tabItem));
@@ -372,7 +372,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				return;
 
 			source.Visibility = Visibility.Collapsed;
-			TextBox target = VisualTree.GetChild<TextBox>(source.Parent);
+			TextBox target = Visual.GetDescendant<TextBox>(source.Parent);
 			target.Visibility = Visibility.Visible;
 			target.Focus();
 
@@ -383,7 +383,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		{
 			TextBox source = sender as TextBox;
 			(source as TextBox).Visibility = Visibility.Collapsed;
-			TextBlock target = VisualTree.GetChild<TextBlock>(source.Parent);
+			TextBlock target = Visual.GetDescendant<TextBlock>(source.Parent);
 			target.Visibility = Visibility.Visible;
 
 			(source.DataContext as IPropertyChangeNotifier).OnAllPropertiesChanged();

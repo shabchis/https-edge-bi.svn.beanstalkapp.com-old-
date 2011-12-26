@@ -38,6 +38,19 @@ namespace Easynet.Edge.UI.Client
 		{
 			InitializeComponent();
 
+			// Get the menu xml URL
+			XmlDataProvider xmlProvider = (XmlDataProvider)this.Resources["MenuData"];
+			if (!ApplicationDeployment.IsNetworkDeployed)
+			{
+				string absolute = AppSettings.Get(this, "MenuXmlAddress.Absolute");
+				xmlProvider.Source = new Uri(absolute);
+			}
+			else
+			{
+				string relative = AppSettings.Get(this, "MenuXmlAddress.Relative");
+				xmlProvider.Source = new Uri(ApplicationDeployment.CurrentDeployment.ActivationUri, relative);
+			}
+
 			// Event handlers
 			this.Loaded += new RoutedEventHandler(MainMenu_Loaded);
 		}
@@ -121,9 +134,13 @@ namespace Easynet.Edge.UI.Client
 		#region Public Properties
 		/*=========================*/
 
-		public XmlDataProvider XmlProvider
+		/// <summary>
+		/// 
+		/// </summary>
+		public Uri XmlDefinition
 		{
-			get { return (this.Resources["MenuData"] as XmlDataProvider); }
+			get { return (this.Resources["MenuData"] as XmlDataProvider).Source; }
+			set { (this.Resources["MenuData"] as XmlDataProvider).Source = value; }
 		}
 
 		/*=========================*/
@@ -137,19 +154,6 @@ namespace Easynet.Edge.UI.Client
 		/// </summary>
 		void MainMenu_Loaded(object sender, RoutedEventArgs e)
 		{
-			// Get the menu xml URL
-			XmlDataProvider xmlProvider = this.XmlProvider;
-			if (!ApplicationDeployment.IsNetworkDeployed)
-			{
-				string absolute = AppSettings.Get(this, "MenuXmlAddress.Absolute");
-				xmlProvider.Source = new Uri(absolute);
-			}
-			else
-			{
-				string relative = AppSettings.Get(this, "MenuXmlAddress.Relative");
-				xmlProvider.Source = new Uri(ApplicationDeployment.CurrentDeployment.ActivationUri, relative);
-			}
-
 			DeselectCollapse(true, true, null);
 		}
 
@@ -291,7 +295,7 @@ namespace Easynet.Edge.UI.Client
 				XmlElement section = (XmlElement) _menuSections.Items[s];
                 ListBoxItem sectionListItem = (ListBoxItem)_menuSections.ItemContainerGenerator.ContainerFromIndex(s);                
 				XmlNodeList sectionPages = section.GetElementsByTagName("Page");
-				ListBox pagesListBox = VisualTree.GetChild<ListBox>(sectionListItem);
+				ListBox pagesListBox = Visual.GetDescendant<ListBox>(sectionListItem);
 
 				bool isSectionEnabled = false;
                 for (int p = 0; p < sectionPages.Count; p++)

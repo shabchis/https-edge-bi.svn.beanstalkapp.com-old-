@@ -62,7 +62,6 @@
     <Compile Include="IOltpLogic.cs" />
     <Compile Include="Oltp.cs">
       <DependentUpon>Oltp.xsd</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Oltp.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -25,12 +25,6 @@ namespace Easynet.Edge.UI.Data
 			public const string SEO = "SEO";
 		}
 
-		/// <summary>
-		/// Converts a table (usually the GetChanges of another table) into a typed table
-		/// </summary>
-		/// <typeparam name="TableType"></typeparam>
-		/// <param name="table"></param>
-		/// <returns></returns>
 		public static TableType Prepare<TableType>(DataTable table) where TableType: DataTable, new()
 		{
 			DataTable changes = table.GetChanges();
@@ -588,8 +582,6 @@ namespace Easynet.Edge.UI.Data
 					this.OnPropertyChanged("Targets");
 				}
 			}
-
-			public object Tag { get; set; }
 		}
 
 		public partial class AdgroupCreativeRow: DataRow, INotifyPropertyChanged, IPropertyChangeNotifier
@@ -802,43 +794,12 @@ namespace Easynet.Edge.UI.Data
 		public string DisplayName { get; set; }
 		public bool IsAbsolute { get; private set; }
 
-		private string _valueRowColumnName;
-		private TargetsRow _valueRow;
-
-		public void SetValueSource(TargetsRow row)
-		{
-			_valueRow = row;
-		}
-
-		public double? Value
-		{
-			get
-			{
-				return _valueRow[FieldName];
-			}
-			set
-			{
-				_valueRow[FieldName] = value;
-			}
-		}
-
 		#region ISerializable Members
 
 		public Measure(IDataRecord record)
 		{
-			// Backwards compatibility
-			string fieldNameColumn = "OLTP_Name";
-			for (int i = 0; i < record.FieldCount; i++)
-			{
-				if (record.GetName(i).ToLower() == "FieldName".ToLower())
-				{
-					fieldNameColumn = "FieldName";
-					break;
-				}
-			}
-			
 			MeasureID = record.GetInt32(record.GetOrdinal("MeasureID"));
-			FieldName = record.GetString(record.GetOrdinal(fieldNameColumn));
+			FieldName = record.GetString(record.GetOrdinal("FieldName"));
 			DisplayName = record.GetString(record.GetOrdinal("DisplayName"));
 			IsAbsolute = record.GetBoolean(record.GetOrdinal("IsAbsolute"));
 		}
@@ -858,11 +819,6 @@ namespace Easynet.Edge.UI.Data
 			info.AddValue("FieldName", FieldName);
 			info.AddValue("DisplayName", DisplayName);
 			info.AddValue("IsAbsolute", IsAbsolute);
-		}
-
-		public Measure Clone()
-		{
-			return (Measure) this.MemberwiseClone();
 		}
 
 		#endregion
@@ -1067,11 +1023,6 @@ namespace Easynet.Edge.UI.Data
 			get { return _row == null || _row.RowState == DataRowState.Detached || _row.RowState == DataRowState.Deleted; }
 		}
 
-		public DataRow InnerRow
-		{
-			get { return _row; }
-		}
-
 		public double? this[string measure]
 		{
 			get
@@ -1121,15 +1072,6 @@ namespace Easynet.Edge.UI.Data
 				
 				this.OnPropertyChanged("Item[]");
 			}
-		}
-
-		public void Reject()
-		{
-			if (_row == null)
-				return;
-
-			_row.RejectChanges();
-			this.OnPropertyChanged("Item[]");
 		}
 	}
 }

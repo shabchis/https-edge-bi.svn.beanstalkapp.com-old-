@@ -53,7 +53,7 @@ namespace Easynet.Edge.UI.Client
 			InitializeComponent();
 
 			// HACK due to shitty namescope-related bug
-			MainMenu.RegisterName("_menuColumn", _menuColumn);
+			_mainMenu.RegisterName("_menuColumn", _menuColumn);
 
 			// Event handlers
 			this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
@@ -139,9 +139,9 @@ namespace Easynet.Edge.UI.Client
 			delegate()
 			{
 				// Hide all menu items/sections that have NO PERMISSIONS at all (account = null)
-				MainMenu.Visibility = Visibility.Visible;
-				MainMenu.UpdateLayout();
-				MainMenu.ApplyPermissions(null);
+				_mainMenu.Visibility = Visibility.Visible;
+				_mainMenu.UpdateLayout();
+				_mainMenu.ApplyPermissions(null);
 
 				_header.Visibility = Visibility.Visible;
 				_currentPageViewer.Content = CurrentPage = null;
@@ -170,8 +170,8 @@ namespace Easynet.Edge.UI.Client
 			OltpProxy.SessionEnd();
 			App.Cookies.ClearCookie(Const.Cookies.Login);
 
-			MainMenu.Visibility = Visibility.Hidden;
-			MainMenu.CollapseAll();
+			_mainMenu.Visibility = Visibility.Hidden;
+			_mainMenu.CollapseAll();
 			_accountsSelector.ItemsSource = null;
 			_accountsSelector.SelectedItem = null;
 			_header.Visibility = Visibility.Hidden;
@@ -192,7 +192,7 @@ namespace Easynet.Edge.UI.Client
 		/// <summary>
 		/// Gets or sets the currently selected account
 		/// </summary>
-		public Oltp.UserRow CurrentUser
+		protected Oltp.UserRow CurrentUser
 		{
 			get { return (Oltp.UserRow) GetValue(CurrentUserProperty); }
 			set { SetValue(CurrentUserProperty, value); }
@@ -262,7 +262,7 @@ namespace Easynet.Edge.UI.Client
 			get
 			{
 				if (_main == null)
-					_main = VisualTree.GetChild<MainWindow>(App.Current.Windows[0]);
+					_main = Visual.GetDescendant<MainWindow>(App.Current.Windows[0]);
 
 				return _main;
 			}
@@ -293,7 +293,7 @@ namespace Easynet.Edge.UI.Client
 			}
 
 			// Disable unavialable menu items for this account
-			MainMenu.ApplyPermissions(accountToChangeTo);
+			_mainMenu.ApplyPermissions(accountToChangeTo);
 
 			if (CurrentPage != null && !HasPermission(accountToChangeTo, CurrentPage.PageData))
 			{
@@ -322,7 +322,7 @@ namespace Easynet.Edge.UI.Client
 		/// </summary>
 		private void _mainMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (!MainMenu.IsLoaded)
+			if (!_mainMenu.IsLoaded)
 				return;
 
 			if (e.AddedItems.Count < 1)
@@ -395,17 +395,8 @@ namespace Easynet.Edge.UI.Client
 				catch (Exception ex)
 				{
 					CurrentPage = null;
-					string error = 
+					_currentPageViewer.Content = 
 						String.Format("Failed to load page. \n\n {0} ({1})", ex.Message, ex.GetType().FullName);
-
-					Exception innerEx = ex.InnerException;
-					while (innerEx != null)
-					{
-						error += String.Format("\n {0} ({1})", innerEx.Message, innerEx.GetType().FullName);
-						innerEx = innerEx.InnerException;
-					}
-
-					_currentPageViewer.Content = error;
 				}
 
 			}

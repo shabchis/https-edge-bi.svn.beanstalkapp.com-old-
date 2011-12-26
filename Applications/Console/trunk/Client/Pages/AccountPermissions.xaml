@@ -6,7 +6,8 @@
 >
 	
 	<this:PageBase.Resources>
-
+		<XmlDataProvider x:Key="MenuData" XPath="/Sections/Section/Page" Source="../Menu.xml" />
+		
 		<Style TargetType="{x:Type TextBlock}">
 			<Setter Property="Padding" Value="0,6,0,6"/>
 		</Style>
@@ -51,12 +52,11 @@
 
 			<Canvas DockPanel.Dock="Top">
 				<StackPanel Orientation="Horizontal" Canvas.Right="50" VerticalAlignment="Center" HorizontalAlignment="Right">
-					<Button x:Name="_buttonCopy" Margin="10,10,0,0" Style="{StaticResource Link}" Content="Apply to other accounts" Click="PermissionCopy_dialog_Open"/>
 					<ComboBox x:Name="_comboAddUser" Margin="10,10,0,0" Width="120" ItemTemplateSelector="{StaticResource AddComboBoxTemplateSelector}" SelectionChanged="_comboAdd_SelectionChanged"/>
 					<ComboBox x:Name="_comboAddGroup" Margin="10,10,0,0" Width="120" ItemTemplateSelector="{StaticResource AddComboBoxTemplateSelector}" SelectionChanged="_comboAdd_SelectionChanged"/>
 				</StackPanel>
 			</Canvas>
-			
+
 			<this:ListTable x:Name="_listTable" Margin="0,35,50,10">
 				<this:ListTable.View>
 					<GridView AllowsColumnReorder="False" >
@@ -70,12 +70,6 @@
 
 
 		<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-			<Grid.Resources>
-				<Style TargetType="{x:Type ListBoxItem}">
-					<Setter Property="BorderBrush" Value="Silver"/>
-					<Setter Property="BorderThickness" Value="0,0,0,1"/>
-				</Style>
-			</Grid.Resources>
 
 			<this:FloatingDialog
 				x:Name="PermissionTarget_dialog"
@@ -101,7 +95,6 @@
 					<DataTemplate>
 						<TabControl TabStripPlacement="Top" VirtualizingStackPanel.IsVirtualizing="False">
 							<TabItem Header="Permissions">
-								<!-- MenuData resource is added at runtime -->
 								<ListBox
 									DataContext="{Binding Source={StaticResource MenuData}, XPath=/Sections/Section/Page[@Class]}"
 									ItemsSource="{Binding}"
@@ -135,42 +128,6 @@
 				</this:FloatingDialog.ContentTemplate>
 			</this:FloatingDialog>
 
-			<this:FloatingDialog
-				x:Name="PermissionCopy_dialog"
-				Width="600"
-				Height="400"
-				ApplyingChanges="PermissionCopy_dialog_ApplyingChanges"
-				AppliedChanges="PermissionCopy_dialog_AppliedChanges"
-				Closing="PermissionCopy_dialog_Closing"
-				Title="Apply permissions to other accounts"
-				ApplyButtonVisibility="Collapsed"
-			 >
-				<this:FloatingDialog.ContentTemplate>
-					<DataTemplate>
-						<TabControl TabStripPlacement="Top" VirtualizingStackPanel.IsVirtualizing="False">
-							<TabItem Header="Accounts">
-								<ListBox
-									x:Name="_copyToAccountsListBox"
-									Loaded="_copyToAccountsListBox_Loaded"
-									ItemsSource="{Binding}"
-									Height="Auto"
-									Margin="10"
-									VirtualizingStackPanel.IsVirtualizing="False"
-										>
-									<ListBox.ItemTemplate>
-										<DataTemplate>
-											<StackPanel Style="{StaticResource FormField}" VerticalAlignment="Center">
-												<CheckBox IsChecked="False" Content="{Binding Path=Name}" ToolTip="{Binding Path=ID}"/>
-											</StackPanel>
-										</DataTemplate>
-									</ListBox.ItemTemplate>
-								</ListBox>
-							</TabItem>
-
-						</TabControl>
-					</DataTemplate>
-				</this:FloatingDialog.ContentTemplate>
-			</this:FloatingDialog>
 		</Grid>
 
 	</Grid>
