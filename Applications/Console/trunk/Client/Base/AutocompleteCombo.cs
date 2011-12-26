@@ -50,7 +50,7 @@ namespace Easynet.Edge.UI.Client
 
 		void AutocompleteCombo_Loaded(object sender, RoutedEventArgs e)
 		{
-			_textbox = VisualTree.GetChild<TextBox>(this);
+			_textbox = Visual.GetDescendant<TextBox>(this);
 
 			if (_textbox != null)
 			{

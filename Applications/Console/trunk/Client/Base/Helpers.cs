@@ -18,37 +18,16 @@ namespace Easynet.Edge.UI.Client
 {
 
 	#region Visual helpers
-	class VisualTree
+	class Visual
 	{
-		public static List<T> GetChildren<T>(DependencyObject parent) where T : DependencyObject
-		{
-			if (parent == null)
-				throw new ArgumentNullException("parent");
-
-			// Popup needs special treament
-			int childCount = parent is Popup ?
-				1 :
-				VisualTreeHelper.GetChildrenCount(parent);
-
-			List<T> list = new List<T>();
-
-			for (int i = 0; i < childCount; i++)
-			{
-				DependencyObject child = parent is Popup ?
-					(parent as Popup).Child :
-					VisualTreeHelper.GetChild(parent, i);
-
-				if (child is T)
-					list.Add(child as T);
-				else
-					list.AddRange(GetChildren<T>(child));
-			}
-
-			return list;
-
-		}
-
-		public static T GetChild<T>(DependencyObject parent, string name) where T: DependencyObject
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="parent"></param>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		public static T GetDescendant<T>(DependencyObject parent, string name) where T: DependencyObject
 		{
 			if (parent == null)
 				throw new ArgumentNullException("parent");
@@ -70,7 +49,7 @@ namespace Easynet.Edge.UI.Client
 					)
 					return child as T;
 
-				child = GetChild<T>(child, name);
+				child = GetDescendant<T>(child, name);
 				if (child != null)
 					return child as T;
 			}
@@ -78,14 +57,24 @@ namespace Easynet.Edge.UI.Client
 			return null;
 		}
 
-
-		public static T GetChild<T>(DependencyObject parent) where T: DependencyObject
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="parent"></param>
+		/// <returns></returns>
+		public static T GetDescendant<T>(DependencyObject parent) where T: DependencyObject
 		{
-			return GetChild<T>(parent, null);
+			return GetDescendant<T>(parent, null);
 		}
 
-
-		public static T GetParent<T>(DependencyObject element) where T : DependencyObject
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="element"></param>
+		/// <returns></returns>
+		public static T GetRoot<T>(DependencyObject element) where T : DependencyObject
 		{
 			if (element == null)
 				return null;
@@ -94,7 +83,7 @@ namespace Easynet.Edge.UI.Client
 			if (parent is T)
 				return parent as T;
 			else
-				return GetParent<T>(parent);
+				return GetRoot<T>(parent);
 		}
 
 

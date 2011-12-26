@@ -30,12 +30,10 @@ namespace Easynet.Edge.UI.Client.Pages
 		#region Fields
 		/*=========================*/
 
-		ObservableCollection<DataRow> _items;
-		ObservableCollection<object> _groupsToAdd;
-		ObservableCollection<object> _usersToAdd;
+		private ObservableCollection<DataRow> _items;
+		private ObservableCollection<object> _groupsToAdd;
+		private ObservableCollection<object> _usersToAdd;
 		bool _openingDialog = false;
-		Oltp.AccountDataTable _copyToAccounts;
-		ListBox _copyToAccountsListBox;
 
 		/*=========================*/
 		#endregion
@@ -48,7 +46,6 @@ namespace Easynet.Edge.UI.Client.Pages
 		/// </summary>
 		public AccountPermissions()
 		{
-			this.Resources.Add("MenuData", Window.MainMenu.XmlProvider);
 			InitializeComponent();
 		}
 
@@ -79,11 +76,6 @@ namespace Easynet.Edge.UI.Client.Pages
 			Oltp.UserDataTable usersWith = null;
 			Oltp.UserGroupDataTable groupsWithout = null;
 			Oltp.UserDataTable usersWithout = null;
-			
-			// Set to null if we need to retrieve it from db
-			_copyToAccounts = Window.CurrentUser.AccountAdmin ?
-						Window.AvailableAccounts :
-						null;
 
 			Window.AsyncOperation(delegate()
 			{
@@ -93,13 +85,6 @@ namespace Easynet.Edge.UI.Client.Pages
 					usersWith = proxy.Service.User_GetUsersWithPermissions(currentAccount.ID);
 					groupsWithout = proxy.Service.UserGroup_GetGroupsWithoutPermissions(currentAccount.ID);
 					usersWithout = proxy.Service.User_GetUsersWithoutPermissions(currentAccount.ID);
-
-					_copyToAccounts =
-						// If not null
-						_copyToAccounts
-						??
-						// else
-						proxy.Service.Account_GetByPermission(GetPermissionValue(this.PageData));
 				}
 			},
 			delegate()
@@ -143,17 +128,8 @@ namespace Easynet.Edge.UI.Client.Pages
 				_comboAddUser.ItemsSource = _usersToAdd;
 
 				_comboAddGroup.SelectedIndex = 0;
-				_comboAddUser.SelectedIndex = 0;
-
-				if (_copyToAccountsListBox != null)
-					_copyToAccountsListBox.DataContext = Filter(_copyToAccounts);
+				_comboAddUser.SelectedIndex = 0; ;
 			});
-		}
-
-		private DataRow[] Filter(Oltp.AccountDataTable accounts)
-		{
-			DataRow[] rows = _copyToAccounts.Select(String.Format("ID <> {0}", Window.CurrentAccount.ID));
-			return rows;
 		}
 
 		string GetPermissionValue(XmlLinkedNode x)
@@ -176,7 +152,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void PermissionTarget_Delete(object sender, RoutedEventArgs e)
 		{
 			// Get the select item
-			ListViewItem item = VisualTree.GetParent<ListViewItem>(sender as DependencyObject);
+			ListViewItem item = Visual.GetRoot<ListViewItem>(sender as DependencyObject);
 			Oltp.UserRow user = item.Content as Oltp.UserRow;
 			Oltp.UserGroupRow group = item.Content as Oltp.UserGroupRow;
 
@@ -245,7 +221,7 @@ namespace Easynet.Edge.UI.Client.Pages
 				_openingDialog = true;
 
 				// Apply retrieved permissions to the GUI radio buttons
-				ListBox permissionsList = VisualTree.GetChild<ListBox>(PermissionTarget_dialog);
+				ListBox permissionsList = Visual.GetDescendant<ListBox>(PermissionTarget_dialog);
 				for (int i = 0; i < permissionsList.Items.Count; i++)
 				{
 					XmlLinkedNode x = (XmlLinkedNode)permissionsList.Items[i];
@@ -263,11 +239,11 @@ namespace Easynet.Edge.UI.Client.Pages
 					ListBoxItem lbItem = (ListBoxItem)permissionsList.ItemContainerGenerator.ContainerFromIndex(i);
 
 					if (perm == null)
-						VisualTree.GetChild<RadioButton>(lbItem, "radioNotSet").IsChecked = true;
+						Visual.GetDescendant<RadioButton>(lbItem, "radioNotSet").IsChecked = true;
 					else if (perm.Value)
-						VisualTree.GetChild<RadioButton>(lbItem, "radioAllow").IsChecked = true;
+						Visual.GetDescendant<RadioButton>(lbItem, "radioAllow").IsChecked = true;
 					else
-						VisualTree.GetChild<RadioButton>(lbItem, "radioDeny").IsChecked = true;
+						Visual.GetDescendant<RadioButton>(lbItem, "radioDeny").IsChecked = true;
 				}
 
 				currentItem.IsSelected = true;
@@ -294,7 +270,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			
 			// Retrieve the data of the permission being set
-			ListBoxItem lbItem = VisualTree.GetParent<ListBoxItem>(sender as RadioButton);
+			ListBoxItem lbItem = Visual.GetRoot<ListBoxItem>(sender as RadioButton);
 			XmlLinkedNode x = (XmlLinkedNode) lbItem.Content;
 			string permissionValue = GetPermissionValue(x);
 			if (permissionValue == null)
@@ -485,71 +461,6 @@ namespace Easynet.Edge.UI.Client.Pages
 			return _items.Count;
 		}
 
-		private void PermissionCopy_dialog_Open(object sender, RoutedEventArgs e)
-		{
-			if (_copyToAccountsListBox != null)
-			{
-				List<CheckBox> checkboxes = VisualTree.GetChildren<CheckBox>(_copyToAccountsListBox);
-				foreach (CheckBox cb in checkboxes)
-					cb.IsChecked = false;
-			}
-
-			PermissionCopy_dialog.IsOpen = true;
-		}
-
-		private void PermissionCopy_dialog_ApplyingChanges(object sender, CancelRoutedEventArgs e)
-		{
-			if (MessageBox.Show("This will replace all permissions on selected accounts. Continue?", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK)
-			{
-				e.Cancel = true;
-				return;
-			}
-
-			List<int> accounts = new List<int>();
-			foreach (Oltp.AccountRow targetAccount in _copyToAccounts.Rows)
-			{
-				ListBoxItem listBoxItem = (ListBoxItem) _copyToAccountsListBox.ItemContainerGenerator.ContainerFromItem(targetAccount);
-				if (listBoxItem == null)
-					continue;
-
-				CheckBox cb = VisualTree.GetChild<CheckBox>(listBoxItem);
-				if (cb.IsChecked != null && cb.IsChecked.Value)
-					accounts.Add(targetAccount.ID);
-			}
-			
-			int accountID = Window.CurrentAccount.ID;
-			Window.AsyncOperation(delegate()
-			{
-				using (OltpProxy proxy = new OltpProxy())
-				{
-					proxy.Service.AccountPermission_Copy(accountID, accounts.ToArray());
-				}
-			},
-			delegate(Exception ex)
-			{
-				MessageBoxError("Failed to copy permissions.", ex);
-				return false;
-			},
-			delegate()
-			{
-				//MessageBox.Show("Done!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-				PermissionCopy_dialog.EndApplyChanges(e);
-			});
-		}
-
-		private void PermissionCopy_dialog_AppliedChanges(object sender, CancelRoutedEventArgs e)
-		{
-		}
-
-		private void PermissionCopy_dialog_Closing(object sender, CancelRoutedEventArgs e)
-		{
-		}
-
-		private void _copyToAccountsListBox_Loaded(object sender, RoutedEventArgs e)
-		{
-			_copyToAccountsListBox = sender as ListBox;
-			_copyToAccountsListBox.DataContext = Filter(_copyToAccounts);
-		}
 
 		/*=========================*/
 		#endregion

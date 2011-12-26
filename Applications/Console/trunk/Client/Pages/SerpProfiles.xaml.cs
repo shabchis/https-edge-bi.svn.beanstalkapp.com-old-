@@ -147,7 +147,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		private void Profile_Add(object sender, RoutedEventArgs e)
 		{
 			// Create an editable new ro
-			Oltp.SerpProfileRow editVersion = Dialog_MakeEditVersion<Oltp.SerpProfileDataTable, Oltp.SerpProfileRow>(null);
+			Oltp.SerpProfileRow editVersion = Dialog_MakeEditVersion<Oltp.SerpProfileDataTable, Oltp.SerpProfileRow>(_profiles, null);
 			editVersion.AccountID = this.Window.CurrentAccount.ID;
 			editVersion.ProfileType = Oltp.SerpProfileType.SEO;
 
@@ -231,11 +231,11 @@ namespace Easynet.Edge.UI.Client.Pages
 			Profile_dialog.TitleTooltip = row.ID.ToString();
 
 			Profile_dialog.BeginEdit(
-				Dialog_MakeEditVersion<Oltp.SerpProfileDataTable, Oltp.SerpProfileRow>(row),
+				Dialog_MakeEditVersion<Oltp.SerpProfileDataTable, Oltp.SerpProfileRow>(_profiles, row),
 				row
 			);
 
-			TabControl tabs = VisualTree.GetChild<TabControl>(Profile_dialog);
+			TabControl tabs = Visual.GetDescendant<TabControl>(Profile_dialog);
 			TabItem tabItem = (TabItem) tabs.ItemContainerGenerator.ContainerFromIndex(tabs.SelectedIndex);
 			if (tabItem != null)
 				tabItem.RaiseEvent(new RoutedEventArgs(TabItem.GotFocusEvent, tabItem));
@@ -672,13 +672,13 @@ namespace Easynet.Edge.UI.Client.Pages
 
 		private void KeywordsTab_OpenBatch(object sender, RoutedEventArgs e)
 		{
-			Grid batchKeywordsDialog = VisualTree.GetChild<Grid>(Profile_dialog, "_batchKeywordsDialog");
+			Grid batchKeywordsDialog = Visual.GetDescendant<Grid>(Profile_dialog, "_batchKeywordsDialog");
 			if (batchKeywordsDialog == null)
 				return;
 
 			batchKeywordsDialog.Visibility = Visibility.Visible;
 
-			TextBox batchKeywordsText = VisualTree.GetChild<TextBox>(batchKeywordsDialog, "_batchKeywordsText");
+			TextBox batchKeywordsText = Visual.GetDescendant<TextBox>(batchKeywordsDialog, "_batchKeywordsText");
 			if (batchKeywordsText == null)
 				return;
 			batchKeywordsText.Focus();
@@ -687,7 +687,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 		private void KeywordsTab_CloseBatch(object sender, RoutedEventArgs e)
 		{
-			Grid batchKeywordsDialog = VisualTree.GetChild<Grid>(Profile_dialog, "_batchKeywordsDialog");
+			Grid batchKeywordsDialog = Visual.GetDescendant<Grid>(Profile_dialog, "_batchKeywordsDialog");
 			if (batchKeywordsDialog == null)
 				return;
 
@@ -696,11 +696,11 @@ namespace Easynet.Edge.UI.Client.Pages
 
 		private void KeywordsTab_AddBatch(object sender, RoutedEventArgs e)
 		{
-			Grid batchKeywordsDialog = VisualTree.GetChild<Grid>(Profile_dialog, "_batchKeywordsDialog");
+			Grid batchKeywordsDialog = Visual.GetDescendant<Grid>(Profile_dialog, "_batchKeywordsDialog");
 			if (batchKeywordsDialog == null)
 				return;
 
-			TextBox batchKeywordsText = VisualTree.GetChild<TextBox>(batchKeywordsDialog, "_batchKeywordsText");
+			TextBox batchKeywordsText = Visual.GetDescendant<TextBox>(batchKeywordsDialog, "_batchKeywordsText");
 			if (batchKeywordsText == null)
 				return;
 			
@@ -773,7 +773,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			TextBlock source = sender as TextBlock;
 			source.Visibility = Visibility.Collapsed;
-			TextBox target = VisualTree.GetChild<TextBox>(source.Parent);
+			TextBox target = Visual.GetDescendant<TextBox>(source.Parent);
 			target.Visibility = Visibility.Visible;
 			target.Focus();
 
@@ -784,7 +784,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		{
 			TextBox source = sender as TextBox;
 			(source as TextBox).Visibility = Visibility.Collapsed;
-			TextBlock target = VisualTree.GetChild<TextBlock>(source.Parent);
+			TextBlock target = Visual.GetDescendant<TextBlock>(source.Parent);
 			target.Visibility = Visibility.Visible;
 
 			(source.DataContext as IPropertyChangeNotifier).OnAllPropertiesChanged();
@@ -890,7 +890,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			}
 
 			// Expand if necessary
-			ToggleButton expander = VisualTree.GetChild<ToggleButton>(_profileDomainsListView.ListView.ItemContainerGenerator.ContainerFromItem(group));
+			ToggleButton expander = Visual.GetDescendant<ToggleButton>(_profileDomainsListView.ListView.ItemContainerGenerator.ContainerFromItem(group));
 			if (expander.IsChecked != true)
 				expander.IsChecked = true;
 
@@ -925,7 +925,7 @@ namespace Easynet.Edge.UI.Client.Pages
 			{
 				// Collapse the toggle button to get rid of the visible items
 				ListViewItem item = (ListViewItem) _profileDomainsListView.ListView.ItemContainerGenerator.ContainerFromItem(row);
-				VisualTree.GetChild<ToggleButton>(item).IsChecked = false;
+				Visual.GetDescendant<ToggleButton>(item).IsChecked = false;
 
 				// Get rid of the rows from the domain table
 				Oltp.SerpProfileDomainRow[] rowsToDelete = (Oltp.SerpProfileDomainRow[])
@@ -951,14 +951,14 @@ namespace Easynet.Edge.UI.Client.Pages
 			int indexToInsert = e.SourceIndex < e.TargetIndex ? e.TargetIndex-1 : e.TargetIndex;
 
 			Oltp.SerpProfileDomainGroupRow targetGroup = DomainsTab_GetGroupItem(indexToInsert);
-			ToggleButton targetExpander = VisualTree.GetChild<ToggleButton>(_profileDomainsListView.ListView.ItemContainerGenerator.ContainerFromItem(targetGroup));
+			ToggleButton targetExpander = Visual.GetDescendant<ToggleButton>(_profileDomainsListView.ListView.ItemContainerGenerator.ContainerFromItem(targetGroup));
 			if (targetExpander.IsChecked == true)
 			{
 				if (indexToInsert < sourceCollection.IndexOf(targetGroup) + DomainsTab_GetGroupChildren(targetGroup).Length + 1)
 					return;
 			}
 
-			ToggleButton sourceExpander = VisualTree.GetChild<ToggleButton>(_profileDomainsListView.ListView.ItemContainerGenerator.ContainerFromItem(group));
+			ToggleButton sourceExpander = Visual.GetDescendant<ToggleButton>(_profileDomainsListView.ListView.ItemContainerGenerator.ContainerFromItem(group));
 			if (sourceExpander.IsChecked == true)
 			{
 				sourceExpander.IsChecked = false;
@@ -1069,7 +1069,7 @@ namespace Easynet.Edge.UI.Client.Pages
 
 			TextBlock source = sender as TextBlock;
 			source.Visibility = Visibility.Collapsed;
-			TextBox target = VisualTree.GetChild<TextBox>(source.Parent);
+			TextBox target = Visual.GetDescendant<TextBox>(source.Parent);
 			target.Visibility = Visibility.Visible;
 			target.Focus();
 
@@ -1080,7 +1080,7 @@ namespace Easynet.Edge.UI.Client.Pages
 		{
 			TextBox source = sender as TextBox;
 			(source as TextBox).Visibility = Visibility.Collapsed;
-			TextBlock target = VisualTree.GetChild<TextBlock>(source.Parent);
+			TextBlock target = Visual.GetDescendant<TextBlock>(source.Parent);
 			target.Visibility = Visibility.Visible;
 
 			(source.DataContext as IPropertyChangeNotifier).OnAllPropertiesChanged();
