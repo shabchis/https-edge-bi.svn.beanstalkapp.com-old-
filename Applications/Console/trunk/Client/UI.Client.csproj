@@ -37,21 +37,22 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <PublishUrl>Publish\seperia.edge-bi.com\</PublishUrl>
+    <PublishUrl>Publish\console.edge-bi.com\</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Web</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://console.edge-bi.com/seperia/</InstallUrl>
-    <SupportUrl>https://console.edge-bi.com/seperia/install.html</SupportUrl>
+    <InstallUrl>https://console.edge-bi.com/</InstallUrl>
+    <SupportUrl>https://console.edge-bi.com/install.html</SupportUrl>
     <TargetCulture>en</TargetCulture>
-    <ProductName>Edge.BI Management Console [debug]</ProductName>
+    <ProductName>Edge.BI Management Console</ProductName>
     <PublisherName>Edge.BI</PublisherName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>install.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <TrustUrlParameters>true</TrustUrlParameters>
@@ -59,7 +60,7 @@
     <ApplicationVersion>2.5.0.733</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <BootstrapperEnabled>false</BootstrapperEnabled>
   </PropertyGroup>
   <!-- Debug configuration -->
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -133,11 +134,11 @@
   </ItemGroup>
   <!-- Project references -->
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\BusinessObjects\BusinessObjects.csproj">
+    <ProjectReference Include="..\Core\BusinessObjects\BusinessObjects.csproj">
       <Project>{6E2451D8-DD5B-4B28-B84A-A652D539F8C0}</Project>
       <Name>BusinessObjects</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Core\Core\Core.csproj">
+    <ProjectReference Include="..\Core\Core\Core.csproj">
       <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
       <Name>Core %28Core\Core%29</Name>
     </ProjectReference>
@@ -350,11 +351,6 @@
 	</ItemGroup>-->
   <!-- Bootstrapper packages -->
   <ItemGroup>
-    <BootstrapperPackage Include="Edge.UI.Deployment.Certificates">
-      <Visible>False</Visible>
-      <ProductName>Edge.BI Certificates</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
     <BootstrapperPackage Include="Java.Runtime.Environment">
       <Visible>False</Visible>
       <ProductName>Java Runtime Environment</ProductName>

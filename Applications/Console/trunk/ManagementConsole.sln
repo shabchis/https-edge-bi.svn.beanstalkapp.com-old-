@@ -10,11 +10,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Server", "Server\UI.Serv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Data", "Data\UI.Data.csproj", "{AC9C4389-97C8-47B9-84F3-E5E4E32C5E73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\..\Core\Core\Core.csproj", "{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core\Core.csproj", "{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "..\..\Core\BusinessObjects\BusinessObjects.csproj", "{6E2451D8-DD5B-4B28-B84A-A652D539F8C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "Core\BusinessObjects\BusinessObjects.csproj", "{6E2451D8-DD5B-4B28-B84A-A652D539F8C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.DataRetrieval", "..\..\Services\DataRetrieval\Services.DataRetrieval.csproj", "{65DAED92-326B-401D-BF05-526C6BD5409C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.DataRetrieval", "Services\DataRetrieval\Services.DataRetrieval.csproj", "{65DAED92-326B-401D-BF05-526C6BD5409C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.WebPages", "WebPages\UI.WebPages.csproj", "{EFE6B61F-5B04-4890-B0E8-B4C4265297A7}"
 EndProject
@@ -85,7 +85,6 @@ Global
 		{71264783-6865-4525-B43D-C04A4D996E94}.Demo|Mixed Platforms.Build.0 = Demo|Any CPU
 		{71264783-6865-4525-B43D-C04A4D996E94}.Demo|Win32.ActiveCfg = Demo|Any CPU
 		{71264783-6865-4525-B43D-C04A4D996E94}.Production|Any CPU.ActiveCfg = Production|Any CPU
-		{71264783-6865-4525-B43D-C04A4D996E94}.Production|Any CPU.Build.0 = Production|Any CPU
 		{71264783-6865-4525-B43D-C04A4D996E94}.Production|Mixed Platforms.ActiveCfg = Production|Any CPU
 		{71264783-6865-4525-B43D-C04A4D996E94}.Production|Mixed Platforms.Build.0 = Production|Any CPU
 		{71264783-6865-4525-B43D-C04A4D996E94}.Production|Win32.ActiveCfg = Production|Any CPU
@@ -185,7 +184,6 @@ Global
 		{65DAED92-326B-401D-BF05-526C6BD5409C}.Demo|Mixed Platforms.Build.0 = Release|Any CPU
 		{65DAED92-326B-401D-BF05-526C6BD5409C}.Demo|Win32.ActiveCfg = Debug|Any CPU
 		{65DAED92-326B-401D-BF05-526C6BD5409C}.Production|Any CPU.ActiveCfg = Release|Any CPU
-		{65DAED92-326B-401D-BF05-526C6BD5409C}.Production|Any CPU.Build.0 = Release|Any CPU
 		{65DAED92-326B-401D-BF05-526C6BD5409C}.Production|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{65DAED92-326B-401D-BF05-526C6BD5409C}.Production|Mixed Platforms.Build.0 = Release|Any CPU
 		{65DAED92-326B-401D-BF05-526C6BD5409C}.Production|Win32.ActiveCfg = Release|Any CPU
@@ -210,7 +208,6 @@ Global
 		{EFE6B61F-5B04-4890-B0E8-B4C4265297A7}.Demo|Mixed Platforms.Build.0 = Release|Any CPU
 		{EFE6B61F-5B04-4890-B0E8-B4C4265297A7}.Demo|Win32.ActiveCfg = Debug|Any CPU
 		{EFE6B61F-5B04-4890-B0E8-B4C4265297A7}.Production|Any CPU.ActiveCfg = Release|Any CPU
-		{EFE6B61F-5B04-4890-B0E8-B4C4265297A7}.Production|Any CPU.Build.0 = Release|Any CPU
 		{EFE6B61F-5B04-4890-B0E8-B4C4265297A7}.Production|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{EFE6B61F-5B04-4890-B0E8-B4C4265297A7}.Production|Mixed Platforms.Build.0 = Release|Any CPU
 		{EFE6B61F-5B04-4890-B0E8-B4C4265297A7}.Production|Win32.ActiveCfg = Release|Any CPU
@@ -235,7 +232,6 @@ Global
 		{08730AF4-DE67-41B0-BCB1-3483D25E71D1}.Demo|Mixed Platforms.Build.0 = Release|Any CPU
 		{08730AF4-DE67-41B0-BCB1-3483D25E71D1}.Demo|Win32.ActiveCfg = Debug|Any CPU
 		{08730AF4-DE67-41B0-BCB1-3483D25E71D1}.Production|Any CPU.ActiveCfg = Release|Any CPU
-		{08730AF4-DE67-41B0-BCB1-3483D25E71D1}.Production|Any CPU.Build.0 = Release|Any CPU
 		{08730AF4-DE67-41B0-BCB1-3483D25E71D1}.Production|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{08730AF4-DE67-41B0-BCB1-3483D25E71D1}.Production|Mixed Platforms.Build.0 = Release|Any CPU
 		{08730AF4-DE67-41B0-BCB1-3483D25E71D1}.Production|Win32.ActiveCfg = Release|Any CPU
@@ -285,7 +281,6 @@ Global
 		{311544A4-C7E1-475C-B649-6BB25D907DFE}.Demo|Mixed Platforms.Build.0 = Release|Any CPU
 		{311544A4-C7E1-475C-B649-6BB25D907DFE}.Demo|Win32.ActiveCfg = Debug|Any CPU
 		{311544A4-C7E1-475C-B649-6BB25D907DFE}.Production|Any CPU.ActiveCfg = Release|Any CPU
-		{311544A4-C7E1-475C-B649-6BB25D907DFE}.Production|Any CPU.Build.0 = Release|Any CPU
 		{311544A4-C7E1-475C-B649-6BB25D907DFE}.Production|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{311544A4-C7E1-475C-B649-6BB25D907DFE}.Production|Mixed Platforms.Build.0 = Release|Any CPU
 		{311544A4-C7E1-475C-B649-6BB25D907DFE}.Production|Win32.ActiveCfg = Release|Any CPU
