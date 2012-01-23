@@ -16094,10 +16094,25 @@ ORDER BY IsDefaultAdunit DESC, Adunit";
             this._adapter.UpdateCommand.Connection = this.Connection;
             this._adapter.UpdateCommand.CommandText = @"
 						UPDATE UserProcess_GUI_Gateway
-						SET Channel_ID = @Channel_ID, Gateway = @Gateway, Dest_URL = @Dest_URL, Page_GK = @Page_GK, Reference_Type = @Reference_Type, Reference_ID = @Reference_ID,
-						Segment1 = @Segment1, Segment2 = @Segment2, Segment3 = @Segment3, Segment4 = @Segment4, Segment5 = @Segment5
-						WHERE (Gateway_GK = @Gateway_GK and Account_ID = @Account_ID);
-						SELECT Gateway_GK, Account_ID, Gateway_id, Gateway, Dest_URL, Campaign_GK, Adgroup_GK, Page_GK, Reference_Type, Reference_ID, Segment1, Segment2, Segment3, Segment4, Segment5 FROM UserProcess_GUI_Gateway WHERE (Gateway_GK = @Gateway_GK) ORDER BY Gateway";
+						SET
+							Channel_ID		= @Channel_ID,
+							Gateway			= @Gateway,
+							Dest_URL		= @Dest_URL,
+							Page_GK			= @Page_GK,
+							Reference_Type	= @Reference_Type,
+							Reference_ID	= @Reference_ID,
+							Segment1		= @Segment1,
+							Segment2		= @Segment2,
+							Segment3		= @Segment3,
+							Segment4		= @Segment4,
+							Segment5		= @Segment5,
+							LastUpdated		= getdate()
+						WHERE
+							Gateway_GK = @Gateway_GK
+							and Account_ID = @Account_ID;
+							
+						SELECT Gateway_GK, Account_ID, Gateway_id, Gateway, Dest_URL, Campaign_GK, Adgroup_GK, Page_GK, Reference_Type, Reference_ID, Segment1, Segment2, Segment3, Segment4, Segment5 FROM UserProcess_GUI_Gateway WHERE (Gateway_GK = @Gateway_GK) ORDER BY Gateway
+						";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Gateway_GK", global::System.Data.SqlDbType.BigInt, 8, global::System.Data.ParameterDirection.Input, 0, 0, "Gateway_GK", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Account_ID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Account_ID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
