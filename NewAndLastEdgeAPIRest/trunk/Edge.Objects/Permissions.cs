@@ -63,7 +63,6 @@ namespace Edge.Objects
 				{
 					foreach (AssignedPermission assignedPermission in accountPermissionData.assignedPermissions)
 					{
-
 						SqlCommand sqlCommand = null;
 						sqlCommand = DataManager.CreateCommand("Permissions_Operations(@Action:Int,@AccountID:Int,@TargetID:Int,@TargetIsGroup:Bit,@PermissionType:NvarChar,@Value:Bit)", CommandType.StoredProcedure);
 						sqlCommand.Parameters["@Action"].Value = sqlOperation;
@@ -95,10 +94,8 @@ namespace Edge.Objects
 		[FieldMap("Path")]
 		public string Path;
 		[DataMember(Order = 3)]
-
-
-
 		public List<Permission> ChildPermissions = new List<Permission>();
+
 		public static List<Permission> GetAllPermissionTypeTree()
 		{
 			List<Permission> returnObject = new List<Permission>();
