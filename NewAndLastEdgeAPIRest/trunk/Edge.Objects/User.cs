@@ -50,13 +50,13 @@ namespace Edge.Objects
 		[DictionaryMap(Command = "User_AssignedPermission(@UserID:Int)", IsStoredProcedure = true, ValueIsGenericList = true, KeyName = "AccountID", ValueFieldsName = "PermissionName,PermissionType,Value")]
 		public Dictionary<int, List<AssignedPermission>> AssignedPermissions = new Dictionary<int, List<AssignedPermission>>();
 
-		//[DataMember(Order = 6)]
-		//[DictionaryMap(Command = "SELECT T0.GroupID,T1.Name FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID WHERE T0.UserID=@UserID:Int", IsStoredProcedure = false, ValueIsGenericList = false, KeyName = "GroupID", ValueFieldsName = "Name")]
-		//public Dictionary<int, string> AssignedToGroups = new Dictionary<int, string>();
-
+		
 		[DataMember(Order = 6)]
 		[ListMap(Command = "SELECT T0.GroupID,T1.Name FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID WHERE T0.UserID=@UserID:Int ORDER BY Name", IsStoredProcedure = false)]
 		public List<Group> AssignedToGroups = new List<Group>();
+
+		[DataMember(Order = 7)]		
+		public Dictionary<int, List<CalculatedPermission>> CalculatedPermission = new Dictionary<int, List<CalculatedPermission>>();
 
 		public static User GetUserByID(int id)
 		{
@@ -96,7 +96,7 @@ namespace Edge.Objects
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
 			using (DataManager.Current.OpenConnection())
 			{
-				SqlCommand sqlCommand = DataManager.CreateCommand("SELECT UserID,IsActive,Name FROM User_GUI_User ORDER BY Name");
+				SqlCommand sqlCommand = DataManager.CreateCommand("SELECT UserID,IsActive,Name,Email FROM User_GUI_User ORDER BY Name");
 
 
 				thingReader = new ThingReader<User>(sqlCommand.ExecuteReader(), CustomApply);
@@ -105,13 +105,13 @@ namespace Edge.Objects
 					users.Add((User)thingReader.Current);
 				}
 			}
-			//if (users != null && users.Count > 0)
-			//{
-			//    for (int i = 0; i < users.Count; i++)
-			//    {
-			//        users[i] = MapperUtility.ExpandObject<User>(users[i], customApply);
-			//    }
-			//}
+			if (users != null && users.Count > 0)
+			{
+				for (int i = 0; i < users.Count; i++)
+				{
+					users[i] = MapperUtility.ExpandObject<User>(users[i], customApply);
+				}
+			}
 			return users.OrderBy(N => N.Name).ToList() ;
 		}
 		public int UserOperations(SqlOperation sqlOperation)
@@ -207,6 +207,24 @@ namespace Edge.Objects
 
 				sqlCommand.ExecuteNonQuery();
 			}
+
+		}
+		public void ChangePasswords(string password)
+		{
+
+		 string DecPassword=Easynet.Edge.Core.Utilities.Encryptor.Dec(password);
+		 using (DataManager.Current.OpenConnection())
+		 {
+			 SqlCommand sqlCommand = DataManager.CreateCommand(@"UPDATE User_GUI_User 
+																SET password=@password:Nvarchar 
+																WHERE UserID=@ID:int", CommandType.Text);
+			 sqlCommand.Parameters["@password"].Value = DecPassword;
+			 sqlCommand.Parameters["@ID"].Value = this.UserID;
+			 sqlCommand.ExecuteNonQuery();
+
+
+		 }
+
 
 		}
 	}
