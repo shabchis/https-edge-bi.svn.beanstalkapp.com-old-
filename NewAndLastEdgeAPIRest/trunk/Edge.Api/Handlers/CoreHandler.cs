@@ -250,7 +250,7 @@ namespace Edge.Api.Handlers
 
 			return returnUser;
 		}
-		[UriMapping(Method = "POST", Template = "users/{ID}?isActive={isActive}" )]
+		[UriMapping(Method = "PUT", Template = "users/{ID}?isActive={isActive}" )]
 		public int EnableDisableUser(int ID, string isActive)
 		{
 			bool value = bool.Parse(isActive);
@@ -375,6 +375,46 @@ namespace Edge.Api.Handlers
 			return associateGroups;
 		}
 
+		[UriMapping(Method = "GET", Template = "users/{ID}/calculatedpermissions")]
+		public Dictionary<int, List<CalculatedPermission>> GetCalculatedPermissions(int ID) //TODO: CHANGE TO GET
+		{
+
+			
+
+
+			int currentUser;
+			ThingReader<CalculatedPermission> calculatedPermissionReader;
+			currentUser = ID;
+			Dictionary<int,List<CalculatedPermission>> calculatedPermissionDic = new Dictionary<int,List<CalculatedPermission>>();
+			using (DataManager.Current.OpenConnection())
+			{
+				SqlCommand sqlCommand = DataManager.CreateCommand("User_CalculatePermissions(@UserID:Int)", CommandType.StoredProcedure);
+				sqlCommand.Parameters["@UserID"].Value = currentUser;
+				calculatedPermissionReader = new ThingReader<CalculatedPermission>(sqlCommand.ExecuteReader(), null);
+				while (calculatedPermissionReader.Read())
+				{
+					if (!calculatedPermissionDic.ContainsKey(calculatedPermissionReader.Current.AccountID))
+					{
+						calculatedPermissionDic.Add(calculatedPermissionReader.Current.AccountID, new List<CalculatedPermission>());
+					}
+					calculatedPermissionDic[calculatedPermissionReader.Current.AccountID].Add(calculatedPermissionReader.Current);
+				}
+				
+
+
+			}
+			return calculatedPermissionDic;
+		}
+
+		[UriMapping(Method = "PUT", Template = "users/{ID}/password", BodyParameter = "password")]
+		public void ChangePassword(int ID, string password)
+		{
+			User user = User.GetUserByID(ID);
+			user.ChangePasswords(password);
+
+
+
+		}
 
 		#endregion
 
@@ -442,6 +482,10 @@ namespace Edge.Api.Handlers
 
 			return hasPermission;
 		}
+
+		
+
+		
 
 		[UriMapping(Template = "permissions/list", Method = "GET")]
 		public List<string> GetListOfAllPermissionType()
