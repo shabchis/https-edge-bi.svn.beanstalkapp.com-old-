@@ -50,7 +50,7 @@
     <InstallUrl>http://console.edge-bi.com/</InstallUrl>
     <SupportUrl>http://www.edge.bi/install-edge-bi-console/</SupportUrl>
     <TargetCulture>en</TargetCulture>
-    <ProductName>Edge.BI Management Pages [PRE-RELEASE]</ProductName>
+    <ProductName>Edge.BI Management Pages</ProductName>
     <PublisherName>Edge.BI</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>install.html</WebPage>
