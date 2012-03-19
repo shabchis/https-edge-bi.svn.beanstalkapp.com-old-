@@ -1092,7 +1092,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class AccountDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class AccountDataTable : global::System.Data.TypedTableBase<AccountRow> {
             
             private global::System.Data.DataColumn columnName;
             
@@ -1245,11 +1245,6 @@ namespace Easynet.Edge.UI.Data {
             public AccountRow FindByID(int ID) {
                 return ((AccountRow)(this.Rows.Find(new object[] {
                             ID})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1433,7 +1428,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class AdunitDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class AdunitDataTable : global::System.Data.TypedTableBase<AdunitRow> {
             
             private global::System.Data.DataColumn columnIsDefaultAdunit;
             
@@ -1556,11 +1551,6 @@ namespace Easynet.Edge.UI.Data {
             public AdunitRow FindByID(int ID) {
                 return ((AdunitRow)(this.Rows.Find(new object[] {
                             ID})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1735,7 +1725,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class GatewayDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class GatewayDataTable : global::System.Data.TypedTableBase<GatewayRow> {
             
             private global::System.Data.DataColumn columnGK;
             
@@ -1971,11 +1961,6 @@ namespace Easynet.Edge.UI.Data {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public override global::System.Data.DataTable Clone() {
                 GatewayDataTable cln = ((GatewayDataTable)(base.Clone()));
                 cln.InitVars();
@@ -2191,7 +2176,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class KeywordDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class KeywordDataTable : global::System.Data.TypedTableBase<KeywordRow> {
             
             private global::System.Data.DataColumn columnGK;
             
@@ -2304,11 +2289,6 @@ namespace Easynet.Edge.UI.Data {
             public KeywordRow FindByGK(long GK) {
                 return ((KeywordRow)(this.Rows.Find(new object[] {
                             GK})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2476,7 +2456,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class CreativeDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class CreativeDataTable : global::System.Data.TypedTableBase<CreativeRow> {
             
             private global::System.Data.DataColumn columnGK;
             
@@ -2659,11 +2639,6 @@ namespace Easynet.Edge.UI.Data {
             public CreativeRow FindByGK(long GK) {
                 return ((CreativeRow)(this.Rows.Find(new object[] {
                             GK})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2860,7 +2835,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class PageDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class PageDataTable : global::System.Data.TypedTableBase<PageRow> {
             
             private global::System.Data.DataColumn columnGK;
             
@@ -3003,11 +2978,6 @@ namespace Easynet.Edge.UI.Data {
             public PageRow FindByGK(long GK) {
                 return ((PageRow)(this.Rows.Find(new object[] {
                             GK})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3187,7 +3157,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class AdunitTargetDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class AdunitTargetDataTable : global::System.Data.TypedTableBase<AdunitTargetRow> {
             
             private global::System.Data.DataColumn columnAccountID;
             
@@ -3361,11 +3331,6 @@ namespace Easynet.Edge.UI.Data {
                 return ((AdunitTargetRow)(this.Rows.Find(new object[] {
                             AdunitID,
                             MonthKey})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3555,7 +3520,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class AdgroupDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class AdgroupDataTable : global::System.Data.TypedTableBase<AdgroupRow> {
             
             private global::System.Data.DataColumn columnName;
             
@@ -3761,11 +3726,6 @@ namespace Easynet.Edge.UI.Data {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public override global::System.Data.DataTable Clone() {
                 AdgroupDataTable cln = ((AdgroupDataTable)(base.Clone()));
                 cln.InitVars();
@@ -3965,7 +3925,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class CampaignTargetDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class CampaignTargetDataTable : global::System.Data.TypedTableBase<CampaignTargetRow> {
             
             private global::System.Data.DataColumn columnAccountID;
             
@@ -4099,11 +4059,6 @@ namespace Easynet.Edge.UI.Data {
                 return ((CampaignTargetRow)(this.Rows.Find(new object[] {
                             CampaignGK,
                             MonthKey})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4277,7 +4232,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class UserDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class UserDataTable : global::System.Data.TypedTableBase<UserRow> {
             
             private global::System.Data.DataColumn columnID;
             
@@ -4420,11 +4375,6 @@ namespace Easynet.Edge.UI.Data {
             public UserRow FindByID(int ID) {
                 return ((UserRow)(this.Rows.Find(new object[] {
                             ID})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4604,7 +4554,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class UserGroupDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class UserGroupDataTable : global::System.Data.TypedTableBase<UserGroupRow> {
             
             private global::System.Data.DataColumn columnID;
             
@@ -4727,11 +4677,6 @@ namespace Easynet.Edge.UI.Data {
             public UserGroupRow FindByID(int ID) {
                 return ((UserGroupRow)(this.Rows.Find(new object[] {
                             ID})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4902,7 +4847,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class AccountPermissionDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class AccountPermissionDataTable : global::System.Data.TypedTableBase<AccountPermissionRow> {
             
             private global::System.Data.DataColumn columnAccountID;
             
@@ -5028,11 +4973,6 @@ namespace Easynet.Edge.UI.Data {
                             TargetID,
                             TargetIsGroup,
                             PermissionType})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -5202,7 +5142,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class ChannelDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class ChannelDataTable : global::System.Data.TypedTableBase<ChannelRow> {
             
             private global::System.Data.DataColumn columnID;
             
@@ -5315,11 +5255,6 @@ namespace Easynet.Edge.UI.Data {
             public ChannelRow FindByID(int ID) {
                 return ((ChannelRow)(this.Rows.Find(new object[] {
                             ID})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -5486,7 +5421,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class CampaignStatusDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class CampaignStatusDataTable : global::System.Data.TypedTableBase<CampaignStatusRow> {
             
             private global::System.Data.DataColumn columnID;
             
@@ -5573,11 +5508,6 @@ namespace Easynet.Edge.UI.Data {
                 rowCampaignStatusRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowCampaignStatusRow);
                 return rowCampaignStatusRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -5731,7 +5661,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class AdgroupKeywordDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class AdgroupKeywordDataTable : global::System.Data.TypedTableBase<AdgroupKeywordRow> {
             
             private global::System.Data.DataColumn columnAccountID;
             
@@ -6004,11 +5934,6 @@ namespace Easynet.Edge.UI.Data {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public override global::System.Data.DataTable Clone() {
                 AdgroupKeywordDataTable cln = ((AdgroupKeywordDataTable)(base.Clone()));
                 cln.InitVars();
@@ -6232,7 +6157,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class AdgroupCreativeDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class AdgroupCreativeDataTable : global::System.Data.TypedTableBase<AdgroupCreativeRow> {
             
             private global::System.Data.DataColumn columnTitle;
             
@@ -6538,11 +6463,6 @@ namespace Easynet.Edge.UI.Data {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public override global::System.Data.DataTable Clone() {
                 AdgroupCreativeDataTable cln = ((AdgroupCreativeDataTable)(base.Clone()));
                 cln.InitVars();
@@ -6775,7 +6695,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class GatewayReservationDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class GatewayReservationDataTable : global::System.Data.TypedTableBase<GatewayReservationRow> {
             
             private global::System.Data.DataColumn columnAccountID;
             
@@ -6920,11 +6840,6 @@ namespace Easynet.Edge.UI.Data {
                             AccountID,
                             FromGateway,
                             ToGateway})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -7103,7 +7018,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class SerpProfileDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class SerpProfileDataTable : global::System.Data.TypedTableBase<SerpProfileRow> {
             
             private global::System.Data.DataColumn columnAccountID;
             
@@ -7236,11 +7151,6 @@ namespace Easynet.Edge.UI.Data {
             public SerpProfileRow FindByID(int ID) {
                 return ((SerpProfileRow)(this.Rows.Find(new object[] {
                             ID})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -7418,7 +7328,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class SerpProfileKeywordDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class SerpProfileKeywordDataTable : global::System.Data.TypedTableBase<SerpProfileKeywordRow> {
             
             private global::System.Data.DataColumn columnAccountID;
             
@@ -7545,11 +7455,6 @@ namespace Easynet.Edge.UI.Data {
                 rowSerpProfileKeywordRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowSerpProfileKeywordRow);
                 return rowSerpProfileKeywordRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -7719,7 +7624,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class SerpProfileDomainDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class SerpProfileDomainDataTable : global::System.Data.TypedTableBase<SerpProfileDomainRow> {
             
             private global::System.Data.DataColumn columnDomain;
             
@@ -7842,11 +7747,6 @@ namespace Easynet.Edge.UI.Data {
             public SerpProfileDomainRow FindByDomainID(int DomainID) {
                 return ((SerpProfileDomainRow)(this.Rows.Find(new object[] {
                             DomainID})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8020,7 +7920,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class SearchEngineDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class SearchEngineDataTable : global::System.Data.TypedTableBase<SearchEngineRow> {
             
             private global::System.Data.DataColumn columnID;
             
@@ -8123,11 +8023,6 @@ namespace Easynet.Edge.UI.Data {
             public SearchEngineRow FindByID(int ID) {
                 return ((SearchEngineRow)(this.Rows.Find(new object[] {
                             ID})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8293,7 +8188,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class SerpProfileSearchEngineDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class SerpProfileSearchEngineDataTable : global::System.Data.TypedTableBase<SerpProfileSearchEngineRow> {
             
             private global::System.Data.DataColumn columnAccountID;
             
@@ -8410,11 +8305,6 @@ namespace Easynet.Edge.UI.Data {
                 rowSerpProfileSearchEngineRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowSerpProfileSearchEngineRow);
                 return rowSerpProfileSearchEngineRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8580,7 +8470,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class SerpProfileDomainGroupDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class SerpProfileDomainGroupDataTable : global::System.Data.TypedTableBase<SerpProfileDomainGroupRow> {
             
             private global::System.Data.DataColumn columnID;
             
@@ -8687,11 +8577,6 @@ namespace Easynet.Edge.UI.Data {
                 rowSerpProfileDomainGroupRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowSerpProfileDomainGroupRow);
                 return rowSerpProfileDomainGroupRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8854,7 +8739,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class RelatedAccountDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class RelatedAccountDataTable : global::System.Data.TypedTableBase<RelatedAccountRow> {
             
             private global::System.Data.DataColumn columnAccountID;
             
@@ -8948,11 +8833,6 @@ namespace Easynet.Edge.UI.Data {
                 return ((RelatedAccountRow)(this.Rows.Find(new object[] {
                             AccountID,
                             RelatedAccountID})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -9107,7 +8987,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class SegmentDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class SegmentDataTable : global::System.Data.TypedTableBase<SegmentRow> {
             
             private global::System.Data.DataColumn columnSegmentID;
             
@@ -9244,11 +9124,6 @@ namespace Easynet.Edge.UI.Data {
                 rowSegmentRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowSegmentRow);
                 return rowSegmentRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -9423,7 +9298,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class SegmentValueDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class SegmentValueDataTable : global::System.Data.TypedTableBase<SegmentValueRow> {
             
             private global::System.Data.DataColumn columnAccountID;
             
@@ -9530,11 +9405,6 @@ namespace Easynet.Edge.UI.Data {
                 rowSegmentValueRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowSegmentValueRow);
                 return rowSegmentValueRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -9699,7 +9569,7 @@ namespace Easynet.Edge.UI.Data {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class CampaignDataTable : global::System.Data.DataTable, global::System.Collections.IEnumerable {
+        public partial class CampaignDataTable : global::System.Data.TypedTableBase<CampaignRow> {
             
             private global::System.Data.DataColumn columnGK;
             
@@ -9872,11 +9742,6 @@ namespace Easynet.Edge.UI.Data {
             public CampaignRow FindByGK(int GK) {
                 return ((CampaignRow)(this.Rows.Find(new object[] {
                             GK})));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public virtual global::System.Collections.IEnumerator GetEnumerator() {
-                return this.Rows.GetEnumerator();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -15301,6 +15166,8 @@ namespace Easynet.Edge.UI.Data.OltpTableAdapters {
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -15311,7 +15178,7 @@ namespace Easynet.Edge.UI.Data.OltpTableAdapters {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -15343,6 +15210,31 @@ namespace Easynet.Edge.UI.Data.OltpTableAdapters {
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -15625,6 +15517,8 @@ SELECT Account_ID, Account_Name, BackOffice_Status, GatewayBaseUrl, GatewayAccou
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -15635,7 +15529,7 @@ SELECT Account_ID, Account_Name, BackOffice_Status, GatewayBaseUrl, GatewayAccou
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -15667,6 +15561,31 @@ SELECT Account_ID, Account_Name, BackOffice_Status, GatewayBaseUrl, GatewayAccou
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -16002,6 +15921,8 @@ ORDER BY IsDefaultAdunit DESC, Adunit";
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -16012,7 +15933,7 @@ ORDER BY IsDefaultAdunit DESC, Adunit";
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -16044,6 +15965,31 @@ ORDER BY IsDefaultAdunit DESC, Adunit";
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -17055,6 +17001,8 @@ ORDER BY Gateway, Gateway_id";
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -17065,7 +17013,7 @@ ORDER BY Gateway, Gateway_id";
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -17097,6 +17045,31 @@ ORDER BY Gateway, Gateway_id";
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -17366,6 +17339,8 @@ ORDER BY   k.Keyword";
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -17376,7 +17351,7 @@ ORDER BY   k.Keyword";
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -17408,6 +17383,31 @@ ORDER BY   k.Keyword";
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -17768,6 +17768,8 @@ SELECT Creative_GK, Account_ID, Creative_Title, Creative_Desc1, Creative_Desc2, 
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -17778,7 +17780,7 @@ SELECT Creative_GK, Account_ID, Creative_Title, Creative_Desc1, Creative_Desc2, 
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -17810,6 +17812,31 @@ SELECT Creative_GK, Account_ID, Creative_Title, Creative_Desc1, Creative_Desc2, 
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -18162,6 +18189,8 @@ ORDER BY Title, Page
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -18172,7 +18201,7 @@ ORDER BY Title, Page
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -18204,6 +18233,31 @@ ORDER BY Title, Page
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -18703,6 +18757,8 @@ SELECT Account_ID, Adunit_ID, Month_Key, Target_Cost, Target_New_Active_Users, T
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -18713,7 +18769,7 @@ SELECT Account_ID, Adunit_ID, Month_Key, Target_Cost, Target_New_Active_Users, T
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -18745,6 +18801,31 @@ SELECT Account_ID, Adunit_ID, Month_Key, Target_Cost, Target_New_Active_Users, T
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -19380,6 +19461,8 @@ SELECT Account_ID, Adunit_ID, Month_Key, Target_Cost, Target_New_Active_Users, T
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -19390,7 +19473,7 @@ SELECT Account_ID, Adunit_ID, Month_Key, Target_Cost, Target_New_Active_Users, T
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -19422,6 +19505,31 @@ SELECT Account_ID, Adunit_ID, Month_Key, Target_Cost, Target_New_Active_Users, T
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -19732,6 +19840,8 @@ SELECT Account_ID, Campaign_GK, Month_Key, Target_Clicks, Target_Conversions, Ta
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -19742,7 +19852,7 @@ SELECT Account_ID, Campaign_GK, Month_Key, Target_Clicks, Target_Conversions, Ta
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -19774,6 +19884,31 @@ SELECT Account_ID, Campaign_GK, Month_Key, Target_Clicks, Target_Conversions, Ta
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -20297,6 +20432,8 @@ WHERE (u.Email = @email and u.Password = @password) AND u.IsActive = 1
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -20307,7 +20444,7 @@ WHERE (u.Email = @email and u.Password = @password) AND u.IsActive = 1
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -20339,6 +20476,31 @@ WHERE (u.Email = @email and u.Password = @password) AND u.IsActive = 1
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -20697,6 +20859,8 @@ SELECT GroupID, Name, IsActive, AccountAdmin, UserAdmin FROM User_GUI_UserGroup 
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -20707,7 +20871,7 @@ SELECT GroupID, Name, IsActive, AccountAdmin, UserAdmin FROM User_GUI_UserGroup 
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -20739,6 +20903,31 @@ SELECT GroupID, Name, IsActive, AccountAdmin, UserAdmin FROM User_GUI_UserGroup 
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -21129,6 +21318,8 @@ or
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -21139,7 +21330,7 @@ or
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -21171,6 +21362,31 @@ or
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -21251,6 +21467,8 @@ or
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -21261,7 +21479,7 @@ or
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -21293,6 +21511,31 @@ or
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -21370,6 +21613,8 @@ or
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -21380,7 +21625,7 @@ or
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -21412,6 +21657,31 @@ or
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -21970,6 +22240,8 @@ or
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -21980,7 +22252,7 @@ or
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -22012,6 +22284,31 @@ or
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -22248,6 +22545,8 @@ or
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -22258,7 +22557,7 @@ or
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -22290,6 +22589,31 @@ or
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -22676,6 +23000,8 @@ SELECT Account_ID, FromGateway, ToGateway, Page_GK, ReservedByUserID, ReservedBy
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -22686,7 +23012,7 @@ SELECT Account_ID, FromGateway, ToGateway, Page_GK, ReservedByUserID, ReservedBy
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -22718,6 +23044,31 @@ SELECT Account_ID, FromGateway, ToGateway, Page_GK, ReservedByUserID, ReservedBy
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -23021,6 +23372,8 @@ SELECT Account_ID, Profile_ID, Profile_Name, Profile_Type, DisplayPosition, IsAc
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -23031,7 +23384,7 @@ SELECT Account_ID, Profile_ID, Profile_Name, Profile_Type, DisplayPosition, IsAc
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -23063,6 +23416,31 @@ SELECT Account_ID, Profile_ID, Profile_Name, Profile_Type, DisplayPosition, IsAc
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -23335,6 +23713,8 @@ ORDER BY   pk.DisplayPosition";
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -23345,7 +23725,7 @@ ORDER BY   pk.DisplayPosition";
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -23377,6 +23757,31 @@ ORDER BY   pk.DisplayPosition";
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -23629,6 +24034,8 @@ SELECT Account_ID, Profile_ID, Group_ID, Domain_ID, Domain FROM User_GUI_SerpPro
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -23639,7 +24046,7 @@ SELECT Account_ID, Profile_ID, Group_ID, Domain_ID, Domain FROM User_GUI_SerpPro
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -23671,6 +24078,31 @@ SELECT Account_ID, Profile_ID, Group_ID, Domain_ID, Domain FROM User_GUI_SerpPro
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -23750,6 +24182,8 @@ SELECT Account_ID, Profile_ID, Group_ID, Domain_ID, Domain FROM User_GUI_SerpPro
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -23760,7 +24194,7 @@ SELECT Account_ID, Profile_ID, Group_ID, Domain_ID, Domain FROM User_GUI_SerpPro
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -23792,6 +24226,31 @@ SELECT Account_ID, Profile_ID, Group_ID, Domain_ID, Domain FROM User_GUI_SerpPro
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -24034,6 +24493,8 @@ ORDER BY p.DisplayPosition";
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -24044,7 +24505,7 @@ ORDER BY p.DisplayPosition";
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -24076,6 +24537,31 @@ ORDER BY p.DisplayPosition";
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -24334,6 +24820,8 @@ SELECT Group_ID, Profile_ID, Name, DisplayPosition FROM User_GUI_SerpProfileDoma
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -24344,7 +24832,7 @@ SELECT Group_ID, Profile_ID, Name, DisplayPosition FROM User_GUI_SerpProfileDoma
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -24376,6 +24864,31 @@ SELECT Group_ID, Profile_ID, Name, DisplayPosition FROM User_GUI_SerpProfileDoma
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -24581,6 +25094,8 @@ SELECT AccountID, RelatedAccountID FROM User_GUI_RelatedAccount WHERE (AccountID
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -24591,7 +25106,7 @@ SELECT AccountID, RelatedAccountID FROM User_GUI_RelatedAccount WHERE (AccountID
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -24623,6 +25138,31 @@ SELECT AccountID, RelatedAccountID FROM User_GUI_RelatedAccount WHERE (AccountID
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -24743,6 +25283,8 @@ SELECT AccountID, RelatedAccountID FROM User_GUI_RelatedAccount WHERE (AccountID
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -24753,7 +25295,7 @@ SELECT AccountID, RelatedAccountID FROM User_GUI_RelatedAccount WHERE (AccountID
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -24785,6 +25327,31 @@ SELECT AccountID, RelatedAccountID FROM User_GUI_RelatedAccount WHERE (AccountID
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -24931,6 +25498,8 @@ SELECT AccountID, RelatedAccountID FROM User_GUI_RelatedAccount WHERE (AccountID
         
         private global::System.Data.SqlClient.SqlConnection _connection;
         
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
         private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
         
         private bool _clearBeforeFill;
@@ -24941,7 +25510,7 @@ SELECT AccountID, RelatedAccountID FROM User_GUI_RelatedAccount WHERE (AccountID
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private global::System.Data.SqlClient.SqlDataAdapter Adapter {
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
             get {
                 if ((this._adapter == null)) {
                     this.InitAdapter();
@@ -24973,6 +25542,31 @@ SELECT AccountID, RelatedAccountID FROM User_GUI_RelatedAccount WHERE (AccountID
                     if ((this.CommandCollection[i] != null)) {
                         ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
                     }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
                 }
             }
         }
@@ -25396,6 +25990,1893 @@ SELECT Campaign_GK, Account_ID, Channel_ID, campaign, Segment1, Segment2, Segmen
                 if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
                     this.Adapter.UpdateCommand.Connection.Close();
                 }
+            }
+        }
+    }
+    
+    /// <summary>
+    ///TableAdapterManager is used to coordinate TableAdapters in the dataset to enable Hierarchical Update scenarios
+    ///</summary>
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+    [global::System.ComponentModel.DesignerCategoryAttribute("code")]
+    [global::System.ComponentModel.ToolboxItem(true)]
+    [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerDesigner, Microsoft.VSD" +
+        "esigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
+    [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapterManager")]
+    public partial class TableAdapterManager : global::System.ComponentModel.Component {
+        
+        private UpdateOrderOption _updateOrder;
+        
+        private AccountTableAdapter _accountTableAdapter;
+        
+        private AdunitTableAdapter _adunitTableAdapter;
+        
+        private GatewayTableAdapter _gatewayTableAdapter;
+        
+        private KeywordTableAdapter _keywordTableAdapter;
+        
+        private CreativeTableAdapter _creativeTableAdapter;
+        
+        private PageTableAdapter _pageTableAdapter;
+        
+        private AdunitTargetTableAdapter _adunitTargetTableAdapter;
+        
+        private AdgroupTableAdapter _adgroupTableAdapter;
+        
+        private CampaignTargetTableAdapter _campaignTargetTableAdapter;
+        
+        private UserTableAdapter _userTableAdapter;
+        
+        private UserGroupTableAdapter _userGroupTableAdapter;
+        
+        private AccountPermissionTableAdapter _accountPermissionTableAdapter;
+        
+        private AdgroupKeywordTableAdapter _adgroupKeywordTableAdapter;
+        
+        private AdgroupCreativeTableAdapter _adgroupCreativeTableAdapter;
+        
+        private GatewayReservationTableAdapter _gatewayReservationTableAdapter;
+        
+        private SerpProfileTableAdapter _serpProfileTableAdapter;
+        
+        private SerpProfileKeywordTableAdapter _serpProfileKeywordTableAdapter;
+        
+        private SerpProfileDomainTableAdapter _serpProfileDomainTableAdapter;
+        
+        private SerpProfileSearchEngineTableAdapter _serpProfileSearchEngineTableAdapter;
+        
+        private SerpProfileDomainGroupTableAdapter _serpProfileDomainGroupTableAdapter;
+        
+        private RelatedAccountTableAdapter _relatedAccountTableAdapter;
+        
+        private SegmentTableAdapter _segmentTableAdapter;
+        
+        private SegmentValueTableAdapter _segmentValueTableAdapter;
+        
+        private CampaignTableAdapter _campaignTableAdapter;
+        
+        private bool _backupDataSetBeforeUpdate;
+        
+        private global::System.Data.IDbConnection _connection;
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public UpdateOrderOption UpdateOrder {
+            get {
+                return this._updateOrder;
+            }
+            set {
+                this._updateOrder = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public AccountTableAdapter AccountTableAdapter {
+            get {
+                return this._accountTableAdapter;
+            }
+            set {
+                this._accountTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public AdunitTableAdapter AdunitTableAdapter {
+            get {
+                return this._adunitTableAdapter;
+            }
+            set {
+                this._adunitTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public GatewayTableAdapter GatewayTableAdapter {
+            get {
+                return this._gatewayTableAdapter;
+            }
+            set {
+                this._gatewayTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public KeywordTableAdapter KeywordTableAdapter {
+            get {
+                return this._keywordTableAdapter;
+            }
+            set {
+                this._keywordTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public CreativeTableAdapter CreativeTableAdapter {
+            get {
+                return this._creativeTableAdapter;
+            }
+            set {
+                this._creativeTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public PageTableAdapter PageTableAdapter {
+            get {
+                return this._pageTableAdapter;
+            }
+            set {
+                this._pageTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public AdunitTargetTableAdapter AdunitTargetTableAdapter {
+            get {
+                return this._adunitTargetTableAdapter;
+            }
+            set {
+                this._adunitTargetTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public AdgroupTableAdapter AdgroupTableAdapter {
+            get {
+                return this._adgroupTableAdapter;
+            }
+            set {
+                this._adgroupTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public CampaignTargetTableAdapter CampaignTargetTableAdapter {
+            get {
+                return this._campaignTargetTableAdapter;
+            }
+            set {
+                this._campaignTargetTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public UserTableAdapter UserTableAdapter {
+            get {
+                return this._userTableAdapter;
+            }
+            set {
+                this._userTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public UserGroupTableAdapter UserGroupTableAdapter {
+            get {
+                return this._userGroupTableAdapter;
+            }
+            set {
+                this._userGroupTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public AccountPermissionTableAdapter AccountPermissionTableAdapter {
+            get {
+                return this._accountPermissionTableAdapter;
+            }
+            set {
+                this._accountPermissionTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public AdgroupKeywordTableAdapter AdgroupKeywordTableAdapter {
+            get {
+                return this._adgroupKeywordTableAdapter;
+            }
+            set {
+                this._adgroupKeywordTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public AdgroupCreativeTableAdapter AdgroupCreativeTableAdapter {
+            get {
+                return this._adgroupCreativeTableAdapter;
+            }
+            set {
+                this._adgroupCreativeTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public GatewayReservationTableAdapter GatewayReservationTableAdapter {
+            get {
+                return this._gatewayReservationTableAdapter;
+            }
+            set {
+                this._gatewayReservationTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public SerpProfileTableAdapter SerpProfileTableAdapter {
+            get {
+                return this._serpProfileTableAdapter;
+            }
+            set {
+                this._serpProfileTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public SerpProfileKeywordTableAdapter SerpProfileKeywordTableAdapter {
+            get {
+                return this._serpProfileKeywordTableAdapter;
+            }
+            set {
+                this._serpProfileKeywordTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public SerpProfileDomainTableAdapter SerpProfileDomainTableAdapter {
+            get {
+                return this._serpProfileDomainTableAdapter;
+            }
+            set {
+                this._serpProfileDomainTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public SerpProfileSearchEngineTableAdapter SerpProfileSearchEngineTableAdapter {
+            get {
+                return this._serpProfileSearchEngineTableAdapter;
+            }
+            set {
+                this._serpProfileSearchEngineTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public SerpProfileDomainGroupTableAdapter SerpProfileDomainGroupTableAdapter {
+            get {
+                return this._serpProfileDomainGroupTableAdapter;
+            }
+            set {
+                this._serpProfileDomainGroupTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public RelatedAccountTableAdapter RelatedAccountTableAdapter {
+            get {
+                return this._relatedAccountTableAdapter;
+            }
+            set {
+                this._relatedAccountTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public SegmentTableAdapter SegmentTableAdapter {
+            get {
+                return this._segmentTableAdapter;
+            }
+            set {
+                this._segmentTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public SegmentValueTableAdapter SegmentValueTableAdapter {
+            get {
+                return this._segmentValueTableAdapter;
+            }
+            set {
+                this._segmentValueTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public CampaignTableAdapter CampaignTableAdapter {
+            get {
+                return this._campaignTableAdapter;
+            }
+            set {
+                this._campaignTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public bool BackupDataSetBeforeUpdate {
+            get {
+                return this._backupDataSetBeforeUpdate;
+            }
+            set {
+                this._backupDataSetBeforeUpdate = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.Browsable(false)]
+        public global::System.Data.IDbConnection Connection {
+            get {
+                if ((this._connection != null)) {
+                    return this._connection;
+                }
+                if (((this._accountTableAdapter != null) 
+                            && (this._accountTableAdapter.Connection != null))) {
+                    return this._accountTableAdapter.Connection;
+                }
+                if (((this._adunitTableAdapter != null) 
+                            && (this._adunitTableAdapter.Connection != null))) {
+                    return this._adunitTableAdapter.Connection;
+                }
+                if (((this._gatewayTableAdapter != null) 
+                            && (this._gatewayTableAdapter.Connection != null))) {
+                    return this._gatewayTableAdapter.Connection;
+                }
+                if (((this._keywordTableAdapter != null) 
+                            && (this._keywordTableAdapter.Connection != null))) {
+                    return this._keywordTableAdapter.Connection;
+                }
+                if (((this._creativeTableAdapter != null) 
+                            && (this._creativeTableAdapter.Connection != null))) {
+                    return this._creativeTableAdapter.Connection;
+                }
+                if (((this._pageTableAdapter != null) 
+                            && (this._pageTableAdapter.Connection != null))) {
+                    return this._pageTableAdapter.Connection;
+                }
+                if (((this._adunitTargetTableAdapter != null) 
+                            && (this._adunitTargetTableAdapter.Connection != null))) {
+                    return this._adunitTargetTableAdapter.Connection;
+                }
+                if (((this._adgroupTableAdapter != null) 
+                            && (this._adgroupTableAdapter.Connection != null))) {
+                    return this._adgroupTableAdapter.Connection;
+                }
+                if (((this._campaignTargetTableAdapter != null) 
+                            && (this._campaignTargetTableAdapter.Connection != null))) {
+                    return this._campaignTargetTableAdapter.Connection;
+                }
+                if (((this._userTableAdapter != null) 
+                            && (this._userTableAdapter.Connection != null))) {
+                    return this._userTableAdapter.Connection;
+                }
+                if (((this._userGroupTableAdapter != null) 
+                            && (this._userGroupTableAdapter.Connection != null))) {
+                    return this._userGroupTableAdapter.Connection;
+                }
+                if (((this._accountPermissionTableAdapter != null) 
+                            && (this._accountPermissionTableAdapter.Connection != null))) {
+                    return this._accountPermissionTableAdapter.Connection;
+                }
+                if (((this._adgroupKeywordTableAdapter != null) 
+                            && (this._adgroupKeywordTableAdapter.Connection != null))) {
+                    return this._adgroupKeywordTableAdapter.Connection;
+                }
+                if (((this._adgroupCreativeTableAdapter != null) 
+                            && (this._adgroupCreativeTableAdapter.Connection != null))) {
+                    return this._adgroupCreativeTableAdapter.Connection;
+                }
+                if (((this._gatewayReservationTableAdapter != null) 
+                            && (this._gatewayReservationTableAdapter.Connection != null))) {
+                    return this._gatewayReservationTableAdapter.Connection;
+                }
+                if (((this._serpProfileTableAdapter != null) 
+                            && (this._serpProfileTableAdapter.Connection != null))) {
+                    return this._serpProfileTableAdapter.Connection;
+                }
+                if (((this._serpProfileKeywordTableAdapter != null) 
+                            && (this._serpProfileKeywordTableAdapter.Connection != null))) {
+                    return this._serpProfileKeywordTableAdapter.Connection;
+                }
+                if (((this._serpProfileDomainTableAdapter != null) 
+                            && (this._serpProfileDomainTableAdapter.Connection != null))) {
+                    return this._serpProfileDomainTableAdapter.Connection;
+                }
+                if (((this._serpProfileSearchEngineTableAdapter != null) 
+                            && (this._serpProfileSearchEngineTableAdapter.Connection != null))) {
+                    return this._serpProfileSearchEngineTableAdapter.Connection;
+                }
+                if (((this._serpProfileDomainGroupTableAdapter != null) 
+                            && (this._serpProfileDomainGroupTableAdapter.Connection != null))) {
+                    return this._serpProfileDomainGroupTableAdapter.Connection;
+                }
+                if (((this._relatedAccountTableAdapter != null) 
+                            && (this._relatedAccountTableAdapter.Connection != null))) {
+                    return this._relatedAccountTableAdapter.Connection;
+                }
+                if (((this._segmentTableAdapter != null) 
+                            && (this._segmentTableAdapter.Connection != null))) {
+                    return this._segmentTableAdapter.Connection;
+                }
+                if (((this._segmentValueTableAdapter != null) 
+                            && (this._segmentValueTableAdapter.Connection != null))) {
+                    return this._segmentValueTableAdapter.Connection;
+                }
+                if (((this._campaignTableAdapter != null) 
+                            && (this._campaignTableAdapter.Connection != null))) {
+                    return this._campaignTableAdapter.Connection;
+                }
+                return null;
+            }
+            set {
+                this._connection = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.Browsable(false)]
+        public int TableAdapterInstanceCount {
+            get {
+                int count = 0;
+                if ((this._accountTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._adunitTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._gatewayTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._keywordTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._creativeTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._pageTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._adunitTargetTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._adgroupTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._campaignTargetTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._userTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._userGroupTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._accountPermissionTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._adgroupKeywordTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._adgroupCreativeTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._gatewayReservationTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._serpProfileTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._serpProfileKeywordTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._serpProfileDomainTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._serpProfileSearchEngineTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._serpProfileDomainGroupTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._relatedAccountTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._segmentTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._segmentValueTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                if ((this._campaignTableAdapter != null)) {
+                    count = (count + 1);
+                }
+                return count;
+            }
+        }
+        
+        /// <summary>
+        ///Update rows in top-down order.
+        ///</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        private int UpdateUpdatedRows(Oltp dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+            int result = 0;
+            if ((this._serpProfileKeywordTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.SerpProfileKeyword.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._serpProfileKeywordTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._campaignTargetTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.CampaignTarget.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._campaignTargetTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._serpProfileDomainTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.SerpProfileDomain.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._serpProfileDomainTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._adgroupCreativeTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.AdgroupCreative.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._adgroupCreativeTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._gatewayReservationTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.GatewayReservation.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._gatewayReservationTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._serpProfileTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.SerpProfile.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._serpProfileTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._segmentTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.Segment.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._segmentTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._segmentValueTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.SegmentValue.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._segmentValueTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._campaignTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.Campaign.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._campaignTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._serpProfileSearchEngineTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.SerpProfileSearchEngine.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._serpProfileSearchEngineTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._serpProfileDomainGroupTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.SerpProfileDomainGroup.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._serpProfileDomainGroupTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._relatedAccountTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.RelatedAccount.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._relatedAccountTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._adgroupKeywordTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.AdgroupKeyword.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._adgroupKeywordTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._keywordTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.Keyword.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._keywordTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._creativeTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.Creative.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._creativeTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._pageTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.Page.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._pageTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._accountTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.Account.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._accountTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._adunitTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.Adunit.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._adunitTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._gatewayTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.Gateway.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._gatewayTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._adunitTargetTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.AdunitTarget.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._adunitTargetTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._accountPermissionTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.AccountPermission.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._accountPermissionTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._adgroupTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.Adgroup.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._adgroupTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._userTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.User.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._userTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._userGroupTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.UserGroup.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._userGroupTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            return result;
+        }
+        
+        /// <summary>
+        ///Insert rows in top-down order.
+        ///</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        private int UpdateInsertedRows(Oltp dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+            int result = 0;
+            if ((this._serpProfileKeywordTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.SerpProfileKeyword.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._serpProfileKeywordTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._campaignTargetTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.CampaignTarget.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._campaignTargetTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._serpProfileDomainTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.SerpProfileDomain.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._serpProfileDomainTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._adgroupCreativeTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.AdgroupCreative.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._adgroupCreativeTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._gatewayReservationTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.GatewayReservation.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._gatewayReservationTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._serpProfileTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.SerpProfile.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._serpProfileTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._segmentTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.Segment.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._segmentTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._segmentValueTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.SegmentValue.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._segmentValueTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._campaignTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.Campaign.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._campaignTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._serpProfileSearchEngineTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.SerpProfileSearchEngine.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._serpProfileSearchEngineTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._serpProfileDomainGroupTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.SerpProfileDomainGroup.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._serpProfileDomainGroupTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._relatedAccountTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.RelatedAccount.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._relatedAccountTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._adgroupKeywordTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.AdgroupKeyword.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._adgroupKeywordTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._keywordTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.Keyword.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._keywordTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._creativeTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.Creative.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._creativeTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._pageTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.Page.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._pageTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._accountTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.Account.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._accountTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._adunitTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.Adunit.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._adunitTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._gatewayTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.Gateway.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._gatewayTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._adunitTargetTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.AdunitTarget.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._adunitTargetTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._accountPermissionTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.AccountPermission.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._accountPermissionTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._adgroupTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.Adgroup.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._adgroupTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._userTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.User.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._userTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._userGroupTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.UserGroup.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._userGroupTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            return result;
+        }
+        
+        /// <summary>
+        ///Delete rows in bottom-up order.
+        ///</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        private int UpdateDeletedRows(Oltp dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
+            int result = 0;
+            if ((this._userGroupTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.UserGroup.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._userGroupTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._userTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.User.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._userTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._adgroupTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.Adgroup.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._adgroupTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._accountPermissionTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.AccountPermission.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._accountPermissionTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._adunitTargetTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.AdunitTarget.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._adunitTargetTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._gatewayTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.Gateway.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._gatewayTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._adunitTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.Adunit.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._adunitTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._accountTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.Account.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._accountTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._pageTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.Page.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._pageTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._creativeTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.Creative.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._creativeTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._keywordTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.Keyword.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._keywordTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._adgroupKeywordTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.AdgroupKeyword.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._adgroupKeywordTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._relatedAccountTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.RelatedAccount.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._relatedAccountTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._serpProfileDomainGroupTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.SerpProfileDomainGroup.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._serpProfileDomainGroupTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._serpProfileSearchEngineTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.SerpProfileSearchEngine.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._serpProfileSearchEngineTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._campaignTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.Campaign.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._campaignTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._segmentValueTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.SegmentValue.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._segmentValueTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._segmentTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.Segment.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._segmentTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._serpProfileTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.SerpProfile.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._serpProfileTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._gatewayReservationTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.GatewayReservation.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._gatewayReservationTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._adgroupCreativeTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.AdgroupCreative.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._adgroupCreativeTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._serpProfileDomainTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.SerpProfileDomain.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._serpProfileDomainTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._campaignTargetTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.CampaignTarget.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._campaignTargetTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._serpProfileKeywordTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.SerpProfileKeyword.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._serpProfileKeywordTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            return result;
+        }
+        
+        /// <summary>
+        ///Remove inserted rows that become updated rows after calling TableAdapter.Update(inserted rows) first
+        ///</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        private global::System.Data.DataRow[] GetRealUpdatedRows(global::System.Data.DataRow[] updatedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+            if (((updatedRows == null) 
+                        || (updatedRows.Length < 1))) {
+                return updatedRows;
+            }
+            if (((allAddedRows == null) 
+                        || (allAddedRows.Count < 1))) {
+                return updatedRows;
+            }
+            global::System.Collections.Generic.List<global::System.Data.DataRow> realUpdatedRows = new global::System.Collections.Generic.List<global::System.Data.DataRow>();
+            for (int i = 0; (i < updatedRows.Length); i = (i + 1)) {
+                global::System.Data.DataRow row = updatedRows[i];
+                if ((allAddedRows.Contains(row) == false)) {
+                    realUpdatedRows.Add(row);
+                }
+            }
+            return realUpdatedRows.ToArray();
+        }
+        
+        /// <summary>
+        ///Update all changes to the dataset.
+        ///</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public virtual int UpdateAll(Oltp dataSet) {
+            if ((dataSet == null)) {
+                throw new global::System.ArgumentNullException("dataSet");
+            }
+            if ((dataSet.HasChanges() == false)) {
+                return 0;
+            }
+            if (((this._accountTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._accountTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._adunitTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._adunitTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._gatewayTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._gatewayTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._keywordTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._keywordTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._creativeTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._creativeTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._pageTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._pageTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._adunitTargetTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._adunitTargetTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._adgroupTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._adgroupTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._campaignTargetTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._campaignTargetTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._userTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._userTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._userGroupTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._userGroupTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._accountPermissionTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._accountPermissionTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._adgroupKeywordTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._adgroupKeywordTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._adgroupCreativeTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._adgroupCreativeTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._gatewayReservationTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._gatewayReservationTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._serpProfileTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._serpProfileTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._serpProfileKeywordTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._serpProfileKeywordTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._serpProfileDomainTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._serpProfileDomainTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._serpProfileSearchEngineTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._serpProfileSearchEngineTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._serpProfileDomainGroupTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._serpProfileDomainGroupTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._relatedAccountTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._relatedAccountTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._segmentTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._segmentTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._segmentValueTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._segmentValueTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._campaignTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._campaignTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            global::System.Data.IDbConnection workConnection = this.Connection;
+            if ((workConnection == null)) {
+                throw new global::System.ApplicationException("TableAdapterManager contains no connection information. Set each TableAdapterMana" +
+                        "ger TableAdapter property to a valid TableAdapter instance.");
+            }
+            bool workConnOpened = false;
+            if (((workConnection.State & global::System.Data.ConnectionState.Broken) 
+                        == global::System.Data.ConnectionState.Broken)) {
+                workConnection.Close();
+            }
+            if ((workConnection.State == global::System.Data.ConnectionState.Closed)) {
+                workConnection.Open();
+                workConnOpened = true;
+            }
+            global::System.Data.IDbTransaction workTransaction = workConnection.BeginTransaction();
+            if ((workTransaction == null)) {
+                throw new global::System.ApplicationException("The transaction cannot begin. The current data connection does not support transa" +
+                        "ctions or the current state is not allowing the transaction to begin.");
+            }
+            global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows = new global::System.Collections.Generic.List<global::System.Data.DataRow>();
+            global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows = new global::System.Collections.Generic.List<global::System.Data.DataRow>();
+            global::System.Collections.Generic.List<global::System.Data.Common.DataAdapter> adaptersWithAcceptChangesDuringUpdate = new global::System.Collections.Generic.List<global::System.Data.Common.DataAdapter>();
+            global::System.Collections.Generic.Dictionary<object, global::System.Data.IDbConnection> revertConnections = new global::System.Collections.Generic.Dictionary<object, global::System.Data.IDbConnection>();
+            int result = 0;
+            global::System.Data.DataSet backupDataSet = null;
+            if (this.BackupDataSetBeforeUpdate) {
+                backupDataSet = new global::System.Data.DataSet();
+                backupDataSet.Merge(dataSet);
+            }
+            try {
+                // ---- Prepare for update -----------
+                //
+                if ((this._accountTableAdapter != null)) {
+                    revertConnections.Add(this._accountTableAdapter, this._accountTableAdapter.Connection);
+                    this._accountTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._accountTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._accountTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._accountTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._accountTableAdapter.Adapter);
+                    }
+                }
+                if ((this._adunitTableAdapter != null)) {
+                    revertConnections.Add(this._adunitTableAdapter, this._adunitTableAdapter.Connection);
+                    this._adunitTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._adunitTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._adunitTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._adunitTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._adunitTableAdapter.Adapter);
+                    }
+                }
+                if ((this._gatewayTableAdapter != null)) {
+                    revertConnections.Add(this._gatewayTableAdapter, this._gatewayTableAdapter.Connection);
+                    this._gatewayTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._gatewayTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._gatewayTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._gatewayTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._gatewayTableAdapter.Adapter);
+                    }
+                }
+                if ((this._keywordTableAdapter != null)) {
+                    revertConnections.Add(this._keywordTableAdapter, this._keywordTableAdapter.Connection);
+                    this._keywordTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._keywordTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._keywordTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._keywordTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._keywordTableAdapter.Adapter);
+                    }
+                }
+                if ((this._creativeTableAdapter != null)) {
+                    revertConnections.Add(this._creativeTableAdapter, this._creativeTableAdapter.Connection);
+                    this._creativeTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._creativeTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._creativeTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._creativeTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._creativeTableAdapter.Adapter);
+                    }
+                }
+                if ((this._pageTableAdapter != null)) {
+                    revertConnections.Add(this._pageTableAdapter, this._pageTableAdapter.Connection);
+                    this._pageTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._pageTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._pageTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._pageTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._pageTableAdapter.Adapter);
+                    }
+                }
+                if ((this._adunitTargetTableAdapter != null)) {
+                    revertConnections.Add(this._adunitTargetTableAdapter, this._adunitTargetTableAdapter.Connection);
+                    this._adunitTargetTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._adunitTargetTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._adunitTargetTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._adunitTargetTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._adunitTargetTableAdapter.Adapter);
+                    }
+                }
+                if ((this._adgroupTableAdapter != null)) {
+                    revertConnections.Add(this._adgroupTableAdapter, this._adgroupTableAdapter.Connection);
+                    this._adgroupTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._adgroupTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._adgroupTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._adgroupTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._adgroupTableAdapter.Adapter);
+                    }
+                }
+                if ((this._campaignTargetTableAdapter != null)) {
+                    revertConnections.Add(this._campaignTargetTableAdapter, this._campaignTargetTableAdapter.Connection);
+                    this._campaignTargetTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._campaignTargetTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._campaignTargetTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._campaignTargetTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._campaignTargetTableAdapter.Adapter);
+                    }
+                }
+                if ((this._userTableAdapter != null)) {
+                    revertConnections.Add(this._userTableAdapter, this._userTableAdapter.Connection);
+                    this._userTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._userTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._userTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._userTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._userTableAdapter.Adapter);
+                    }
+                }
+                if ((this._userGroupTableAdapter != null)) {
+                    revertConnections.Add(this._userGroupTableAdapter, this._userGroupTableAdapter.Connection);
+                    this._userGroupTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._userGroupTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._userGroupTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._userGroupTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._userGroupTableAdapter.Adapter);
+                    }
+                }
+                if ((this._accountPermissionTableAdapter != null)) {
+                    revertConnections.Add(this._accountPermissionTableAdapter, this._accountPermissionTableAdapter.Connection);
+                    this._accountPermissionTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._accountPermissionTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._accountPermissionTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._accountPermissionTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._accountPermissionTableAdapter.Adapter);
+                    }
+                }
+                if ((this._adgroupKeywordTableAdapter != null)) {
+                    revertConnections.Add(this._adgroupKeywordTableAdapter, this._adgroupKeywordTableAdapter.Connection);
+                    this._adgroupKeywordTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._adgroupKeywordTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._adgroupKeywordTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._adgroupKeywordTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._adgroupKeywordTableAdapter.Adapter);
+                    }
+                }
+                if ((this._adgroupCreativeTableAdapter != null)) {
+                    revertConnections.Add(this._adgroupCreativeTableAdapter, this._adgroupCreativeTableAdapter.Connection);
+                    this._adgroupCreativeTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._adgroupCreativeTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._adgroupCreativeTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._adgroupCreativeTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._adgroupCreativeTableAdapter.Adapter);
+                    }
+                }
+                if ((this._gatewayReservationTableAdapter != null)) {
+                    revertConnections.Add(this._gatewayReservationTableAdapter, this._gatewayReservationTableAdapter.Connection);
+                    this._gatewayReservationTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._gatewayReservationTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._gatewayReservationTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._gatewayReservationTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._gatewayReservationTableAdapter.Adapter);
+                    }
+                }
+                if ((this._serpProfileTableAdapter != null)) {
+                    revertConnections.Add(this._serpProfileTableAdapter, this._serpProfileTableAdapter.Connection);
+                    this._serpProfileTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._serpProfileTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._serpProfileTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._serpProfileTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._serpProfileTableAdapter.Adapter);
+                    }
+                }
+                if ((this._serpProfileKeywordTableAdapter != null)) {
+                    revertConnections.Add(this._serpProfileKeywordTableAdapter, this._serpProfileKeywordTableAdapter.Connection);
+                    this._serpProfileKeywordTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._serpProfileKeywordTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._serpProfileKeywordTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._serpProfileKeywordTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._serpProfileKeywordTableAdapter.Adapter);
+                    }
+                }
+                if ((this._serpProfileDomainTableAdapter != null)) {
+                    revertConnections.Add(this._serpProfileDomainTableAdapter, this._serpProfileDomainTableAdapter.Connection);
+                    this._serpProfileDomainTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._serpProfileDomainTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._serpProfileDomainTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._serpProfileDomainTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._serpProfileDomainTableAdapter.Adapter);
+                    }
+                }
+                if ((this._serpProfileSearchEngineTableAdapter != null)) {
+                    revertConnections.Add(this._serpProfileSearchEngineTableAdapter, this._serpProfileSearchEngineTableAdapter.Connection);
+                    this._serpProfileSearchEngineTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._serpProfileSearchEngineTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._serpProfileSearchEngineTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._serpProfileSearchEngineTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._serpProfileSearchEngineTableAdapter.Adapter);
+                    }
+                }
+                if ((this._serpProfileDomainGroupTableAdapter != null)) {
+                    revertConnections.Add(this._serpProfileDomainGroupTableAdapter, this._serpProfileDomainGroupTableAdapter.Connection);
+                    this._serpProfileDomainGroupTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._serpProfileDomainGroupTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._serpProfileDomainGroupTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._serpProfileDomainGroupTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._serpProfileDomainGroupTableAdapter.Adapter);
+                    }
+                }
+                if ((this._relatedAccountTableAdapter != null)) {
+                    revertConnections.Add(this._relatedAccountTableAdapter, this._relatedAccountTableAdapter.Connection);
+                    this._relatedAccountTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._relatedAccountTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._relatedAccountTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._relatedAccountTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._relatedAccountTableAdapter.Adapter);
+                    }
+                }
+                if ((this._segmentTableAdapter != null)) {
+                    revertConnections.Add(this._segmentTableAdapter, this._segmentTableAdapter.Connection);
+                    this._segmentTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._segmentTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._segmentTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._segmentTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._segmentTableAdapter.Adapter);
+                    }
+                }
+                if ((this._segmentValueTableAdapter != null)) {
+                    revertConnections.Add(this._segmentValueTableAdapter, this._segmentValueTableAdapter.Connection);
+                    this._segmentValueTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._segmentValueTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._segmentValueTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._segmentValueTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._segmentValueTableAdapter.Adapter);
+                    }
+                }
+                if ((this._campaignTableAdapter != null)) {
+                    revertConnections.Add(this._campaignTableAdapter, this._campaignTableAdapter.Connection);
+                    this._campaignTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._campaignTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._campaignTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._campaignTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._campaignTableAdapter.Adapter);
+                    }
+                }
+                // 
+                //---- Perform updates -----------
+                //
+                if ((this.UpdateOrder == UpdateOrderOption.UpdateInsertDelete)) {
+                    result = (result + this.UpdateUpdatedRows(dataSet, allChangedRows, allAddedRows));
+                    result = (result + this.UpdateInsertedRows(dataSet, allAddedRows));
+                }
+                else {
+                    result = (result + this.UpdateInsertedRows(dataSet, allAddedRows));
+                    result = (result + this.UpdateUpdatedRows(dataSet, allChangedRows, allAddedRows));
+                }
+                result = (result + this.UpdateDeletedRows(dataSet, allChangedRows));
+                // 
+                //---- Commit updates -----------
+                //
+                workTransaction.Commit();
+                if ((0 < allAddedRows.Count)) {
+                    global::System.Data.DataRow[] rows = new System.Data.DataRow[allAddedRows.Count];
+                    allAddedRows.CopyTo(rows);
+                    for (int i = 0; (i < rows.Length); i = (i + 1)) {
+                        global::System.Data.DataRow row = rows[i];
+                        row.AcceptChanges();
+                    }
+                }
+                if ((0 < allChangedRows.Count)) {
+                    global::System.Data.DataRow[] rows = new System.Data.DataRow[allChangedRows.Count];
+                    allChangedRows.CopyTo(rows);
+                    for (int i = 0; (i < rows.Length); i = (i + 1)) {
+                        global::System.Data.DataRow row = rows[i];
+                        row.AcceptChanges();
+                    }
+                }
+            }
+            catch (global::System.Exception ex) {
+                workTransaction.Rollback();
+                // ---- Restore the dataset -----------
+                if (this.BackupDataSetBeforeUpdate) {
+                    global::System.Diagnostics.Debug.Assert((backupDataSet != null));
+                    dataSet.Clear();
+                    dataSet.Merge(backupDataSet);
+                }
+                else {
+                    if ((0 < allAddedRows.Count)) {
+                        global::System.Data.DataRow[] rows = new System.Data.DataRow[allAddedRows.Count];
+                        allAddedRows.CopyTo(rows);
+                        for (int i = 0; (i < rows.Length); i = (i + 1)) {
+                            global::System.Data.DataRow row = rows[i];
+                            row.AcceptChanges();
+                            row.SetAdded();
+                        }
+                    }
+                }
+                throw ex;
+            }
+            finally {
+                if (workConnOpened) {
+                    workConnection.Close();
+                }
+                if ((this._accountTableAdapter != null)) {
+                    this._accountTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._accountTableAdapter]));
+                    this._accountTableAdapter.Transaction = null;
+                }
+                if ((this._adunitTableAdapter != null)) {
+                    this._adunitTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._adunitTableAdapter]));
+                    this._adunitTableAdapter.Transaction = null;
+                }
+                if ((this._gatewayTableAdapter != null)) {
+                    this._gatewayTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._gatewayTableAdapter]));
+                    this._gatewayTableAdapter.Transaction = null;
+                }
+                if ((this._keywordTableAdapter != null)) {
+                    this._keywordTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._keywordTableAdapter]));
+                    this._keywordTableAdapter.Transaction = null;
+                }
+                if ((this._creativeTableAdapter != null)) {
+                    this._creativeTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._creativeTableAdapter]));
+                    this._creativeTableAdapter.Transaction = null;
+                }
+                if ((this._pageTableAdapter != null)) {
+                    this._pageTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._pageTableAdapter]));
+                    this._pageTableAdapter.Transaction = null;
+                }
+                if ((this._adunitTargetTableAdapter != null)) {
+                    this._adunitTargetTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._adunitTargetTableAdapter]));
+                    this._adunitTargetTableAdapter.Transaction = null;
+                }
+                if ((this._adgroupTableAdapter != null)) {
+                    this._adgroupTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._adgroupTableAdapter]));
+                    this._adgroupTableAdapter.Transaction = null;
+                }
+                if ((this._campaignTargetTableAdapter != null)) {
+                    this._campaignTargetTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._campaignTargetTableAdapter]));
+                    this._campaignTargetTableAdapter.Transaction = null;
+                }
+                if ((this._userTableAdapter != null)) {
+                    this._userTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._userTableAdapter]));
+                    this._userTableAdapter.Transaction = null;
+                }
+                if ((this._userGroupTableAdapter != null)) {
+                    this._userGroupTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._userGroupTableAdapter]));
+                    this._userGroupTableAdapter.Transaction = null;
+                }
+                if ((this._accountPermissionTableAdapter != null)) {
+                    this._accountPermissionTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._accountPermissionTableAdapter]));
+                    this._accountPermissionTableAdapter.Transaction = null;
+                }
+                if ((this._adgroupKeywordTableAdapter != null)) {
+                    this._adgroupKeywordTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._adgroupKeywordTableAdapter]));
+                    this._adgroupKeywordTableAdapter.Transaction = null;
+                }
+                if ((this._adgroupCreativeTableAdapter != null)) {
+                    this._adgroupCreativeTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._adgroupCreativeTableAdapter]));
+                    this._adgroupCreativeTableAdapter.Transaction = null;
+                }
+                if ((this._gatewayReservationTableAdapter != null)) {
+                    this._gatewayReservationTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._gatewayReservationTableAdapter]));
+                    this._gatewayReservationTableAdapter.Transaction = null;
+                }
+                if ((this._serpProfileTableAdapter != null)) {
+                    this._serpProfileTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._serpProfileTableAdapter]));
+                    this._serpProfileTableAdapter.Transaction = null;
+                }
+                if ((this._serpProfileKeywordTableAdapter != null)) {
+                    this._serpProfileKeywordTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._serpProfileKeywordTableAdapter]));
+                    this._serpProfileKeywordTableAdapter.Transaction = null;
+                }
+                if ((this._serpProfileDomainTableAdapter != null)) {
+                    this._serpProfileDomainTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._serpProfileDomainTableAdapter]));
+                    this._serpProfileDomainTableAdapter.Transaction = null;
+                }
+                if ((this._serpProfileSearchEngineTableAdapter != null)) {
+                    this._serpProfileSearchEngineTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._serpProfileSearchEngineTableAdapter]));
+                    this._serpProfileSearchEngineTableAdapter.Transaction = null;
+                }
+                if ((this._serpProfileDomainGroupTableAdapter != null)) {
+                    this._serpProfileDomainGroupTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._serpProfileDomainGroupTableAdapter]));
+                    this._serpProfileDomainGroupTableAdapter.Transaction = null;
+                }
+                if ((this._relatedAccountTableAdapter != null)) {
+                    this._relatedAccountTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._relatedAccountTableAdapter]));
+                    this._relatedAccountTableAdapter.Transaction = null;
+                }
+                if ((this._segmentTableAdapter != null)) {
+                    this._segmentTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._segmentTableAdapter]));
+                    this._segmentTableAdapter.Transaction = null;
+                }
+                if ((this._segmentValueTableAdapter != null)) {
+                    this._segmentValueTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._segmentValueTableAdapter]));
+                    this._segmentValueTableAdapter.Transaction = null;
+                }
+                if ((this._campaignTableAdapter != null)) {
+                    this._campaignTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._campaignTableAdapter]));
+                    this._campaignTableAdapter.Transaction = null;
+                }
+                if ((0 < adaptersWithAcceptChangesDuringUpdate.Count)) {
+                    global::System.Data.Common.DataAdapter[] adapters = new System.Data.Common.DataAdapter[adaptersWithAcceptChangesDuringUpdate.Count];
+                    adaptersWithAcceptChangesDuringUpdate.CopyTo(adapters);
+                    for (int i = 0; (i < adapters.Length); i = (i + 1)) {
+                        global::System.Data.Common.DataAdapter adapter = adapters[i];
+                        adapter.AcceptChangesDuringUpdate = true;
+                    }
+                }
+            }
+            return result;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        protected virtual void SortSelfReferenceRows(global::System.Data.DataRow[] rows, global::System.Data.DataRelation relation, bool childFirst) {
+            global::System.Array.Sort<global::System.Data.DataRow>(rows, new SelfReferenceComparer(relation, childFirst));
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        protected virtual bool MatchTableAdapterConnection(global::System.Data.IDbConnection inputConnection) {
+            if ((this._connection != null)) {
+                return true;
+            }
+            if (((this.Connection == null) 
+                        || (inputConnection == null))) {
+                return true;
+            }
+            if (string.Equals(this.Connection.ConnectionString, inputConnection.ConnectionString, global::System.StringComparison.Ordinal)) {
+                return true;
+            }
+            return false;
+        }
+        
+        /// <summary>
+        ///Update Order Option
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+        public enum UpdateOrderOption {
+            
+            InsertUpdateDelete = 0,
+            
+            UpdateInsertDelete = 1,
+        }
+        
+        /// <summary>
+        ///Used to sort self-referenced table's rows
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+        private class SelfReferenceComparer : object, global::System.Collections.Generic.IComparer<global::System.Data.DataRow> {
+            
+            private global::System.Data.DataRelation _relation;
+            
+            private int _childFirst;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            internal SelfReferenceComparer(global::System.Data.DataRelation relation, bool childFirst) {
+                this._relation = relation;
+                if (childFirst) {
+                    this._childFirst = -1;
+                }
+                else {
+                    this._childFirst = 1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            private bool IsChildAndParent(global::System.Data.DataRow child, global::System.Data.DataRow parent) {
+                global::System.Diagnostics.Debug.Assert((child != null));
+                global::System.Diagnostics.Debug.Assert((parent != null));
+                global::System.Data.DataRow newParent = child.GetParentRow(this._relation, global::System.Data.DataRowVersion.Default);
+                for (
+                ; ((newParent != null) 
+                            && ((object.ReferenceEquals(newParent, child) == false) 
+                            && (object.ReferenceEquals(newParent, parent) == false))); 
+                ) {
+                    newParent = newParent.GetParentRow(this._relation, global::System.Data.DataRowVersion.Default);
+                }
+                if ((newParent == null)) {
+                    for (newParent = child.GetParentRow(this._relation, global::System.Data.DataRowVersion.Original); ((newParent != null) 
+                                && ((object.ReferenceEquals(newParent, child) == false) 
+                                && (object.ReferenceEquals(newParent, parent) == false))); 
+                    ) {
+                        newParent = newParent.GetParentRow(this._relation, global::System.Data.DataRowVersion.Original);
+                    }
+                }
+                if (object.ReferenceEquals(newParent, parent)) {
+                    return true;
+                }
+                return false;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public int Compare(global::System.Data.DataRow row1, global::System.Data.DataRow row2) {
+                if (object.ReferenceEquals(row1, row2)) {
+                    return 0;
+                }
+                if ((row1 == null)) {
+                    return -1;
+                }
+                if ((row2 == null)) {
+                    return 1;
+                }
+
+                // Is row1 the child or grandchild of row2
+                if (this.IsChildAndParent(row1, row2)) {
+                    return this._childFirst;
+                }
+
+                // Is row2 the child or grandchild of row1
+                if (this.IsChildAndParent(row2, row1)) {
+                    return (-1 * this._childFirst);
+                }
+                return 0;
             }
         }
     }
