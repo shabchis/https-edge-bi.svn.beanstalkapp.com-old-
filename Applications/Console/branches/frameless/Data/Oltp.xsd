@@ -342,7 +342,8 @@ SET		Channel_ID = (CASE WHEN @channelID IS NULL THEN Channel_ID ELSE @channelID 
 		Segment2 = (CASE WHEN @segment2 IS NULL THEN Segment2 ELSE @segment2 END),
 		Segment3 = (CASE WHEN @segment3 IS NULL THEN Segment3 ELSE @segment3 END),
 		Segment4 = (CASE WHEN @segment4 IS NULL THEN Segment4 ELSE @segment4 END),
-		Segment5 = (CASE WHEN @segment5 IS NULL THEN Segment5 ELSE @segment5 END)
+		Segment5 = (CASE WHEN @segment5 IS NULL THEN Segment5 ELSE @segment5 END),
+		LastUpdated = getdate()
 WHERE	Account_ID = @accountID and
 		ISNUMERIC(Gateway_id) = 1 and
 		CASE 
