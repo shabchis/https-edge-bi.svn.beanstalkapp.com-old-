@@ -15,11 +15,11 @@
     <Setting Name="BodyGetSpecificPermission" Type="System.String" Scope="User">
       <Value Profile="(Default)">{"AccountID":"7","Path":"management"}</Value>
     </Setting>
-    <Setting Name="Services" Type="System.String" Scope="User">
-      <Value Profile="(Default)">users/{0}/password,users/{0},users,Menu,accounts,accounts/{0},permissions,permissions/list,permissions/tree,Sessions,groups,groups/{0},users/{0}/permissions,groups/{0}/permissions,Tools/refund,users/{0}/groups,groups/{0}/users,groups/{0}/users/{1},accounts/{0}/campaigns?channel={1},accounts/{0}/campaigns/{1},users/{0}?isActive={1},users/{0}/calculatedpermissions</Value>
-    </Setting>
     <Setting Name="LocalAdress" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://localhost/Edge.Api/</Value>
+    </Setting>
+    <Setting Name="Services" Type="System.String" Scope="User">
+      <Value Profile="(Default)">users/{0}/password,users/{0},users,Menu,accounts,accounts/{0},permissions,permissions/list,permissions/tree,Sessions,groups,groups/{0},users/{0}/permissions,groups/{0}/permissions,Tools/refund,users/{0}/groups,groups/{0}/users,groups/{0}/users/{1},accounts/{0}/campaigns?channel={1},accounts/{0}/campaigns/{1},users/{0}?isActive={1},users/{0}/calculatedpermissions,accounts/{0}/Services/{1}?options={2},accounts/{0}/Services?guid={1}</Value>
     </Setting>
   </Settings>
 </SettingsFile>
