@@ -6,10 +6,11 @@ using System.Web;
 using Edge.Api.Handlers.Template;
 using Edge.Objects;
 using System.Data;
-using Easynet.Edge.Core.Data;
-using Easynet.Edge.Core.Utilities;
+using Edge.Core.Data;
+using Edge.Core.Utilities;
 using System.Data.SqlClient;
 using System.Net;
+using Edge.Core.Configuration;
 
 namespace Edge.Api.Handlers
 {
@@ -31,11 +32,12 @@ namespace Edge.Api.Handlers
 			int session;
 			try
 			{
-				using (DataManager.Current.OpenConnection())
+				using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 				{
 					Encryptor encryptor = new Encryptor(KeyEncrypt);
 					sqlCommand = DataManager.CreateCommand("User_Login(@OperationType:Int,@Email:NVarchar,@Password:NVarchar,@UserID:Int,@SessionID:Int)", CommandType.StoredProcedure);
-
+					sqlCommand.Connection = conn;
+					conn.Open();
 
 					sqlCommand.Parameters["@OperationType"].Value = sessionData.OperationType;
 					if (sessionData.OperationType == OperationTypeEnum.New)
@@ -354,14 +356,15 @@ namespace Edge.Api.Handlers
 		{
 			List<Group> associateGroups = new List<Group>();
 
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT DISTINCT  T0.GroupID ,T1.Name
 																	FROM User_GUI_UserGroupUser T0
 																	INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID 
 																	WHERE T0.UserID=@UserID:Int");
 				sqlCommand.Parameters["@UserID"].Value = int.Parse(ID);
-
+				sqlCommand.Connection = conn;
+				conn.Open();
 				using (ThingReader<Group> thingReader = new ThingReader<Group>(sqlCommand.ExecuteReader(), null))
 				{
 					while (thingReader.Read())
@@ -386,9 +389,11 @@ namespace Edge.Api.Handlers
 			ThingReader<CalculatedPermission> calculatedPermissionReader;
 			currentUser = ID;
 			Dictionary<int,List<CalculatedPermission>> calculatedPermissionDic = new Dictionary<int,List<CalculatedPermission>>();
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand("User_CalculatePermissions(@UserID:Int)", CommandType.StoredProcedure);
+				sqlCommand.Connection = conn;
+				sqlCommand.Connection.Open();
 				sqlCommand.Parameters["@UserID"].Value = currentUser;
 				calculatedPermissionReader = new ThingReader<CalculatedPermission>(sqlCommand.ExecuteReader(), null);
 				while (calculatedPermissionReader.Read())
@@ -447,9 +452,11 @@ namespace Edge.Api.Handlers
 			ThingReader<CalculatedPermission> calculatedPermissionReader;
 			currentUser = System.Convert.ToInt32(CurrentContext.Request.Headers["edge-user-id"]);
 			List<CalculatedPermission> calculatedPermissionList = new List<CalculatedPermission>();
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn=new SqlConnection( AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection","String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand("User_CalculatePermissions(@UserID:Int)", CommandType.StoredProcedure);
+				sqlCommand.Connection=conn;
+				conn.Open();
 				sqlCommand.Parameters["@UserID"].Value = currentUser;
 				calculatedPermissionReader = new ThingReader<CalculatedPermission>(sqlCommand.ExecuteReader(), null);
 				while (calculatedPermissionReader.Read())
