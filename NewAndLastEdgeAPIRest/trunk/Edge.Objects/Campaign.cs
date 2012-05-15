@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
-using Easynet.Edge.Core.Data;
+using Edge.Core.Data;
 using System.Data.SqlClient;
 
 namespace Edge.Objects

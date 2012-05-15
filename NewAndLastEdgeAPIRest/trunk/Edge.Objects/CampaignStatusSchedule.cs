@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 using System.Data.SqlClient;
-using Easynet.Edge.Core.Data;
+using Edge.Core.Data;
 
 namespace Edge.Objects
 {
