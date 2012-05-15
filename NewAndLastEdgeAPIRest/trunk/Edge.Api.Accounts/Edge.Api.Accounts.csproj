@@ -31,8 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Edge.Core.Scheduling, Version=2.9.0.405, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\2.9\Framework\Edge.Core.Scheduling.Branch\bin\Debug\Edge.Core.Scheduling.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -45,9 +50,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core\Core.csproj">
+    <ProjectReference Include="..\..\Core\Edge.Core\Edge.Core.csproj">
       <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
-      <Name>Core</Name>
+      <Name>Edge.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Edge.Api\Edge.Api.csproj">
       <Project>{15C720A8-FC62-4E04-9491-F5648F4970FB}</Project>
@@ -67,5 +72,4 @@
   <Target Name="AfterBuild">
     <Copy SkipUnchangedFiles="false" SourceFiles="$(TargetPath)" DestinationFiles="..\Edge.Api\bin\Handlers\$(TargetFileName)" />
   </Target>
- 
 </Project>
