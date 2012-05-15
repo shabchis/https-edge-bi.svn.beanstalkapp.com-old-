@@ -4,13 +4,14 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 using System.IO;
-using Easynet.Edge.Core.Configuration;
+using Edge.Core.Configuration;
+
 
 namespace Edge.Api.Base
 {
 	public class JsonSerializer : IHttpSerializer
 	{
-		static bool JsonFormating = (bool.Parse(AppSettings.GetAbsolute("JsonFormatting")));
+		static bool JsonFormating = (bool.Parse(AppSettings.Get("JsonSerializer","JsonFormatting")));
 		#region IHttpSerializer Members
 
 		public object DeserializeValue(string contentType, System.IO.Stream stream, Type type)

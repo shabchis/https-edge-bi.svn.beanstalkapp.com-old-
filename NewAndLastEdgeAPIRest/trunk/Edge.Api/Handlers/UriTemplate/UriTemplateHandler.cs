@@ -5,9 +5,9 @@ using System.Web;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
-using Easynet.Edge.Core.Configuration;
-using Easynet.Edge.Core.Utilities;
-using Easynet.Edge.Core.Data;
+using Edge.Core.Configuration;
+using Edge.Core.Utilities;
+using Edge.Core.Data;
 using System.Data.SqlClient;
 using System.Net;
 
@@ -222,10 +222,12 @@ namespace Edge.Api.Handlers.Template
 				return false;
 			}
 
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn=new SqlConnection( AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection","String")))
 			{
 				using (SqlCommand sqlCommand = DataManager.CreateCommand("Session_ValidateSession(@SessionID:Int)", System.Data.CommandType.StoredProcedure))
 				{
+					sqlCommand.Connection = conn;
+					conn.Open();
 					sqlCommand.Parameters["@SessionID"].Value = sessionID;
 					using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
 					{

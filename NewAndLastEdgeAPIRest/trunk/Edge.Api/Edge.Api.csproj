@@ -34,9 +34,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Edge.Core.Scheduling">
+      <HintPath>..\..\..\2.9\Framework\Edge.Core.Scheduling.Branch\bin\Debug\Edge.Core.Scheduling.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Dlls\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=4.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\2.9\(third party)\Json.net\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -82,9 +86,9 @@
     <Compile Include="Handlers\ObjectQuery\ObjectQueryHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core\Core.csproj">
+    <ProjectReference Include="..\..\Core\Edge.Core\Edge.Core.csproj">
       <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
-      <Name>Core</Name>
+      <Name>Edge.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Edge.Objects\Edge.Objects.csproj">
       <Project>{AA37E9C3-5121-4731-BB13-7C79FFEA28AE}</Project>
@@ -98,10 +102,10 @@
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
-          <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>1111</DevelopmentServerPort>
-          <DevelopmentServerVPath>/apix</DevelopmentServerVPath>
-          <IISUrl>http://localhost:8080/</IISUrl>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>28383</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost/Edge.Api</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
