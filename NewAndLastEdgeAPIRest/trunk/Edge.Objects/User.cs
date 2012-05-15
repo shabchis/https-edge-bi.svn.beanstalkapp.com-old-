@@ -9,7 +9,8 @@ using System.Runtime.Serialization.Json;
 using System.Reflection;
 using System.Data;
 using System.Data.SqlClient;
-using Easynet.Edge.Core.Data;
+using Edge.Core.Data;
+using Edge.Core.Configuration;
 
 
 
@@ -52,7 +53,7 @@ namespace Edge.Objects
 
 		
 		[DataMember(Order = 6)]
-		[ListMap(Command = "SELECT T0.GroupID,T1.Name FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID WHERE T0.UserID=@UserID:Int ORDER BY Name", IsStoredProcedure = false)]
+		[ListMap(Command = "SELECT T0.GroupID,T1.Name,T1.AccountAdmin FROM User_GUI_UserGroupUser T0 INNER JOIN User_GUI_UserGroup T1 ON T0.GroupID=T1.GroupID WHERE T0.UserID=@UserID:Int ORDER BY Name", IsStoredProcedure = false)]
 		public List<Group> AssignedToGroups = new List<Group>();
 
 		[DataMember(Order = 7)]		
@@ -63,9 +64,11 @@ namespace Edge.Objects
 			User user = null;
 			ThingReader<User> thingReader;
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand("User_GetByID(@userID:int)", CommandType.StoredProcedure);
+				sqlCommand.Connection = conn;
+				conn.Open();
 				sqlCommand.Parameters["@userID"].Value = id;
 
 				thingReader = new ThingReader<User>(sqlCommand.ExecuteReader(), CustomApply);
@@ -94,10 +97,11 @@ namespace Edge.Objects
 			List<User> users = new List<User>();
 			ThingReader<User> thingReader;
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand("SELECT UserID,IsActive,Name,Email FROM User_GUI_User ORDER BY Name");
-
+				sqlCommand.Connection = conn;
+				conn.Open();
 
 				thingReader = new ThingReader<User>(sqlCommand.ExecuteReader(), CustomApply);
 				while (thingReader.Read())
@@ -123,7 +127,8 @@ namespace Edge.Objects
 
 				//Insert/Update/Remove user (also this clean all permissions and assigned groups)
 				string command = @"User_Operations(@Action:Int,@UserID:Int,@Name:NvarChar,@IsActive:bit,@AccountAdmin:bit,@Email:NvarChar,@Password:NvarChar)";
-				SqlConnection sqlConnection = new SqlConnection(DataManager.ConnectionString);
+
+				SqlConnection sqlConnection = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String"));
 				sqlConnection.Open();
 				sqlTransaction = sqlConnection.BeginTransaction("SaveUser");
 				returnValue = this.UserID = Convert.ToInt32(MapperUtility.SaveOrRemoveSimpleObject<User>(command, CommandType.StoredProcedure, sqlOperation, this, sqlConnection, sqlTransaction));
@@ -181,12 +186,14 @@ namespace Edge.Objects
 		}
 		public void AssignGroup(int groupID)
 		{
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_GUI_UserGroupUser
 																	(GroupID,UserID)
 																	VALUES
 																	(@GroupID,@UserID)");
+				sqlCommand.Connection = conn;
+				conn.Open();
 				sqlCommand.Parameters["@GroupID"].Value = groupID;
 				sqlCommand.Parameters["@UserID"].Value = this.UserID; ;
 
@@ -197,14 +204,15 @@ namespace Edge.Objects
 		}
 		public static void EnableDisableUser(int ID, bool isActive)
 		{
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand(@"UPDATE User_GUI_User 
 																	SET IsActive=@isActive:bit
 																	WHERE UserID=@userID:int");
 				sqlCommand.Parameters["@isActive"].Value = isActive;
 				sqlCommand.Parameters["@userID"].Value = ID;
-
+				sqlCommand.Connection = conn;
+				conn.Open();
 				sqlCommand.ExecuteNonQuery();
 			}
 
@@ -212,12 +220,14 @@ namespace Edge.Objects
 		public void ChangePasswords(string password)
 		{
 
-		 string DecPassword=Easynet.Edge.Core.Utilities.Encryptor.Dec(password);
-		 using (DataManager.Current.OpenConnection())
+		 string DecPassword=Edge.Core.Utilities.Encryptor.Dec(password);
+		 using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 		 {
 			 SqlCommand sqlCommand = DataManager.CreateCommand(@"UPDATE User_GUI_User 
 																SET password=@password:Nvarchar 
 																WHERE UserID=@ID:int", CommandType.Text);
+			 sqlCommand.Connection = conn;
+			 conn.Open();
 			 sqlCommand.Parameters["@password"].Value = DecPassword;
 			 sqlCommand.Parameters["@ID"].Value = this.UserID;
 			 sqlCommand.ExecuteNonQuery();

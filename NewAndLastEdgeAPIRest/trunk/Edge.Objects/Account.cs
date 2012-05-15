@@ -5,9 +5,10 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.Data;
 using System.Reflection;
-using Easynet.Edge.Core.Data;
+using Edge.Core.Data;
 using System.Data.SqlClient;
-using Easynet.Edge.Core;
+using Edge.Core;
+using Edge.Core.Configuration;
 
 
 namespace Edge.Objects
@@ -75,10 +76,13 @@ namespace Edge.Objects
 			List<Account> returnObject = new List<Account>();
 			Dictionary<int?, Account> parents = new Dictionary<int?, Account>();
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = null;
+				
 				sqlCommand = DataManager.CreateCommand("User_CalculatePermissions(@UserID:Int)", CommandType.StoredProcedure);
+				sqlCommand.Connection = conn;
+				conn.Open();
 				sqlCommand.Parameters["@UserID"].Value = userId;
 				calculatedPermissionReader = new ThingReader<CalculatedPermission>(sqlCommand.ExecuteReader(), customApply);
 				while (calculatedPermissionReader.Read())
@@ -87,11 +91,15 @@ namespace Edge.Objects
 				}
 				calculatedPermissionReader.Dispose();
 				if (id == null)
+				{
 					sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID,AccountSettings,Level,SiteURL FROM [V_User_GUI_Accounts]   ORDER BY Parent_ID", CommandType.Text);
+					sqlCommand.Connection = conn;
+				}
 				else
 				{
 					sqlCommand = DataManager.CreateCommand("SELECT DISTINCT ID,Name,Parent_ID,AccountSettings,Level,SiteURL FROM [V_User_GUI_Accounts] WHERE ID=@ID:Int ORDER BY Parent_ID", CommandType.Text);
 					sqlCommand.Parameters["@ID"].Value = id;
+					sqlCommand.Connection = conn;
 				}
 				accountReader = new ThingReader<Account>(sqlCommand.ExecuteReader(), CustomApply);
 				while (accountReader.Read())

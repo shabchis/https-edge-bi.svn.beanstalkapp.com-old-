@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Reflection;
 using System.Data;
-using Easynet.Edge.Core.Data;
+using Edge.Core.Data;
 using System.Data.SqlClient;
 using System.Collections;
 

@@ -7,7 +7,7 @@ using System.ServiceModel.Description;
 using System.Runtime.Serialization;
 using System.Reflection;
 using System.Data;
-using Easynet.Edge.Core.Data;
+using Edge.Core.Data;
 using System.Data.SqlClient;
 
 

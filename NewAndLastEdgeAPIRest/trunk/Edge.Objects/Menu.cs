@@ -8,10 +8,11 @@ using System.ServiceModel.Description;
 using System.Runtime.Serialization;
 using System.Reflection;
 using System.Data;
-using Easynet.Edge.Core;
+using Edge.Core;
 using System.Text.RegularExpressions;
-using Easynet.Edge.Core.Data;
+using Edge.Core.Data;
 using System.Data.SqlClient;
+using Edge.Core.Configuration;
 
 
 namespace Edge.Objects
@@ -59,9 +60,11 @@ namespace Edge.Objects
 			List<Menu> returnObject = new List<Menu>();
 			Dictionary<int, List<Menu>> menuesByLevel = new Dictionary<int, List<Menu>>();
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand("Menu_GetMenuByUserPermission(@userID:Int,@menuPath:NvarChar)", CommandType.StoredProcedure);
+				sqlCommand.Connection = conn;
+				conn.Open();
 				sqlCommand.Parameters["@menuPath"].Value = newPath;
 				sqlCommand.Parameters["@userID"].Value = userId;
 
