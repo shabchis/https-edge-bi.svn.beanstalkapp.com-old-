@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Data;
 using Edge.Core.Data;
 using System.Data.SqlClient;
+using Edge.Core.Configuration;
 
 namespace Edge.Objects
 {
@@ -50,10 +51,13 @@ namespace Edge.Objects
 			List<Group> groups = new List<Group>();
 			ThingReader<Group> thingReader;
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
+				conn.Open();
 				SqlCommand sqlCommand = DataManager.CreateCommand("SELECT GroupID,IsActive,Name,AccountAdmin FROM User_GUI_UserGroup ORDER BY Name");
-
+				sqlCommand.Connection = conn;
+				if (conn.State != ConnectionState.Open)
+					conn.Open();
 
 				thingReader = new ThingReader<Group>(sqlCommand.ExecuteReader(), CustomApply);
 				while (thingReader.Read())
@@ -76,7 +80,7 @@ namespace Edge.Objects
 			Group group = null;
 			ThingReader<Group> thingReader;
 			Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT GroupID,
 																			Name,
@@ -85,6 +89,8 @@ namespace Edge.Objects
 																			FROM User_GUI_UserGroup
 																			WHERE GroupID=@GroupID:Int");
 				sqlCommand.Parameters["@GroupID"].Value = groupID;
+				sqlCommand.Connection = conn;
+				conn.Open();
 
 				thingReader = new ThingReader<Group>(sqlCommand.ExecuteReader(), CustomApply);
 				if (thingReader.Read())
@@ -101,12 +107,14 @@ namespace Edge.Objects
 		}
 		public void AssignUser(int userID)
 		{
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand(@"INSERT INTO User_GUI_UserGroupUser
 																	(GroupID,UserID)
 																	VALUES
 																	(@GroupID,@UserID)");
+				sqlCommand.Connection = conn;
+				conn.Open();
 				sqlCommand.Parameters["@GroupID"].Value = this.GroupID;
 				sqlCommand.Parameters["@UserID"].Value = userID;
 
@@ -118,12 +126,14 @@ namespace Edge.Objects
 		{
 			List<User> associateUsers = new List<User>();
 
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand(@"SELECT DISTINCT  T0.UserID ,T1.Name
 																	FROM User_GUI_UserGroupUser T0
 																	INNER JOIN User_GUI_User T1 ON T0.UserID=T1.UserID 
 																	WHERE GroupID=@GroupID:Int");
+				sqlCommand.Connection = conn;
+				conn.Open();
 				sqlCommand.Parameters["@GroupID"].Value = ID;
 
 				using (ThingReader<User> thingReader = new ThingReader<User>(sqlCommand.ExecuteReader(), null))

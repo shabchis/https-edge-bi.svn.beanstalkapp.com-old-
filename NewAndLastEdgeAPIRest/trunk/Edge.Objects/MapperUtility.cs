@@ -8,6 +8,7 @@ using System.Data;
 using Edge.Core.Data;
 using System.Data.SqlClient;
 using System.Collections;
+using Edge.Core.Configuration;
 
 namespace Edge.Objects
 {
@@ -106,13 +107,15 @@ namespace Edge.Objects
 			string dictionaryKey = string.Empty;
 			SqlCommand sqlCommand;
 
-			foreach (FieldInfo fieldInfo in returnObject.GetType().GetFields())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
-				if (Attribute.IsDefined(fieldInfo, typeof(DictionaryMapAttribute)))
+
+				foreach (FieldInfo fieldInfo in returnObject.GetType().GetFields())
 				{
-					DictionaryMapAttribute dictionaryMapAttribute = (DictionaryMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(DictionaryMapAttribute));
-					using (DataManager.Current.OpenConnection())
+					if (Attribute.IsDefined(fieldInfo, typeof(DictionaryMapAttribute)))
 					{
+						DictionaryMapAttribute dictionaryMapAttribute = (DictionaryMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(DictionaryMapAttribute));
+
 						if (!dictionaryMapAttribute.IsStoredProcedure)
 							sqlCommand = DataManager.CreateCommand(dictionaryMapAttribute.Command);
 						else
@@ -123,15 +126,18 @@ namespace Edge.Objects
 							param.Value = returnObject.GetType().GetField(fieldName).GetValue(returnObject);
 
 						}
+						sqlCommand.Connection = conn;
+						if (conn.State != ConnectionState.Open)
+							conn.Open();
 
 						fieldInfo.SetValue(returnObject, GetDictionryObject(fieldInfo, sqlCommand.ExecuteReader()));
+
+
 					}
-				}
-				else if (Attribute.IsDefined(fieldInfo, typeof(ListMapAttribute)))
-				{
-					ListMapAttribute listMapAttribute = (ListMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(ListMapAttribute));
-					using (DataManager.Current.OpenConnection())
+					else if (Attribute.IsDefined(fieldInfo, typeof(ListMapAttribute)))
 					{
+						ListMapAttribute listMapAttribute = (ListMapAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(ListMapAttribute));
+
 						if (!listMapAttribute.IsStoredProcedure)
 							sqlCommand = DataManager.CreateCommand(listMapAttribute.Command);
 						else
@@ -142,15 +148,18 @@ namespace Edge.Objects
 							param.Value = returnObject.GetType().GetField(fieldName).GetValue(returnObject);
 
 						}
-
+						sqlCommand.Connection = conn;
+						if (conn.State != ConnectionState.Open)
+							conn.Open();
 						fieldInfo.SetValue(returnObject, GetListObject(fieldInfo, sqlCommand.ExecuteReader()));
-					}
 
+
+					}
 				}
 			}
 
 			return (T)returnObject;
-		}		
+		}
 		public static IList GetListObject(FieldInfo fieldInfo, IDataReader sqlDataReader)
 		{
 			if (!fieldInfo.FieldType.IsGenericType || fieldInfo.FieldType.GetGenericTypeDefinition() == typeof(IList))
@@ -175,12 +184,13 @@ namespace Edge.Objects
 								f.SetValue(currentItem, null);
 							}
 							else
-								f.SetValue(currentItem, val); 
+								f.SetValue(currentItem, val);
 						}
 					}
 				}
 				returnObject.Add(currentItem);
 			}
+			sqlDataReader.Dispose();
 			return returnObject;
 		}
 		public static IDictionary GetDictionryObject(FieldInfo fieldInfo, IDataReader sqlDataReader)
@@ -240,6 +250,7 @@ namespace Edge.Objects
 				}
 
 			}
+			sqlDataReader.Dispose();
 			return returnObject;
 		}
 

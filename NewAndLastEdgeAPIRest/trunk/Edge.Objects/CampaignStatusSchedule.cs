@@ -5,6 +5,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.Data.SqlClient;
 using Edge.Core.Data;
+using Edge.Core.Configuration;
 
 namespace Edge.Objects
 {
@@ -184,12 +185,13 @@ namespace Edge.Objects
 			List<CampaignStatusSchedule> campaignStatusSchedules = new List<CampaignStatusSchedule>();
 			ThingReader<CampaignStatusSchedule> thingReader;
 			//Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand("CampaignStatusSchedules_GetByCampaignGK(@Campaign_GK:Int", System.Data.CommandType.StoredProcedure);
 				sqlCommand.Parameters["@Campaign_GK"].Value = campaignID;
 
-
+				sqlCommand.Connection = conn;
+				conn.Open();
 				thingReader = new ThingReader<CampaignStatusSchedule>(sqlCommand.ExecuteReader(), null);
 				while (thingReader.Read())
 				{

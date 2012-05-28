@@ -5,6 +5,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using Edge.Core.Data;
 using System.Data.SqlClient;
+using Edge.Core.Configuration;
 
 namespace Edge.Objects
 {
@@ -50,13 +51,14 @@ namespace Edge.Objects
 			List<Campaign> campaigns = new List<Campaign>();
 			ThingReader<Campaign> thingReader;
 			//Func<FieldInfo, IDataRecord, object> customApply = CustomApply;
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				SqlCommand sqlCommand = DataManager.CreateCommand("CampaignByAccountAndChannel(@Account_ID:Int,@Channel_ID:Int",System.Data.CommandType.StoredProcedure);
 
 				sqlCommand.Parameters["@Account_ID"].Value = accountID;
 				sqlCommand.Parameters["@Channel_ID"].Value = channelID;
-
+				sqlCommand.Connection = conn;
+				conn.Open();
 				thingReader = new ThingReader<Campaign>(sqlCommand.ExecuteReader(), null);
 				while (thingReader.Read())
 				{
