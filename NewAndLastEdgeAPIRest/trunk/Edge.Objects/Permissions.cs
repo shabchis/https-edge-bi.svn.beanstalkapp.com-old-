@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Data;
 using Edge.Core.Data;
 using System.Data.SqlClient;
+using Edge.Core.Configuration;
 
 
 
@@ -59,12 +60,14 @@ namespace Edge.Objects
 		{
 			foreach (AccountPermissionData accountPermissionData in accountsPermissionsData)
 			{
-				using (DataManager.Current.OpenConnection())
+				using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 				{
 					foreach (AssignedPermission assignedPermission in accountPermissionData.assignedPermissions)
 					{
 						SqlCommand sqlCommand = null;
 						sqlCommand = DataManager.CreateCommand("Permissions_Operations(@Action:Int,@AccountID:Int,@TargetID:Int,@TargetIsGroup:Bit,@PermissionType:NvarChar,@Value:Bit)", CommandType.StoredProcedure);
+						sqlCommand.Connection = conn;
+						conn.Open();
 						sqlCommand.Parameters["@Action"].Value = sqlOperation;
 						sqlCommand.Parameters["@AccountID"].Value = accountPermissionData.AccountID;
 						sqlCommand.Parameters["@TargetID"].Value = userID;
@@ -104,10 +107,12 @@ namespace Edge.Objects
 
 
 
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				using (SqlCommand sqlCommand = DataManager.CreateCommand(@"Permmissions_GetAllPermissions",CommandType.StoredProcedure))
 				{
+					sqlCommand.Connection = conn;
+					conn.Open();
 					thingReader = new ThingReader<Permission>(sqlCommand.ExecuteReader(), null);
 					while (thingReader.Read())
 					{
@@ -155,10 +160,12 @@ namespace Edge.Objects
 		public static List<string> GetAllPermissionTypeList()
 		{
 			List<string> permissions = new List<string>();
-			using (DataManager.Current.OpenConnection())
+			using (SqlConnection conn = new SqlConnection(AppSettings.GetConnectionString("Easynet.Edge.Core.Data.DataManager.Connection", "String")))
 			{
 				using (SqlCommand sqlCommand = DataManager.CreateCommand("SELECT Path FROM Constant_PermissionType ORDER BY Path"))
 				{
+					sqlCommand.Connection = conn;
+					conn.Open();
 					using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
 					{
 						while (sqlDataReader.Read())
