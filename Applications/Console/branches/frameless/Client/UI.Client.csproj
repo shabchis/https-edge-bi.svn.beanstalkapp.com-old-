@@ -37,7 +37,7 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <PublishUrl>D:\Edge\Deployment\EDGE1\Edge.BI\2.5\Web\Console\WPF</PublishUrl>
+    <PublishUrl>D:\Edge\Deployment\EDGE1\Seperia\2.5\Web\Console\WPF</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -47,10 +47,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://console.edge-bi.com/</InstallUrl>
+    <InstallUrl>http://console.edge-bi.com/seperia/</InstallUrl>
     <SupportUrl>http://www.edge.bi/install-edge-bi-console/</SupportUrl>
     <TargetCulture>en</TargetCulture>
-    <ProductName>Edge.BI Management Pages</ProductName>
+    <ProductName>Edge.BI Management Pages [Seperia]</ProductName>
     <PublisherName>Edge.BI</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>install.html</WebPage>
