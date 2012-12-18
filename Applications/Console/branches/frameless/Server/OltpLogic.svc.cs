@@ -15,7 +15,6 @@ using Easynet.Edge.Core.Scheduling;
 using Easynet.Edge.Core;
 using Easynet.Edge.Core.Utilities;
 using Easynet.Edge.BusinessObjects;
-using Easynet.Edge.Services.DataRetrieval;
 using Easynet.Edge.Core.Configuration;
 using System.Security.Authentication;
 using System.Configuration;
@@ -1596,10 +1595,10 @@ namespace Easynet.Edge.UI.Server
 		public void SerpProfile_RunNow(int accountID, int profileID)
 		{
 			// Schedule a google organic
-			using (ServiceClient<IOrganicServiceDelegator> serviceDelegator = new ServiceClient<IOrganicServiceDelegator>())
-			{
-				serviceDelegator.Service.RunOrganicProfile(accountID, profileID);
-			}
+			//using (ServiceClient<IOrganicServiceDelegator> serviceDelegator = new ServiceClient<IOrganicServiceDelegator>())
+			//{
+			//	serviceDelegator.Service.RunOrganicProfile(accountID, profileID);
+			//}
 		}
 
 		public Oltp.SerpProfileDataTable SerpProfile_Save(Oltp.SerpProfileDataTable table)
