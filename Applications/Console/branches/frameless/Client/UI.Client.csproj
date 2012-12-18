@@ -87,7 +87,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PublishUrl>D:\Edge\Deployment\EDGE1\Seperia\2.5\Web\Console\WPF</PublishUrl>
-    <InstallUrl>http://console.edge-bi.com/seperia/</InstallUrl>
+    <InstallUrl>https://console.edge-bi.com/seperia/</InstallUrl>
     <SupportUrl>http://www.edge.bi/install-edge-bi-console/</SupportUrl>
     <ProductName>Edge.BI Management Pages [Seperia]</ProductName>
   </PropertyGroup>
