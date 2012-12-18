@@ -93,10 +93,6 @@
       <Project>{AD4B53AD-B28A-4E90-9483-D2F7C8E6D436}</Project>
       <Name>Core %28Core\Core%29</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Services\DataRetrieval\Services.DataRetrieval.csproj">
-      <Project>{65DAED92-326B-401D-BF05-526C6BD5409C}</Project>
-      <Name>Services.DataRetrieval</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Data\UI.Data.csproj">
       <Project>{AC9C4389-97C8-47B9-84F3-E5E4E32C5E73}</Project>
       <Name>UI.Data</Name>

@@ -309,6 +309,10 @@ namespace Easynet.Edge.UI.Deployment
 				// STEP 2 - Copy to Directory
 
 				const string pluginFile = "NPWPF.dll";
+                
+                if (!Directory.Exists(pluginsDir))
+                    Directory.CreateDirectory(pluginsDir);
+
 				string pluginDestination = Path.Combine(pluginsDir, pluginFile);
 				if (File.Exists(pluginDestination))
 				{

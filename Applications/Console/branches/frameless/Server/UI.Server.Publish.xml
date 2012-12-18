@@ -1,26 +1,86 @@
 <publishData>
-  <publishTarget publishUrl="D:\Codebase\Reorganize\Console\Applications\Frameless\Client\Publish\QA\server\">
-    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="02/24/2011 21:29:17" />
-    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="02/24/2011 21:29:16" />
-    <file relUrl="bin/Edge.UI.Server.dll" publishTime="02/24/2011 21:33:23" />
-    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="02/24/2011 21:29:16" />
-    <file relUrl="Web.config" publishTime="01/03/2011 10:17:47" />
-    <file relUrl="bin/Edge.Core.pdb" publishTime="02/24/2011 21:29:15" />
-    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="02/24/2011 21:29:17" />
+  <publishTarget publishUrl="D:\Edge\EDGE-MERGE\deployment\EDGE1\Seperia\2.5\Web\Console\WPF\server\">
+    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="06/28/2012 16:18:37" />
+    <file relUrl="bin/Edge.UI.Server.pdb" publishTime="06/28/2012 16:18:38" />
+    <file relUrl="bin/Edge.UI.Data.pdb" publishTime="06/28/2012 16:18:36" />
+    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="06/28/2012 16:18:36" />
+    <file relUrl="bin/Edge.UI.Server.dll" publishTime="06/28/2012 16:18:38" />
+    <file relUrl="Web.config" publishTime="09/25/2011 15:57:15" />
+    <file relUrl="bin/Edge.Core.pdb" publishTime="06/28/2012 16:18:35" />
+    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="06/28/2012 16:18:36" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="06/28/2012 16:18:37" />
     <file relUrl="OltpLogic.svc" publishTime="07/25/2010 15:21:14" />
-    <file relUrl="bin/Edge.UI.Server.pdb" publishTime="02/24/2011 21:33:23" />
-    <file relUrl="bin/Edge.Core.dll" publishTime="02/24/2011 21:29:15" />
+    <file relUrl="bin/Edge.UI.Data.dll" publishTime="06/28/2012 16:18:36" />
+    <file relUrl="bin/Edge.Core.dll" publishTime="06/28/2012 16:18:36" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="06/28/2012 16:18:37" />
+  </publishTarget>
+  <publishTarget publishUrl="D:\Edge\Deployment\EDGE1\Seperia\2.5\Web\Console\WPF\server\">
+    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="06/28/2012 16:18:37" />
+    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="06/28/2012 16:18:36" />
+    <file relUrl="bin/Edge.UI.Server.dll" publishTime="06/28/2012 16:18:38" />
+    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="06/28/2012 16:18:36" />
+    <file relUrl="Web.config" publishTime="08/11/2011 15:09:15" />
+    <file relUrl="bin/Edge.Core.pdb" publishTime="06/28/2012 16:18:35" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="06/28/2012 16:18:37" />
+    <file relUrl="OltpLogic.svc" publishTime="07/25/2010 15:21:14" />
+    <file relUrl="bin/Edge.UI.Server.pdb" publishTime="06/28/2012 16:18:38" />
+    <file relUrl="bin/Edge.Core.dll" publishTime="06/28/2012 16:18:36" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="06/28/2012 16:18:37" />
+    <file relUrl="bin/Edge.UI.Data.pdb" publishTime="03/19/2012 16:04:36" />
+    <file relUrl="bin/Edge.UI.Data.dll" publishTime="03/19/2012 16:04:36" />
+  </publishTarget>
+  <publishTarget publishUrl="D:\Edge\Deployment\EDGE1\Edge.BI\2.5\Web\Console\WPF\server\">
+    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="03/19/2012 15:53:49" />
+    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="03/19/2012 15:53:48" />
+    <file relUrl="bin/Edge.UI.Server.dll" publishTime="03/19/2012 16:26:42" />
+    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="03/19/2012 15:53:48" />
+    <file relUrl="Web.config" publishTime="09/25/2011 15:57:15" />
+    <file relUrl="bin/Edge.Core.pdb" publishTime="03/19/2012 15:53:46" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="03/19/2012 15:53:49" />
+    <file relUrl="OltpLogic.svc" publishTime="07/25/2010 15:21:14" />
+    <file relUrl="bin/Edge.UI.Server.pdb" publishTime="03/19/2012 16:26:42" />
+    <file relUrl="bin/Edge.Core.dll" publishTime="03/19/2012 15:53:46" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="03/19/2012 15:53:51" />
+    <file relUrl="bin/Edge.UI.Data.pdb" publishTime="03/19/2012 16:04:36" />
+    <file relUrl="bin/Edge.UI.Data.dll" publishTime="03/19/2012 16:04:36" />
+  </publishTarget>
+  <publishTarget publishUrl="D:\Edge\Codebase\2.5\2008\Console\Applications\Frameless\Client\Publish\QA\Server\">
+    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="08/11/2011 15:24:45" />
+    <file relUrl="bin/Edge.UI.Server.dll" publishTime="08/18/2011 16:15:03" />
+    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="08/11/2011 15:24:43" />
+    <file relUrl="Web.config" publishTime="08/11/2011 15:09:15" />
+    <file relUrl="bin/Edge.UI.Data.pdb" publishTime="08/18/2011 16:15:02" />
+    <file relUrl="bin/Edge.Core.pdb" publishTime="08/11/2011 15:24:43" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="08/11/2011 15:24:45" />
+    <file relUrl="bin/Edge.Core.dll" publishTime="08/11/2011 15:24:43" />
+    <file relUrl="OltpLogic.svc" publishTime="07/25/2010 15:21:14" />
+    <file relUrl="bin/Edge.UI.Server.pdb" publishTime="08/18/2011 16:15:02" />
+    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="08/11/2011 15:24:43" />
     <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="12/30/2010 04:40:08" />
-    <file relUrl="bin/Edge.UI.Data.pdb" publishTime="02/24/2011 21:29:17" />
-    <file relUrl="bin/Edge.UI.Data.dll" publishTime="02/24/2011 21:29:17" />
+    <file relUrl="bin/Edge.UI.Data.dll" publishTime="08/18/2011 16:15:02" />
+  </publishTarget>
+  <publishTarget publishUrl="D:\Codebase\Reorganize\Console\Applications\Frameless\Client\Publish\QA\server\">
+    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="08/11/2011 11:42:07" />
+    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="08/11/2011 11:42:05" />
+    <file relUrl="bin/Edge.UI.Server.dll" publishTime="08/11/2011 12:39:12" />
+    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="08/11/2011 11:42:05" />
+    <file relUrl="Web.config" publishTime="08/09/2011 18:44:02" />
+    <file relUrl="bin/Edge.Core.pdb" publishTime="08/11/2011 11:42:05" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="08/11/2011 11:42:07" />
+    <file relUrl="OltpLogic.svc" publishTime="07/25/2010 15:21:14" />
+    <file relUrl="bin/Edge.UI.Server.pdb" publishTime="08/11/2011 12:39:12" />
+    <file relUrl="bin/Edge.Core.dll" publishTime="08/11/2011 11:42:05" />
+    <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="12/30/2010 04:40:08" />
+    <file relUrl="bin/Edge.UI.Data.pdb" publishTime="08/11/2011 11:42:06" />
+    <file relUrl="bin/Edge.UI.Data.dll" publishTime="08/11/2011 11:42:06" />
   </publishTarget>
   <publishTarget publishUrl="C:\Documents and Settings\Doron\Desktop\NEW PUBLISH\20101230\server\">
     <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="12/30/2010 04:19:55" />
+    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="12/30/2010 04:19:54" />
     <file relUrl="bin/Edge.UI.Server.dll" publishTime="12/30/2010 04:19:57" />
     <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="12/30/2010 04:19:54" />
     <file relUrl="Web.config" publishTime="12/30/2010 03:09:28" />
     <file relUrl="bin/Edge.Core.pdb" publishTime="12/30/2010 04:19:53" />
-    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="12/30/2010 04:19:54" />
     <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="12/30/2010 04:19:55" />
     <file relUrl="OltpLogic.svc" publishTime="07/25/2010 14:21:14" />
     <file relUrl="bin/Edge.UI.Server.pdb" publishTime="12/30/2010 04:19:57" />
@@ -87,65 +147,5 @@
     <file relUrl="bin/Edge.Core.dll" publishTime="08/19/2010 12:53:19" />
     <file relUrl="bin/Edge.UI.Data.pdb" publishTime="09/13/2010 12:12:34" />
     <file relUrl="bin/Edge.UI.Data.dll" publishTime="09/13/2010 12:12:34" />
-  </publishTarget>
-  <publishTarget publishUrl="D:\Codebase\Reorganize\Console\Applications\Console\Client\Publish\console.edge-bi.com\server\">
-    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="08/19/2010 18:06:14" />
-    <file relUrl="bin/Edge.UI.Server.dll" publishTime="08/19/2010 18:06:16" />
-    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="08/19/2010 18:06:13" />
-    <file relUrl="Web.config" publishTime="08/18/2010 17:22:36" />
-    <file relUrl="bin/Edge.UI.Data.pdb" publishTime="08/19/2010 18:06:14" />
-    <file relUrl="bin/Edge.Core.pdb" publishTime="07/29/2010 15:35:58" />
-    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="08/19/2010 18:06:14" />
-    <file relUrl="bin/Edge.Core.dll" publishTime="07/29/2010 15:35:58" />
-    <file relUrl="OltpLogic.svc" publishTime="07/25/2010 15:21:14" />
-    <file relUrl="bin/Edge.UI.Server.pdb" publishTime="08/19/2010 18:06:16" />
-    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="08/19/2010 18:06:13" />
-    <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="08/19/2010 18:06:16" />
-    <file relUrl="bin/Edge.UI.Data.dll" publishTime="08/19/2010 18:06:14" />
-  </publishTarget>
-  <publishTarget publishUrl="D:\Codebase\Reorganize\Console\Applications\Console\Client\Publish\seperia.edge-bi.com\web\">
-    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="08/02/2010 18:32:01" />
-    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="08/02/2010 18:31:58" />
-    <file relUrl="bin/Edge.UI.Server.dll" publishTime="08/02/2010 18:32:03" />
-    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="08/02/2010 18:31:59" />
-    <file relUrl="Web.config" publishTime="08/01/2010 14:45:33" />
-    <file relUrl="bin/Edge.Core.pdb" publishTime="07/29/2010 15:35:58" />
-    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="08/02/2010 18:32:00" />
-    <file relUrl="OltpLogic.svc" publishTime="07/25/2010 15:21:14" />
-    <file relUrl="bin/Edge.UI.Server.pdb" publishTime="08/02/2010 18:32:03" />
-    <file relUrl="bin/Edge.Core.dll" publishTime="07/29/2010 15:35:58" />
-    <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="08/02/2010 18:32:02" />
-    <file relUrl="bin/Edge.UI.Data.pdb" publishTime="08/02/2010 18:32:00" />
-    <file relUrl="bin/Edge.UI.Data.dll" publishTime="08/02/2010 18:32:00" />
-  </publishTarget>
-  <publishTarget publishUrl="C:\Documents and Settings\Doron\Desktop\Publish\testdebug\">
-    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="07/29/2010 12:41:38" />
-    <file relUrl="bin/Edge.UI.Server.dll" publishTime="07/29/2010 12:41:38" />
-    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="07/29/2010 12:41:35" />
-    <file relUrl="Configuration/release/Web.config" publishTime="07/29/2010 12:40:20" />
-    <file relUrl="Configuration/debug/Web.config" publishTime="07/29/2010 12:41:20" />
-    <file relUrl="bin/Edge.Core.pdb" publishTime="07/29/2010 12:41:35" />
-    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="07/29/2010 12:41:35" />
-    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="07/29/2010 12:41:38" />
-    <file relUrl="OltpLogic.svc" publishTime="07/25/2010 15:21:14" />
-    <file relUrl="bin/Edge.UI.Server.pdb" publishTime="07/29/2010 12:41:38" />
-    <file relUrl="bin/Edge.Core.dll" publishTime="07/29/2010 12:41:35" />
-    <file relUrl="bin/Edge.UI.Data.pdb" publishTime="07/29/2010 12:41:37" />
-    <file relUrl="bin/Edge.UI.Data.dll" publishTime="07/29/2010 12:41:37" />
-  </publishTarget>
-  <publishTarget publishUrl="C:\Documents and Settings\Doron\Desktop\Publish\console.edge-bi.com\server\">
-    <file relUrl="bin/Edge.Services.DataRetrieval.dll" publishTime="07/06/2010 12:40:26" />
-    <file relUrl="bin/Edge.UI.Server.dll" publishTime="07/06/2010 12:40:28" />
-    <file relUrl="bin/Edge.BusinessObjects.dll" publishTime="07/06/2010 12:40:23" />
-    <file relUrl="Web.config" publishTime="07/06/2010 12:37:01" />
-    <file relUrl="bin/Edge.UI.Data.pdb" publishTime="07/06/2010 12:40:24" />
-    <file relUrl="bin/Edge.Core.pdb" publishTime="07/06/2010 12:40:22" />
-    <file relUrl="bin/Edge.Services.DataRetrieval.pdb" publishTime="07/06/2010 12:40:26" />
-    <file relUrl="bin/Edge.Core.dll" publishTime="07/06/2010 12:40:22" />
-    <file relUrl="OltpLogic.svc" publishTime="05/16/2010 11:12:36" />
-    <file relUrl="bin/Edge.UI.Server.pdb" publishTime="07/06/2010 12:40:28" />
-    <file relUrl="bin/Edge.BusinessObjects.pdb" publishTime="07/06/2010 12:40:23" />
-    <file relUrl="bin/Edge.Services.DataRetrieval.XmlSerializers.dll" publishTime="07/06/2010 12:40:28" />
-    <file relUrl="bin/Edge.UI.Data.dll" publishTime="07/06/2010 12:40:25" />
   </publishTarget>
 </publishData>
